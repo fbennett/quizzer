@@ -50,6 +50,7 @@ function UITest1() {
 		}
 	}  
     // This should call the node server instead, with an appropriate query string
+    // Will be served up as a doc, so can work directly with response object, no?
 	xmlhttp.open("GET", "data.xml", true);  
     xmlhttp.send();  
 }  
