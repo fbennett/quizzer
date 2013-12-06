@@ -1,0 +1,27 @@
+<questions>
+  <question>  
+    <question_text answer="1">Question 1</question_text>  
+    <options>  
+      <option>Option 1</option>  
+      <option>Option 2</option>  
+      <option>Option 3</option>  
+    </options>  
+  </question>  
+  <question>  
+    <question_text answer="1">Question 2</question_text>  
+    <options>  
+      <option>Option 1</option>  
+      <option>Option 2</option>  
+      <option>Option 3</option>  
+      <option>Option 4</option>  
+    </options>  
+  </question>  
+  <question>  
+    <question_text answer="1">Question 3</question_text>  
+    <options>  
+      <option>Option 1</option>  
+      <option>Option 2</option>  
+    </options>  
+  </question>
+ </questions>  
+ 
