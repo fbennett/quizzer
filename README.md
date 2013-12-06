@@ -12,30 +12,6 @@ Initial code based on a sample posted by Chetan Jain:
 
 Okay, so what are we after here ...
 
-## Operations
-
-##Disk files
-
-  * Administrators (CSV): ID, key
-  * Classes (CSV): Name, ID
-  * Students (CSV): Name, email, ID, key [supplied if not present]
-  * Results: (class/student+question).json
-
-## Screens
-
-  * Admin:
-    * Top-level: add course / delete courses / edit course / student menu
-    * Student-admin: add student / disable-enable student / edit student
-    * Course-level: add quiz / delete quizes / edit quiz / add student / disable-enable student
-    * Quiz-level
-      * add question / delete questions / edit question
-      * send quiz links to students
-      * view results
-
-  * Student:
-    * Quiz engine cycle only. One shot and out per question, no time limit.
-    * On completion, the incorrect answers are displayed, with correct answer highlighted.
-
 ## General design
 
 The idea is to build quizes from 400-word essays submitted by
@@ -63,3 +39,34 @@ The result of a quiz can be called up by an instructor in a quick-view response 
 (useful for in-class exercises), and can be downloaded in CSV
 format for the final course record held on the instructor's own
 computer.
+
+## Dependencies
+
+The node server has some dependencies:
+
+    npm install csv
+
+
+
+## Disk files
+
+  * Administrators (CSV): ID, key
+  * Classes (CSV): Name, ID
+  * Students (CSV): Name, email, ID, key [supplied if not present]
+  * Results: (class/student+question).json
+
+## Screens
+
+  * Admin:
+    * Top-level: add course / delete courses / edit course / student menu
+    * Student-admin: add student / disable-enable student / edit student
+    * Course-level: add quiz / delete quizes / edit quiz / add student / disable-enable student
+    * Quiz-level
+      * add question / delete questions / edit question
+      * send quiz links to students
+      * view results
+
+  * Student:
+    * Quiz engine cycle only. One shot and out per question, no time limit.
+    * On completion, the incorrect answers are displayed, with correct answer highlighted.
+
