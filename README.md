@@ -1,6 +1,6 @@
 # Quizzer
 
-A simple, lightweight quiz engine implemented in JavaScript, with a
+A simple, lightweight, low-security quiz engine implemented in JavaScript, with a
 node.js backend.
 
 --------------------
