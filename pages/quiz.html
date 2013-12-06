@@ -20,15 +20,27 @@
 	  height: 25px;  
 	  }  
 	</style>  
-	<script type="text/javascript" src="js/jquery.min.js"></script>  
+	<script type="text/javascript" src="../js/jquery.min.js"></script>  
     <script type="text/javascript">  
-var nextnodecounter = 0;  
-var xmldocstr;  
-var correctanscounter = 0;  
+var nextnodecounter = 0;
+var xmldocstr;
+var correctanscounter = 0;
 var randmarrcnt = 0;  
 var quesindex = 0;  
 var getvalue;  
 var ansarry = new Array();  
+var i;
+
+function getRandomKey() {
+  // Borrowed from http://jsperf.com/random-md5-hash-implementations
+  var _results;
+  _results = [];
+  for (var i=0;i<16;i+=1) {
+    _results.push((Math.random() * 16 | 0).toString(16));
+  }
+  return _results.join("");
+}
+
 function UITest1() {  
 	var xmlhttp;  
 	if (window.XMLHttpRequest) {  
