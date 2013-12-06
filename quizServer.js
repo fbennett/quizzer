@@ -14,15 +14,18 @@ csv = require('csv');
 // To call the quiz page on a student and course
 // To perform the final save and marking of a quiz after key validation
 
-// To get a random key, when needed in initializing student data
-function getRandomKey() {
-  // Borrowed from http://jsperf.com/random-md5-hash-implementations
-  var _results;
-  _results = [];
-  for (var i=0;i<16;i+=1) {
-    _results.push((Math.random() * 16 | 0).toString(16));
-  }
-  return _results.join("");
+// To get a random key or random student ID, when needed in initializing
+// student data
+function getRandomKey(len, base) {
+    // Modified from http://jsperf.com/random-md5-hash-implementations
+    len = len ? len : 16;
+    base = base ? base : 16;
+    var _results;
+    _results = [];
+    for (var i=0;i<len;i+=1) {
+        _results.push((Math.random() * base | 0).toString(base));
+    }
+    return _results.join("");
 }
 
 
