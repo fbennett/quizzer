@@ -44,7 +44,7 @@ name of the student from whose essay each question is drawn is
 displayed in the question itself. In composing questions, the bad
 example, an equally bad example, a corrected sentence, and a
 corrected sentence containing a common error are composed and
-saved. The engine randomizes the sequence of questions and
+saved (manually). The engine randomizes the sequence of questions and
 responses, and flags the correct answer in each for final marking.
 
 Quiz responses are saved only when the full quiz has been completed.
