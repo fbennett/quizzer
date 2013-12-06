@@ -34,6 +34,7 @@ Okay, so what are we after here ...
 
   * Student:
     * Quiz engine cycle only. One shot and out per question, no time limit.
+    * On completion, the incorrect answers are displayed, with correct answer highlighted.
 
 ## General design
 
