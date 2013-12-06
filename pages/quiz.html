@@ -31,15 +31,7 @@ var getvalue;
 var ansarry = new Array();  
 var i;
 
-function getRandomKey() {
-  // Borrowed from http://jsperf.com/random-md5-hash-implementations
-  var _results;
-  _results = [];
-  for (var i=0;i<16;i+=1) {
-    _results.push((Math.random() * 16 | 0).toString(16));
-  }
-  return _results.join("");
-}
+// Need something to extract the query string
 
 function UITest1() {  
 	var xmlhttp;  
@@ -57,6 +49,7 @@ function UITest1() {
 		    displaychild(xmldocstr);  
 		}
 	}  
+    // This should call the node server instead, with an appropriate query string
 	xmlhttp.open("GET", "data.xml", true);  
     xmlhttp.send();  
 }  
@@ -212,8 +205,8 @@ function randomizeques(tempxmldoc) {
 	<br />  
 	<center>  
 	  <div id="result" style="display:none;height:200px;width:500px;background-color:rgb(152,173, 240)">  
-        &nbsp;&nbsp;&nbsp; No of Questions : <div id="noofques"></div><br/>  
-        &nbsp;&nbsp;&nbsp; No of Correct Answers : <div id="noofcorans"></div>  
+        &nbsp;&nbsp;&nbsp; Number of Questions : <div id="noofques"></div><br/>  
+        &nbsp;&nbsp;&nbsp; Number of Correct Answers : <div id="noofcorans"></div>  
     </div></center>  
   </body>  
 </html>  
