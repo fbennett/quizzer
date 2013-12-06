@@ -42,7 +42,7 @@ students, using grammatical errors, errors in usage and awkward
 expression as raw material. To add a peer-pressure element, the
 name of the student from whose essay each question is drawn is
 displayed in the question itself. In composing questions, the bad
-example, and equally bad example, a corrected sentence, and a
+example, an equally bad example, a corrected sentence, and a
 corrected sentence containing a common error are composed and
 saved. The engine randomizes the sequence of questions and
 responses, and flags the correct answer in each for final marking.
