@@ -52,7 +52,13 @@ If the quiz page is refreshed before completion, the quiz is
 re-randomized, and starts over from the beginning. There is no time
 limit: this is a tool for study, rather than examination.
 
-The result of a quiz is returned in a quick-view response screen
+For ease of administration, the system works without IDs and passwords.
+A management screen for each quiz, available only to instructors, allows
+a quiz link to be sent to each student, with the student ID and key
+embedded in the link. Student simply clicks on the link and takes the quiz.
+There is no other security.
+
+The result of a quiz can be called up by an instructor in a quick-view response screen
 (useful for in-class exercises), and can be downloaded in CSV
 format for the final course record held on the instructor's own
 computer.
