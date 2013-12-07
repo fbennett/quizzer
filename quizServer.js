@@ -40,6 +40,9 @@ try {
 }
 
 function loadStudents() {
+    for (var key in admin) {
+        console.log("Whatcha got? "+key+" "+admin[key]);
+    }
     console.log("XXX Next, load students, if any ...");
 }
 
