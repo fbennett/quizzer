@@ -2,7 +2,13 @@ fs = require('fs');
 csv = require('csv');
 http = require('http');
 
+// Subdirs to be created if necessary
 var dirs = ['answer', 'ids', 'quiz'];
+
+// Internal access maps
+var admin = {};
+var students = {};
+var classes = {};
 
 // make data dirs as required
 for (var i=0,ilen=dirs.length;i<ilen;i+=1) {
@@ -63,7 +69,6 @@ function loadStudents() {
     loadClasses();
 }
 
-var admin = {};
 function loadAdmin() {
     csv()
         .from.stream(fs.createReadStream('./ids/admin.csv'))
