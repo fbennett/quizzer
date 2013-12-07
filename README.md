@@ -6,7 +6,7 @@ node.js backend.
 --------------------
 
 The original motivation for this work was an unpleasant encounter with
-the products of a commercial vendor. Quizes are simple things. They
+the products of a commercial vendor. Quizes are *simple* things. They
 should be easy to customise, and deploying a quiz to a given group of
 students should not require weeks of effort involving multiple members
 of staff in trial-and-error exploration of a Byzantine menu system.
