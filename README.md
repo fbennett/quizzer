@@ -5,9 +5,17 @@ node.js backend.
 
 --------------------
 
-The initial inspiration for this was drawn from a code sample posted by Chetan Jain:
+The original motivation for this work was a series of encounters with
+the horribly cumbersome configuration, signup and login procedures
+required by a commercial vendor product. Quizes are simple
+things. They should be easy to customise, and deploying a quiz to a
+given group of students should not require weeks of effort involving
+multiple members of staff in trial-and-error exploration of a
+Byzantine menu system.
 
-  http://chetan0389.blogspot.jp/2013/06/quiz-using-htmlcss-jquery-xml-javascript.html
+The initial inspiration for this was drawn from a [code
+sample](http://chetan0389.blogspot.jp/2013/06/quiz-using-htmlcss-jquery-xml-javascript.html)
+posted by Chetan Jain.
 
 --------------------
 
