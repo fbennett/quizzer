@@ -1,12 +1,17 @@
 fs = require('fs');
 csv = require('csv');
 http = require('http');
+url = require('url');
 
 // Subdirs to be created if necessary
 var dirs = ['answer', 'ids', 'quiz'];
 
 // Files to be created if necessary
 var files = ['students', 'classes']
+
+// Pages
+var pageAdminTop = fs.readFileSync('./pages/admin/top.html');
+
 
 // Internal access maps
 var admin = {};
@@ -72,7 +77,53 @@ function runServer() {
         // To call the quiz page on a student and course
         // To save the final data from a quiz after key validation
 
-        console.log("request received", 5);
+        //console.log("request received", 5);
+        if(request.method == "OPTIONS"){
+            var nowdate = new Date();
+            response.writeHead(200, {
+                'Date': nowdate.toUTCString(),
+                'Allow': 'GET,POST,OPTIONS',
+                'Content-Length': 0,
+                'Content-Type': 'text/plain',
+            });
+            response.end('');
+            return;
+        }
+        request.on('end', function(){
+            try {
+                //zcite.debug('full request received', 5);
+                //parse url from request object
+                var uriObj = url.parse(this.url);
+                uriObj.parsedQuery = require('querystring').parse(uriObj.query);
+                if (uriObj.parsedQuery.page) {
+                    if (uriObj.parsedQuery.page === 'top') {
+                        response.writeHead(200, {'Content-Type': 'text/html'});
+                        response.end(pageAdminTop);
+                    } else {
+                        response.writeHead(500, {'Content-Type': 'text/plain'});
+                        response.end("Sorry, can't help you. I don't know about that page.");
+                        return;
+                    }
+                } else {
+                    // API calls will be handled here when we get to it
+                    response.writeHead(500, {'Content-Type':
+                    'text/plain'}); response.end("An error occurred");
+                    return;
+                }
+            } catch (e) {
+                console.log(err.message);
+                if(typeof err == "string"){
+                    response.writeHead(500, {'Content-Type': 'text/plain'});
+                    response.end(err);
+                    return;
+                }
+                else{
+                    response.writeHead(500, {'Content-Type': 'text/plain'});
+                    response.end("An error occurred");
+                    return;
+                }
+            }
+        });
     }).listen(3498);
     console.log("Listening on port 3498");
 }
