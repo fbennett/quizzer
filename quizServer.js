@@ -77,6 +77,33 @@ for (var i=0,ilen=files.length;i<ilen;i+=1) {
     }
 }
 
+function loadStudents() {
+    // To instantiate student authentication data
+    console.log("XXX Next, load students, if any ...");
+    loadClasses();
+}
+
+function loadClasses() {
+    // To instantiate course membership rosters
+    console.log("XXX And next, load classes, if any ...");
+    runServer();
+}
+
+function loadAdmin() {
+    csv()
+        .from.stream(fs.createReadStream('./ids/admin.csv'))
+        .on ('record', function (row,index) {
+            admin[row[1]] = row[0];
+            console.log("Admin URL for "+row[0]+": http://localhost:" + quizPort + "/?admin="+row[1]);
+        })
+        .on('end', function(count){
+            loadStudents();
+        })
+        .on('error', function (e) {
+            throw e;
+        });
+}
+
 function runServer() {
     console.log("XXX And finally, spin up the server in all its glory ...");
     http.createServer(function (request, response) {
@@ -163,33 +190,6 @@ function runServer() {
         });
     }).listen(quizPort);
     console.log("Listening on port "+quizPort);
-}
-
-function loadClasses() {
-    // To instantiate course membership rosters
-    console.log("XXX And next, load classes, if any ...");
-    runServer();
-}
-
-function loadStudents() {
-    // To instantiate student authentication data
-    console.log("XXX Next, load students, if any ...");
-    loadClasses();
-}
-
-function loadAdmin() {
-    csv()
-        .from.stream(fs.createReadStream('./ids/admin.csv'))
-        .on ('record', function (row,index) {
-            admin[row[1]] = row[0];
-            console.log("Admin URL for "+row[0]+": http://localhost:" + quizPort + "/?admin="+row[1]);
-        })
-        .on('end', function(count){
-            loadStudents();
-        })
-        .on('error', function (e) {
-            throw e;
-        });
 }
 
 // Setup
