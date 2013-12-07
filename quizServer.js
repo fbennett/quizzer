@@ -5,6 +5,9 @@ http = require('http');
 // Subdirs to be created if necessary
 var dirs = ['answer', 'ids', 'quiz'];
 
+// Files to be created if necessary
+var files = ['students', 'classes']
+
 // Internal access maps
 var admin = {};
 var students = {};
@@ -31,6 +34,7 @@ function getRandomKey(len, base) {
     return _results.join("");
 }
 
+// Also initialise students.csv and classes.csv here
 try {
     fs.openSync('./ids/admin.csv', 'r')
 } catch (e) {
@@ -45,23 +49,42 @@ try {
         throw e;
     }
 }
+for (var i=0,ilen=2;i<ilen;i+=1) {
+    try {
+        fs.openSync('./ids/' + files[i] + '.csv', 'r')
+    } catch (e) {
+        if (e.code === 'ENOENT') {
+            csv().to('./ids/' + files[i] + '.csv').write([]);
+        } else {
+            throw e;
+        }
+    }
+}
 
 function runServer() {
     console.log("XXX And finally, spin up the server in all its glory ...");
     http.createServer(function (request, response) {
-        // params can be passed around ... maybe.
-        var params = {};
+
+        // Stuff that will be needed
+
+        // To call a requested admin page (default is top)
+        // To perform the various admin operations after key validation
+        // To call the quiz page on a student and course
+        // To save the final data from a quiz after key validation
+
         console.log("request received", 5);
     }).listen(3498);
     console.log("Listening on port 3498");
 }
 
 function loadClasses() {
+    // To instantiate course membership rosters
     console.log("XXX And next, load classes, if any ...");
     runServer();
 }
 
 function loadStudents() {
+    // To instantiate student authentication data
     for (var key in admin) {
         console.log("Whatcha got? "+key+" "+admin[key]);
     }
@@ -86,19 +109,4 @@ function loadAdmin() {
 
 // Setup
 loadAdmin();
-
-// Functions needed ...
-
-
-// To instantiate admin authentication data
-//   * just bundle the object to JS
-
-
-// To instantiate student authentication data
-// To instantiate course membership rosters
-// To call a requested admin page (default is top)
-// To perform various admin operations after key validation
-// To call the quiz page on a student and course
-// To perform the final save and marking of a quiz after key validation
-
 
