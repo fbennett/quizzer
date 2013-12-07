@@ -12,6 +12,8 @@ var files = ['students', 'classes']
 
 // Pages
 var pageAdminTop = fs.readFileSync('./pages/admin/top.html');
+var pageStudents = fs.readFileSync('./pages/admin/students.html');
+var pageClasses = fs.readFileSync('./pages/admin/classes.html');
 var pageQuiz = fs.readFileSync('./pages/user/quiz.html');
 
 
@@ -104,6 +106,12 @@ function runServer() {
                     if (!pageKey || pageKey === 'top') {
                         response.writeHead(200, {'Content-Type': 'text/html'});
                         response.end(pageAdminTop);
+                    } else if (!pageKey || pageKey === 'students') {
+                        response.writeHead(200, {'Content-Type': 'text/html'});
+                        response.end(pageStudents);
+                    } else if (!pageKey || pageKey === 'classes') {
+                        response.writeHead(200, {'Content-Type': 'text/html'});
+                        response.end(pageClasses);
                     } else {
                         response.writeHead(500, {'Content-Type': 'text/plain'});
                         response.end("Sorry, can't help you. I don't know about that page.");
@@ -114,15 +122,15 @@ function runServer() {
                         response.end(pageQuiz);
                 } else {
                     // All API calls and page dependencies will be handled here when we get to it
-                    if ('/data.xml' === uriObj.href) {
+                    if ('.xml' === uriObj.href.slice(-4)) {
                         // This needs to be a bit smarter, obviously. Admin pages first, then
                         // fix this up to chase out the correct data file.
-                        var myxml = fs.readFileSync('data.xml'); 
+                        var myxml = fs.readFileSync(uriObj.href.slice(1)); 
                         response.writeHead(200, {'Content-Type': 'text/xml'});
                         response.end(myxml);
                         return;
-                    } else if ('/js/jquery.min.js' === uriObj.href) {
-                        var myxml = fs.readFileSync('js/jquery.min.js'); 
+                    } else if ('.js' === uriObj.href.slice(-3)) {
+                        var myxml = fs.readFileSync(uriObj.href.slice(1)); 
                         response.writeHead(200, {'Content-Type': 'text/javascript'});
                         response.end(myxml);
                         return;

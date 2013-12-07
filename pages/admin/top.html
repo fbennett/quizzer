@@ -1,11 +1,15 @@
 <html>
 <head>
   <title>Quizzer Admin - top page</title>
+  <script type="text/javascript" src="js/local.js"></script>  
 </head>
 <body>
-  <h1>Hi there!</h1>
-  <p>
-    This is a cat.
-  </p>
+  <h1>Quizzer Admin - top page</h1>
+  <div>
+    <input type="button" value="Students" onclick="window.location = '?page=students&admin=' + getParameterByName('admin')"/>
+  </div>
+  <div>
+    <input type="button" value="Classes" onclick="window.location = '?page=classes&admin=' + getParameterByName('admin')"/>
+  </div>
 </body>
 </html>
