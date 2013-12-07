@@ -1,5 +1,6 @@
 fs = require('fs');
 csv = require('csv');
+http = require('http');
 
 var dirs = ['answer', 'ids', 'quiz'];
 
@@ -39,19 +40,27 @@ try {
     }
 }
 
+function runServer() {
+    console.log("XXX And finally, spin up the server in all its glory ...");
+    http.createServer(function (request, response) {
+        // params can be passed around ... maybe.
+        var params = {};
+        console.log("request received", 5);
+    }).listen(3498);
+    console.log("Listening on port 3498");
+}
+
+function loadClasses() {
+    console.log("XXX And next, load classes, if any ...");
+    runServer();
+}
+
 function loadStudents() {
     for (var key in admin) {
         console.log("Whatcha got? "+key+" "+admin[key]);
     }
     console.log("XXX Next, load students, if any ...");
-}
-
-function loadClasses() {
-    console.log("XXX And next, load classes, if any ...");
-}
-
-function runServer() {
-    console.log("XXX And finally, spin up the server in all its glory ...");
+    loadClasses();
 }
 
 var admin = {};
