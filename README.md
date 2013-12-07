@@ -15,6 +15,14 @@ The initial inspiration for this particular attempt to do better was a [code
 sample](http://chetan0389.blogspot.jp/2013/06/quiz-using-htmlcss-jquery-xml-javascript.html)
 posted by Chetan Jain.
 
+The descriptions below may make it sound like this is a working product
+already. Don't be deceived: I've only begin working on the code, and it
+will likely be a couple of months before it's ready for deployment. When
+done, it will be simple to install and run, though, so if you keep an eye
+on this space, you shouldn't be disappointed.
+
+Frank Bennett, 7 December 2013
+
 --------------------
 
 ## General design
