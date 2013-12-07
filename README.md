@@ -13,7 +13,7 @@ given group of students should not require weeks of effort involving
 multiple members of staff in trial-and-error exploration of a
 Byzantine menu system.
 
-The initial inspiration for this particular attempt to do better was drawn from a [code
+The initial inspiration for this particular attempt to do better was a [code
 sample](http://chetan0389.blogspot.jp/2013/06/quiz-using-htmlcss-jquery-xml-javascript.html)
 posted by Chetan Jain.
 
