@@ -5,7 +5,7 @@ url = require('url');
 quizPort = 3498;
 
 // Subdirs to be created if necessary
-var dirs = ['answer', 'ids', 'quiz'];
+var dirs = ['answer', 'ids', 'question'];
 
 // Files to be created if necessary
 var files = ['students', 'classes', 'membership']
@@ -182,7 +182,7 @@ function loadAdmin() {
         .from.stream(fs.createReadStream('./ids/admin.csv'))
         .on ('record', function (row,index) {
             admin[row[1]] = row[0];
-            console.log("Admin URL for "+row[0]+": http://localhost:" + quizPort + "?admin="+row[1]);
+            console.log("Admin URL for "+row[0]+": http://localhost:" + quizPort + "/?admin="+row[1]);
         })
         .on('end', function(count){
             loadStudents();
