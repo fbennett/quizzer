@@ -8,8 +8,10 @@ node.js backend.
 The original motivation for this work was an unpleasant encounter with
 the products of a commercial vendor. Quizes are *simple* things. They
 should be easy to customise, and deploying a quiz to a given group of
-students should not require weeks of effort involving multiple members
-of staff in trial-and-error exploration of a Byzantine menu system.
+students should not require weeks of effort, large volumes of email,
+numerous meetings and progress reports, or extensive trial-and-error
+exploration of a byzantine menu system. It should just do its job,
+so that we can get on with our own.
 
 The initial inspiration for this particular attempt to do better was a [code
 sample](http://chetan0389.blogspot.jp/2013/06/quiz-using-htmlcss-jquery-xml-javascript.html)
