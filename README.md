@@ -5,13 +5,11 @@ node.js backend.
 
 --------------------
 
-The original motivation for this work was a series of encounters with
-the horribly cumbersome configuration, signup and login procedures
-required by a commercial vendor product. Quizes are simple
-things. They should be easy to customise, and deploying a quiz to a
-given group of students should not require weeks of effort involving
-multiple members of staff in trial-and-error exploration of a
-Byzantine menu system.
+The original motivation for this work was an unpleasant encounter with
+the products of a commercial vendor. Quizes are simple things. They
+should be easy to customise, and deploying a quiz to a given group of
+students should not require weeks of effort involving multiple members
+of staff in trial-and-error exploration of a Byzantine menu system.
 
 The initial inspiration for this particular attempt to do better was a [code
 sample](http://chetan0389.blogspot.jp/2013/06/quiz-using-htmlcss-jquery-xml-javascript.html)
@@ -22,13 +20,13 @@ posted by Chetan Jain.
 ## General design
 
 The idea is to build quizes from 400-word essays submitted by
-students, using grammatical errors, errors in usage and awkward
-expression as raw material. To add a peer-pressure element, the
-name of the student from whose essay each question is drawn is
+students, using grammatical errors, errors in usage, and examples of
+awkward expression as raw material. To add a peer-pressure element,
+the name of the student from whose essay each question is drawn is
 displayed in the question itself. In composing questions, the bad
-example, an equally bad example, a corrected sentence, and a
-corrected sentence containing a common error are composed and
-saved (manually). The engine randomizes the sequence of questions and
+example, an equally bad example, a corrected sentence, and a corrected
+sentence containing a common error are composed and saved
+(manually). The engine randomizes the sequence of questions and
 responses, and flags the correct answer in each for final marking.
 
 Quiz responses are saved only when the full quiz has been completed.
@@ -40,10 +38,10 @@ For ease of administration, the system uses one-time passwords
 embedded in the URL for each quiz instance.  A management screen for
 each quiz, available only to instructors, is used to send the quiz
 link to each student. Student simply clicks on the link and takes the
-quiz. The student's one-time password changes with each new mailing.
+quiz. The students' one-time passwords change with each new mailing.
 
 Administrators all have global write access, and the administrator URL
-can be reset either by deleting the admin.csv file or replacing it
+can be reset either by deleting the admin.csv file, or by replacing it
 with another version manually, and restarting the server.  There is no
 other security.
 
