@@ -79,7 +79,7 @@ The node server has some dependencies:
 
   * Admin:
     * Top-level: add course / delete courses / edit course / student menu
-    * Student-admin: add student / disable-enable student / edit student
+    * Student-admin: add student / edit student
     * Course-level: add quiz / delete quizes / edit quiz / add student / disable-enable student
     * Quiz-level
       * add question / delete questions / edit question

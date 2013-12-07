@@ -8,19 +8,26 @@ quizPort = 3498;
 var dirs = ['answer', 'ids', 'quiz'];
 
 // Files to be created if necessary
-var files = ['students', 'classes']
+var files = ['students', 'classes', 'membership']
 
 // Pages
 var pageAdminTop = fs.readFileSync('./pages/admin/top.html');
 var pageStudents = fs.readFileSync('./pages/admin/students.html');
+//var pageStudentEdit = fs.readFileSync('./pages/admin/studentedit.html');
 var pageClasses = fs.readFileSync('./pages/admin/classes.html');
-var pageQuiz = fs.readFileSync('./pages/user/quiz.html');
+//var pageClassEdit = fs.readFileSync('./pages/admin/classedit.html');
+//var pageMembership = fs.readFileSync('./pages/admin/membership.html');
+//var pageQuizEdit = fs.readFileSync('./pages/admin/quizedit.html');
+//var pageQuestionEdit = fs.readFileSync('./pages/admin/questionedit.html');
+var pageQuiz = fs.readFileSync('./pages/user/quizpage.html');
 
+//var pageQuizResult = fs.readFileSync('./pages/user/quizresult.html');
 
 // Internal access maps
 var admin = {};
 var students = {};
 var classes = {};
+var membership = {};
 
 // make data dirs as required
 for (var i=0,ilen=dirs.length;i<ilen;i+=1) {
@@ -58,7 +65,7 @@ try {
         throw e;
     }
 }
-for (var i=0,ilen=2;i<ilen;i+=1) {
+for (var i=0,ilen=files.length;i<ilen;i+=1) {
     try {
         fs.openSync('./ids/' + files[i] + '.csv', 'r')
     } catch (e) {
