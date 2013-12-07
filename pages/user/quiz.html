@@ -20,7 +20,7 @@
 	  height: 25px;  
 	  }  
 	</style>  
-	<script type="text/javascript" src="../js/jquery.min.js"></script>  
+	<script type="text/javascript" src="js/jquery.min.js"></script>  
     <script type="text/javascript">  
 var nextnodecounter = 0;
 var xmldocstr;
@@ -44,7 +44,7 @@ function UITest1() {
     }  
     xmlhttp.onreadystatechange = function () { 
 	    if (xmlhttp.readyState == 4 && (xmlhttp.status == 200 || xmlhttp.status == 0)) {  
-            var dataxml = xmlhttp.responseText;  
+            var dataxml = xmlhttp.responseText;
 	        xmldocstr = loadXMLString(dataxml);  
 		    displaychild(xmldocstr);  
 		}

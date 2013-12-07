@@ -2,6 +2,7 @@ fs = require('fs');
 csv = require('csv');
 http = require('http');
 url = require('url');
+quizPort = 3498;
 
 // Subdirs to be created if necessary
 var dirs = ['answer', 'ids', 'quiz'];
@@ -11,6 +12,7 @@ var files = ['students', 'classes']
 
 // Pages
 var pageAdminTop = fs.readFileSync('./pages/admin/top.html');
+var pageQuiz = fs.readFileSync('./pages/user/quiz.html');
 
 
 // Internal access maps
@@ -77,7 +79,6 @@ function runServer() {
         // To call the quiz page on a student and course
         // To save the final data from a quiz after key validation
 
-        //console.log("request received", 5);
         if(request.method == "OPTIONS"){
             var nowdate = new Date();
             response.writeHead(200, {
@@ -91,12 +92,16 @@ function runServer() {
         }
         request.on('end', function(){
             try {
-                //zcite.debug('full request received', 5);
                 //parse url from request object
                 var uriObj = url.parse(this.url);
                 uriObj.parsedQuery = require('querystring').parse(uriObj.query);
-                if (uriObj.parsedQuery.page) {
-                    if (uriObj.parsedQuery.page === 'top') {
+                var adminKey = uriObj.parsedQuery.admin;
+                var quizKey = uriObj.parsedQuery.quiz;
+                var studentID = uriObj.parsedQuery.id;
+                var studentKey = uriObj.parsedQuery.key;
+                var pageKey = uriObj.parsedQuery.page;
+                if (adminKey && admin[adminKey]) {
+                    if (!pageKey || pageKey === 'top') {
                         response.writeHead(200, {'Content-Type': 'text/html'});
                         response.end(pageAdminTop);
                     } else {
@@ -104,11 +109,28 @@ function runServer() {
                         response.end("Sorry, can't help you. I don't know about that page.");
                         return;
                     }
+                } else if (quizKey && studentID && studentKey) {
+                        response.writeHead(200, {'Content-Type': 'text/html'});
+                        response.end(pageQuiz);
                 } else {
-                    // API calls will be handled here when we get to it
-                    response.writeHead(500, {'Content-Type':
-                    'text/plain'}); response.end("An error occurred");
-                    return;
+                    // All API calls and page dependencies will be handled here when we get to it
+                    if ('/data.xml' === uriObj.href) {
+                        // This needs to be a bit smarter, obviously. Admin pages first, then
+                        // fix this up to chase out the correct data file.
+                        var myxml = fs.readFileSync('data.xml'); 
+                        response.writeHead(200, {'Content-Type': 'text/xml'});
+                        response.end(myxml);
+                        return;
+                    } else if ('/js/jquery.min.js' === uriObj.href) {
+                        var myxml = fs.readFileSync('js/jquery.min.js'); 
+                        response.writeHead(200, {'Content-Type': 'text/javascript'});
+                        response.end(myxml);
+                        return;
+                    } else {
+                        response.writeHead(500, {'Content-Type': 'text/plain'});
+                        response.end("An error occurred");
+                        return;
+                    }
                 }
             } catch (e) {
                 console.log(err.message);
@@ -124,8 +146,8 @@ function runServer() {
                 }
             }
         });
-    }).listen(3498);
-    console.log("Listening on port 3498");
+    }).listen(quizPort);
+    console.log("Listening on port "+quizPort);
 }
 
 function loadClasses() {
@@ -136,9 +158,6 @@ function loadClasses() {
 
 function loadStudents() {
     // To instantiate student authentication data
-    for (var key in admin) {
-        console.log("Whatcha got? "+key+" "+admin[key]);
-    }
     console.log("XXX Next, load students, if any ...");
     loadClasses();
 }
@@ -148,7 +167,7 @@ function loadAdmin() {
         .from.stream(fs.createReadStream('./ids/admin.csv'))
         .on ('record', function (row,index) {
             admin[row[1]] = row[0];
-            console.log("Admin URL for "+row[0]+": http://localhost:7943?admin="+row[1]);
+            console.log("Admin URL for "+row[0]+": http://localhost:" + quizPort + "?admin="+row[1]);
         })
         .on('end', function(count){
             loadStudents();
