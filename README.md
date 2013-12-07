@@ -5,12 +5,11 @@ node.js backend.
 
 --------------------
 
-Initial code based on a sample posted by Chetan Jain:
+The initial inspiration for this was drawn from a code sample posted by Chetan Jain:
 
   http://chetan0389.blogspot.jp/2013/06/quiz-using-htmlcss-jquery-xml-javascript.html
 
-
-Okay, so what are we after here ...
+--------------------
 
 ## General design
 
@@ -29,15 +28,20 @@ If the quiz page is refreshed before completion, the quiz is
 re-randomized, and starts over from the beginning. There is no time
 limit: this is a tool for study, rather than examination.
 
-For ease of administration, the system works without IDs and passwords.
-A management screen for each quiz, available only to instructors, allows
-a quiz link to be sent to each student, with the student ID and key
-embedded in the link. Student simply clicks on the link and takes the quiz.
-There is no other security.
+For ease of administration, the system uses one-time passwords
+embedded in the URL for each quiz instance.  A management screen for
+each quiz, available only to instructors, is used to send the quiz
+link to each student. Student simply clicks on the link and takes the
+quiz. The student's one-time password changes with each new mailing.
 
-The result of a quiz can be called up by an instructor in a quick-view response screen
-(useful for in-class exercises), and can be downloaded in CSV
-format for the final course record held on the instructor's own
+Administrators all have global write access, and the administrator URL
+can be reset either by deleting the admin.csv file or replacing it
+with another version manually, and restarting the server.  There is no
+other security.
+
+The result of a quiz can be called up by an instructor in a quick-view
+response screen (useful for in-class exercises), and can be downloaded
+in CSV format for the final course record held on the instructor's own
 computer.
 
 ## Dependencies
@@ -45,7 +49,7 @@ computer.
 The node server has some dependencies:
 
     npm install csv
-
+    
 
 
 ## Disk files
