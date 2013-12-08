@@ -6,7 +6,7 @@ node.js backend.
 --------------------
 
 The original motivation for this work was an unpleasant encounter with
-the products of a commercial vendor. Quizes are *simple* things. They
+the products of a commercial vendor. Quizzes are *simple* things. They
 should be easy to customise, and deploying a quiz to a given group of
 students should not require weeks of effort, large volumes of email,
 numerous meetings and progress reports, or extensive trial-and-error
@@ -29,7 +29,7 @@ Frank Bennett, 7 December 2013
 
 ## General design
 
-The idea is to build quizes from 400-word essays submitted by
+The idea is to build quizzes from 400-word essays submitted by
 students, using grammatical errors, errors in usage, and examples of
 awkward expression as raw material. To add a peer-pressure element,
 the name of the student from whose essay each question is drawn is
@@ -80,7 +80,7 @@ The node server has some dependencies:
   * Admin:
     * Top-level: add course / delete courses / edit course / student menu
     * Student-admin: add student / edit student
-    * Course-level: add quiz / delete quizes / edit quiz / add student / disable-enable student
+    * Course-level: add quiz / delete quizzes / edit quiz / add student / disable-enable student
     * Quiz-level
       * add question / delete questions / edit question
       * send quiz links to students
