@@ -3,11 +3,21 @@ function getParameterByName(name) {
     return match && decodeURIComponent(match[1].replace(/\+/g, ' '));
 }
 
-function addStudent() {
+function addStudent(node) {
     var addButton = document.getElementById('add-student-button');
     var saveButton = document.getElementById('save-student-button');
     var studentBoxes = document.getElementById('student-boxes');
+    var studentName = document.getElementById('student-name');
+    var studentEmail = document.getElementById('student-email');
     var studentID = document.getElementById('student-id');
+    if (node) {
+        var name = node.childNodes[0].textContent;
+        var email = node.childNodes[1].textContent;
+        var id = node.childNodes[2].textContent;
+        studentName.value = name;
+        studentEmail.value = email;
+        studentID.value = id;
+    }
     if (studentID.value) {
         studentID.disabled = true;
     } else {
@@ -49,7 +59,7 @@ function saveStudent() {
         var xhr = new XMLHttpRequest();
         xhr.open('POST', '/?admin='+adminID+'&cmd=addstudent', false);
         xhr.setRequestHeader("Content-type","application/json");
-        xhr.send(JSON.stringify({email:email,name:name}));
+        xhr.send(JSON.stringify({email:email,name:name,id:id}));
         buildStudentList();
     }
     if ((name && email) || (!name && !email && !id)) {
@@ -89,13 +99,24 @@ function buildStudentList (rows) {
     for (var i=0,ilen=rows.length;i<ilen;i+=1) {
         var nameText = document.createTextNode(rows[i][0]);
         var emailText = document.createTextNode(rows[i][1]);
+        var idText = document.createTextNode(rows[i][2]);
         var tr = document.createElement('tr');
         var nameTD = document.createElement('td');
         var emailTD = document.createElement('td');
+        var idTD = document.createElement('td');
         nameTD.appendChild(nameText);
         tr.appendChild(nameTD);
         emailTD.appendChild(emailText);
         tr.appendChild(emailTD)
+        idTD.appendChild(idText);
+        idTD.hidden = true;
+        tr.appendChild(idTD)
+        // Edit button
+        var button = document.createElement('input');
+        button.setAttribute('type', 'button');
+        button.setAttribute('value', 'Edit');
+        button.setAttribute('onclick', 'addStudent(this.parentNode)');
+        tr.appendChild(button);
         container.appendChild(tr);
     }
     // Each student line should have an edit button
