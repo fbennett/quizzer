@@ -50,6 +50,7 @@ function saveStudent() {
         xhr.open('POST', '/?admin='+adminID+'&cmd=addstudent', false);
         xhr.setRequestHeader("Content-type","application/json");
         xhr.send(JSON.stringify({email:email,name:name}));
+        buildStudentList();
     }
     if ((name && email) || (!name && !email && !id)) {
         // Clear
@@ -65,9 +66,37 @@ function saveStudent() {
 }
 
 function buildStudentList (rows) {
-    // if rows is nil, call the server.
-    // Sort by ???
+    if (!rows) {
+        // if rows is nil, call the server.
+        var adminID = getParameterByName('admin');
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', '/?admin='+adminID+'&cmd=readstudents', false);
+        xhr.setRequestHeader("Content-type","text/plain");
+        xhr.overrideMimeType("application/json"); 
+        xhr.send(null);
+        var rows = JSON.parse(xhr.responseText);
+    }
+    rows.sort(function (a,b) {
+        // Sort by ???
+        return a[0].localeCompare(b[0]);
+    });
     // Delete children from container
+    var container = document.getElementById('student-list');
+    for (var i=0,ilen=container.childNodes.length;i<ilen;i+=1) {
+        container.removeChild(container.childNodes[0]);
+    }
     // Rebuild container content
+    for (var i=0,ilen=rows.length;i<ilen;i+=1) {
+        var nameText = document.createTextNode(rows[i][0]);
+        var emailText = document.createTextNode(rows[i][1]);
+        var tr = document.createElement('tr');
+        var nameTD = document.createElement('td');
+        var emailTD = document.createElement('td');
+        nameTD.appendChild(nameText);
+        tr.appendChild(nameTD);
+        emailTD.appendChild(emailText);
+        tr.appendChild(emailTD)
+        container.appendChild(tr);
+    }
     // Each student line should have an edit button
 }

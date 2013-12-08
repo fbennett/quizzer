@@ -64,6 +64,16 @@ function writeStudents(studentsById) {
     return rows;
 }
 
+function readStudents(studentsById) {
+    var rows = [];
+    for (var key in studentsById) {
+        var obj = studentsById[key];
+        var row = [obj.name, obj.email, obj.id, obj.key];
+        rows.push(row);
+    }
+    return rows;
+}
+
 // Initialise students.csv and classes.csv if necessary
 try {
     fs.openSync('./ids/admin.csv', 'r')
@@ -240,6 +250,10 @@ function runServer() {
                             response.writeHead(200, {'Content-Type': 'application/json'});
                             response.end(JSON.stringify(rows));
                             return;
+                        } else if (cmd === 'readstudents') {
+                            var rows = readStudents(studentsById);
+                            response.writeHead(200, {'Content-Type': 'application/json'});
+                            response.end(JSON.stringify(rows));
                         } else {
                             response.writeHead(500, {'Content-Type': 'text/plain'});
                             response.end("An error occurred");
