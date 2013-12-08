@@ -134,6 +134,29 @@ function readStudents(studentsById) {
     return rows;
 }
 
+function writeClasses(classes) {
+    var cfh = csv().to.path('./ids/classes.csv');
+    var rows = [];
+    for (var key in classes) {
+        var obj = classes[key];
+        var row = [obj.name, obj.id];
+        cfh.write(row);
+        rows.push(row);
+    }
+    cfh.end();
+    return rows;
+}
+
+function readClasses(classes) {
+    var rows = [];
+    for (var key in classes) {
+        var obj = classes[key];
+        var row = [obj.name, obj.id];
+        rows.push(row);
+    }
+    return rows;
+}
+
 // Initialise students.csv and classes.csv if necessary
 try {
     fs.openSync('./ids/admin.csv', 'r')
@@ -187,8 +210,25 @@ function loadStudents() {
 
 function loadClasses() {
     // To instantiate course membership rosters
-    console.log("TODO: load classes, if any ...");
-    runServer();
+    csv()
+        .from.stream(fs.createReadStream('./ids/classes.csv'))
+        .on('record', function (row, index) {
+            if (row[1]) {
+                obj = {
+                    name: row[0],
+                    id: row[1] ? row[1] : getRandomKey(10, 10)
+                };
+                classes[obj.id] = obj;
+            }
+        })
+        .on('end', function(count) {
+            // Rewrite to disk, in case ids/keys have been added
+            writeClasses(classes);
+            runServer();
+        })
+        .on('error', function (e) {
+            throw e;
+        });
 }
 
 function loadAdmin() {
@@ -315,6 +355,35 @@ function runServer() {
                             var payload = JSON.parse(this.POSTDATA);
                             response.writeHead(200, {'Content-Type': 'application/json'});
                             response.end(JSON.stringify(studentsById[payload.id]));
+                            return;
+                        } else if (cmd === 'addclass') {
+                            var payload = JSON.parse(this.POSTDATA);
+                            // NOTE: Req of name and email are handled in pages
+                            if (payload.id && classes[payload.id]) {
+                                // If id matches a record, update name
+                                classes[payload.id].name = payload.name;
+                            } else {
+                                // New record, add it
+                                if (!payload.id) {
+                                    payload.id = getRandomKey(10, 10);
+                                }
+                                classes[payload.id] = payload;
+                            }
+                            // Recast as lst
+                            var rows = writeClasses(classes);
+                            // Send the object back to the client page as JSON
+                            // so the display list can be rebuilt
+                            response.writeHead(200, {'Content-Type': 'application/json'});
+                            response.end(JSON.stringify(rows));
+                            return;
+                        } else if (cmd === 'readclasses') {
+                            var rows = readClasses(classes);
+                            response.writeHead(200, {'Content-Type': 'application/json'});
+                            response.end(JSON.stringify(rows));
+                        } else if (cmd === 'readoneclass') {
+                            var payload = JSON.parse(this.POSTDATA);
+                            response.writeHead(200, {'Content-Type': 'application/json'});
+                            response.end(JSON.stringify(classes[payload.id]));
                             return;
                         } else {
                             response.writeHead(500, {'Content-Type': 'text/plain'});
