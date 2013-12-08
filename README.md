@@ -80,9 +80,9 @@ The node server has some dependencies:
 ## Screens
 
   * Admin:
-    * Top-level: students / classes
-    * Course-admin: add course / edit course
-    * Student-admin: add student / edit student
+    * Top-level: students / classes [done]
+    * Course-admin: add course / edit course [done]
+    * Student-admin: add student / edit student [done]
     * Course-level: add quiz / add student / remove student
     * Quiz-level
       * add question / edit question (active until sending)
