@@ -73,10 +73,8 @@ var files = ['students', 'classes', 'membership']
 // Pages
 var pageAdminTop = fs.readFileSync('./pages/admin/top.html');
 var pageStudents = fs.readFileSync('./pages/admin/students.html');
-//var pageStudentEdit = fs.readFileSync('./pages/admin/studentedit.html');
 var pageClasses = fs.readFileSync('./pages/admin/classes.html');
-//var pageClassEdit = fs.readFileSync('./pages/admin/classedit.html');
-//var pageMembership = fs.readFileSync('./pages/admin/membership.html');
+var pageClass = fs.readFileSync('./pages/admin/class.html');
 //var pageQuizEdit = fs.readFileSync('./pages/admin/quizedit.html');
 //var pageQuestionEdit = fs.readFileSync('./pages/admin/questionedit.html');
 var pageQuiz = fs.readFileSync('./pages/user/quizpage.html');
@@ -296,6 +294,9 @@ function runServer() {
                     } else if (!pageKey || pageKey === 'classes') {
                         response.writeHead(200, {'Content-Type': 'text/html'});
                         response.end(pageClasses);
+                    } else if (!pageKey || pageKey === 'class') {
+                        response.writeHead(200, {'Content-Type': 'text/html'});
+                        response.end(pageClass);
                     } else {
                         response.writeHead(500, {'Content-Type': 'text/plain'});
                         response.end("Sorry, can't help you. I don't know about that page.");
@@ -316,6 +317,11 @@ function runServer() {
                     } else if ('.js' === uriObj.href.slice(-3)) {
                         var myxml = fs.readFileSync(uriObj.href.slice(1));
                         response.writeHead(200, {'Content-Type': 'text/javascript'});
+                        response.end(myxml);
+                        return;
+                    } else if ('.css' === uriObj.href.slice(-4)) {
+                        var myxml = fs.readFileSync(uriObj.href.slice(1));
+                        response.writeHead(200, {'Content-Type': 'text/css'});
                         response.end(myxml);
                         return;
                     } else if (cmd) {
@@ -397,10 +403,10 @@ function runServer() {
                     }
                 }
             } catch (e) {
-                console.log(err.message);
-                if(typeof err == "string"){
+                console.log("ERROR: "+e);
+                if(typeof e == "string"){
                     response.writeHead(500, {'Content-Type': 'text/plain'});
-                    response.end(err);
+                    response.end(e);
                     return;
                 }
                 else{
