@@ -65,6 +65,8 @@ computer.
 The node server has some dependencies:
 
     npm install csv
+    npm install argparse
+    npm install emailjs
     
 
 
