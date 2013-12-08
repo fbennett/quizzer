@@ -2,7 +2,67 @@ fs = require('fs');
 csv = require('csv');
 http = require('http');
 url = require('url');
+emailjs = require('emailjs')
+argparse = require('argparse')
 quizPort = 3498;
+
+var ArgumentParser = argparse.ArgumentParser;
+var optparse = new ArgumentParser({
+  version: '0.0.1',
+  addHelp:true,
+  description: 'Quizzer quiz server'
+});
+optparse.addArgument(
+  [ '-a', '--email-account' ],
+  {
+    help: 'Full username of email account (e.g. useme@gmail.com)'
+  }
+);
+optparse.addArgument(
+  [ '-s', '--smtp-host' ],
+  {
+    help: 'SMTP host name (default: smtp.gmail.com)'
+  }
+);
+var args = optparse.parseArgs();
+
+if (!args.smtp_host) {
+    args.smtp_host = "smtp.gmail.com";
+}
+
+if (!args.email_account) {
+    optparse.printHelp();
+    console.log("ERROR: must provide an email account");
+    return;
+}
+
+// Get mail password file
+try {
+    var email_password = fs.readFileSync('./mypwd.txt')
+    if (!email_password) {
+        console.log("ERROR: empty email password in mypwd.txt");
+        return;
+    }
+} catch (e) {
+    console.log("ERROR: file mypwd.txt not found");
+    return;
+}
+// Set up the mail server
+var mailserver  = emailjs.server.connect({
+   user:    args.email_account, 
+   password:email_password,
+   host:    args.smtp_host, 
+   ssl:     true
+});
+
+//mailserver.send({
+//   text:    "Let's hope it works, really.", 
+//   from:    "Our Mail Account <biercenator@gmail.com>", 
+//   to:      "Their Mail Account <bennett@law.nagoya-u.ac.jp>",
+//   cc:      "Other Mail Account <bennett@nagoya-u.jp>",
+//   subject: "Test mail message wowie zowie!"
+//}, function(err, message) { console.log(err || message); });
+
 
 // Subdirs to be created if necessary
 var dirs = ['answer', 'ids', 'question'];
@@ -79,12 +139,8 @@ try {
     fs.openSync('./ids/admin.csv', 'r')
 } catch (e) {
     if (e.code === 'ENOENT') {
-        if (process.argv.length === 3) {
-            var lst = [process.argv[2], getRandomKey()];
-            csv().to('./ids/admin.csv').write(lst);
-        } else {
-            throw "ERROR: Must provide admin name as a single argument at first startup";
-        }
+        var lst = ['Admin', getRandomKey()];
+        csv().to('./ids/admin.csv').write(lst);
     } else {
         throw e;
     }
@@ -102,8 +158,9 @@ for (var i=0,ilen=files.length;i<ilen;i+=1) {
     }
 }
 
+
 function loadStudents() {
-    // To instantiate student authentication data
+    // To instantiate student auth1entication data
     csv()
         .from.stream(fs.createReadStream('./ids/students.csv'))
         .on('record', function (row, index) {
