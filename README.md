@@ -80,15 +80,17 @@ The node server has some dependencies:
 ## Screens
 
   * Admin:
-    * Top-level: add course / delete courses / edit course / student menu
+    * Top-level: students / classes
+    * Course-admin: add course / edit course
     * Student-admin: add student / edit student
-    * Course-level: add quiz / delete quizzes / edit quiz / add student / disable-enable student
+    * Course-level: add quiz / add student / remove student
     * Quiz-level
-      * add question / delete questions / edit question
-      * send quiz links to students
-      * view results
+      * add question / edit question (active until sending)
+      * send quiz links to students  (active until sending)
+      * view results by question (active after sending)
+      * view results by student  (active after sending)
 
   * Student:
     * Quiz engine cycle only. One shot and out per question, no time limit.
-    * On completion, the incorrect answers are displayed, with correct answer highlighted.
+    * On completion, link to incorrect answers is displayed, with correct answer highlighted.
 
