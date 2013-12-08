@@ -41,16 +41,15 @@ function saveStudent() {
     // Values
     var name = studentName.value;
     var email = studentEmail.value;
+    if (!name || !email) {
+        return;
+    }
     // Save
     var adminID = getParameterByName('admin');
     var xhr = new XMLHttpRequest();
     xhr.open('POST', '/?admin='+adminID+'&cmd=addstudent', false);
     xhr.setRequestHeader("Content-type","application/json");
     xhr.send(JSON.stringify({email:email,name:name}));
-    if ("NAME_AND_EMAIL_REQUIRED" === xhr.responseText) {
-        alert("OOPS! Name and email are both required");
-        return;
-    }
     // Clear
     studentName.value = null;
     studentEmail.value = null;

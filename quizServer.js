@@ -214,12 +214,7 @@ function runServer() {
                     } else if (cmd) {
                         if (cmd === 'addstudent') {
                             var payload = JSON.parse(this.POSTDATA);
-                            // Require name and email
-                            if (!payload.name || !payload.email) {
-                                response.writeHead(500, {'Content-Type': 'text/plain'});
-                                response.end("NAME_AND_EMAIL_REQUIRED");
-                                return;
-                            }
+                            // NOTE: Req of name and email are handled in pages
                             if (payload.id && studentsById[payload.id]) {
                                 // If optional id matches a record, update email and name
                                 studentsById[payload.id].name = payload.name;
@@ -230,7 +225,9 @@ function runServer() {
                             } else {
                                 // New record, add it
                                 if (!payload.id) {
-                                    payload.id = getRandomKey(12, 10);
+                                    payload.id = getRandomKey(10, 10);
+                                }
+                                if (!payload.key) {
                                     payload.key = getRandomKey(16, 16);
                                 }
                                 studentsById[payload.id] = payload;
