@@ -8,8 +8,18 @@
   <div>
     <input type="button" value="Back" onclick="window.location = '?page=top&admin=' + getParameterByName('admin')"/>
   </div>
-  <p>
-    Student list and management buttons go here.
-  </p>
+  <div>
+    <input id="add-student-button" type="button" value="Add Student" onclick="addStudent()"/>
+    <input id="save-student-button" type="button" value="Save Student" onclick="saveStudent()" hidden="true"/>
+    <span id="student-boxes" hidden="true">
+      Name:
+      <input id="student-name" type="text" size="30"/>
+      Email:
+      <input id="student-email" type="text" size="30"/>
+    </span>
+  </div>
+  <hr/>
+  <div id="student-list">
+  </div>
 </body>
 </html>

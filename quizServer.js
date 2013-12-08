@@ -126,6 +126,14 @@ function runServer() {
             response.end('');
             return;
         }
+        request.on('data', function(data){
+            if(typeof this.POSTDATA === "undefined"){
+                this.POSTDATA = data;
+            }
+            else{
+                this.POSTDATA += data;
+            }
+        });
         request.on('end', function(){
             try {
                 //parse url from request object
@@ -136,7 +144,8 @@ function runServer() {
                 var studentID = uriObj.parsedQuery.id;
                 var studentKey = uriObj.parsedQuery.key;
                 var pageKey = uriObj.parsedQuery.page;
-                if (adminKey && admin[adminKey]) {
+                var cmd = uriObj.parsedQuery.cmd;
+                if (!cmd && adminKey && admin[adminKey]) {
                     if (!pageKey || pageKey === 'top') {
                         response.writeHead(200, {'Content-Type': 'text/html'});
                         response.end(pageAdminTop);
@@ -151,7 +160,7 @@ function runServer() {
                         response.end("Sorry, can't help you. I don't know about that page.");
                         return;
                     }
-                } else if (quizKey && studentID && studentKey) {
+                } else if (!cmd && quizKey && studentID && studentKey) {
                         response.writeHead(200, {'Content-Type': 'text/html'});
                         response.end(pageQuiz);
                 } else {
@@ -164,10 +173,23 @@ function runServer() {
                         response.end(myxml);
                         return;
                     } else if ('.js' === uriObj.href.slice(-3)) {
-                        var myxml = fs.readFileSync(uriObj.href.slice(1)); 
+                        var myxml = fs.readFileSync(uriObj.href.slice(1));
                         response.writeHead(200, {'Content-Type': 'text/javascript'});
                         response.end(myxml);
                         return;
+                    } else if (cmd) {
+                        if (cmd === 'addstudent') {
+                            response.writeHead(200, {'Content-Type': 'text/plain'});
+                            response.end("");
+                            var payload = JSON.parse(this.POSTDATA);
+                            // Starting to think we should explore sqlite for this.
+                            console.log("ADD A STUDENT: " + payload.name);
+                            return;
+                        } else {
+                            response.writeHead(500, {'Content-Type': 'text/plain'});
+                            response.end("An error occurred");
+                            return;
+                        }
                     } else {
                         response.writeHead(500, {'Content-Type': 'text/plain'});
                         response.end("An error occurred");
