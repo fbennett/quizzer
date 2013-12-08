@@ -216,7 +216,7 @@ function runServer() {
                             var payload = JSON.parse(this.POSTDATA);
                             // NOTE: Req of name and email are handled in pages
                             if (payload.id && studentsById[payload.id]) {
-                                // If optional id matches a record, update email and name
+                                // If id matches a record, update email and name
                                 studentsById[payload.id].name = payload.name;
                                 studentsById[payload.id].email = payload.email;
                             } else if (studentsByEmail[payload.email]) {
@@ -235,7 +235,8 @@ function runServer() {
                             }
                             // Recast as lst
                             var rows = writeStudents(studentsById);
-                            // XXX Should then send the object back to the client page as JSON
+                            // Send the object back to the client page as JSON
+                            // so the display list can be rebuilt
                             response.writeHead(200, {'Content-Type': 'application/json'});
                             response.end(JSON.stringify(rows));
                             return;

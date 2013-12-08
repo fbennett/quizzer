@@ -38,25 +38,30 @@ function saveStudent() {
     var studentBoxes = document.getElementById('student-boxes');
     var studentName = document.getElementById('student-name');
     var studentEmail = document.getElementById('student-email');
+    var studentID = document.getElementById('student-id');
     // Values
     var name = studentName.value;
     var email = studentEmail.value;
-    if (!name || !email) {
-        return;
+    var id = studentID.value;
+    if (name && email) {
+        // Save
+        var adminID = getParameterByName('admin');
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', '/?admin='+adminID+'&cmd=addstudent', false);
+        xhr.setRequestHeader("Content-type","application/json");
+        xhr.send(JSON.stringify({email:email,name:name}));
     }
-    // Save
-    var adminID = getParameterByName('admin');
-    var xhr = new XMLHttpRequest();
-    xhr.open('POST', '/?admin='+adminID+'&cmd=addstudent', false);
-    xhr.setRequestHeader("Content-type","application/json");
-    xhr.send(JSON.stringify({email:email,name:name}));
-    // Clear
-    studentName.value = null;
-    studentEmail.value = null;
-    // Redecorate
-    addButton.removeAttribute('hidden');
-    saveButton.setAttribute('hidden', true);
-    studentBoxes.setAttribute('hidden', true);
+    if ((name && email) || (!name && !email && !id)) {
+        // Clear
+        studentName.value = null;
+        studentEmail.value = null;
+        // Redecorate
+        addButton.removeAttribute('hidden');
+        saveButton.setAttribute('hidden', true);
+        studentBoxes.setAttribute('hidden', true);
+    } else {
+        alert("Both name and email are required");
+    }
 }
 
 function buildStudentList (rows) {
