@@ -254,6 +254,11 @@ function runServer() {
                             var rows = readStudents(studentsById);
                             response.writeHead(200, {'Content-Type': 'application/json'});
                             response.end(JSON.stringify(rows));
+                        } else if (cmd === 'readonestudent') {
+                            var payload = JSON.parse(this.POSTDATA);
+                            response.writeHead(200, {'Content-Type': 'application/json'});
+                            response.end(JSON.stringify(studentsById[payload.id]));
+                            return;
                         } else {
                             response.writeHead(500, {'Content-Type': 'text/plain'});
                             response.end("An error occurred");
