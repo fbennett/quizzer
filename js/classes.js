@@ -91,7 +91,7 @@ function buildClassList (rows) {
         var nameTD = document.createElement('td');
         var idTD = document.createElement('td');
         nameAnchor.appendChild(nameText);
-        nameAnchor.setAttribute('href', '/?admin=' + adminID + '&page=class&id=' + rows[i][1]);
+        nameAnchor.setAttribute('href', '/?admin=' + adminID + '&page=class&classid=' + rows[i][1]);
         nameTD.appendChild(nameAnchor);
         tr.appendChild(nameTD);
         idTD.appendChild(idText);

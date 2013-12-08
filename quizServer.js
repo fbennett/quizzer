@@ -281,6 +281,7 @@ function runServer() {
                 var adminKey = uriObj.parsedQuery.admin;
                 var quizKey = uriObj.parsedQuery.quiz;
                 var studentID = uriObj.parsedQuery.id;
+                var classID = uriObj.parsedQuery.classid;
                 var studentKey = uriObj.parsedQuery.key;
                 var pageKey = uriObj.parsedQuery.page;
                 var cmd = uriObj.parsedQuery.cmd;
@@ -295,8 +296,9 @@ function runServer() {
                         response.writeHead(200, {'Content-Type': 'text/html'});
                         response.end(pageClasses);
                     } else if (!pageKey || pageKey === 'class') {
+                        myPage = pageClass.toString().replace(/@@CLASS@@/g, classes[classID].name);
                         response.writeHead(200, {'Content-Type': 'text/html'});
-                        response.end(pageClass);
+                        response.end(myPage);
                     } else {
                         response.writeHead(500, {'Content-Type': 'text/plain'});
                         response.end("Sorry, can't help you. I don't know about that page.");
