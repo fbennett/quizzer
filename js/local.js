@@ -7,12 +7,32 @@ function addStudent() {
     var addButton = document.getElementById('add-student-button');
     var saveButton = document.getElementById('save-student-button');
     var studentBoxes = document.getElementById('student-boxes');
+    var studentID = document.getElementById('student-id');
+    if (studentID.value) {
+        studentID.disabled = true;
+    } else {
+        studentID.disabled = false;
+    }
     addButton.setAttribute('hidden', true);
     saveButton.removeAttribute('hidden');
     studentBoxes.removeAttribute('hidden');
 }
 
+function editStudent(node) {
+    // Read out student details from node, write to edit panel,
+    // and run addStudent()
+    // The HTML will need a node for the student ID for
+    // this to work right. It should be editable only for
+    // newly-created entries. After that, it should stick.
+    // There will be consistency problems only where
+    // a student reports under two separate email
+    // addresses, and we add him/her without picking up
+    // the duplicate. Not much you can do there. Things
+    // happen.
+}
+
 function saveStudent() {
+    // Need to add student ID, for edits
     var addButton = document.getElementById('add-student-button');
     var saveButton = document.getElementById('save-student-button');
     var studentBoxes = document.getElementById('student-boxes');
@@ -27,6 +47,11 @@ function saveStudent() {
     xhr.open('POST', '/?admin='+adminID+'&cmd=addstudent', false);
     xhr.setRequestHeader("Content-type","application/json");
     xhr.send(JSON.stringify({email:email,name:name}));
+    if ("NAME_AND_EMAIL_REQUIRED" === xhr.responseText) {
+        alert("OOPS! Name and email are both required");
+        return;
+    }
+    // Clear
     studentName.value = null;
     studentEmail.value = null;
     // Redecorate
@@ -35,3 +60,10 @@ function saveStudent() {
     studentBoxes.setAttribute('hidden', true);
 }
 
+function buildStudentList (rows) {
+    // if rows is nil, call the server.
+    // Sort by ???
+    // Delete children from container
+    // Rebuild container content
+    // Each student line should have an edit button
+}

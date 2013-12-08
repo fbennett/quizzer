@@ -25,7 +25,8 @@ var pageQuiz = fs.readFileSync('./pages/user/quizpage.html');
 
 // Internal access maps
 var admin = {};
-var students = {};
+var studentsById = {};
+var studentsByEmail = {};
 var classes = {};
 var membership = {};
 
@@ -50,7 +51,20 @@ function getRandomKey(len, base) {
     return _results.join("");
 }
 
-// Also initialise students.csv and classes.csv here
+function writeStudents(studentsById) {
+    var cfh = csv().to.path('./ids/students.csv');
+    var rows = [];
+    for (var key in studentsById) {
+        var obj = studentsById[key];
+        var row = [obj.name, obj.email, obj.id, obj.key];
+        cfh.write(row);
+        rows.push(row);
+    }
+    cfh.end();
+    return rows;
+}
+
+// Initialise students.csv and classes.csv if necessary
 try {
     fs.openSync('./ids/admin.csv', 'r')
 } catch (e) {
@@ -67,7 +81,8 @@ try {
 }
 for (var i=0,ilen=files.length;i<ilen;i+=1) {
     try {
-        fs.openSync('./ids/' + files[i] + '.csv', 'r')
+        var fh = fs.openSync('./ids/' + files[i] + '.csv', 'r');
+        fs.close(fh);
     } catch (e) {
         if (e.code === 'ENOENT') {
             csv().to('./ids/' + files[i] + '.csv').write([]);
@@ -79,13 +94,33 @@ for (var i=0,ilen=files.length;i<ilen;i+=1) {
 
 function loadStudents() {
     // To instantiate student authentication data
-    console.log("XXX Next, load students, if any ...");
-    loadClasses();
+    csv()
+        .from.stream(fs.createReadStream('./ids/students.csv'))
+        .on('record', function (row, index) {
+            if (row[1]) {
+                obj = {
+                    name: row[0],
+                    email: row[1],
+                    id: row[2] ? row[2] : getRandomKey(10, 10),
+                    key: row[3] ? row[3] : getRandomKey(16, 16)
+                };
+                studentsById[obj.id] = obj;
+                studentsByEmail[obj.email] = obj;
+            }
+        })
+        .on('end', function(count) {
+            // Rewrite to disk, in case ids/keys have been added
+            writeStudents(studentsById);
+            loadClasses();
+        })
+        .on('error', function (e) {
+            throw e;
+        });
 }
 
 function loadClasses() {
     // To instantiate course membership rosters
-    console.log("XXX And next, load classes, if any ...");
+    console.log("TODO: load classes, if any ...");
     runServer();
 }
 
@@ -105,7 +140,6 @@ function loadAdmin() {
 }
 
 function runServer() {
-    console.log("XXX And finally, spin up the server in all its glory ...");
     http.createServer(function (request, response) {
 
         // Stuff that will be needed
@@ -179,11 +213,34 @@ function runServer() {
                         return;
                     } else if (cmd) {
                         if (cmd === 'addstudent') {
-                            response.writeHead(200, {'Content-Type': 'text/plain'});
-                            response.end("");
                             var payload = JSON.parse(this.POSTDATA);
-                            // Starting to think we should explore sqlite for this.
-                            console.log("ADD A STUDENT: " + payload.name);
+                            // Require name and email
+                            if (!payload.name || !payload.email) {
+                                response.writeHead(500, {'Content-Type': 'text/plain'});
+                                response.end("NAME_AND_EMAIL_REQUIRED");
+                                return;
+                            }
+                            if (payload.id && studentsById[payload.id]) {
+                                // If optional id matches a record, update email and name
+                                studentsById[payload.id].name = payload.name;
+                                studentsById[payload.id].email = payload.email;
+                            } else if (studentsByEmail[payload.email]) {
+                                // If email matches a record, update name only
+                                studentsByEmail[payload.email].name = payload.name;
+                            } else {
+                                // New record, add it
+                                if (!payload.id) {
+                                    payload.id = getRandomKey(12, 10);
+                                    payload.key = getRandomKey(16, 16);
+                                }
+                                studentsById[payload.id] = payload;
+                                studentsByEmail[payload.email] = payload;
+                            }
+                            // Recast as lst
+                            var rows = writeStudents(studentsById);
+                            // XXX Should then send the object back to the client page as JSON
+                            response.writeHead(200, {'Content-Type': 'application/json'});
+                            response.end(JSON.stringify(rows));
                             return;
                         } else {
                             response.writeHead(500, {'Content-Type': 'text/plain'});
