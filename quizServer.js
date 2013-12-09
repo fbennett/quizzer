@@ -171,24 +171,15 @@ function writeMemberships(memberships) {
 
 // XXX fixme
 function readMemberships(memberships, classID) {
-    var rows = [];
-    for (var key in memberships) {
-        var obj = classes[key];
-        var row = [obj.name, obj.id];
-        rows.push(row);
+    var rowsets = [[],[]];
+    for (var key in studentsById) {
+        if (memberships[classID] && memberships[classID][key]) {
+            rowsets[0].push(studentsById[key]);
+        } else {
+            rowsets[1].push(studentsById[key]);
+        }
     }
-    return rows;
-}
-
-// XXX fixme
-function readNonMemberships(memberships, classID) {
-    var rows = [];
-    for (var key in classes) {
-        var obj = classes[key];
-        var row = [obj.name, obj.id];
-        rows.push(row);
-    }
-    return rows;
+    return rowsets;
 }
 
 // Initialise students.csv and classes.csv if necessary
@@ -258,6 +249,26 @@ function loadClasses() {
         .on('end', function(count) {
             // Rewrite to disk, in case ids/keys have been added
             writeClasses(classes);
+            loadMemberships();
+        })
+        .on('error', function (e) {
+            throw e;
+        });
+}
+
+function loadMemberships() {
+    // To instantiate course list
+    csv()
+        .from.stream(fs.createReadStream('./ids/memberships.csv'))
+        .on('record', function (row, index) {
+            if (row[0]) {
+                if (!memberships[row[0]]) {
+                    memberships[row[0]] = {};
+                }
+                memberships[row[0]][row[1]] = true;
+            }
+        })
+        .on('end', function(count) {
             runServer();
         })
         .on('error', function (e) {
@@ -391,12 +402,12 @@ function runServer() {
                             response.writeHead(200, {'Content-Type': 'application/json'});
                             response.end(JSON.stringify(rows));
                             return;
-                        } else if (cmd === 'readnonmembers') {
+                        } else if (cmd === 'readmembers') {
                             // XXX fixme
                             var payload = JSON.parse(this.POSTDATA);
-                            var rows = readNonMembers(memberships, payload.classID);
+                            var rowsets = readMemberships(memberships, payload.classID);
                             response.writeHead(200, {'Content-Type': 'application/json'});
-                            response.end(JSON.stringify(rows));
+                            response.end(JSON.stringify(rowsets));
                         } else if (cmd === 'readstudents') {
                             var rows = readStudents(studentsById);
                             response.writeHead(200, {'Content-Type': 'application/json'});
