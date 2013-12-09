@@ -159,11 +159,11 @@ function readClasses(classes) {
 function writeMemberships(memberships) {
     var cfh = csv().to.path('./ids/memberships.csv');
     var rows = [];
-    for (var key in memberships) {
-        var obj = memberships[key];
-        var row = [obj.classID, obj.id];
-        cfh.write(row);
-        rows.push(row);
+    for (var classID in memberships) {
+        for (var studentID in memberships[classID]) {
+            var row = [classID, studentID];
+            cfh.write(row);
+        }
     }
     cfh.end();
     return rows;
@@ -180,6 +180,30 @@ function readMemberships(memberships, classID) {
         }
     }
     return rowsets;
+}
+
+function addMemberships(memberships, classID, addmembers) {
+    for (var i=0,ilen=addmembers.length;i<ilen;i+=1) {
+        var member = studentsById[addmembers[i]];
+        if (member) {
+            if (!memberships[classID]) {
+                memberships[classID] = {};
+            }
+            memberships[classID][member.id] = member;
+        }
+    }
+    writeMemberships(memberships);
+    return readMemberships(memberships, classID);
+}
+
+function removeMemberships(memberships, classID, removemembers) {
+    for (var i=0,ilen=removemembers.length;i<ilen;i+=1) {
+        if (memberships[classID] && memberships[classID][removemembers[i]]) {
+            delete memberships[classID][removemembers[i]];
+        }
+    }
+    writeMemberships(memberships);
+    return readMemberships(memberships, classID);
 }
 
 // Initialise students.csv and classes.csv if necessary
@@ -406,6 +430,18 @@ function runServer() {
                             // XXX fixme
                             var payload = JSON.parse(this.POSTDATA);
                             var rowsets = readMemberships(memberships, payload.classID);
+                            response.writeHead(200, {'Content-Type': 'application/json'});
+                            response.end(JSON.stringify(rowsets));
+                        } else if (cmd === 'addmembers') {
+                            // XXX fixme
+                            var payload = JSON.parse(this.POSTDATA);
+                            var rowsets = addMemberships(memberships, payload.classID, payload.addmembers);
+                            response.writeHead(200, {'Content-Type': 'application/json'});
+                            response.end(JSON.stringify(rowsets));
+                        } else if (cmd === 'removemembers') {
+                            // XXX fixme
+                            var payload = JSON.parse(this.POSTDATA);
+                            var rowsets = removeMemberships(memberships, payload.classID, payload.removemembers);
                             response.writeHead(200, {'Content-Type': 'application/json'});
                             response.end(JSON.stringify(rowsets));
                         } else if (cmd === 'readstudents') {

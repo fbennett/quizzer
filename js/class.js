@@ -1,17 +1,22 @@
-function buildMemberLists() {
-    var adminID = getParameterByName('admin');
-    var classID = getParameterByName('classid');
-    var xhr = new XMLHttpRequest();
-    xhr.open('POST', '/?admin='+adminID+'&cmd=readmembers', false);
-    xhr.setRequestHeader("Content-type","application/json");
-    xhr.overrideMimeType("application/json"); 
-    xhr.send(JSON.stringify({classID:classID}));
-    var rowsets = JSON.parse(xhr.responseText);
+function buildMemberLists(rowsets) {
+    if (!rowsets) {
+        var adminID = getParameterByName('admin');
+        var classID = getParameterByName('classid');
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', '/?admin='+adminID+'&cmd=readmembers', false);
+        xhr.setRequestHeader("Content-type","application/json");
+        xhr.overrideMimeType("application/json"); 
+        xhr.send(JSON.stringify({classID:classID}));
+        rowsets = JSON.parse(xhr.responseText);
+    }
     // Clear lists and rewrite
     var memberContainer = document.getElementById("members");
     var nonmemberContainer = document.getElementById("non-members");
     var listContainers = [memberContainer, nonmemberContainer];
     for (var i=0,ilen=listContainers.length;i<ilen;i+=1) {
+        rowsets[i].sort(function (a,b) {
+            return a.name.localeCompare(b.name);
+        });
         for (var j=0,jlen=listContainers[i].childNodes.length;j<jlen;j+=1) {
             listContainers[i].removeChild(listContainers[i].childNodes[0]);
         }
@@ -29,19 +34,39 @@ function buildMemberLists() {
 }
 
 function addMembers () {
+    var ret = [];
     var nonMembers = document.getElementById('non-members');
     for (var i=0,ilen=nonMembers.childNodes.length;i<ilen;i+=1) {
         if (nonMembers.childNodes[i].childNodes[0].checked) {
-            alert('To add! '+nonMembers.childNodes[i].childNodes[0].value);
+            ret.push(nonMembers.childNodes[i].childNodes[0].value);
         }
     }
+    var adminID = getParameterByName('admin');
+    var classID = getParameterByName('classid');
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', '/?admin='+adminID+'&cmd=addmembers', false);
+    xhr.setRequestHeader("Content-type","application/json");
+    xhr.overrideMimeType("application/json"); 
+    xhr.send(JSON.stringify({classID:classID,addmembers:ret}));
+    var rowsets = JSON.parse(xhr.responseText);
+    buildMemberLists(rowsets);
 }
 
 function removeMembers () {
-    var members = document.getElementById('non-members');
+    var ret = [];
+    var members = document.getElementById('members');
     for (var i=0,ilen=members.childNodes.length;i<ilen;i+=1) {
         if (members.childNodes[i].childNodes[0].checked) {
-            alert('To remove! '+members.childNodes[i].childNodes[0].value);
+            ret.push(members.childNodes[i].childNodes[0].value);
         }
     }
+    var adminID = getParameterByName('admin');
+    var classID = getParameterByName('classid');
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', '/?admin='+adminID+'&cmd=removemembers', false);
+    xhr.setRequestHeader("Content-type","application/json");
+    xhr.overrideMimeType("application/json"); 
+    xhr.send(JSON.stringify({classID:classID,removemembers:ret}));
+    var rowsets = JSON.parse(xhr.responseText);
+    buildMemberLists(rowsets);
 }
