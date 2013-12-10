@@ -4,6 +4,7 @@ http = require('http');
 url = require('url');
 emailjs = require('emailjs')
 argparse = require('argparse')
+markdown = require('marked')
 quizPort = 3498;
 
 var ArgumentParser = argparse.ArgumentParser;
