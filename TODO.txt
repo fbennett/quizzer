@@ -1,0 +1,8 @@
+Some ideas
+
+Speech!
+
+    https://github.com/christopherdebeer/speak.js
+    
+Button to clone initial pasted text to other choices.
+
