@@ -1,0 +1,22 @@
+<html>
+<head>
+  <title>Quizzer Admin - @@CLASS@@ - @@QUIZ_NUMBER@@</title>
+  <script type="text/javascript" src="js/local.js"></script>  
+  <script type="text/javascript" src="node_modules/marked/lib/marked.js"></script>
+  <script type="text/javascript" src="js/quiz.js"></script>
+</head>
+<body onLoad="buildQuizList();buildMemberLists();">
+  <h1>Quizzer Admin - @@CLASS@@</h1>
+  <h2>@@QUIZ_NUMBER@@</h2>
+  <div>
+    <input type="button" value="Back" onclick="window.location = '?page=class&admin=' + getParameterByName('admin') + '&classid=' getParameterByName('classid')"/>
+  </div>
+  <hr/>
+  <div id="quiz-questions">
+    Quiz content goes here.
+  </div>
+  <div>
+    <input id="add-question-button" type="button" value="Add Question" onclick="addQuestion()"/>
+  </div>
+</body>
+</html>
