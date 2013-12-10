@@ -13,7 +13,7 @@ function addQuestion () {
 function openQuestion (questionNumber) {
     // If questionNumber present, call for JSON of question from server
     // Otherwise, create empty object
-    // Create a node with text-box content
+    // Create a node with object content
     // Returns the node
 }
 
