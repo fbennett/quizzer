@@ -206,6 +206,54 @@ function removeMemberships(memberships, classID, removemembers) {
     return readMemberships(memberships, classID);
 }
 
+function readQuizzes(response, classID) {
+    // This is driven by directory content under "question" and "answer".
+    // Class is created for both if necessary.
+    try {
+        fs.readdirSync('./question/' + classID);
+    } catch (e) {
+        fs.mkdirSync('./question/' + classID);
+    }
+    try {
+        fs.readdirSync('./answer/' + classID);
+    } catch (e) {
+        fs.mkdirSync('./answer/' + classID);
+    }
+    // Quizzes are numbered in sequence from 1 in principle,
+    // but holes are permitted.
+    // At least one quiz dir under question must not have 
+    // a corresponding quiz dir under answer.
+    // If needed, the highest-numbered quiz under question
+    // is incremented by 1 and a new quiz dir is created.
+    fs.readdir('./question/' + classID, function (err, questions) {
+        fs.readdir('./answer/' + classID, function (err, answers) {
+            var rows = [];
+            var max = 0;
+            var hasNew = false;
+            for (var i=0,ilen=questions.length;i<ilen;i+=1) {
+                if (!questions[i].match(/[0-9]+/)) {
+                    continue;
+                } else if (parseInt(questions[i],10) > max) {
+                    max = parseInt(questions[i],10);
+                }
+                if (answers.indexOf(questions[i]) === -1) {
+                    rows.push({number:questions[i],isnew:true});
+                    hasNew = true;
+                } else {
+                    rows.push({number:questions[i],isnew:false});
+                }
+            }
+            if (!hasNew) {
+                fs.mkdir('./question/' + classID + "/" + (max + 1));
+                rows.push({number: (max + 1), isnew: true});
+            }
+            response.writeHead(200, {'Content-Type': 'application/json'});
+            response.end(JSON.stringify(rows));
+        });
+    });
+}
+
+
 // Initialise students.csv and classes.csv if necessary
 try {
     fs.openSync('./ids/admin.csv', 'r')
@@ -432,12 +480,14 @@ function runServer() {
                             var rowsets = readMemberships(memberships, payload.classID);
                             response.writeHead(200, {'Content-Type': 'application/json'});
                             response.end(JSON.stringify(rowsets));
+                            return;
                         } else if (cmd === 'addmembers') {
                             // XXX fixme
                             var payload = JSON.parse(this.POSTDATA);
                             var rowsets = addMemberships(memberships, payload.classID, payload.addmembers);
                             response.writeHead(200, {'Content-Type': 'application/json'});
                             response.end(JSON.stringify(rowsets));
+                            return;
                         } else if (cmd === 'removemembers') {
                             // XXX fixme
                             var payload = JSON.parse(this.POSTDATA);
@@ -448,6 +498,14 @@ function runServer() {
                             var rows = readStudents(studentsById);
                             response.writeHead(200, {'Content-Type': 'application/json'});
                             response.end(JSON.stringify(rows));
+                            return;
+                        } else if (cmd === 'readquizzes') {
+                            // XXX Should always keep at least one unassigned quiz open.
+                            // XXX Returns a list of all quizes for a course.
+                            var payload = JSON.parse(this.POSTDATA);
+                            // Runs async, returns direct to API
+                            readQuizzes(response, payload.classid);
+                            return;
                         } else if (cmd === 'readonestudent') {
                             var payload = JSON.parse(this.POSTDATA);
                             response.writeHead(200, {'Content-Type': 'application/json'});

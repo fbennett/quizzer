@@ -5,26 +5,16 @@
   <script type="text/javascript" src="js/class.js"></script>
   <link rel="stylesheet" type="text/css" href="css/simple-grid.css"/>
 </head>
-<body onLoad="buildMemberLists()">
+<body onLoad="buildQuizList();buildMemberLists();">
   <h1>Quizzer Admin - @@CLASS@@</h1>
   <div>
     <input type="button" value="Back" onclick="window.location = '?page=classes&admin=' + getParameterByName('admin')"/>
-  </div>
-  <div>
-    <input id="add-quiz-button" type="button" value="Add Quiz" onclick="addQuiz()"/>
-    <input id="save-quiz-button" type="button" value="Save Quiz" onclick="saveQuiz()" hidden="true"/>
-    <span id="quiz-boxes" hidden="true">
-      Name:
-      <input id="quiz-name" type="text" size="30"/>
-      ID (optional):
-      <input id="quiz-id" type="text" size="20"/>
-    </span>
   </div>
   <hr/>
   <div class="grid">
     <div class="col-1-4">
       <h2>Quizzes</h2>
-      <div id="quizzes">
+      <div id="quiz-list">
       </div>
     </div>
     <div class="col-1-4">
