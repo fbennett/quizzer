@@ -1,70 +1,76 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
   <head>
-    <meta charset="utf-8">
+    <meta charset='utf-8'>
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <title>Quizzer by fbennett</title>
-
-    <link rel="stylesheet" href="stylesheets/styles.css">
-    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
-    <script src="javascripts/scale.fix.js"></script>
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-
+    <link href='https://fonts.googleapis.com/css?family=Chivo:900' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
     <!--[if lt IE 9]>
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
+    <title>Quizzer by fbennett</title>
   </head>
+
   <body>
-    <div class="wrapper">
-      <header>
-        <h1>Quizzer</h1>
-        <p>A simple and lightweight quiz engine with a node.js backend</p>
-        <p class="view"><a href="https://github.com/fbennett/quizzer">View the Project on GitHub <small>fbennett/quizzer</small></a></p>
-        <ul>
-          <li><a href="https://github.com/fbennett/quizzer/zipball/master">Download <strong>ZIP File</strong></a></li>
-          <li><a href="https://github.com/fbennett/quizzer/tarball/master">Download <strong>TAR Ball</strong></a></li>
-          <li><a href="https://github.com/fbennett/quizzer">View On <strong>GitHub</strong></a></li>
-        </ul>
-      </header>
-      <section>
-        <h3>
-<a name="welcome-to-github-pages" class="anchor" href="#welcome-to-github-pages"><span class="octicon octicon-link"></span></a>Welcome to GitHub Pages.</h3>
+    <div id="container">
+      <div class="inner">
 
-<p>This automatic page generator is the easiest way to create beautiful pages for all of your projects. Author your page content here using GitHub Flavored Markdown, select a template crafted by a designer, and publish. After your page is generated, you can check out the new branch:</p>
+        <header>
+          <h1>Quizzer</h1>
+          <h2>A simple and lightweight quiz engine with a node.js backend</h2>
+        </header>
 
-<pre><code>$ cd your_repo_root/repo_name
-$ git fetch origin
-$ git checkout gh-pages
-</code></pre>
+        <section id="downloads" class="clearfix">
+          <a href="https://github.com/fbennett/quizzer/zipball/master" id="download-zip" class="button"><span>Download .zip</span></a>
+          <a href="https://github.com/fbennett/quizzer/tarball/master" id="download-tar-gz" class="button"><span>Download .tar.gz</span></a>
+          <a href="https://github.com/fbennett/quizzer" id="view-on-github" class="button"><span>View on GitHub</span></a>
+        </section>
 
-<p>If you're using the GitHub for Mac, simply sync your repository and you'll see the new branch.</p>
+        <hr>
+
+        <section id="main_content">
+          <h3>
+<a name="overview" class="anchor" href="#overview"><span class="octicon octicon-link"></span></a>Overview</h3>
+
+<p>Quizzer is a simple quiz engine meant to support the small-scale needs of a single instructor (a few classes, a few hundred students). The code is incomplete as of this writing, but will be fully functional by end of January 2014.</p>
+
+<p>Quizzer was originally conceived as a tool to support academic writing classes.
+The idea is to build quizzes from 400-word essays submitted by
+students, using grammatical errors, errors in usage, and examples of
+awkward expression as raw material (to add a peer-pressure element,
+the name of the student from whose essay each question is drawn can be
+displayed in each question). Typical workflow will be to construct questions with a bad
+example, an equally bad example, a corrected sentence, and a corrected
+sentence containing a common error. This is a manual process: we're not trying to <em>eliminate</em> the instructor here, but to help him or her to engage with students more effectively.</p>
+
+<p>Students are registered on the system with a name an email address. Classes and class membership are managed with a simple menu-driven interface. Quizzes created for a class are sent to enrolled students with a click. For simplicity, the system uses access codes
+embedded in the URL for each quiz instance. There is no login at the student end: they just click on the link and take the quiz. The engine randomizes the sequence of questions and
+responses.
+Quiz responses are saved only when the full quiz has been completed.
+If the quiz page is refreshed before completion, the quiz is
+re-randomized, and starts over from the beginning. There is no time
+limit: this is a tool for study, rather than examination.</p>
+
+<p>Final marking is automated (of course), and stored on the server in CSV format.
+The display of results can be collated on-screen by class performance on each question, or on student performance on the quiz as a whole, and the results can be downloaded for local record-keeping.</p>
+
+<p>Administrators all have global write access within a Quizzer server instance. By default, the system uses the GMail SMTP server for mailing of quizzes.</p>
 
 <h3>
-<a name="designer-templates" class="anchor" href="#designer-templates"><span class="octicon octicon-link"></span></a>Designer Templates</h3>
+<a name="screenshots" class="anchor" href="#screenshots"><span class="octicon octicon-link"></span></a>Screenshots</h3>
 
-<p>We've crafted some handsome templates for you to use. Go ahead and continue to layouts to browse through them. You can easily go back to edit your page before publishing. After publishing your page, you can revisit the page generator and switch to another theme. Your Page content will be preserved if it remained markdown format.</p>
+<p>Forthcoming ...</p>
+        </section>
 
-<h3>
-<a name="rather-drive-stick" class="anchor" href="#rather-drive-stick"><span class="octicon octicon-link"></span></a>Rather Drive Stick?</h3>
+        <footer>
+          Quizzer is maintained by <a href="https://github.com/fbennett">fbennett</a><br>
+          This page was generated by <a href="http://pages.github.com">GitHub Pages</a>. Tactile theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.
+        </footer>
 
-<p>If you prefer to not use the automatic generator, push a branch named <code>gh-pages</code> to your repository to create a page manually. In addition to supporting regular HTML content, GitHub Pages support Jekyll, a simple, blog aware static site generator written by our own Tom Preston-Werner. Jekyll makes it easy to create site-wide headers and footers without having to copy them across every page. It also offers intelligent blog support and other advanced templating features.</p>
-
-<h3>
-<a name="authors-and-contributors" class="anchor" href="#authors-and-contributors"><span class="octicon octicon-link"></span></a>Authors and Contributors</h3>
-
-<p>You can <a href="https://github.com/blog/821" class="user-mention">@mention</a> a GitHub username to generate a link to their profile. The resulting <code>&lt;a&gt;</code> element will link to the contributor's GitHub Profile. For example: In 2007, Chris Wanstrath (<a href="https://github.com/defunkt" class="user-mention">@defunkt</a>), PJ Hyett (<a href="https://github.com/pjhyett" class="user-mention">@pjhyett</a>), and Tom Preston-Werner (<a href="https://github.com/mojombo" class="user-mention">@mojombo</a>) founded GitHub.</p>
-
-<h3>
-<a name="support-or-contact" class="anchor" href="#support-or-contact"><span class="octicon octicon-link"></span></a>Support or Contact</h3>
-
-<p>Having trouble with Pages? Check out the documentation at <a href="http://help.github.com/pages">http://help.github.com/pages</a> or contact <a href="mailto:support@github.com">support@github.com</a> and we’ll help you sort it out.</p>
-      </section>
+        
+      </div>
     </div>
-    <footer>
-      <p>Project maintained by <a href="https://github.com/fbennett">fbennett</a></p>
-      <p>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></p>
-    </footer>
-    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
-    
   </body>
 </html>
