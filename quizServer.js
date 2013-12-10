@@ -76,6 +76,7 @@ var pageAdminTop = fs.readFileSync('./pages/admin/top.html');
 var pageStudents = fs.readFileSync('./pages/admin/students.html');
 var pageClasses = fs.readFileSync('./pages/admin/classes.html');
 var pageClass = fs.readFileSync('./pages/admin/class.html');
+var pageQuizAdmin = fs.readFileSync('./pages/admin/quiz.html');
 //var pageQuizEdit = fs.readFileSync('./pages/admin/quizedit.html');
 //var pageQuestionEdit = fs.readFileSync('./pages/admin/questionedit.html');
 var pageQuiz = fs.readFileSync('./pages/user/quizpage.html');
@@ -404,6 +405,7 @@ function runServer() {
                 var classID = uriObj.parsedQuery.classid;
                 var studentKey = uriObj.parsedQuery.key;
                 var pageKey = uriObj.parsedQuery.page;
+                var quizNumber = uriObj.parsedQuery.quizno;
                 var cmd = uriObj.parsedQuery.cmd;
                 if (!cmd && adminKey && admin[adminKey]) {
                     if (!pageKey || pageKey === 'top') {
@@ -417,6 +419,11 @@ function runServer() {
                         response.end(pageClasses);
                     } else if (!pageKey || pageKey === 'class') {
                         myPage = pageClass.toString().replace(/@@CLASS@@/g, classes[classID].name);
+                        response.writeHead(200, {'Content-Type': 'text/html'});
+                        response.end(myPage);
+                    } else if (!pageKey || pageKey === 'quiz') {
+                        myPage = pageQuizAdmin.toString().replace(/@@CLASS@@/g, classes[classID].name);
+                        myPage = myPage.replace(/@@QUIZ_NUMBER@@/g, "Quiz " + quizNumber);
                         response.writeHead(200, {'Content-Type': 'text/html'});
                         response.end(myPage);
                     } else {
