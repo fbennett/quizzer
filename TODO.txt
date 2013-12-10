@@ -6,3 +6,18 @@ Speech!
     
 Button to clone initial pasted text to other choices.
 
+Option to pull in a fixed number of the questions most often missed in
+previous quizzes for a class.
+
+Bundled download of questions for archiving and reuse.
+
+Content-sharing consent toggle on student record.
+
+Explanation field, for instant feedback when wrong answer is selected.
+
+Two links in student mail: one for text, the other (heavier) with
+speech support. If that turns out to work reasonably well.
+
+Pulldown list of students in question drafting display, for
+optional note of student author prompting the question.
+Shown only at quiz-time, not in feedback/results display.
