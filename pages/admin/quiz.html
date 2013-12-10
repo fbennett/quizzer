@@ -4,6 +4,7 @@
   <script type="text/javascript" src="js/local.js"></script>  
   <script type="text/javascript" src="node_modules/marked/lib/marked.js"></script>
   <script type="text/javascript" src="js/quiz.js"></script>
+  <link rel="stylesheet" type="text/css" href="css/quiz.css"/>
 </head>
 <body onLoad="buildQuestionList()">
   <h1>Quizzer Admin - @@CLASS@@</h1>
@@ -12,9 +13,9 @@
     <input type="button" value="Back" onclick="window.location = '?page=class&admin=' + getParameterByName('admin') + '&classid=' + getParameterByName('classid')"/>
   </div>
   <hr/>
-  <div id="quiz-questions">
-  </div>
-  <div>
+  <ol id="quiz-questions">
+  </ol>
+  <div style="clear: both;">
     <input id="add-question-button" type="button" value="Add Question" onclick="addQuestion()"/>
   </div>
 </body>

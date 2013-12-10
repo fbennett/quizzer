@@ -1,0 +1,25 @@
+ol#quiz-questions div.choice {
+    position: relative;
+}
+
+
+ol#quiz-questions textarea.selection {
+    position: absolute;
+    left: -10px;
+    top: 0px;
+}
+
+ol#quiz-questions div.selection-text {
+    margin-left: 15px;
+}
+
+.float-left-number {
+    clear: both;
+    float: left;
+}
+
+.float-left-content {
+    clear: both;
+    float: left;
+}
+
