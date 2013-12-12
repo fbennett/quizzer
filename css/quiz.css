@@ -9,8 +9,9 @@ ol#quiz-questions textarea.selection {
     top: 0px;
 }
 
-ol#quiz-questions div.selection-text {
+ol#quiz-questions .selection-text {
     margin-left: 15px;
+    display: inline-block;
 }
 
 .float-left-number {

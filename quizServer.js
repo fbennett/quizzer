@@ -256,6 +256,42 @@ function readQuizzes(response, classID) {
 }
 
 
+function readQuestions(response, classID, quizNumber) {
+    fs.readdir('./question/' + classID + '/' + quizNumber, function (err, questions) {
+        var quizobj = {};
+        for (var i=0,ilen=questions.length;i<ilen;i+=1) {
+            quizobj[questions[i]] = JSON.parse(fs.readFileSync('./question/' + classID + '/' + quizNumber + '/' + questions[i]));
+        }
+        response.writeHead(200, {'Content-Type': 'application/json'});
+        response.end(JSON.stringify(quizobj));
+    });
+}
+
+
+function readQuestion(response, classID, quizNumber, questionNumber) {
+    fs.readFile('./question/' + classID + '/' + quizNumber + '/' + questionNumber, function (err, data) {
+        var quizobj = data;
+        response.writeHead(200, {'Content-Type': 'application/json'});
+        response.end(quizobj);
+    });
+}
+
+
+function writeQuestion(response, classID, quizNumber, questionNumber, data) {
+    fs.readdir('./question/' + classID + '/' + quizNumber, function (err, questions) {
+        // Sort question filenames numerically
+        if (questions.length === 0) {
+            questionNumber = 1;
+        } else if (questionNumber == 0) {
+            questionNumber = Math.max.apply(Math, questions);
+            questionNumber = (questionNumber + 1);
+        }
+        fs.writeFileSync('./question/' + classID + '/' + quizNumber + '/' + questionNumber, JSON.stringify(data));
+        response.writeHead(200, {'Content-Type': 'application/json'});
+        response.end(JSON.stringify(questionNumber));
+    });
+}
+
 // Initialise students.csv and classes.csv if necessary
 try {
     fs.openSync('./ids/admin.csv', 'r')
@@ -514,6 +550,22 @@ function runServer() {
                             // Runs async, returns direct to API
                             readQuizzes(response, payload.classid);
                             return;
+                        } else if (cmd === 'readquestions') {
+                            // XXX Should always keep at least one unassigned quiz open.
+                            // XXX Returns a list of all quizes for a course.
+                            var payload = JSON.parse(this.POSTDATA);
+                            // Runs async, returns direct to API
+                            readQuestions(response, payload.classid, payload.quizno);
+                            return;
+                        } else if (cmd === 'readonequestion') {
+                            var payload = JSON.parse(this.POSTDATA);
+                            // Runs async, returns direct to API
+                            // XXX NEED THIS FUNCTION
+                            readQuestion(response, payload.classid, payload.quizno, payload.questionno);
+                        } else if (cmd === 'writeonequestion') {
+                            var payload = JSON.parse(this.POSTDATA);
+                            // Runs async, returns direct to API
+                            writeQuestion(response, payload.classid, payload.quizno, payload.questionno, payload.data);
                         } else if (cmd === 'readonestudent') {
                             var payload = JSON.parse(this.POSTDATA);
                             response.writeHead(200, {'Content-Type': 'application/json'});
