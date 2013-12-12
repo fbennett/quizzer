@@ -5,6 +5,9 @@ url = require('url');
 emailjs = require('emailjs')
 argparse = require('argparse')
 markdown = require('marked')
+//var Barc= require ('barc')
+
+
 quizPort = 3498;
 
 var ArgumentParser = argparse.ArgumentParser;
@@ -66,7 +69,7 @@ var mailserver  = emailjs.server.connect({
 
 
 // Subdirs to be created if necessary
-var dirs = ['answer', 'ids', 'question'];
+var dirs = ['answer', 'ids', 'question', 'barcodes'];
 
 // Files to be created if necessary
 var files = ['students', 'classes', 'memberships']
@@ -97,6 +100,15 @@ for (var i=0,ilen=dirs.length;i<ilen;i+=1) {
         fs.mkdirSync(dir);
     } catch (e) {} 
 }
+
+// Create a barcode
+//function makeBarcode(title, text, barc, angle){
+//        var buf = barc.code128(text, 300, 30, angle);
+//        var filename = 'code128-' + title + '.png';
+//        fs.writeFile('./barcodes/' + filename, buf, function(){
+//                console.log('Created code128 and saved it as ', filename);
+//        })
+//}
 
 // To get a random key or random student ID, when needed in initializing data files
 function getRandomKey(len, base) {
@@ -292,6 +304,13 @@ function writeQuestion(response, classID, quizNumber, questionNumber, data) {
     });
 }
 
+// This works. Needs studentID for field test printouts.
+//        for (var i=0,ilen=data.questions.length;i<ilen;i+=1) {
+//            var code = classID + quizNumber + i + questionNumber
+//            makeBarcode(code, code, new Barc({hri:false}));
+//        }
+
+
 function writeChoice(response, classID, quizNumber, questionNumber, choice) {
     fs.readFile('./question/' + classID + '/' + quizNumber + '/' + questionNumber, function (err, quizobj) {
         quizobj = JSON.parse(quizobj);
@@ -309,7 +328,7 @@ try {
     fs.openSync('./ids/admin.csv', 'r')
 } catch (e) {
     if (e.code === 'ENOENT') {
-        var lst = ['Admin', getRandomKey()];
+        var lst = ['Admin', getRandomKey(8, 36)];
         csv().to('./ids/admin.csv').write(lst);
     } else {
         throw e;
@@ -338,8 +357,8 @@ function loadStudents() {
                 obj = {
                     name: row[0],
                     email: row[1],
-                    id: row[2] ? row[2] : getRandomKey(10, 10),
-                    key: row[3] ? row[3] : getRandomKey(16, 16)
+                    id: row[2] ? row[2] : getRandomKey(8, 36),
+                    key: row[3] ? row[3] : getRandomKey(8, 36)
                 };
                 studentsById[obj.id] = obj;
                 studentsByEmail[obj.email] = obj;
@@ -363,7 +382,7 @@ function loadClasses() {
             if (row[1]) {
                 obj = {
                     name: row[0],
-                    id: row[1] ? row[1] : getRandomKey(10, 10)
+                    id: row[1] ? row[1] : getRandomKey(8, 36)
                 };
                 classes[obj.id] = obj;
             }
@@ -515,10 +534,10 @@ function runServer() {
                             } else {
                                 // New record, add it
                                 if (!payload.id) {
-                                    payload.id = getRandomKey(10, 10);
+                                    payload.id = getRandomKey(8, 36);
                                 }
                                 if (!payload.key) {
-                                    payload.key = getRandomKey(16, 16);
+                                    payload.key = getRandomKey(8, 36);
                                 }
                                 studentsById[payload.id] = payload;
                                 studentsByEmail[payload.email] = payload;
@@ -596,7 +615,7 @@ function runServer() {
                             } else {
                                 // New record, add it
                                 if (!payload.id) {
-                                    payload.id = getRandomKey(10, 10);
+                                    payload.id = getRandomKey(8, 36);
                                 }
                                 classes[payload.id] = payload;
                             }
