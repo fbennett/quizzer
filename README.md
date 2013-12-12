@@ -60,6 +60,16 @@ response screen (useful for in-class exercises), and can be downloaded
 in CSV format for the final course record held on the instructor's own
 computer.
 
+## Quizzes administered in the field
+
+For admissions purposes, it may be desireable to administer a basic
+writing skills test in the field. Personalized, fully randomized
+copies of a quiz can be printed from the adminstrator's view, which
+contain QR codes for marking purposes. By photographing each answer
+and scanning the resulting files with a suitable script, the results
+of a quiz administered in the field ca quickly be marked and returned
+for administrative purposes.
+
 ## Dependencies
 
 The node server has some dependencies:
@@ -68,6 +78,7 @@ The node server has some dependencies:
     npm install argparse
     npm install emailjs
     npm install marked
+    npm install qrcode
     
 
 

@@ -286,11 +286,23 @@ function writeQuestion(response, classID, quizNumber, questionNumber, data) {
             questionNumber = Math.max.apply(Math, questions);
             questionNumber = (questionNumber + 1);
         }
-        fs.writeFileSync('./question/' + classID + '/' + quizNumber + '/' + questionNumber, JSON.stringify(data));
+        fs.writeFileSync('./question/' + classID + '/' + quizNumber + '/' + questionNumber, JSON.stringify(data, null, 4));
         response.writeHead(200, {'Content-Type': 'application/json'});
         response.end(JSON.stringify(questionNumber));
     });
 }
+
+function writeChoice(response, classID, quizNumber, questionNumber, choice) {
+    fs.readFile('./question/' + classID + '/' + quizNumber + '/' + questionNumber, function (err, quizobj) {
+        quizobj = JSON.parse(quizobj);
+        quizobj.correct = choice;
+        fs.writeFile('./question/' + classID + '/' + quizNumber + '/' + questionNumber, JSON.stringify(quizobj), function (err){});
+        response.writeHead(200, {'Content-Type': 'text/plain'});
+        response.end("");
+    });
+}
+
+
 
 // Initialise students.csv and classes.csv if necessary
 try {
@@ -566,6 +578,10 @@ function runServer() {
                             var payload = JSON.parse(this.POSTDATA);
                             // Runs async, returns direct to API
                             writeQuestion(response, payload.classid, payload.quizno, payload.questionno, payload.data);
+                        } else if (cmd === 'writeonechoice') {
+                            var payload = JSON.parse(this.POSTDATA);
+                            // Runs async, return ignored
+                            writeChoice(response, payload.classid, payload.quizno, payload.questionno, payload.choice);
                         } else if (cmd === 'readonestudent') {
                             var payload = JSON.parse(this.POSTDATA);
                             response.writeHead(200, {'Content-Type': 'application/json'});

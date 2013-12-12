@@ -18,6 +18,19 @@ function buildQuestionList (quizobj) {
     button.disabled = false;
 }
 
+function writeChoice(questionNumber, choice) {
+    var adminID = getParameterByName('admin');
+    var classID = getParameterByName('classid');
+    var quizNumber = getParameterByName('quizno');
+
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', '/?admin='+adminID+'&cmd=writeonechoice', false);
+    xhr.setRequestHeader("Content-type","text/plain");
+    xhr.overrideMimeType("application/json"); 
+    xhr.send(JSON.stringify({classid:classID,quizno:quizNumber,questionno:questionNumber,choice:choice}));
+    var emptystr = xhr.responseText;
+}
+
 function addQuestion () {
     // Add a question node and populate using openQuestion()
     var questions = document.getElementById('quiz-questions');
@@ -106,7 +119,6 @@ function closeQuestion (questionNumber) {
     var quizNumber = getParameterByName('quizno');
 
     // Extracts text-box content to object
-    console.log("WOW: "+questionNumber);
     var node = document.getElementById('quiz-question-' + questionNumber);
     var rubric = node.childNodes[0].value;
     if (!rubric) {
@@ -134,7 +146,6 @@ function closeQuestion (questionNumber) {
     xhr.open('POST', '/?admin='+adminID+'&cmd=writeonequestion', false);
     xhr.setRequestHeader("Content-type","text/plain");
     xhr.overrideMimeType("application/json"); 
-    console.log("XXX "+classID+" "+quizNumber+" "+questionNumber+" "+obj);
     xhr.send(JSON.stringify({classid:classID,quizno:quizNumber,questionno:questionNumber,data:obj}));
     var questionNumber = JSON.parse(xhr.responseText);
     node.setAttribute('id', 'quiz-question-' + questionNumber);
@@ -148,7 +159,6 @@ function closeQuestion (questionNumber) {
 }
 
 function displayQuestions (quizobj) {
-    console.log("DISPLAY: "+JSON.stringify(quizobj));
     var questions = document.getElementById('quiz-questions');
     // Purge children
     for (var i=0,ilen=questions.childNodes.length;i<ilen;i+=1) {
@@ -184,9 +194,7 @@ function displayQuestion (qobj, questionNumber) {
     // XXX can be set and saved without opening and closing the
     // XXX question with the button.
 
-    console.log("questionNumber: " + questionNumber + ", QOBJ: "+JSON.stringify(qobj));
     var questions = document.getElementById('quiz-questions');
-    console.log('OKAY: '+questionNumber);
     var node = document.getElementById('quiz-question-' + questionNumber);
     if (!node) {
         node = document.createElement('li');
@@ -203,12 +211,14 @@ function displayQuestion (qobj, questionNumber) {
         checkbox.setAttribute('type', 'radio');
         checkbox.setAttribute('name', 'question-' + questionNumber);
         checkbox.setAttribute('class', 'selection');
+        checkbox.setAttribute('onclick', 'writeChoice(' + questionNumber + ', ' + i + ')');
         if (qobj.correct == i) {
             checkbox.checked = true;
         }
         choice_wrapper.appendChild(checkbox)
         var selectionText = document.createElement('div');
         selectionText.setAttribute('class', 'selection-text');
+        selectionText.setAttribute('style', 'vertical-align: top;margin-top:-0.8em;margin-left:0.3em;');
         selectionText.innerHTML = marked.parse(qobj.questions[i]);
         choice_wrapper.appendChild(selectionText)
         node.appendChild(choice_wrapper)
