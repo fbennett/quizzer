@@ -65,10 +65,10 @@ computer.
 For admissions purposes, it may be desireable to administer a basic
 writing skills test in the field. Personalized, fully randomized
 copies of a quiz can be printed from the adminstrator's view, which
-contain QR codes for marking purposes. By photographing each answer
-and scanning the resulting files with a suitable script, the results
-of a quiz administered in the field ca quickly be marked and returned
-for administrative purposes.
+contain barcodes for marking purposes. The class and test-taker ID
+is embedded in the barcode for each answer, so scanning the codes
+into a single data file provides enough information to mark the
+results with a suitable script.
 
 ## Dependencies
 
@@ -78,7 +78,7 @@ The node server has some dependencies:
     npm install argparse
     npm install emailjs
     npm install marked
-    npm install qrcode
+    npm install barc
     
 
 
