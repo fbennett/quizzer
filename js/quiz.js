@@ -18,6 +18,19 @@ function buildQuestionList (quizobj) {
     button.disabled = false;
 }
 
+function sendQuiz() {
+    var adminID = getParameterByName('admin');
+    var classID = getParameterByName('classid');
+    var quizNumber = getParameterByName('quizno');
+
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', '/?admin='+adminID+'&cmd=sendquiz', false);
+    xhr.setRequestHeader("Content-type","text/plain");
+    xhr.overrideMimeType("application/json"); 
+    xhr.send(JSON.stringify({classid:classID,quizno:quizNumber}));
+    var emptystr = xhr.responseText;
+}
+
 function writeChoice(questionNumber, choice) {
     var adminID = getParameterByName('admin');
     var classID = getParameterByName('classid');

@@ -123,6 +123,28 @@ function getRandomKey(len, base) {
     return _results.join("");
 }
 
+function sendQuiz (response, classID, quizNumber) {
+    // Get email addresses
+    for (var studentKey in memberships[classID]) {
+        var email = studentsById[studentKey].email;
+        // Send mail messages
+        var text = "We have prepared a quiz to help you check and improve your English writing ability.\n\nClick on the link below to take the quiz:\n\n"
+            + "    http://our.law.nagoya-u.ac.jp:3498/?id=" + studentKey + "&classid=" + classID + "&quizno=" + quizNumber + "\n\n"
+            + "Sincerely yours,\n"
+            + "The Academic Writing team"
+        mailserver.send({
+            text:    text, 
+            from:    "Your instructor <biercenator@gmail.com>", 
+            to:      email,
+            subject: "Quiz " + quizNumber
+        }, function(err, message) { console.log(err || message); });
+
+    }
+    // Return to client
+    response.writeHead(200, {'Content-Type': 'text/plain'});
+    response.end("");
+}
+
 function writeStudents(studentsById) {
     var cfh = csv().to.path('./ids/students.csv');
     var rows = [];
@@ -559,9 +581,13 @@ function runServer() {
                         } else if (cmd === 'writtenquiz') {
                             // XXX fixme
                             var payload = JSON.parse(this.POSTDATA);
-                            var selectedMembers = JSON.parse(payload.selectedmembers);
+                            var selectedMembers = payload.selectedmembers;
                             // XXX Return essentials only, page will generate the text of individual quizzes.
                             // 
+                            return;
+                        } else if (cmd === 'sendquiz') {
+                            var payload = JSON.parse(this.POSTDATA);
+                            sendQuiz(response, payload.classid,payload.quizno);
                             return;
                         } else if (cmd === 'addmembers') {
                             // XXX fixme
