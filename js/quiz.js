@@ -76,13 +76,21 @@ function openQuestion (questionNumber) {
         node = document.createElement('li');
         node.setAttribute('id', 'quiz-question-' + questionNumber);
     }
-    var rubric = document.createElement('textarea');
-    rubric.setAttribute('style', 'vertical-align: top;');
-    rubric.setAttribute('placeholder', 'Enter rubric here');
-    rubric.value = qobj.rubric;
-    rubric.setAttribute('cols', '70');
-    rubric.setAttribute('rows', '3');
+    var rubric = document.createElement('div');
+    var rubricBox = document.createElement('textarea');
+    rubricBox.setAttribute('style', 'vertical-align: top;');
+    rubricBox.setAttribute('placeholder', 'Enter rubric here');
+    rubricBox.value = qobj.rubric;
+    rubricBox.setAttribute('cols', '70');
+    rubricBox.setAttribute('rows', '3');
+    rubric.appendChild(rubricBox);
+    var button = document.createElement('input');
+    button.setAttribute('type', 'button');
+    button.setAttribute('value', 'Standard');
+    button.setAttribute('onclick', 'standardRubric(' + questionNumber + ')')
+    rubric.appendChild(button);
     node.appendChild(rubric);
+
     for (var i=0,ilen=qobj.questions.length;i<ilen;i+=1) {
         var choice_wrapper = document.createElement('div');
         choice_wrapper.setAttribute('class', 'choice');
@@ -122,6 +130,13 @@ function openQuestion (questionNumber) {
     return node;
 }
 
+function standardRubric (questionNumber) {
+    var node = document.getElementById('quiz-question-' + questionNumber);
+    if (!node.childNodes[0].childNodes[0].value) {
+        node.childNodes[0].childNodes[0].value = "Which of the following is correct?";
+    }
+}
+
 function copyToAll (questionNumber) {
     var node = document.getElementById('quiz-question-' + questionNumber);
     if (node.childNodes[1].childNodes[1].value) {
@@ -151,7 +166,7 @@ function closeQuestion (questionNumber) {
 
     // Extracts text-box content to object
     var node = document.getElementById('quiz-question-' + questionNumber);
-    var rubric = node.childNodes[0].value;
+    var rubric = node.childNodes[0].childNodes[0].value;
     if (!rubric) {
         alert("All fields must have content: "+rubric);
     }
