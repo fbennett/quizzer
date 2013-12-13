@@ -125,6 +125,7 @@ function getRandomKey(len, base) {
 
 function sendQuiz (response, classID, quizNumber) {
     // Get email addresses
+    var className = classes[classID].name;
     for (var studentKey in memberships[classID]) {
         var email = studentsById[studentKey].email;
         // Send mail messages
@@ -134,9 +135,9 @@ function sendQuiz (response, classID, quizNumber) {
             + "The Academic Writing team"
         mailserver.send({
             text:    text, 
-            from:    "Your instructor <biercenator@gmail.com>", 
+            from:    "Your instructors <biercenator@gmail.com>", 
             to:      email,
-            subject: "Quiz " + quizNumber
+            subject: className + ": Quiz " + quizNumber
         }, function(err, message) { console.log(err || message); });
 
     }
