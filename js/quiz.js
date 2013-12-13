@@ -102,14 +102,45 @@ function openQuestion (questionNumber) {
         selectionText.setAttribute('placeholder', 'Enter choice here');
         selectionText.value = qobj.questions[i];
         choice_wrapper.appendChild(selectionText)
+        var cloneButton = document.createElement('input');
+        cloneButton.setAttribute('type', 'button');
+        if (i === 0) {
+            cloneButton.setAttribute('value', 'Copy to all');
+            cloneButton.setAttribute('onclick', 'copyToAll(' + questionNumber + ');');
+        } else {
+            cloneButton.setAttribute('value', 'Ditto');
+            cloneButton.setAttribute('onclick', 'dittoPrevious(' + questionNumber + ',' + i + ');');
+        }
+        choice_wrapper.appendChild(cloneButton);
         node.appendChild(choice_wrapper);
-        var button = document.createElement('input');
-        button.setAttribute('type', 'button');
-        button.setAttribute('value', 'Save Question');
-        button.setAttribute('onclick', 'closeQuestion("' + questionNumber + '")');
     }
+    var button = document.createElement('input');
+    button.setAttribute('type', 'button');
+    button.setAttribute('value', 'Save Question');
+    button.setAttribute('onclick', 'closeQuestion("' + questionNumber + '")');
     node.appendChild(button);
     return node;
+}
+
+function copyToAll (questionNumber) {
+    var node = document.getElementById('quiz-question-' + questionNumber);
+    if (node.childNodes[1].childNodes[1].value) {
+        var val = node.childNodes[1].childNodes[1].value;
+        for (var i=2,ilen=5;i<ilen;i+=1) {
+            if (!node.childNodes[i].childNodes[1].value) {
+                node.childNodes[i].childNodes[1].value = val;
+            }
+        }
+    }
+}
+
+function dittoPrevious (questionNumber, choice) {
+    var node = document.getElementById('quiz-question-' + questionNumber);
+    var prev = node.childNodes[choice].childNodes[1];
+    var current = node.childNodes[1 + choice].childNodes[1];
+    if (prev.value && !current.value) {
+        current.value = prev.value;
+    }
 }
 
 function closeQuestion (questionNumber) {
