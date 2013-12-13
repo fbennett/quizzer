@@ -556,6 +556,13 @@ function runServer() {
                             response.writeHead(200, {'Content-Type': 'application/json'});
                             response.end(JSON.stringify(rowsets));
                             return;
+                        } else if (cmd === 'writtenquiz') {
+                            // XXX fixme
+                            var payload = JSON.parse(this.POSTDATA);
+                            var selectedMembers = JSON.parse(payload.selectedmembers);
+                            // XXX Return essentials only, page will generate the text of individual quizzes.
+                            // 
+                            return;
                         } else if (cmd === 'addmembers') {
                             // XXX fixme
                             var payload = JSON.parse(this.POSTDATA);
