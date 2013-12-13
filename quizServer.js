@@ -5,7 +5,7 @@ url = require('url');
 emailjs = require('emailjs')
 argparse = require('argparse')
 markdown = require('marked')
-//var Barc= require ('barc')
+var Barc= require ('barc')
 
 
 quizPort = 3498;
@@ -102,13 +102,13 @@ for (var i=0,ilen=dirs.length;i<ilen;i+=1) {
 }
 
 // Create a barcode
-//function makeBarcode(title, text, barc, angle){
-//        var buf = barc.code128(text, 300, 30, angle);
-//        var filename = 'code128-' + title + '.png';
-//        fs.writeFile('./barcodes/' + filename, buf, function(){
-//                console.log('Created code128 and saved it as ', filename);
-//        })
-//}
+function makeBarcode(title, text, barc, angle){
+        var buf = barc.code128(text, 300, 30, angle);
+        var filename = 'code128-' + title + '.png';
+        fs.writeFile('./barcodes/' + filename, buf, function(){
+                console.log('Created code128 and saved it as ', filename);
+        })
+}
 
 // To get a random key or random student ID, when needed in initializing data files
 function getRandomKey(len, base) {
