@@ -158,26 +158,31 @@ function quizData (response, classID, studentID, studentKey, quizNumber) {
     var quizData = {classID:classID,studentID:studentID,studentKey:studentKey,quizNumber:quizNumber};
     quizData.questions = [];
     fs.readdir('./question/' + classID + '/' + quizNumber, function (err, questions) {
-        questions.sort(function (a,b) {
-            a = parseInt(a, 10);
-            b = parseInt(b, 10);
-            if (a>b) {
-                return 1;
-            } else if (a < b) {
-                return -1;
-            } else {
-                return 0;
+        if (err) {
+            response.writeHead(500, {'Content-Type': 'text/plain'});
+            response.end("No questions found for this URL");
+        } else {
+            questions.sort(function (a,b) {
+                a = parseInt(a, 10);
+                b = parseInt(b, 10);
+                if (a>b) {
+                    return 1;
+                } else if (a < b) {
+                    return -1;
+                } else {
+                    return 0;
+                }
+            });
+            for (var i=0,ilen=questions.length;i<ilen;i+=1) {
+                var obj = fs.readFileSync('./question/' + classID + '/' + quizNumber + '/' + questions[i]);
+                obj = JSON.parse(obj);
+                //delete obj.correct;
+                quizData.questions.push(obj);
             }
-        });
-        for (var i=0,ilen=questions.length;i<ilen;i+=1) {
-            var obj = fs.readFileSync('./question/' + classID + '/' + quizNumber + '/' + questions[i]);
-            obj = JSON.parse(obj);
-            //delete obj.correct;
-            quizData.questions.push(obj);
+            var quizObject = JSON.stringify(quizData);
+            response.writeHead(200, {'Content-Type': 'application/json'});
+            response.end(quizObject);
         }
-        var quizObject = JSON.stringify(quizData);
-        response.writeHead(200, {'Content-Type': 'application/json'});
-        response.end(quizObject);
     });
 }
 
