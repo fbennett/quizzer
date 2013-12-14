@@ -3,24 +3,28 @@
   <title>Quizzer Admin - classes</title>
   <script type="text/javascript" src="js/local.js"></script>  
   <script type="text/javascript" src="js/classes.js"></script>  
+  <link rel="stylesheet" type="text/css" href="css/simple-grid.css"/>
 </head>
 <body onLoad="buildClassList()">
-  <h1>Quizzer Admin - classes</h1>
-  <div>
-    <input type="button" value="Back" onclick="window.location = '?page=top&admin=' + getParameterByName('admin')"/>
+  <div class="grid">
+    <div class="col-1-1">
+      <h1>Quizzer Admin - classes</h1>
+      <div>
+        <input type="button" value="Back" onclick="window.location = '?page=top&admin=' + getParameterByName('admin')"/>
+      </div>
+      <div>
+        <input id="add-class-button" type="button" value="Add Class" onclick="addClass()"/>
+        <input id="save-class-button" type="button" value="Save Class" onclick="saveClass()" hidden="true"/>
+        <span id="class-boxes" hidden="true">
+          Name:
+          <input id="class-name" type="text" size="30"/>
+          <input id="class-id" type="text" size="20" hidden="true"/>
+        </span>
+      </div>
+      <hr/>
+      <table id="class-list">
+      </table>
+    </div>
   </div>
-  <div>
-    <input id="add-class-button" type="button" value="Add Class" onclick="addClass()"/>
-    <input id="save-class-button" type="button" value="Save Class" onclick="saveClass()" hidden="true"/>
-    <span id="class-boxes" hidden="true">
-      Name:
-      <input id="class-name" type="text" size="30"/>
-      ID (optional):
-      <input id="class-id" type="text" size="20"/>
-    </span>
-  </div>
-  <hr/>
-  <table id="class-list">
-  </table>
 </body>
 </html>

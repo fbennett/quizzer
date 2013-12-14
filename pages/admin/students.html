@@ -3,26 +3,30 @@
   <title>Quizzer Admin - students</title>
   <script type="text/javascript" src="js/local.js"></script>  
   <script type="text/javascript" src="js/students.js"></script>  
+  <link rel="stylesheet" type="text/css" href="css/simple-grid.css"/>
 </head>
 <body onLoad="buildStudentList();">
-  <h1>Quizzer Admin - students</h1>
-  <div>
-    <input type="button" value="Back" onclick="window.location = '?page=top&admin=' + getParameterByName('admin')"/>
+  <div class="grid">
+    <div class="col-1-1">
+      <h1>Quizzer Admin - students</h1>
+      <div>
+        <input type="button" value="Back" onclick="window.location = '?page=top&admin=' + getParameterByName('admin')"/>
+      </div>
+      <div>
+        <input id="add-student-button" type="button" value="Add Student" onclick="addStudent()"/>
+        <input id="save-student-button" type="button" value="Save Student" onclick="saveStudent()" hidden="true"/>
+        <span id="student-boxes" hidden="true">
+          Name:
+          <input id="student-name" type="text" size="30"/>
+          Email:
+          <input id="student-email" type="text" size="30"/>
+          <input id="student-id" type="text" size="20" hidden="true"/>
+        </span>
+      </div>
+      <hr/>
+      <table id="student-list">
+      </table>
+    </div>
   </div>
-  <div>
-    <input id="add-student-button" type="button" value="Add Student" onclick="addStudent()"/>
-    <input id="save-student-button" type="button" value="Save Student" onclick="saveStudent()" hidden="true"/>
-    <span id="student-boxes" hidden="true">
-      Name:
-      <input id="student-name" type="text" size="30"/>
-      Email:
-      <input id="student-email" type="text" size="30"/>
-      ID (optional):
-      <input id="student-id" type="text" size="20"/>
-    </span>
-  </div>
-  <hr/>
-  <table id="student-list">
-  </table>
 </body>
 </html>

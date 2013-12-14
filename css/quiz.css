@@ -1,15 +1,27 @@
-ol#quiz-questions div.choice {
-    position: relative;
+div.rubric {
+    margin-top: 2em;
+    font-size: 120%;
 }
 
-
-ol#quiz-questions textarea.selection {
+ol {
+    list-style-type: none;
+}
+ol#quiz-questions div.choice {
+    position: relative;
+    margin-left: 15px;
+}
+ol#quiz-questions input.selection {
     position: absolute;
     left: -10px;
-    top: 0px;
+}
+
+ol#quiz-questions textarea.selection {
+    margin-left: 15px;
+    vertical-align: top;
 }
 
 ol#quiz-questions .selection-text {
+    display: block;
     margin-left: 15px;
-    display: inline-block;
+    vertical-align: top;
 }

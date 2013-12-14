@@ -90,6 +90,7 @@ function openQuestion (questionNumber) {
         node.setAttribute('id', 'quiz-question-' + questionNumber);
     }
     var rubric = document.createElement('div');
+    rubric.setAttribute("class", "rubric");
     var rubricBox = document.createElement('textarea');
     rubricBox.setAttribute('style', 'vertical-align: top;');
     rubricBox.setAttribute('placeholder', 'Enter rubric here');
@@ -116,7 +117,6 @@ function openQuestion (questionNumber) {
         checkbox.setAttribute('class', 'selection');
         choice_wrapper.appendChild(checkbox)
         var selectionText = document.createElement('textarea');
-        selectionText.setAttribute('style', 'vertical-align: top;');
         selectionText.setAttribute('cols', '60');
         selectionText.setAttribute('rows', '3');
         selectionText.setAttribute('class', 'selection-text');
@@ -261,6 +261,7 @@ function displayQuestion (qobj, questionNumber) {
         questions.appendChild(node);
     }
     var rubric = document.createElement('div');
+    rubric.setAttribute("class", "rubric");
     rubric.innerHTML = marked.parse(qobj.rubric);
     node.appendChild(rubric);
     for (var i=0,ilen=qobj.questions.length;i<ilen;i+=1) {
@@ -277,7 +278,6 @@ function displayQuestion (qobj, questionNumber) {
         choice_wrapper.appendChild(checkbox)
         var selectionText = document.createElement('div');
         selectionText.setAttribute('class', 'selection-text');
-        selectionText.setAttribute('style', 'vertical-align: top;margin-top:-0.8em;margin-left:0.3em;');
         selectionText.innerHTML = marked.parse(qobj.questions[i]);
         choice_wrapper.appendChild(selectionText)
         node.appendChild(choice_wrapper)
