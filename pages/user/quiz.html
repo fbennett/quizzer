@@ -51,14 +51,20 @@ var studentKey = getParameterByName('key');
 var quizNumber = getParameterByName('quizno');
 
 var xhr = new XMLHttpRequest();
-xhr.open('POST', 'http://our.law.nagoya-u.ac.jp:3498/?cmd=quizdata&classid=' + classID+ '&id=' + studentID + '&key=' + studentKey + '&quizno=' + quizNumber, false);
+xhr.open('POST', 'http://localhost:3498/?cmd=quizdata&classid=' + classID+ '&id=' + studentID + '&key=' + studentKey + '&quizno=' + quizNumber, false);
 xhr.setRequestHeader("Content-type","text/plain");
 xhr.send(null);
 var quizData = JSON.parse(xhr.responseText);
 
 // Need something to extract the query string
 
-function UITest1() {  
+function UITest1() {
+  for (var i=0,ilen=quizData.questions.length;i<ilen;i+=1) {
+    remap = randomize(quizData.questions[i].questions);
+    quizData.questions[i].remap = remap;
+  }
+  var remap = randomize(quizData.questions);
+  quizData.remap = remap;
   displaychild(quizData);
 }
 function OnSuccessCall(response) {  
@@ -120,7 +126,8 @@ function FunNextNode() {
 //    $("#wrapper").promise().done(function () {  
 //    });  
 
-	if (getvalue == ansarry[nextnodecounter-1]) {  
+    var pos = (nextnodecounter-1);
+	if (getvalue == quizData.questions[pos].remap[ansarry[nextnodecounter-1]]) {  
 	    correctanscounter = correctanscounter + 1;  
 	}  
 	var questions = quizData.questions;
@@ -166,32 +173,41 @@ function ShowResult() {
 var tempcount = 0;  
 var tempxmldoc;  
 var randquearr = new Array();  
-function randomizeques(tempxmldoc) {  
-	var questiontext =
-        tempxmldoc.getElementsByTagName("question");  
-    var randomno = Math.floor((Math.random() * questiontext.length) +
-                              1);  
-    var tempnodevalue =
-        tempxmldoc.getElementsByTagName("question_text")[randomno].childNodes[0].nodeValue;
-    
-    if (tempcount == 0) {  
-        randquearr[randmarrcnt] = tempnodevalue;  
-	    tempcount = tempcount + 1;  
-		randmarrcnt = randmarrcnt + 1;  
-	}  
-	else {  
-		for (var tempcnt = 0;
-             tempcnt < randquearr.length; tempcnt++) {  
-            if (randquearr[tempcnt] == tempnodevalue) {  
-	            randomizeques(tempxmldoc);  
-		    }  
-		}  
-		randquearr[randmarrcnt] =
-            tempnodevalue;  
-        randmarrcnt = randmarrcnt + 1;  
-    }  
-	quesindex = randomno;  
-}  
+
+function randomize(array) {
+  var orig_order = [];
+  for (var i=0,ilen=array.length;i<ilen;i+=1) {
+    orig_order.push(i);
+  }
+  var new_order = orig_order.slice();
+  var currentIndex = array.length
+      , temporaryValue
+      , randomIndex
+      , temporaryPos
+    ;
+
+  // While there remain elements to shuffle...
+  while (0 !== currentIndex) {
+
+    // Pick a remaining element...
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex -= 1;
+
+    // And swap it with the current element.
+    temporaryValue = array[currentIndex];
+    temporaryPos = new_order[currentIndex];
+    array[currentIndex] = array[randomIndex];
+    new_order[currentIndex] = new_order[randomIndex];
+    array[randomIndex] = temporaryValue;
+    new_order[randomIndex] = temporaryPos;
+  }
+  var remap = {};
+  for (var i=0,ilen=array.length;i<ilen;i+=1) {
+    remap[new_order[i]] = orig_order[i];
+  }
+  return remap;
+}
+
 		               </script>  
   </head>  
   <body onload="UITest1()">  
