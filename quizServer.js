@@ -9,6 +9,7 @@ var Barc= require ('barc')
 
 
 quizPort = 3498;
+var hostname = require('os').hostname();
 
 var ArgumentParser = argparse.ArgumentParser;
 var optparse = new ArgumentParser({
@@ -131,7 +132,7 @@ function sendQuiz (response, classID, quizNumber) {
         var studentKey = studentsById[studentID].key;
         // Send mail messages
         var text = "We have prepared a quiz to help you check and improve your English writing ability.\n\nClick on the link below to take the quiz:\n\n"
-            + "    http://our.law.nagoya-u.ac.jp:3498/?id=" + studentID + "&key=" + studentKey + "&classid=" + classID + "&quizno=" + quizNumber + "\n\n"
+            + "    http://" + hostname + ":3498/?id=" + studentID + "&key=" + studentKey + "&classid=" + classID + "&quizno=" + quizNumber + "&hostname=" + hostname + "\n\n"
             + "Sincerely yours,\n"
             + "The Academic Writing team"
         mailserver.send({
@@ -487,7 +488,7 @@ function loadAdmin() {
         .from.stream(fs.createReadStream('./ids/admin.csv'))
         .on ('record', function (row,index) {
             admin[row[1]] = row[0];
-            console.log("Admin URL for "+row[0]+": http://localhost:" + quizPort + "/?admin="+row[1]);
+            console.log("Admin URL for "+row[0]+": http://" + hostname + ":" + quizPort + "/?admin="+row[1]);
         })
         .on('end', function(count){
             loadStudents();

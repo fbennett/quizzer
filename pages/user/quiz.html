@@ -49,9 +49,13 @@ var classID = getParameterByName('classid');
 var studentID = getParameterByName('id');
 var studentKey = getParameterByName('key');
 var quizNumber = getParameterByName('quizno');
+var hostname = getParameterByName('hostname');
+if (!hostname) {
+    hostname = 'our.law.nagoya-u.ac.jp';
+}
 
 var xhr = new XMLHttpRequest();
-xhr.open('POST', 'http://our.law.nagoya-u.ac.jp:3498/?cmd=quizdata&classid=' + classID+ '&id=' + studentID + '&key=' + studentKey + '&quizno=' + quizNumber, false);
+xhr.open('POST', 'http://' + hostname + ':3498/?cmd=quizdata&classid=' + classID+ '&id=' + studentID + '&key=' + studentKey + '&quizno=' + quizNumber, false);
 xhr.setRequestHeader("Content-type","text/plain");
 xhr.send(null);
 var quizData = JSON.parse(xhr.responseText);
@@ -90,8 +94,11 @@ function displaychild(quizData) {
     // randomizeques(quizData);
     document.getElementById("nextButton").disabled = true;  
 	if (document.getElementById("nextButton").innerHTML == "Show&nbsp;Result") {  
-        document.getElementById("nextButton").disabled = false;  
-        document.getElementById("nextButton").onclick=ShowResult();
+        document.getElementById("nextButton").onclick = ShowResult;
+        document.getElementById("nextButton").disabled = false;
+    }
+    if (quizData.questions.length == nextnodecounter) {
+      return;
     }
     var question = quizData.questions[nextnodecounter];
     document.getElementById("question").innerHTML = marked.parse(question.rubric);
@@ -114,18 +121,6 @@ function displaychild(quizData) {
 }  
 function FunNextNode() {
 	nextnodecounter = nextnodecounter + 1;
-//	$("#wrapper").animate({ height:
-//                            '0px', opacity: '0.5' }, "fast");  
-
-//    $("#wrapper").promise().done(function () {  
-//    });
-
-//	$("#wrapper").animate({ height: '400px', opacity: '1'
-//                          }, "slow");  
-
-//    $("#wrapper").promise().done(function () {  
-//    });  
-
     var pos = (nextnodecounter-1);
 	if (getvalue == quizData.questions[pos].remap[ansarry[nextnodecounter-1]]) {  
 	    correctanscounter = correctanscounter + 1;  
@@ -133,7 +128,7 @@ function FunNextNode() {
 	var questions = quizData.questions;
     if (questions.length == (nextnodecounter)) {
         document.getElementById("nextButton").innerHTML = "Show&nbsp;Result";
-        nextnodecounter += -1;
+        // nextnodecounter += -1;
     }
     displaychild(quizData);  
 }  
@@ -154,12 +149,9 @@ function enablebtn(setvalue) {
     getvalue = setvalue;  
 }  
 function ShowResult() {  
-	//if (getvalue == ansarry[nextnodecounter-1]) {  
-	//	correctanscounter = correctanscounter + 1;  
-	//}  
 	document.getElementById("result").style.display="block";
     
-    document.getElementById("noofques").innerHTML = (nextnodecounter + 1);  
+    document.getElementById("noofques").innerHTML = nextnodecounter;  
     document.getElementById("noofcorans").innerHTML = correctanscounter;  
     // XXX Dump result somewhere. We would want:
     // XXX   * Total correct
