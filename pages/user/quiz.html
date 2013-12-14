@@ -1,0 +1,202 @@
+<!DOCTYPE html>  
+<html>  
+  <head>  
+    <style type="text/css">  
+	  div#options input{  
+	  	margin-left: 15px;    
+	  }  
+	  ul {  
+      	list-style-type: none;  
+	  }  
+	  div#wrapper{  
+	  	width: 500px;    
+	  	background-color:#FAFAFA;  
+	      padding: 10px;
+		  padding-bottom: 35px;  
+	  }  
+	  #nextButton{  
+      float:right;  
+      width: 100px;  
+	  height: 25px;  
+	  }  
+      ul#options div.choice {
+        position:relative;
+      }
+      ul#options input {
+        position: absolute;
+        left: -10px;
+      }
+      ul#options div.label{
+         display: block;
+         margin-left: 15px;
+      }
+	</style>  
+	<script type="text/javascript" src="js/jquery.min.js"></script>  
+    <script type="text/javascript" src="node_modules/marked/lib/marked.js"></script>
+    <script type="text/javascript">  
+var nextnodecounter = 0;
+var xmldocstr;
+var correctanscounter = 0;
+var randmarrcnt = 0;  
+var quesindex = 0;  
+var getvalue;  
+var ansarry = new Array();
+var complete = false;
+var i;
+
+var quizData = JSON.parse('@@QUIZ_OBJECT@@');
+
+// Need something to extract the query string
+
+function UITest1() {  
+  displaychild(quizData);
+}
+function OnSuccessCall(response) {  
+}  
+function OnErrorCall(response) {  
+}  
+function loadXMLString(str) {  
+	if (window.DOMParser) {  
+		parser = new DOMParser();  
+		xmlDoc =
+            parser.parseFromString(str, "text/xml");  
+    }  
+    else // Internet Explorer  
+	{  
+	    xmlDoc = new ActiveXObject("Microsoft.XMLDOM");  
+		xmlDoc.async = "false";  
+		xmlDoc.loadXML(txt);  
+	}  
+	return xmlDoc;  
+}  
+var newxmldoc;
+function displaychild(quizData) {  
+    // randomizeques(quizData);
+    document.getElementById("nextButton").disabled = true;  
+	if (document.getElementById("nextButton").innerHTML == "Show&nbsp;Result") {  
+        document.getElementById("nextButton").disabled = false;  
+        document.getElementById("nextButton").onclick=ShowResult();
+    }
+    var question = quizData.questions[nextnodecounter];
+    document.getElementById("question").innerHTML = marked.parse(question.rubric);
+    
+    // display question text  
+	document.getElementById("options").innerHTML = "";
+
+    ansarry.push(question.correct);
+
+    for (var i=0,ilen=question.questions.length;i<ilen;i+=1) {
+        var choice = marked(question.questions[i]);
+        var radioBtn = $('<li><div class="choice"><input name="r1" type="radio" value="'
+                         + i
+                         + '" onclick="enablebtn(this.value)" id="rbtnCount' + i + '" /><div class="label">' 
+                         + choice
+                         + '</div></div></li>');  
+        radioBtn.appendTo('#options');  
+        checkradiobtn();
+    }
+}  
+function FunNextNode() {
+	nextnodecounter = nextnodecounter + 1;
+//	$("#wrapper").animate({ height:
+//                            '0px', opacity: '0.5' }, "fast");  
+
+//    $("#wrapper").promise().done(function () {  
+//    });
+
+//	$("#wrapper").animate({ height: '400px', opacity: '1'
+//                          }, "slow");  
+
+//    $("#wrapper").promise().done(function () {  
+//    });  
+
+	if (getvalue == ansarry[nextnodecounter-1]) {  
+	    correctanscounter = correctanscounter + 1;  
+	}  
+	var questions = quizData.questions;
+    if (questions.length == (nextnodecounter)) {
+        document.getElementById("nextButton").innerHTML = "Show&nbsp;Result";
+        nextnodecounter += -1;
+    }
+    displaychild(quizData);  
+}  
+function checkradiobtn()  
+{  
+	var radios =
+        document.getElementsByTagName('input');  
+    var value;  
+    for (var i = 0; i < radios.length; i++) {  
+	    if (radios[i].type == 'radio' && radios[i].checked) {  
+		    document.getElementById("nextButton").disabled = true;  
+        }
+    }  
+} 
+var setvalue; 
+function enablebtn(setvalue) {  
+	document.getElementById("nextButton").disabled = false;  
+    getvalue = setvalue;  
+}  
+function ShowResult() {  
+	if (getvalue == ansarry[nextnodecounter-1]) {  
+		correctanscounter = correctanscounter + 1;  
+	}  
+	document.getElementById("result").style.display="block";
+    
+    document.getElementById("noofques").innerHTML = (nextnodecounter + 1);  
+    document.getElementById("noofcorans").innerHTML = correctanscounter;  
+    // XXX Dump result somewhere. We would want:
+    // XXX   * Total correct
+    // XXX   * Questions missed
+    // XXX   * Date and time submitted
+    // XXX Dump as JSON. Viz: http://stackoverflow.com/questions/5670752/write-pretty-json-to-file-using-node-js
+    // XXX Secondary API reads the results and compiles to CSV
+    // XXX Done.
+}
+// function to get random index of questions  
+var tempcount = 0;  
+var tempxmldoc;  
+var randquearr = new Array();  
+function randomizeques(tempxmldoc) {  
+	var questiontext =
+        tempxmldoc.getElementsByTagName("question");  
+    var randomno = Math.floor((Math.random() * questiontext.length) +
+                              1);  
+    var tempnodevalue =
+        tempxmldoc.getElementsByTagName("question_text")[randomno].childNodes[0].nodeValue;
+    
+    if (tempcount == 0) {  
+        randquearr[randmarrcnt] = tempnodevalue;  
+	    tempcount = tempcount + 1;  
+		randmarrcnt = randmarrcnt + 1;  
+	}  
+	else {  
+		for (var tempcnt = 0;
+             tempcnt < randquearr.length; tempcnt++) {  
+            if (randquearr[tempcnt] == tempnodevalue) {  
+	            randomizeques(tempxmldoc);  
+		    }  
+		}  
+		randquearr[randmarrcnt] =
+            tempnodevalue;  
+        randmarrcnt = randmarrcnt + 1;  
+    }  
+	quesindex = randomno;  
+}  
+		               </script>  
+  </head>  
+  <body onload="UITest1()">  
+	<div id="wrapper">  
+	  <div id="question">  
+      </div>  
+	  <ul id="options">  
+	  </ul>  
+	  <button id="nextButton" onclick="FunNextNode()">Next</button>  
+    </div>
+    <center>  
+	  <div id="result" style="display:none;height:200px;width:500px;background-color:rgb(152,173, 240)">  
+        &nbsp;&nbsp;&nbsp; Number of Questions : <div id="noofques"></div><br/>  
+        &nbsp;&nbsp;&nbsp; Number of Correct Answers : <div id="noofcorans"></div>  
+      </div>
+    </center> 
+  </body>  
+</html>  
