@@ -53,7 +53,6 @@ var quizNumber = getParameterByName('quizno');
 var xhr = new XMLHttpRequest();
 xhr.open('POST', 'http://our.law.nagoya-u.ac.jp:3498/?cmd=quizdata&classid=' + classID+ '&id=' + studentID + '&key=' + studentKey + '&quizno=' + quizNumber, false);
 xhr.setRequestHeader("Content-type","text/plain");
-xhr.overrideMimeType("application/json"); 
 xhr.send(null);
 var quizData = JSON.parse(xhr.responseText);
 

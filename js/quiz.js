@@ -9,7 +9,7 @@ function buildQuestionList (quizobj) {
         var xhr = new XMLHttpRequest();
         xhr.open('POST', '/?admin='+adminID+'&cmd=readquestions', false);
         xhr.setRequestHeader("Content-type","text/plain");
-        xhr.overrideMimeType("application/json"); 
+        //xhr.overrideMimeType("application/json"); 
         xhr.send(JSON.stringify({classid:classID,quizno:quizNumber}));
         var quizobj = JSON.parse(xhr.responseText);
     }
@@ -26,7 +26,7 @@ function sendQuiz() {
     var xhr = new XMLHttpRequest();
     xhr.open('POST', '/?admin='+adminID+'&cmd=sendquiz', false);
     xhr.setRequestHeader("Content-type","text/plain");
-    xhr.overrideMimeType("application/json"); 
+    //xhr.overrideMimeType("application/json"); 
     xhr.send(JSON.stringify({classid:classID,quizno:quizNumber}));
     var emptystr = xhr.responseText;
 }
@@ -39,7 +39,7 @@ function writeChoice(questionNumber, choice) {
     var xhr = new XMLHttpRequest();
     xhr.open('POST', '/?admin='+adminID+'&cmd=writeonechoice', false);
     xhr.setRequestHeader("Content-type","text/plain");
-    xhr.overrideMimeType("application/json"); 
+    //xhr.overrideMimeType("application/json"); 
     xhr.send(JSON.stringify({classid:classID,quizno:quizNumber,questionno:questionNumber,choice:choice}));
     var emptystr = xhr.responseText;
 }
@@ -69,7 +69,7 @@ function openQuestion (questionNumber) {
         var xhr = new XMLHttpRequest();
         xhr.open('POST', '/?admin='+adminID+'&cmd=readonequestion', false);
         xhr.setRequestHeader("Content-type","text/plain");
-        xhr.overrideMimeType("application/json"); 
+        //xhr.overrideMimeType("application/json"); 
         xhr.send(JSON.stringify({classid:classID,quizno:quizNumber,questionno:questionNumber}));
         qobj = JSON.parse(xhr.responseText);
         // ... empty this child ...
@@ -204,7 +204,7 @@ function closeQuestion (questionNumber) {
     var xhr = new XMLHttpRequest();
     xhr.open('POST', '/?admin='+adminID+'&cmd=writeonequestion', false);
     xhr.setRequestHeader("Content-type","text/plain");
-    xhr.overrideMimeType("application/json"); 
+    //xhr.overrideMimeType("application/json"); 
     xhr.send(JSON.stringify({classid:classID,quizno:quizNumber,questionno:questionNumber,data:obj}));
     var questionNumber = JSON.parse(xhr.responseText);
     node.setAttribute('id', 'quiz-question-' + questionNumber);

@@ -61,7 +61,7 @@ function saveStudent() {
         var xhr = new XMLHttpRequest();
         xhr.open('POST', '/?admin='+adminID+'&cmd=readonestudent', false);
         xhr.setRequestHeader("Content-type","application/json");
-        xhr.overrideMimeType("application/json"); 
+        //xhr.overrideMimeType("application/json"); 
         xhr.send(JSON.stringify({id:id}));
         var obj = JSON.parse(xhr.responseText);
         studentName.value = obj.name;
@@ -76,7 +76,7 @@ function buildStudentList (rows) {
         var xhr = new XMLHttpRequest();
         xhr.open('POST', '/?admin='+adminID+'&cmd=readstudents', false);
         xhr.setRequestHeader("Content-type","text/plain");
-        xhr.overrideMimeType("application/json"); 
+        //xhr.overrideMimeType("application/json"); 
         xhr.send(null);
         var rows = JSON.parse(xhr.responseText);
     }

@@ -8,7 +8,7 @@ function buildQuizList (rows) {
         var xhr = new XMLHttpRequest();
         xhr.open('POST', '/?admin='+adminID+'&cmd=readquizzes', false);
         xhr.setRequestHeader("Content-type","text/plain");
-        xhr.overrideMimeType("application/json"); 
+        //xhr.overrideMimeType("application/json"); 
         xhr.send(JSON.stringify({classid:classID}));
         var rows = JSON.parse(xhr.responseText);
     }
@@ -64,7 +64,7 @@ function buildMemberLists(rowsets) {
         var xhr = new XMLHttpRequest();
         xhr.open('POST', '/?admin='+adminID+'&cmd=readmembers', false);
         xhr.setRequestHeader("Content-type","application/json");
-        xhr.overrideMimeType("application/json"); 
+        //xhr.overrideMimeType("application/json"); 
         xhr.send(JSON.stringify({classID:classID}));
         rowsets = JSON.parse(xhr.responseText);
     }
@@ -105,7 +105,7 @@ function addMembers () {
     var xhr = new XMLHttpRequest();
     xhr.open('POST', '/?admin='+adminID+'&cmd=addmembers', false);
     xhr.setRequestHeader("Content-type","application/json");
-    xhr.overrideMimeType("application/json"); 
+    //xhr.overrideMimeType("application/json"); 
     xhr.send(JSON.stringify({classID:classID,addmembers:ret}));
     var rowsets = JSON.parse(xhr.responseText);
     buildMemberLists(rowsets);
@@ -124,7 +124,7 @@ function removeMembers () {
     var xhr = new XMLHttpRequest();
     xhr.open('POST', '/?admin='+adminID+'&cmd=removemembers', false);
     xhr.setRequestHeader("Content-type","application/json");
-    xhr.overrideMimeType("application/json"); 
+    //xhr.overrideMimeType("application/json"); 
     xhr.send(JSON.stringify({classID:classID,removemembers:ret}));
     var rowsets = JSON.parse(xhr.responseText);
     buildMemberLists(rowsets);
