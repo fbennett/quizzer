@@ -13,14 +13,3 @@ ol#quiz-questions .selection-text {
     margin-left: 15px;
     display: inline-block;
 }
-
-.float-left-number {
-    clear: both;
-    float: left;
-}
-
-.float-left-content {
-    clear: both;
-    float: left;
-}
-

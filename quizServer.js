@@ -82,7 +82,7 @@ var pageClass = fs.readFileSync('./pages/admin/class.html');
 var pageQuizAdmin = fs.readFileSync('./pages/admin/quiz.html');
 //var pageQuizEdit = fs.readFileSync('./pages/admin/quizedit.html');
 //var pageQuestionEdit = fs.readFileSync('./pages/admin/questionedit.html');
-var pageQuiz = fs.readFileSync('./pages/user/quizpage.html');
+var pageQuiz = fs.readFileSync('./pages/user/quiz.html');
 
 //var pageQuizResult = fs.readFileSync('./pages/user/quizresult.html');
 
@@ -126,11 +126,12 @@ function getRandomKey(len, base) {
 function sendQuiz (response, classID, quizNumber) {
     // Get email addresses
     var className = classes[classID].name;
-    for (var studentKey in memberships[classID]) {
-        var email = studentsById[studentKey].email;
+    for (var studentID in memberships[classID]) {
+        var email = studentsById[studentID].email;
+        var studentKey = studentsById[studentID].key;
         // Send mail messages
         var text = "We have prepared a quiz to help you check and improve your English writing ability.\n\nClick on the link below to take the quiz:\n\n"
-            + "    http://our.law.nagoya-u.ac.jp:3498/?id=" + studentKey + "&classid=" + classID + "&quizno=" + quizNumber + "\n\n"
+            + "    http://our.law.nagoya-u.ac.jp:3498/?id=" + studentID + "&key=" + studentKey + "&classid=" + classID + "&quizno=" + quizNumber + "\n\n"
             + "Sincerely yours,\n"
             + "The Academic Writing team"
         mailserver.send({
@@ -144,6 +145,33 @@ function sendQuiz (response, classID, quizNumber) {
     // Return to client
     response.writeHead(200, {'Content-Type': 'text/plain'});
     response.end("");
+}
+
+function quizPage (response, classID, studentID, studentKey, quizNumber) {
+    var quizData = {classID:classID,studentID:studentID,studentKey:studentKey,quizNumber:quizNumber};
+    quizData.questions = [];
+    fs.readdir('./question/' + classID + '/' + quizNumber, function (err, questions) {
+        questions.sort(function (a,b) {
+            a = parseInt(a, 10);
+            b = parseInt(b, 10);
+            if (a>b) {
+                return 1;
+            } else if (a < b) {
+                return -1;
+            } else {
+                return 0;
+            }
+        });
+        for (var i=0,ilen=questions.length;i<ilen;i+=1) {
+            var obj = fs.readFileSync('./question/' + classID + '/' + quizNumber + '/' + questions[i]);
+            obj = JSON.parse(obj);
+            //delete obj.correct;
+            quizData.questions.push(obj);
+        }
+        var qp = pageQuiz.toString().replace(/@@QUIZ_OBJECT@@/g, JSON.stringify(quizData));
+        response.writeHead(200, {'Content-Type': 'text/html'});
+        response.end(qp);
+    });
 }
 
 function writeStudents(studentsById) {
@@ -490,10 +518,9 @@ function runServer() {
                 var uriObj = url.parse(this.url);
                 uriObj.parsedQuery = require('querystring').parse(uriObj.query);
                 var adminKey = uriObj.parsedQuery.admin;
-                var quizKey = uriObj.parsedQuery.quiz;
                 var studentID = uriObj.parsedQuery.id;
-                var classID = uriObj.parsedQuery.classid;
                 var studentKey = uriObj.parsedQuery.key;
+                var classID = uriObj.parsedQuery.classid;
                 var pageKey = uriObj.parsedQuery.page;
                 var quizNumber = uriObj.parsedQuery.quizno;
                 var cmd = uriObj.parsedQuery.cmd;
@@ -521,9 +548,9 @@ function runServer() {
                         response.end("Sorry, can't help you. I don't know about that page.");
                         return;
                     }
-                } else if (!cmd && quizKey && studentID && studentKey) {
-                        response.writeHead(200, {'Content-Type': 'text/html'});
-                        response.end(pageQuiz);
+                } else if (!cmd && quizNumber && studentID && studentKey && classID) {
+                    quizPage(response, classID,studentID,studentKey,quizNumber);
+                    return;
                 } else {
                     // All API calls and page dependencies will be handled here when we get to it
                     if ('.xml' === uriObj.href.slice(-4)) {
@@ -688,6 +715,7 @@ function runServer() {
                     return;
                 }
                 else{
+                    //console.log("OOPS: cmd="+cmd+", classID="+classID+", studentID="+studentID,', studentKey='+studentKey+", quizNumber="+quizNumber)
                     response.writeHead(500, {'Content-Type': 'text/plain'});
                     response.end("An error occurred");
                     return;
