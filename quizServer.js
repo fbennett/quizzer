@@ -148,6 +148,13 @@ function sendQuiz (response, classID, quizNumber) {
 }
 
 function quizPage (response, classID, studentID, studentKey, quizNumber) {
+    // Validate a little
+    response.writeHead(200, {'Content-Type': 'text/html'});
+    response.end(pageQuiz);
+}
+
+function quizData (response, classID, studentID, studentKey, quizNumber) {
+    // Validate a little
     var quizData = {classID:classID,studentID:studentID,studentKey:studentKey,quizNumber:quizNumber};
     quizData.questions = [];
     fs.readdir('./question/' + classID + '/' + quizNumber, function (err, questions) {
@@ -168,9 +175,9 @@ function quizPage (response, classID, studentID, studentKey, quizNumber) {
             //delete obj.correct;
             quizData.questions.push(obj);
         }
-        var qp = pageQuiz.toString().replace(/@@QUIZ_OBJECT@@/g, JSON.stringify(quizData));
-        response.writeHead(200, {'Content-Type': 'text/html'});
-        response.end(qp);
+        var quizObject = JSON.stringify(quizData);
+        response.writeHead(200, {'Content-Type': 'application/json'});
+        response.end(quizObject);
     });
 }
 
@@ -550,6 +557,9 @@ function runServer() {
                     }
                 } else if (!cmd && quizNumber && studentID && studentKey && classID) {
                     quizPage(response, classID,studentID,studentKey,quizNumber);
+                    return;
+                } else if (cmd === 'quizdata' && quizNumber && studentID && studentKey && classID) {
+                    quizData(response, classID, studentID, studentKey, quizNumber);
                     return;
                 } else {
                     // All API calls and page dependencies will be handled here when we get to it
