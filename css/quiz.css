@@ -16,6 +16,7 @@ ol#quiz-questions input.selection {
 }
 
 ol#quiz-questions textarea.selection {
+    display: block-inline;
     margin-left: 15px;
     vertical-align: top;
 }
