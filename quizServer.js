@@ -143,9 +143,17 @@ function sendQuiz (response, classID, quizNumber) {
         }, function(err, message) { console.log(err || message); });
 
     }
-    // Return to client
-    response.writeHead(200, {'Content-Type': 'text/plain'});
-    response.end("");
+    fs.mkdir('./answer/' + classID + "/" + quizNumber, 0700, function(err) {
+        // Return to client
+        if (err) {
+            console.log("Error creating dir: answer/" + classID + '/' + quizNumber);
+            response.writeHead(500, {'Content-Type': 'text/plain'});
+            response.end("Error creating dir: answer/" + classID + '/' + quizNumber);
+        } else {
+            response.writeHead(200, {'Content-Type': 'text/plain'});
+            response.end("");
+        }
+    });
 }
 
 function quizPage (response, classID, studentID, studentKey, quizNumber) {
