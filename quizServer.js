@@ -157,8 +157,10 @@ function quizData (response, classID, studentID, studentKey, quizNumber) {
     // Validate a little
     var quizData = {classID:classID,studentID:studentID,studentKey:studentKey,quizNumber:quizNumber};
     quizData.questions = [];
-    fs.readdir('./question/' + classID + '/' + quizNumber, function (err, questions) {
+    var path = './question/' + classID + '/' + quizNumber
+    fs.readdir(path, function (err, questions) {
         if (err) {
+            console.log("ERROR: no data found for: " + path);
             response.writeHead(500, {'Content-Type': 'text/plain'});
             response.end("No questions found for this URL");
         } else {
