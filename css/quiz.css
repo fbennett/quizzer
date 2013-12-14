@@ -15,14 +15,7 @@ ol#quiz-questions input.selection {
     left: -10px;
 }
 
-ol#quiz-questions textarea.selection {
-    display: block-inline;
-    margin-left: 15px;
-    vertical-align: top;
-}
-
 ol#quiz-questions .selection-text {
-    display: block;
     margin-left: 15px;
     vertical-align: top;
 }
