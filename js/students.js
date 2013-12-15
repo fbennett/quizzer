@@ -101,6 +101,7 @@ function buildStudentList (rows) {
         nameTD.appendChild(nameText);
         tr.appendChild(nameTD);
         emailTD.appendChild(emailText);
+        emailTD.setAttribute("class", "email");
         tr.appendChild(emailTD)
         idTD.appendChild(idText);
         idTD.hidden = true;
