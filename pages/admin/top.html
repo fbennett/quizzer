@@ -3,16 +3,17 @@
   <title>Quizzer Admin - top page</title>
   <script type="text/javascript" src="js/local.js"></script>  
   <link rel="stylesheet" type="text/css" href="css/simple-grid.css"/>
+  <link rel="stylesheet" type="text/css" href="css/top.css"/>
 </head>
 <body>
   <div class="grid">  
     <div class="col-1-1">
       <h1>Quizzer Admin</h1>
-      <div>
-        <input type="button" value="Students" onclick="window.location = '?page=students&admin=' + getParameterByName('admin')"/>
+      <div style="display:inline-block">
+        <input class="button" type="button" value="Students" onclick="window.location = '?page=students&admin=' + getParameterByName('admin')"/>
       </div>
-      <div>
-        <input type="button" value="Classes" onclick="window.location = '?page=classes&admin=' + getParameterByName('admin')"/>
+      <div style="display:inline-block">
+        <input class="button" type="button" value="Classes" onclick="window.location = '?page=classes&admin=' + getParameterByName('admin')"/>
       </div>
     </div>
   </div>

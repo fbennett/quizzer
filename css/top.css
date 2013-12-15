@@ -1,0 +1,11 @@
+div.button-wrapper {
+    display:inline-block;
+}
+
+input.button {
+    font-size:400%;
+    border:5px solid #bbbbbb;
+    border-radius:1em;
+    padding:0.5em;
+}
+
