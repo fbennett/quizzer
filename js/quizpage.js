@@ -22,6 +22,26 @@ xhr.setRequestHeader("Content-type","text/plain");
 xhr.send(null);
 var quizData = JSON.parse(xhr.responseText);
 
+function markdown (txt) {
+    txt = txt.replace(/\(\(([a-zA-Z1-9])\)\)/g, function (aChar) {
+        var c, val, offset;
+        console.log('XXX: '+aChar[2]);
+        if (aChar[2].match(/[a-z]/)) {
+            val = (aChar.charCodeAt(2) - 97)
+            offset = 9424;
+        } else if (aChar[2].match(/[A-Z]/)) {
+            val = (aChar.charCodeAt(2) - 65)
+            offset = 9398;
+        } else {
+            val = (aChar.charCodeAt(2) - 49)
+            offset = 9312;
+        }
+        console.log("WOW "+aChar[2]+ " " +val+" "+offset+" "+String.fromCharCode(val + offset))
+        return String.fromCharCode(val + offset);
+    });
+    return marked.parse(txt);
+}
+
 function runQuiz() {
     for (var i=0,ilen=quizData.questions.length;i<ilen;i+=1) {
         remap = randomize(quizData.questions[i].questions);
@@ -42,7 +62,7 @@ function displaychild(quizData) {
         return;
     }
     var question = quizData.questions[nextnodecounter];
-    document.getElementById("question").innerHTML = marked.parse(question.rubric);
+    document.getElementById("question").innerHTML = markdown(question.rubric);
     
     // display question text  
 	var options = document.getElementById("options")
@@ -60,7 +80,7 @@ function displaychild(quizData) {
         input.setAttribute('id', ('rbtnCount' + i));
         var label = document.createElement('div');
         label.setAttribute('class', 'label');
-        label.innerHTML = marked.parse(question.questions[i]);
+        label.innerHTML = markdown(question.questions[i]);
         choiceDiv.appendChild(input);
         choiceDiv.appendChild(label);
         radioBtn.appendChild(choiceDiv);

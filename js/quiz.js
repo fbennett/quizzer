@@ -271,6 +271,26 @@ function displayQuestions (quizobj) {
     }
 }
 
+function markdown (txt) {
+    txt = txt.replace(/\(\(([a-zA-Z1-9])\)\)/g, function (aChar) {
+        var c, val, offset;
+        console.log('XXX: '+aChar[2]);
+        if (aChar[2].match(/[a-z]/)) {
+            val = (aChar.charCodeAt(2) - 97)
+            offset = 9424;
+        } else if (aChar[2].match(/[A-Z]/)) {
+            val = (aChar.charCodeAt(2) - 65)
+            offset = 9398;
+        } else {
+            val = (aChar.charCodeAt(2) - 49)
+            offset = 9312;
+        }
+        console.log("WOW "+aChar[2]+ " " +val+" "+offset+" "+String.fromCharCode(val + offset))
+        return String.fromCharCode(val + offset);
+    });
+    return marked.parse(txt);
+}
+
 function displayQuestion (qobj, questionNumber) {
 
     // XXX Put a listener on the checkbox nodes, so that correct answer
@@ -286,7 +306,7 @@ function displayQuestion (qobj, questionNumber) {
     }
     var rubric = document.createElement('div');
     rubric.setAttribute("class", "rubric");
-    rubric.innerHTML = marked.parse(qobj.rubric);
+    rubric.innerHTML = markdown(qobj.rubric);
     node.appendChild(rubric);
     for (var i=0,ilen=qobj.questions.length;i<ilen;i+=1) {
         var choice_wrapper = document.createElement('div');
@@ -302,7 +322,7 @@ function displayQuestion (qobj, questionNumber) {
         choice_wrapper.appendChild(checkbox)
         var selectionText = document.createElement('div');
         selectionText.setAttribute('class', 'selection-text');
-        selectionText.innerHTML = marked.parse(qobj.questions[i]);
+        selectionText.innerHTML = markdown(qobj.questions[i]);
         choice_wrapper.appendChild(selectionText)
         node.appendChild(choice_wrapper)
     }
