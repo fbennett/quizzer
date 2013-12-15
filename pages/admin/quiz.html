@@ -16,7 +16,8 @@
         <input type="button" value="Back" onclick="window.location = '?page=class&admin=' + getParameterByName('admin') + '&classid=' + getParameterByName('classid')"/>
       </div>
       <div>
-        <input type="button" value="Send Quiz" onclick="sendQuiz()"/>
+        <input id="send-quiz" type="button" value="Send Quiz" onclick="sendQuiz()"/>
+        <input id="quiz-results" type="button" value="Quiz Results" onclick="quizResults()" hidden="true"/>
       </div>
       <hr/>
       <ol id="quiz-questions">

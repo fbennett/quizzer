@@ -344,12 +344,19 @@ function readQuizzes(response, classID) {
 
 function readQuestions(response, classID, quizNumber) {
     fs.readdir('./question/' + classID + '/' + quizNumber, function (err, questions) {
-        var quizobj = {};
+        var quizobj = {sent:false,questions:{}};
         for (var i=0,ilen=questions.length;i<ilen;i+=1) {
-            quizobj[questions[i]] = JSON.parse(fs.readFileSync('./question/' + classID + '/' + quizNumber + '/' + questions[i]));
+            quizobj.questions[questions[i]] = JSON.parse(fs.readFileSync('./question/' + classID + '/' + quizNumber + '/' + questions[i]));
         }
-        response.writeHead(200, {'Content-Type': 'application/json'});
-        response.end(JSON.stringify(quizobj));
+        fs.readdir('./answer/' + classID + '/' + quizNumber, function (err, files) {
+            if (err) {
+                quizobj.sent = false;
+            } else {
+                quizobj.sent = true;
+            }
+            response.writeHead(200, {'Content-Type': 'application/json'});
+            response.end(JSON.stringify(quizobj));
+        });
     });
 }
 

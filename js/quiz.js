@@ -13,9 +13,18 @@ function buildQuestionList (quizobj) {
         xhr.send(JSON.stringify({classid:classID,quizno:quizNumber}));
         var quizobj = JSON.parse(xhr.responseText);
     }
-    displayQuestions(quizobj);
+    displayQuestions(quizobj.questions);
     var button = document.getElementById('add-question-button');
     button.disabled = false;
+    var sendQuiz = document.getElementById('send-quiz');
+    var quizResults = document.getElementById('quiz-results');
+    if (quizobj.sent) {
+        sendQuiz.hidden = true;
+        quizResults.hidden = false;
+    } else {
+        sendQuiz.hidden = false;
+        quizResults.hidden = true;
+    }
 }
 
 function sendQuiz() {
@@ -29,6 +38,10 @@ function sendQuiz() {
     //xhr.overrideMimeType("application/json"); 
     xhr.send(JSON.stringify({classid:classID,quizno:quizNumber}));
     var emptystr = xhr.responseText;
+    var sendQuiz = document.getElementById('send-quiz');
+    var quizResults = document.getElementById('quiz-results');
+    sendQuiz.hidden = true;
+    quizResults.hidden = false;
 }
 
 function writeChoice(questionNumber, choice) {
