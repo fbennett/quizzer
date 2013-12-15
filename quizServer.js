@@ -187,19 +187,19 @@ function getQuizResult (response, classID, studentID, studentKey, quizNumber) {
                     response.end("Error reading server directory: " + qpath);
                 } else {
                     var answers = JSON.parse(adata);
-                    for (var key in answers) {
-                        
-                        if (files.indexOf(key) == -1) {
-                                var qdata = fs.readFileSync(qpath + '/' + files[key]);
-                                var qdata = JSON.parse(qdata);
-                            if (answers[key] != qdata.correct) {
-                                var item  = {
-                                    rubric: qdata.rubric,
-                                    wrong: qdata.questions[key],
-                                    right: qdata.questions[qdata.correct]
-                                }
-                                ret.push(item);
+                    for (var i=0,ilen=files.length;i<ilen;i+=1) {
+                        var filename = files[i];
+                        var qdata = fs.readFileSync(qpath + '/' + filename);
+                        qdata = JSON.parse(qdata);
+                        if (qdata.correct != answers[filename]
+                            || 'number' !== typeof answers[filename]) {
+
+                            var item = {
+                                rubric: qdata.rubric,
+                                wrong: 'number' === typeof answers[filename]? qdata.questions[answers[filename]] : "oops, no answer",
+                                right: qdata.questions[qdata.correct]
                             }
+                            ret.push(item);
                         }
                     }
                     var retdata = JSON.stringify(ret);
@@ -236,7 +236,8 @@ function quizData (response, classID, studentID, studentKey, quizNumber) {
             for (var i=0,ilen=questions.length;i<ilen;i+=1) {
                 var obj = fs.readFileSync('./question/' + classID + '/' + quizNumber + '/' + questions[i]);
                 obj = JSON.parse(obj);
-                //delete obj.correct;
+                delete obj.correct;
+                obj.number = questions[i];
                 quizData.questions.push(obj);
             }
             var quizObject = JSON.stringify(quizData);
@@ -419,7 +420,9 @@ function readQuestions(response, classID, quizNumber) {
     fs.readdir('./question/' + classID + '/' + quizNumber, function (err, questions) {
         var quizobj = {sent:false,questions:{}};
         for (var i=0,ilen=questions.length;i<ilen;i+=1) {
-            quizobj.questions[questions[i]] = JSON.parse(fs.readFileSync('./question/' + classID + '/' + quizNumber + '/' + questions[i]));
+            var obj = JSON.parse(fs.readFileSync('./question/' + classID + '/' + quizNumber + '/' + questions[i]));
+            obj.number = questions[i];
+            quizobj.questions[questions[i]] = obj;
         }
         fs.readdir('./answer/' + classID + '/' + quizNumber, function (err, files) {
             if (err) {
@@ -436,9 +439,8 @@ function readQuestions(response, classID, quizNumber) {
 
 function readQuestion(response, classID, quizNumber, questionNumber) {
     fs.readFile('./question/' + classID + '/' + quizNumber + '/' + questionNumber, function (err, data) {
-        var quizobj = data;
         response.writeHead(200, {'Content-Type': 'application/json'});
-        response.end(quizobj);
+        response.end(data);
     });
 }
 

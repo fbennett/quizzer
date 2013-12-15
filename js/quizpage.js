@@ -71,7 +71,8 @@ function displaychild(quizData) {
 
 function FunNextNode() {
 	var questions = quizData.questions;
-    var realqno = quizData.remap[nextnodecounter];
+    //var derandomizedqno = quizData.remap[nextnodecounter];
+    var realqno = questions[nextnodecounter].number;
     quizResult[realqno] = questions[nextnodecounter].remap[getvalue];
 	nextnodecounter = nextnodecounter + 1;
     if (questions.length == (nextnodecounter)) {
