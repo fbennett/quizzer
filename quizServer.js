@@ -170,6 +170,47 @@ function quizPage (response, classID, studentID, studentKey, quizNumber) {
     });
 }
 
+function getQuizResult (response, classID, studentID, studentKey, quizNumber) {
+    var ret = [];
+    var apath = './answer/' + classID + '/' + quizNumber + '/' + studentID;
+    fs.readFile(apath, function (err, adata) {
+        if (err) {
+            console.log("Error reading file: "+apath);
+            response.writeHead(500, {'Content-Type': 'text/plain'});
+            response.end("Error reading server file: " + apath);
+        } else {
+            qpath = './question/' + classID + '/' + quizNumber;
+            fs.readdir(qpath, function (err, files) {
+                if (err) {
+                    console.log("Error reading directory: "+qpath);
+                    response.writeHead(500, {'Content-Type': 'text/plain'});
+                    response.end("Error reading server directory: " + qpath);
+                } else {
+                    var answers = JSON.parse(adata);
+                    for (var key in answers) {
+                        
+                        if (files.indexOf(key) == -1) {
+                                var qdata = fs.readFileSync(qpath + '/' + files[key]);
+                                var qdata = JSON.parse(qdata);
+                            if (answers[key] != qdata.correct) {
+                                var item  = {
+                                    rubric: qdata.rubric,
+                                    wrong: qdata.questions[key],
+                                    right: qdata.questions[qdata.correct]
+                                }
+                                ret.push(item);
+                            }
+                        }
+                    }
+                    var retdata = JSON.stringify(ret);
+                    response.writeHead(200, {'Content-Type': 'text/plain'});
+                    response.end(retdata);
+                }
+            });
+        }
+    });
+}
+
 function quizData (response, classID, studentID, studentKey, quizNumber) {
     // Validate a little
     var quizData = {classID:classID,studentID:studentID,studentKey:studentKey,quizNumber:quizNumber};
@@ -214,7 +255,7 @@ function writeQuizResult (response, classID, studentID, studentKey, quizNumber, 
             response.writeHead(500, {'Content-Type': 'text/plain'});
             response.end("No questions found for this URL");
         } else {
-            var resultUrl = 'http://' + hostname + ':3498/?cmd=showmyquiz&classid=' + classID+ '&id=' + studentID + '&key=' + studentKey + '&quizno=' + quizNumber;
+            var resultUrl = 'http://' + hostname + ':3498/?classid=' + classID+ '&id=' + studentID + '&key=' + studentKey + '&quizno=' + quizNumber + '&hostname=' + hostname;
             response.writeHead(200, {'Content-Type': 'text/plain'});
             response.end(resultUrl);
         }
@@ -224,7 +265,7 @@ function writeQuizResult (response, classID, studentID, studentKey, quizNumber, 
 function showQuizResultPage (response, classID, studentID, studentKey, quizNumber) {
     myPage = pageQuizResult.toString().replace(/@@CLASS@@/g, classes[classID].name);
     myPage = myPage.replace(/@@QUIZ_NUMBER@@/g, "Quiz " + quizNumber);
-    myPage = myPage.replace(/@@STUDENT_NAME@@/g, studentsById[studentID]);
+    myPage = myPage.replace(/@@STUDENT_NAME@@/g, studentsById[studentID].name);
     response.writeHead(200, {'Content-Type': 'text/html'});
     response.end(myPage);
 }
@@ -622,6 +663,9 @@ function runServer() {
                     return;
                 } else if (cmd === 'showmyquiz' && quizNumber && studentID && studentKey && classID) {
                     showQuizResultPage(response, classID, studentID, studentKey, quizNumber);
+                    return;
+                } else if (cmd === 'myquizresult' && quizNumber && studentID && studentKey && classID) {
+                    getQuizResult(response, classID, studentID, studentKey, quizNumber);
                     return;
                 } else {
                     // All API calls and page dependencies will be handled here when we get to it

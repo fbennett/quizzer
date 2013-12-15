@@ -2,13 +2,22 @@
 <html>  
   <head>  
     <link rel="stylesheet" type="text/css" href="css/quizresult.css"/>
+  <link rel="stylesheet" type="text/css" href="css/simple-grid.css"/>
     <script type="text/javascript" src="node_modules/marked/lib/marked.js"></script>
     <script type="text/javascript" src="js/local.js"></script>
     <script type="text/javascript" src="js/quizresult.js"></script>
   </head>  
-  <body onload="runResult()">  
-    <div id="result-List">
+  <body onload="runResult()">
+  <div class="grid">
+    <div class="col-1-1">
+      <h1>Quizzer</h1>
+      <h2>@@CLASS@@: @@QUIZ_NUMBER@@</h2>
+      <h3>Results for @@STUDENT_NAME@@</h3>
+      <hr/>
+    </div>
+    <div id="result-list">
       Hello.
     </div>
+  </div>
   </body>  
 </html>  

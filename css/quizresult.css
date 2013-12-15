@@ -1,0 +1,22 @@
+.answer-pair {
+    margin: 0 0 10px 0;
+}
+
+.right-answer {
+    background: #e3ffe6;
+    border: 3px double black;
+    margin: 6px 0 6px 1em;
+    padding: 0 5px 0 5px
+}
+
+.wrong-answer {
+    background: #ffdfdf;
+    border: 1px solid black;
+    margin: 6px 0 6px 1em;
+    padding: 0 5px 0 5px;
+    text-decoration: line-through;
+}
+
+.rubric {
+    font-weight: bold;
+}
