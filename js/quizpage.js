@@ -1,5 +1,4 @@
 var nextnodecounter = 0;
-var correctanscounter = 0;
 var setvalue; 
 var getvalue;  
 var ansarry = new Array();
@@ -13,6 +12,8 @@ var hostname = getParameterByName('hostname');
 if (!hostname) {
     hostname = 'our.law.nagoya-u.ac.jp';
 }
+
+var quizResult = {};
 
 // Get quiz data
 var xhr = new XMLHttpRequest();
@@ -45,7 +46,6 @@ function displaychild(quizData) {
     
     // display question text  
 	document.getElementById("options").innerHTML = "";
-    ansarry.push(question.correct);
     for (var i=0,ilen=question.questions.length;i<ilen;i+=1) {
         var choice = marked(question.questions[i]);
         var radioBtn = $('<li><div class="choice"><input name="r1" type="radio" value="'
@@ -59,15 +59,12 @@ function displaychild(quizData) {
 }  
 
 function FunNextNode() {
-	nextnodecounter = nextnodecounter + 1;
-    var pos = (nextnodecounter-1);
-	if (getvalue == quizData.questions[pos].remap[ansarry[nextnodecounter-1]]) {  
-	    correctanscounter = correctanscounter + 1;  
-	}  
 	var questions = quizData.questions;
+    var realqno = quizData.remap[nextnodecounter];
+    quizResult[realqno] = questions[nextnodecounter].remap[getvalue];
+	nextnodecounter = nextnodecounter + 1;
     if (questions.length == (nextnodecounter)) {
         document.getElementById("nextButton").innerHTML = "Show&nbsp;Result";
-        // nextnodecounter += -1;
     }
     displaychild(quizData);  
 }  
@@ -87,31 +84,25 @@ function enablebtn(setvalue) {
 	document.getElementById("nextButton").disabled = false;  
     getvalue = setvalue;  
 }  
-function ShowResult() {  
-	document.getElementById("result").style.display="block";
-    
-    document.getElementById("noofques").innerHTML = nextnodecounter;  
-    document.getElementById("noofcorans").innerHTML = correctanscounter;  
-    // XXX Dump result somewhere. We would want:
-    // XXX   * Total correct
-    // XXX   * Questions missed
-    // XXX   * Date and time submitted
-    // XXX Dump as JSON. Viz: http://stackoverflow.com/questions/5670752/write-pretty-json-to-file-using-node-js
-    // XXX Secondary API reads the results and compiles to CSV
-    // XXX Done.
+function ShowResult() {
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', 'http://' + hostname + ':3498/?cmd=writequizresult&classid=' + classID+ '&id=' + studentID + '&key=' + studentKey + '&quizno=' + quizNumber, false);
+    xhr.setRequestHeader("Content-type","text/plain");
+    xhr.send(JSON.stringify({quizres:quizResult}));
+    var resultPageUrl = xhr.responseText;
+    window.location.href = resultPageUrl;
 }
 
 function randomize(array) {
-    var orig_order = [];
+    var new_order = [];
     var currentIndex = array.length;
     var temporaryValue;
     var randomIndex;
     var temporaryPos;
 
     for (var i=0,ilen=array.length;i<ilen;i+=1) {
-        orig_order.push(i);
+        new_order.push(i);
     }
-    var new_order = orig_order.slice();
 
     // While there remain elements to shuffle...
     while (0 !== currentIndex) {
@@ -128,8 +119,8 @@ function randomize(array) {
     }
     var remap = {};
     for (var i=0,ilen=array.length;i<ilen;i+=1) {
-        remap[new_order[i]] = orig_order[i];
+        remap[i] = new_order[i];
     }
-    console.log("HUH? "+JSON.stringify(remap));
+    //console.log("HUH? "+JSON.stringify(remap));
     return remap;
 }

@@ -84,6 +84,7 @@ var pageQuizAdmin = fs.readFileSync('./pages/admin/quiz.html');
 //var pageQuizEdit = fs.readFileSync('./pages/admin/quizedit.html');
 //var pageQuestionEdit = fs.readFileSync('./pages/admin/questionedit.html');
 var pageQuiz = fs.readFileSync('./pages/user/quiz.html');
+var pageQuizResult = fs.readFileSync('./pages/user/quizresult.html');
 
 //var pageQuizResult = fs.readFileSync('./pages/user/quizresult.html');
 
@@ -158,8 +159,15 @@ function sendQuiz (response, classID, quizNumber) {
 
 function quizPage (response, classID, studentID, studentKey, quizNumber) {
     // Validate a little
-    response.writeHead(200, {'Content-Type': 'text/html'});
-    response.end(pageQuiz);
+    var path = './answer/' + classID + '/' + quizNumber + '/' + studentID;
+    fs.readFile(path, function (err, data) {
+        if (err) {
+            response.writeHead(200, {'Content-Type': 'text/html'});
+            response.end(pageQuiz);
+        } else {
+            showQuizResultPage(response, classID, studentID, studentKey, quizNumber);
+        }
+    });
 }
 
 function quizData (response, classID, studentID, studentKey, quizNumber) {
@@ -195,6 +203,30 @@ function quizData (response, classID, studentID, studentKey, quizNumber) {
             response.end(quizObject);
         }
     });
+}
+
+function writeQuizResult (response, classID, studentID, studentKey, quizNumber, quizResult) {
+    var path = './answer/' + classID + '/' + quizNumber + '/' + studentID;
+    var quizResult = JSON.stringify(quizResult);
+    fs.writeFile(path, quizResult, function (err) {
+        if (err) {
+            console.log("ERROR: no data found for: " + path);
+            response.writeHead(500, {'Content-Type': 'text/plain'});
+            response.end("No questions found for this URL");
+        } else {
+            var resultUrl = 'http://' + hostname + ':3498/?cmd=showmyquiz&classid=' + classID+ '&id=' + studentID + '&key=' + studentKey + '&quizno=' + quizNumber;
+            response.writeHead(200, {'Content-Type': 'text/plain'});
+            response.end(resultUrl);
+        }
+    });
+}
+
+function showQuizResultPage (response, classID, studentID, studentKey, quizNumber) {
+    myPage = pageQuizResult.toString().replace(/@@CLASS@@/g, classes[classID].name);
+    myPage = myPage.replace(/@@QUIZ_NUMBER@@/g, "Quiz " + quizNumber);
+    myPage = myPage.replace(/@@STUDENT_NAME@@/g, studentsById[studentID]);
+    response.writeHead(200, {'Content-Type': 'text/html'});
+    response.end(myPage);
 }
 
 function writeStudents(studentsById) {
@@ -583,6 +615,13 @@ function runServer() {
                     return;
                 } else if (cmd === 'quizdata' && quizNumber && studentID && studentKey && classID) {
                     quizData(response, classID, studentID, studentKey, quizNumber);
+                    return;
+                } else if (cmd === 'writequizresult' && quizNumber && studentID && studentKey && classID) {
+                    var payload = JSON.parse(this.POSTDATA);
+                    writeQuizResult(response, classID, studentID, studentKey, quizNumber, payload.quizres);
+                    return;
+                } else if (cmd === 'showmyquiz' && quizNumber && studentID && studentKey && classID) {
+                    showQuizResultPage(response, classID, studentID, studentKey, quizNumber);
                     return;
                 } else {
                     // All API calls and page dependencies will be handled here when we get to it
