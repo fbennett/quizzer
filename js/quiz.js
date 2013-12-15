@@ -225,9 +225,19 @@ function closeQuestion (questionNumber) {
         node.removeChild(node.childNodes[0])
     }
     displayQuestion(obj, questionNumber);
+    setSendButton([1]);
     // Add some magic to change the button back to "Add Question"
     var button = document.getElementById('add-question-button');
     button.disabled = false;
+}
+
+function setSendButton (lst) {
+    var sendQuiz = document.getElementById("send-quiz");
+    if (!lst.length) {
+        sendQuiz.disabled = true;
+    } else {
+        sendQuiz.disabled = false;
+    }
 }
 
 function displayQuestions (quizobj) {
@@ -252,6 +262,7 @@ function displayQuestions (quizobj) {
             return 0;
         }
     });
+    setSendButton(lst);
     // Display objects in lst
     for (var i=0,ilen=lst.length;i<ilen;i+=1) {
         displayQuestion(quizobj[lst[i]], lst[i]);
