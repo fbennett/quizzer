@@ -1,47 +1,18 @@
 <!DOCTYPE html>  
 <html>  
   <head>  
-    <style type="text/css">  
-	  div#options input{  
-	  	margin-left: 15px;    
-	  }  
-	  ul {  
-      	list-style-type: none;  
-	  }  
-	  div#wrapper{  
-	  	width: 500px;    
-	  	background-color:#FAFAFA;  
-	      padding: 10px;
-		  padding-bottom: 35px;  
-	  }  
-	  #nextButton{  
-      float:right;  
-      width: 100px;  
-	  height: 25px;  
-	  }  
-      ul#options div.choice {
-        position:relative;
-      }
-      ul#options input {
-        position: absolute;
-        left: -10px;
-      }
-      ul#options div.label{
-         display: block;
-         margin-left: 15px;
-      }
-	</style>  
+    <link rel="stylesheet" type="text/css" href="css/quizpage.css"/>
 	<script type="text/javascript" src="js/jquery.min.js"></script>  
     <script type="text/javascript" src="node_modules/marked/lib/marked.js"></script>
     <script type="text/javascript" src="js/local.js"></script>
     <script type="text/javascript" src="js/quizpage.js"></script>
   </head>  
-  <body onload="UITest1()">  
-	<div id="wrapper">  
-	  <div id="question">  
-      </div>  
-	  <ul id="options">  
-	  </ul>  
+  <body onload="runQuiz()">  
+	<div id="wrapper">
+	  <div id="question">
+      </div>
+	  <ul id="options">
+	  </ul>
 	  <button id="nextButton" onclick="FunNextNode()">Next</button>  
     </div>
     <center>  
