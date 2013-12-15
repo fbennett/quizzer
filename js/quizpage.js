@@ -45,15 +45,26 @@ function displaychild(quizData) {
     document.getElementById("question").innerHTML = marked.parse(question.rubric);
     
     // display question text  
-	document.getElementById("options").innerHTML = "";
+	var options = document.getElementById("options")
+    options.innerHTML = "";
     for (var i=0,ilen=question.questions.length;i<ilen;i+=1) {
-        var choice = marked(question.questions[i]);
-        var radioBtn = $('<li><div class="choice"><input name="r1" type="radio" value="'
-                         + i
-                         + '" onclick="enablebtn(this.value)" id="rbtnCount' + i + '" /><div class="label">' 
-                         + choice
-                         + '</div></div></li>');  
-        radioBtn.appendTo('#options');  
+
+        var radioBtn = document.createElement('li');
+        var choiceDiv = document.createElement('div');
+        choiceDiv.setAttribute('class', 'choice');
+        var input = document.createElement('input');
+        input.setAttribute('name', 'r1');
+        input.setAttribute('type', 'radio');
+        input.setAttribute('value', i);
+        input.setAttribute('onclick', 'enablebtn(' + i + ')');
+        input.setAttribute('id', ('rbtnCount' + i));
+        var label = document.createElement('div');
+        label.setAttribute('class', 'label');
+        label.innerHTML = marked.parse(question.questions[i]);
+        choiceDiv.appendChild(input);
+        choiceDiv.appendChild(label);
+        radioBtn.appendChild(choiceDiv);
+        options.appendChild(radioBtn);
         checkradiobtn();
     }
 }  
