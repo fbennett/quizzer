@@ -7,9 +7,6 @@ div.rubric {
     font-size: 120%;
 }
 
-ol {
-    list-style-type: none;
-}
 ol#quiz-questions div.choice {
     position: relative;
     margin-left: 15px;
