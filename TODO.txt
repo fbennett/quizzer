@@ -1,11 +1,5 @@
 Some ideas
 
-Speech!
-
-    https://github.com/christopherdebeer/speak.js
-    
-Button to clone initial pasted text to other choices.
-
 Option to pull in a fixed number of the questions most often missed in
 previous quizzes for a class.
 
@@ -13,11 +7,14 @@ Bundled download of questions for archiving and reuse.
 
 Content-sharing consent toggle on student record.
 
-Explanation field, for instant feedback when wrong answer is selected.
+Team settings. Three to four students can be set as a team, whose
+scores in the final exam will be averaged. If strongest students are
+matched with the weakest, we get a community of teachers and learners.
 
-Two links in student mail: one for text, the other (heavier) with
-speech support. If that turns out to work reasonably well.
+Student keys should be set on memberships, not on student records.
+Key can then be reset automatically each time a new quiz is sent out,
+foreclosing late submissions.
 
-Pulldown list of students in question drafting display, for
-optional note of student author prompting the question.
-Shown only at quiz-time, not in feedback/results display.
+Students should be provided with a refreshed link to their overall
+results view (access controlled by the temporary key) in each quiz
+mailing.

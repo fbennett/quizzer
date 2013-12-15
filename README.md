@@ -31,9 +31,7 @@ Frank Bennett, 7 December 2013
 
 The idea is to build quizzes from 400-word essays submitted by
 students, using grammatical errors, errors in usage, and examples of
-awkward expression as raw material. To add a peer-pressure element,
-the name of the student from whose essay each question is drawn is
-displayed in the question itself. In composing questions, the bad
+awkward expression as raw material. In composing questions, the bad
 example, an equally bad example, a corrected sentence, and a corrected
 sentence containing a common error are composed and saved
 (manually). The engine randomizes the sequence of questions and
