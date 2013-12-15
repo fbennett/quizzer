@@ -103,7 +103,6 @@ function ShowResult() {
 
 function randomize(array) {
     var orig_order = [];
-    var new_order = orig_order.slice();
     var currentIndex = array.length;
     var temporaryValue;
     var randomIndex;
@@ -112,6 +111,7 @@ function randomize(array) {
     for (var i=0,ilen=array.length;i<ilen;i+=1) {
         orig_order.push(i);
     }
+    var new_order = orig_order.slice();
 
     // While there remain elements to shuffle...
     while (0 !== currentIndex) {
@@ -130,5 +130,6 @@ function randomize(array) {
     for (var i=0,ilen=array.length;i<ilen;i+=1) {
         remap[new_order[i]] = orig_order[i];
     }
+    console.log("HUH? "+JSON.stringify(remap));
     return remap;
 }
