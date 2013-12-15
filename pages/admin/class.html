@@ -4,29 +4,31 @@
   <script type="text/javascript" src="js/local.js"></script>  
   <script type="text/javascript" src="js/class.js"></script>
   <link rel="stylesheet" type="text/css" href="css/simple-grid.css"/>
+  <link rel="stylesheet" type="text/css" href="css/class.css"/>
 </head>
 <body onLoad="buildQuizList();buildMemberLists();">
   <div class="grid">
     <div class="col-1-1">
-      <h1>Quizzer Admin - @@CLASS@@</h1>
+      <h1>Quizzer Admin</h1>
+      <h2>@@CLASS@@</h2>
       <div>
         <input type="button" value="Back" onclick="window.location = '?page=classes&admin=' + getParameterByName('admin')"/>
       </div>
       <hr/>
     </div>
     <div class="col-1-4">
-      <h2>Quizzes</h2>
+      <h3>Quizzes</h3>
       <div id="quiz-list">
       </div>
     </div>
     <div class="col-1-4">
-      <h2>Members</h2>
+      <h3>Members</h3>
       <input type="button" value="Remove selected students ->" onclick="removeMembers()"/>
       <div id="members">
       </div>
     </div>
     <div class="col-2-4">
-      <h2>Non-Members</h2>
+      <h3>Non-Members</h3>
       <input type="button" value="<- Add selected students" onclick="addMembers()"/>
       <div id="non-members">
       </div>
