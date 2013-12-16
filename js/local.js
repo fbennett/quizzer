@@ -4,7 +4,6 @@ function getParameterByName(name) {
 }
 
 function apiRequest (url, obj, returnAsString) {
-    console.log('XXX >> '+url);
     if ("object" === typeof obj) {
         obj = JSON.stringify(obj);
     } else if (!obj) {
