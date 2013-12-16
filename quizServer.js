@@ -152,7 +152,7 @@ function sendQuiz (response, classID, quizNumber) {
             response.end("Error creating dir: answer/" + classID + '/' + quizNumber);
         } else {
             response.writeHead(200, {'Content-Type': 'text/plain'});
-            response.end("");
+            response.end("{}");
         }
     });
 }

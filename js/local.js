@@ -13,11 +13,9 @@ function apiRequest (url, obj, returnAsString) {
     xhr.open('POST', url, false);
     xhr.setRequestHeader("Content-type","text/plain");
     xhr.send(obj);
-    var ret;
-    if (returnAsString) {
-        ret = xhr.responseText;
-    } else {
-        ret = JSON.parse(xhr.responseText);
+    var ret = xhr.responseText;
+    if (!returnAsString) {
+        ret = JSON.parse(ret);
     }
     return ret;
 }

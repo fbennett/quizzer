@@ -1,3 +1,5 @@
+function showQuizResults () {}
+
 function buildQuestionList (quizobj) {
     var adminID = getParameterByName('admin');
     var classID = getParameterByName('classid');
@@ -290,7 +292,6 @@ function displayQuestions (quizobj) {
 function markdown (txt) {
     txt = txt.replace(/\(\(([a-zA-Z1-9])\)\)/g, function (aChar) {
         var c, val, offset;
-        console.log('XXX: '+aChar[2]);
         if (aChar[2].match(/[a-z]/)) {
             val = (aChar.charCodeAt(2) - 97)
             offset = 9424;
@@ -301,7 +302,6 @@ function markdown (txt) {
             val = (aChar.charCodeAt(2) - 49)
             offset = 9312;
         }
-        console.log("WOW "+aChar[2]+ " " +val+" "+offset+" "+String.fromCharCode(val + offset))
         return String.fromCharCode(val + offset);
     });
     return marked.parse(txt);
