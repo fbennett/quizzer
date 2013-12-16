@@ -679,7 +679,7 @@ function runServer() {
                         response.end(myxml);
                         return;
                     } else if ('.js' === uriObj.href.slice(-3)) {
-                        var myxml = fs.readFileSync(uriObj.href.replace(/^.*?\/(js\/.*)/, '$1'));
+                        var myxml = fs.readFileSync(uriObj.href.replace(/^.*?\/((?js|node_modules)\/.*)/, '$1'));
                         response.writeHead(200, {'Content-Type': 'text/javascript'});
                         response.end(myxml);
                         return;
