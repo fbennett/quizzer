@@ -15,17 +15,9 @@ if (!hostname) {
 
 var quizResult = {};
 
-// Get quiz data
-var xhr = new XMLHttpRequest();
-xhr.open('POST', 'http://' + hostname + ':3498/?cmd=quizdata&classid=' + classID+ '&id=' + studentID + '&key=' + studentKey + '&quizno=' + quizNumber, false);
-xhr.setRequestHeader("Content-type","text/plain");
-xhr.send(null);
-var quizData = JSON.parse(xhr.responseText);
-
 function markdown (txt) {
     txt = txt.replace(/\(\(([a-zA-Z1-9])\)\)/g, function (aChar) {
-        var c, val, offset;
-        console.log('XXX: '+aChar[2]);
+        var val, offset;
         if (aChar[2].match(/[a-z]/)) {
             val = (aChar.charCodeAt(2) - 97)
             offset = 9424;
@@ -36,13 +28,30 @@ function markdown (txt) {
             val = (aChar.charCodeAt(2) - 49)
             offset = 9312;
         }
-        console.log("WOW "+aChar[2]+ " " +val+" "+offset+" "+String.fromCharCode(val + offset))
         return String.fromCharCode(val + offset);
     });
     return marked.parse(txt);
 }
 
+var quizData;
 function runQuiz() {
+
+    // Get quiz data
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', 'http://' 
+             + hostname 
+             + ':3498/?cmd=quizdata&classid=' 
+             + classID
+             + '&id=' 
+             + studentID 
+             + '&key=' 
+             + studentKey 
+             + '&quizno=' 
+             + quizNumber, false);
+    xhr.setRequestHeader("Content-type","text/plain");
+    xhr.send(null);
+    quizData = JSON.parse(xhr.responseText);
+
     for (var i=0,ilen=quizData.questions.length;i<ilen;i+=1) {
         remap = randomize(quizData.questions[i].questions);
         quizData.questions[i].remap = remap;
@@ -91,7 +100,6 @@ function displaychild(quizData) {
 
 function FunNextNode() {
 	var questions = quizData.questions;
-    //var derandomizedqno = quizData.remap[nextnodecounter];
     var realqno = questions[nextnodecounter].number;
     quizResult[realqno] = questions[nextnodecounter].remap[getvalue];
 	nextnodecounter = nextnodecounter + 1;
@@ -116,9 +124,19 @@ function enablebtn(setvalue) {
 	document.getElementById("nextButton").disabled = false;  
     getvalue = setvalue;  
 }  
+
 function ShowResult() {
     var xhr = new XMLHttpRequest();
-    xhr.open('POST', 'http://' + hostname + ':3498/?cmd=writequizresult&classid=' + classID+ '&id=' + studentID + '&key=' + studentKey + '&quizno=' + quizNumber, false);
+    xhr.open('POST', 'http://' 
+             + hostname 
+             + ':3498/?cmd=writequizresult&classid=' 
+             + classID 
+             + '&id=' 
+             + studentID 
+             + '&key=' 
+             + studentKey 
+             + '&quizno=' 
+             + quizNumber, false);
     xhr.setRequestHeader("Content-type","text/plain");
     xhr.send(JSON.stringify({quizres:quizResult}));
     var resultPageUrl = xhr.responseText;
@@ -141,18 +159,18 @@ function randomize(array) {
         // Pick a remaining element...
         randomIndex = Math.floor(Math.random() * currentIndex);
         currentIndex -= 1;
-        // And swap it with the current element.
+        // Swap it with the current element.
         temporaryValue = array[currentIndex];
-        temporaryPos = new_order[currentIndex];
         array[currentIndex] = array[randomIndex];
-        new_order[currentIndex] = new_order[randomIndex];
         array[randomIndex] = temporaryValue;
+        // Same treatment for the sequence map
+        temporaryPos = new_order[currentIndex];
+        new_order[currentIndex] = new_order[randomIndex];
         new_order[randomIndex] = temporaryPos;
     }
     var remap = {};
     for (var i=0,ilen=array.length;i<ilen;i+=1) {
         remap[i] = new_order[i];
     }
-    //console.log("HUH? "+JSON.stringify(remap));
     return remap;
 }
