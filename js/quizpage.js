@@ -37,20 +37,17 @@ var quizData;
 function runQuiz() {
 
     // Get quiz data
-    var xhr = new XMLHttpRequest();
-    xhr.open('POST', 'http://' 
-             + hostname 
-             + ':3498/?cmd=quizdata&classid=' 
-             + classID
-             + '&id=' 
-             + studentID 
-             + '&key=' 
-             + studentKey 
-             + '&quizno=' 
-             + quizNumber, false);
-    xhr.setRequestHeader("Content-type","text/plain");
-    xhr.send(null);
-    quizData = JSON.parse(xhr.responseText);
+    quizData = apiRequest(
+        'http://' 
+            + hostname 
+            + ':3498/?cmd=quizdata&classid=' 
+            + classID
+            + '&id=' 
+            + studentID 
+            + '&key=' 
+            + studentKey 
+            + '&quizno=' 
+            + quizNumber);
 
     for (var i=0,ilen=quizData.questions.length;i<ilen;i+=1) {
         remap = randomize(quizData.questions[i].questions);
@@ -126,20 +123,21 @@ function enablebtn(setvalue) {
 }  
 
 function ShowResult() {
-    var xhr = new XMLHttpRequest();
-    xhr.open('POST', 'http://' 
-             + hostname 
-             + ':3498/?cmd=writequizresult&classid=' 
-             + classID 
-             + '&id=' 
-             + studentID 
-             + '&key=' 
-             + studentKey 
-             + '&quizno=' 
-             + quizNumber, false);
-    xhr.setRequestHeader("Content-type","text/plain");
-    xhr.send(JSON.stringify({quizres:quizResult}));
-    var resultPageUrl = xhr.responseText;
+    var resultPageUrl = apiRequest(
+        'http://' 
+            + hostname 
+            + ':3498/?cmd=writequizresult&classid=' 
+            + classID 
+            + '&id=' 
+            + studentID 
+            + '&key=' 
+            + studentKey 
+            + '&quizno=' 
+            + quizNumber
+        , {
+            quizres:quizResult
+        }
+        , true);
     window.location.href = resultPageUrl;
 }
 

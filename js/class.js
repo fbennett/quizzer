@@ -5,12 +5,14 @@ function buildQuizList (rows) {
 
     if (!rows) {
         // if rows is nil, call the server.
-        var xhr = new XMLHttpRequest();
-        xhr.open('POST', '/?admin='+adminID+'&cmd=readquizzes', false);
-        xhr.setRequestHeader("Content-type","text/plain");
-        //xhr.overrideMimeType("application/json"); 
-        xhr.send(JSON.stringify({classid:classID}));
-        var rows = JSON.parse(xhr.responseText);
+        var rows = apiRequest(
+            '/?admin='
+                + adminID
+                + '&cmd=readquizzes'
+            , {
+                classid:classID
+            }
+        );
     }
     rows.sort(function (a,b) {
         a = parseInt(a.number,10);
@@ -61,12 +63,14 @@ function buildMemberLists(rowsets) {
     if (!rowsets) {
         var adminID = getParameterByName('admin');
         var classID = getParameterByName('classid');
-        var xhr = new XMLHttpRequest();
-        xhr.open('POST', '/?admin='+adminID+'&cmd=readmembers', false);
-        xhr.setRequestHeader("Content-type","application/json");
-        //xhr.overrideMimeType("application/json"); 
-        xhr.send(JSON.stringify({classID:classID}));
-        rowsets = JSON.parse(xhr.responseText);
+        rowsets = apiRequest(
+            '/?admin='
+                + adminID
+                + '&cmd=readmembers'
+            , {
+                classID:classID
+            }
+        );
     }
     // Clear lists and rewrite
     var memberContainer = document.getElementById("members");
@@ -102,12 +106,15 @@ function addMembers () {
     }
     var adminID = getParameterByName('admin');
     var classID = getParameterByName('classid');
-    var xhr = new XMLHttpRequest();
-    xhr.open('POST', '/?admin='+adminID+'&cmd=addmembers', false);
-    xhr.setRequestHeader("Content-type","application/json");
-    //xhr.overrideMimeType("application/json"); 
-    xhr.send(JSON.stringify({classID:classID,addmembers:ret}));
-    var rowsets = JSON.parse(xhr.responseText);
+    var rowsets = apiRequest(
+        '/?admin='
+            + adminID
+            + '&cmd=addmembers'
+        , {
+            classID:classID,
+            addmembers:ret
+        }
+    );
     buildMemberLists(rowsets);
 }
 
@@ -121,12 +128,15 @@ function removeMembers () {
     }
     var adminID = getParameterByName('admin');
     var classID = getParameterByName('classid');
-    var xhr = new XMLHttpRequest();
-    xhr.open('POST', '/?admin='+adminID+'&cmd=removemembers', false);
-    xhr.setRequestHeader("Content-type","application/json");
-    //xhr.overrideMimeType("application/json"); 
-    xhr.send(JSON.stringify({classID:classID,removemembers:ret}));
-    var rowsets = JSON.parse(xhr.responseText);
+    var rowsets = apiRequest(
+        '/?admin='
+            + adminID
+            + '&cmd=removemembers'
+        , {
+            classID:classID,
+            removemembers:ret
+        }
+    );
     buildMemberLists(rowsets);
 }
 

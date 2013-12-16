@@ -21,20 +21,24 @@ function markdown (txt) {
             val = (aChar.charCodeAt(2) - 49)
             offset = 9312;
         }
-        console.log("WOW "+aChar[2]+ " " +val+" "+offset+" "+String.fromCharCode(val + offset))
         return String.fromCharCode(val + offset);
     });
     return marked.parse(txt);
 }
 
 function runResult () {
-    var postpath = 'http://' + hostname + ':3498/?cmd=myquizresult&classid=' + classID+ '&id=' + studentID + '&key=' + studentKey + '&quizno=' + quizNumber;
-    var xhr = new XMLHttpRequest();
-    xhr.open('POST', postpath, false);
-    xhr.setRequestHeader("Content-type","text/plain");
-    xhr.send(null);
-    var quizErrors = JSON.parse(xhr.responseText);
-    
+    var quizErrors = apiRequest(
+        'http://' 
+            + hostname 
+            + ':3498/?cmd=myquizresult&classid=' 
+            + classID
+            + '&id=' 
+            + studentID 
+            + '&key=' 
+            + studentKey 
+            + '&quizno=' 
+            + quizNumber);
+
     var resultList = document.getElementById("result-list");
 
     resultList.innerHTML = "";

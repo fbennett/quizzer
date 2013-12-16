@@ -34,10 +34,14 @@ function saveClass() {
     if (name) {
         // Save
         var adminID = getParameterByName('admin');
-        var xhr = new XMLHttpRequest();
-        xhr.open('POST', '/?admin='+adminID+'&cmd=addclass', false);
-        xhr.setRequestHeader("Content-type","application/json");
-        xhr.send(JSON.stringify({name:name,id:id}));
+        apiRequest(
+            '/?admin='
+                + adminID 
+                + '&cmd=addclass'
+            , {
+                name:name,
+                id:id
+            });
         buildClassList();
     }
     if (name || (!name && !id)) {
@@ -52,12 +56,13 @@ function saveClass() {
         alert("A name is required");
         // Restore from server
         var adminID = getParameterByName('admin');
-        var xhr = new XMLHttpRequest();
-        xhr.open('POST', '/?admin='+adminID+'&cmd=readoneclass', false);
-        xhr.setRequestHeader("Content-type","application/json");
-        //xhr.overrideMimeType("application/json"); 
-        xhr.send(JSON.stringify({id:id}));
-        var obj = JSON.parse(xhr.responseText);
+        var obj = apiRequest(
+            '/?admin='
+                + adminID
+                + '&cmd=readoneclass'
+            , {
+                id:id
+            });
         className.value = obj.name;
     }
 }
@@ -66,12 +71,11 @@ function buildClassList (rows) {
     if (!rows) {
         // if rows is nil, call the server.
         var adminID = getParameterByName('admin');
-        var xhr = new XMLHttpRequest();
-        xhr.open('POST', '/?admin='+adminID+'&cmd=readclasses', false);
-        xhr.setRequestHeader("Content-type","text/plain");
-        //xhr.overrideMimeType("application/json"); 
-        xhr.send(null);
-        var rows = JSON.parse(xhr.responseText);
+        var rows = apiRequest(
+            '/?admin='
+                + adminID
+                + '&cmd=readclasses'
+        );
     }
     rows.sort(function (a,b) {
         // Sort by ???

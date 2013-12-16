@@ -35,14 +35,21 @@ function saveStudent() {
     // Values
     var name = studentName.value;
     var email = studentEmail.value;
+    name = name ? name.replace(/^\s+/,'').replace(/\s+$/,'') : '';
+    email = email ? email.replace(/^\s+/,'').replace(/\s+$/,'') : '';
     var id = studentID.value;
     if (name && email) {
         // Save
         var adminID = getParameterByName('admin');
-        var xhr = new XMLHttpRequest();
-        xhr.open('POST', '/?admin='+adminID+'&cmd=addstudent', false);
-        xhr.setRequestHeader("Content-type","application/json");
-        xhr.send(JSON.stringify({email:email,name:name,id:id}));
+        apiRequest(
+            '/?admin='
+                + adminID
+                + '&cmd=addstudent'
+            , {
+                email:email,
+                name:name,
+                id:id
+            });
         buildStudentList();
     }
     if ((name && email) || (!name && !email && !id)) {
@@ -58,12 +65,13 @@ function saveStudent() {
         alert("Both name and email are required");
         // Restore from server
         var adminID = getParameterByName('admin');
-        var xhr = new XMLHttpRequest();
-        xhr.open('POST', '/?admin='+adminID+'&cmd=readonestudent', false);
-        xhr.setRequestHeader("Content-type","application/json");
-        //xhr.overrideMimeType("application/json"); 
-        xhr.send(JSON.stringify({id:id}));
-        var obj = JSON.parse(xhr.responseText);
+        var obj = apiRequest(
+            '/?admin='
+                + adminID
+                + '&cmd=readonestudent'
+            , {
+                id:id
+            });
         studentName.value = obj.name;
         studentEmail.value = obj.email;
     }
@@ -73,12 +81,10 @@ function buildStudentList (rows) {
     if (!rows) {
         // if rows is nil, call the server.
         var adminID = getParameterByName('admin');
-        var xhr = new XMLHttpRequest();
-        xhr.open('POST', '/?admin='+adminID+'&cmd=readstudents', false);
-        xhr.setRequestHeader("Content-type","text/plain");
-        //xhr.overrideMimeType("application/json"); 
-        xhr.send(null);
-        var rows = JSON.parse(xhr.responseText);
+        var rows = apiRequest(
+            '/?admin='
+                + adminID
+                + '&cmd=readstudents');
     }
     rows.sort(function (a,b) {
         // Sort by ???

@@ -6,12 +6,14 @@ function buildQuestionList (quizobj) {
     // Call for quiz questions
     if (!quizobj) {
         // if rows is nil, call the server.
-        var xhr = new XMLHttpRequest();
-        xhr.open('POST', '/?admin='+adminID+'&cmd=readquestions', false);
-        xhr.setRequestHeader("Content-type","text/plain");
-        //xhr.overrideMimeType("application/json"); 
-        xhr.send(JSON.stringify({classid:classID,quizno:quizNumber}));
-        var quizobj = JSON.parse(xhr.responseText);
+        var quizobj = apiRequest(
+            '/?admin='
+                + adminID
+                + '&cmd=readquestions'
+            , {
+                classid:classID,
+                quizno:quizNumber
+            });
     }
     displayQuestions(quizobj.questions);
     var button = document.getElementById('add-question-button');
@@ -32,12 +34,14 @@ function sendQuiz() {
     var classID = getParameterByName('classid');
     var quizNumber = getParameterByName('quizno');
 
-    var xhr = new XMLHttpRequest();
-    xhr.open('POST', '/?admin='+adminID+'&cmd=sendquiz', false);
-    xhr.setRequestHeader("Content-type","text/plain");
-    //xhr.overrideMimeType("application/json"); 
-    xhr.send(JSON.stringify({classid:classID,quizno:quizNumber}));
-    var emptystr = xhr.responseText;
+    var emptystr = apiRequest(
+        '/?admin='
+            + adminID
+            + '&cmd=sendquiz'
+        , {
+            classid:classID,
+            quizno:quizNumber
+        });
     var sendQuiz = document.getElementById('send-quiz');
     var quizResults = document.getElementById('quiz-results');
     sendQuiz.hidden = true;
@@ -49,12 +53,17 @@ function writeChoice(questionNumber, choice) {
     var classID = getParameterByName('classid');
     var quizNumber = getParameterByName('quizno');
 
-    var xhr = new XMLHttpRequest();
-    xhr.open('POST', '/?admin='+adminID+'&cmd=writeonechoice', false);
-    xhr.setRequestHeader("Content-type","text/plain");
-    //xhr.overrideMimeType("application/json"); 
-    xhr.send(JSON.stringify({classid:classID,quizno:quizNumber,questionno:questionNumber,choice:choice}));
-    var emptystr = xhr.responseText;
+    var emptystr = apiRequest(
+        '/?admin='
+            + adminID 
+            + '&cmd=writeonechoice'
+        , {
+            classid:classID,
+            quizno:quizNumber,
+            questionno:questionNumber,
+            choice:choice
+        }
+    );
 }
 
 function addQuestion () {
@@ -79,12 +88,16 @@ function openQuestion (questionNumber) {
     if (questionNumber) {
         // If questionNumber present, call for JSON of question from server
         // (to get markdown)
-        var xhr = new XMLHttpRequest();
-        xhr.open('POST', '/?admin='+adminID+'&cmd=readonequestion', false);
-        xhr.setRequestHeader("Content-type","text/plain");
-        //xhr.overrideMimeType("application/json"); 
-        xhr.send(JSON.stringify({classid:classID,quizno:quizNumber,questionno:questionNumber}));
-        qobj = JSON.parse(xhr.responseText);
+        qobj = apiRequest(
+            '/?admin='
+                + adminID
+                + '&cmd=readonequestion'
+            , {
+                classid:classID,
+                quizno:quizNumber,
+                questionno:questionNumber
+            }
+        );
         // ... empty this child ...
         node = document.getElementById('quiz-question-' + questionNumber);
         for (var i=0,ilen=node.childNodes.length;i<ilen;i+=1) {
@@ -214,12 +227,15 @@ function closeQuestion (questionNumber) {
         correct: correct
     }
     // Sends object to server for saving
-    var xhr = new XMLHttpRequest();
-    xhr.open('POST', '/?admin='+adminID+'&cmd=writeonequestion', false);
-    xhr.setRequestHeader("Content-type","text/plain");
-    //xhr.overrideMimeType("application/json"); 
-    xhr.send(JSON.stringify({classid:classID,quizno:quizNumber,questionno:questionNumber,data:obj}));
-    var questionNumber = JSON.parse(xhr.responseText);
+    var questionNumber = apiRequest('/?admin=' 
+                                    + adminID 
+                                    + '&cmd=writeonequestion'
+                                    , {
+                                        classid:classID,
+                                        quizno:quizNumber,
+                                        questionno:questionNumber,
+                                        data:obj
+                                    });
     node.setAttribute('id', 'quiz-question-' + questionNumber);
     for (var i=0,ilen=node.childNodes.length;i<ilen;i+=1) {
         node.removeChild(node.childNodes[0])
