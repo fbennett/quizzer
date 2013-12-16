@@ -679,12 +679,12 @@ function runServer() {
                         response.end(myxml);
                         return;
                     } else if ('.js' === uriObj.href.slice(-3)) {
-                        var myxml = fs.readFileSync(uriObj.href.slice(1));
+                        var myxml = fs.readFileSync(uriObj.href.replace(/^.*\/(.*)/, 'js/$1'));
                         response.writeHead(200, {'Content-Type': 'text/javascript'});
                         response.end(myxml);
                         return;
                     } else if ('.css' === uriObj.href.slice(-4)) {
-                        var myxml = fs.readFileSync(uriObj.href.slice(1));
+                        var myxml = fs.readFileSync(uriObj.href.replace(/^.*\/(.*)/, 'css/$1'));
                         response.writeHead(200, {'Content-Type': 'text/css'});
                         response.end(myxml);
                         return;

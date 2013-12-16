@@ -3,6 +3,14 @@ function getParameterByName(name) {
     return match && decodeURIComponent(match[1].replace(/\+/g, ' '));
 }
 
+function composeURL (classID, quizNumber, studentID, studentKey) {
+}
+
+function getPath () {
+    var match = RegExp('https?://[^/]*/(.*)([?#]|$)').exec(window.location.href);
+    return match && match[1];
+}
+
 function apiRequest (url, obj, returnAsString) {
     if ("object" === typeof obj) {
         obj = JSON.stringify(obj);

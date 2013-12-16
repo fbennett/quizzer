@@ -40,6 +40,8 @@ function buildQuizList (rows) {
         var idTD = document.createElement('td');
         nameAnchor.appendChild(nameText);
 
+        
+
         // XXX Think about this one.
         nameAnchor.setAttribute('href', '/?admin=' + adminID + '&page=quiz&classid=' + classID + '&quizno=' + rows[i].number);
 
