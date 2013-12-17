@@ -10,7 +10,6 @@ if (!hostname) {
 function markdown (txt) {
     txt = txt.replace(/\(\(([a-zA-Z1-9])\)\)/g, function (aChar) {
         var c, val, offset;
-        console.log('XXX: '+aChar[2]);
         if (aChar[2].match(/[a-z]/)) {
             val = (aChar.charCodeAt(2) - 97)
             offset = 9424;
@@ -28,9 +27,7 @@ function markdown (txt) {
 
 function runResult () {
     var quizErrors = apiRequest(
-        'http://' 
-            + hostname 
-            + ':3498/?cmd=myquizresult&classid=' 
+        '/?cmd=myquizresult&classid=' 
             + classID
             + '&id=' 
             + studentID 
