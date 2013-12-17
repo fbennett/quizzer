@@ -9,7 +9,7 @@ function fixPath (path) {
     var stub =  match && match[1];
     if (stub) {
         //   (1) remove &admin= value from URL
-        path = path.replace(/(\?)(?:admin=[^&]*)*(.*?)(?:&)(?:admin=[^&]*)*/,'$1$2');
+        path = path.replace(/(\?)(?:admin=[^&]*)*(.*?)(?:&admin=[^&]*)*/,'$1$2');
         //   (2) if URL begins with '/?', append stub to '/'
         path = path.replace(/^(\/)(\?)/, '$1' + stub + '$2');
         //   (3) remove any port designation from URL
