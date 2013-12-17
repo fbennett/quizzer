@@ -38,7 +38,7 @@ function runQuiz() {
 
     // Get quiz data
     quizData = apiRequest(
-        '?cmd=quizdata&classid=' 
+        '/?cmd=quizdata&classid=' 
             + classID
             + '&id=' 
             + studentID 
@@ -122,7 +122,7 @@ function enablebtn(setvalue) {
 
 function ShowResult() {
     var resultPageUrl = apiRequest(
-        '?cmd=writequizresult&classid=' 
+        '/?cmd=writequizresult&classid=' 
             + classID 
             + '&id=' 
             + studentID 
