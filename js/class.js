@@ -43,7 +43,7 @@ function buildQuizList (rows) {
         
 
         // XXX Think about this one.
-        nameAnchor.setAttribute('href', '/?admin=' + adminID + '&page=quiz&classid=' + classID + '&quizno=' + rows[i].number);
+        nameAnchor.setAttribute('href', fixPath('/?admin=' + adminID + '&page=quiz&classid=' + classID + '&quizno=' + rows[i].number));
 
         nameTD.appendChild(nameAnchor);
         tr.appendChild(nameTD);

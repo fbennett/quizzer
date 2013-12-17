@@ -3,15 +3,24 @@ function getParameterByName(name) {
     return match && decodeURIComponent(match[1].replace(/\+/g, ' '));
 }
 
-function composeURL (classID, quizNumber, studentID, studentKey) {
-}
-
-function getPath () {
-    var match = RegExp('https?://[^/]*/(.*)([?#]|$)').exec(window.location.href);
-    return match && match[1];
+function fixPath (path) {
+    var match = RegExp('https?://[^/]*/(.*?)([?#]|$)').exec(window.location.href);
+    // If a stub exists, assume secure operation, so:
+    var stub =  match && match[1];
+    if (stub) {
+        console.log("XX have stub: " + stub);
+        //   (1) remove &admin= value from URL
+        path = path.replace(/(\?)(?:admin=[^&]*)*(.*?)(?:&)(?:admin=[^&]*)*/,'$1$2');
+        //   (2) if URL begins with '/?', append stub to '/'
+        path = path.replace(/^(\/)(\?)/, '$1' + stub + '$2');
+        //   (3) remove any port designation from URL
+        path = path.replace(/(https?:\/\/[^\/]*):[0-9]+/, '$1');
+    }
+    return path;
 }
 
 function apiRequest (url, obj, returnAsString) {
+    url = fixPath(url);
     if ("object" === typeof obj) {
         obj = JSON.stringify(obj);
     } else if (!obj) {
