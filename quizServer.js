@@ -77,6 +77,7 @@ var pageClass = fs.readFileSync('./pages/admin/class.html');
 var pageQuizAdmin = fs.readFileSync('./pages/admin/quiz.html');
 var pageQuiz = fs.readFileSync('./pages/user/quiz.html');
 var pageQuizResult = fs.readFileSync('./pages/user/quizresult.html');
+var pageQuizStats = fs.readFileSync('./pages/admin/quizstats.html');
 
 // Internal access maps
 var admin = {};
@@ -261,7 +262,7 @@ function writeQuizResult (response, classID, studentID, studentKey, quizNumber, 
 }
 
 function showQuizResultPage (response, classID, studentID, studentKey, quizNumber) {
-    myPage = pageQuizResult.toString().replace(/@@CLASS@@/g, classes[classID].name);
+    var myPage = pageQuizResult.toString().replace(/@@CLASS@@/g, classes[classID].name);
     myPage = myPage.replace(/@@QUIZ_NUMBER@@/g, "Quiz " + quizNumber);
     myPage = myPage.replace(/@@STUDENT_NAME@@/g, studentsById[studentID].name);
     response.writeHead(200, {'Content-Type': 'text/html'});
@@ -600,6 +601,7 @@ function runServer() {
                 var pageKey = uriObj.parsedQuery.page;
                 var quizNumber = uriObj.parsedQuery.quizno;
                 var cmd = uriObj.parsedQuery.cmd;
+                var myPage;
                 if (!cmd && adminKey && admin[adminKey]) {
                     if (!pageKey || pageKey === 'top') {
                         response.writeHead(200, {'Content-Type': 'text/html'});
@@ -616,6 +618,11 @@ function runServer() {
                         response.end(myPage);
                     } else if (!pageKey || pageKey === 'quiz') {
                         myPage = pageQuizAdmin.toString().replace(/@@CLASS@@/g, classes[classID].name);
+                        myPage = myPage.replace(/@@QUIZ_NUMBER@@/g, "Quiz " + quizNumber);
+                        response.writeHead(200, {'Content-Type': 'text/html'});
+                        response.end(myPage);
+                    } else if (!pageKey || pageKey === 'quizstats') {
+                        myPage = pageQuizStats.toString().replace(/@@CLASS@@/g, classes[classID].name);
                         myPage = myPage.replace(/@@QUIZ_NUMBER@@/g, "Quiz " + quizNumber);
                         response.writeHead(200, {'Content-Type': 'text/html'});
                         response.end(myPage);

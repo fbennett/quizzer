@@ -1,4 +1,18 @@
-function showQuizResults () {}
+function showQuizResults () {
+
+    var adminID = getParameterByName('admin');
+    var classID = getParameterByName('classid');
+    var quizNumber = getParameterByName('quizno');
+
+    var url = '?admin='
+        + adminID
+        + '&page=quizstats'
+        + '&classid='
+        + classID
+        + '&quizno='
+        + quizNumber;
+    window.location.href = url;
+}
 
 function buildQuestionList (quizobj) {
     var adminID = getParameterByName('admin');
