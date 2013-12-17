@@ -13,7 +13,7 @@
       <h1>Quizzer Admin</h1>
       <h2>@@CLASS@@: @@QUIZ_NUMBER@@</h2>
       <div>
-        <input type="button" value="Back" onclick="window.location = '?page=class&admin=' + getParameterByName('admin') + '&classid=' + getParameterByName('classid')"/>
+        <input type="button" value="Back" onclick="window.location = fixPath('/?admin=' + getParameterByName('admin') + '&page=class' + '&classid=' + getParameterByName('classid'))"/>
       </div>
       <div>
         <input id="send-quiz" type="button" value="Send Quiz" onclick="sendQuiz()"/>
