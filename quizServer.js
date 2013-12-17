@@ -125,19 +125,22 @@ function getRandomKey(len, base) {
     return _results.join("");
 }
 
-function sendQuiz (response, classID, quizNumber) {
+function sendQuiz (response, classID, quizNumber, pathName) {
     // Get email addresses
     var className = classes[classID].name;
     for (var studentID in memberships[classID]) {
         var email = studentsById[studentID].email;
         var studentKey = studentsById[studentID].key;
         // Send mail messages
-
-        //var match = RegExp('https?://[^/]*/(.*?)([?#]|$)').exec(window.location.href);
-        //var stub = match && match[1];
-
+        
+        var port = ':3498';
+        var stub = '/';
+        if (pathName && pathName !== '/') {
+            port = '';
+            stub = pathName.replace(/(.*\/).*/, '$1/quiz.html');
+        } 
         var text = "We have prepared a quiz to help you check and improve your English writing ability.\n\nClick on the link below to take the quiz:\n\n"
-            + "    http://" + hostname + ":3498/?id=" + studentID + "&key=" + studentKey + "&classid=" + classID + "&quizno=" + quizNumber + "&hostname=" + hostname + "\n\n"
+            + "    http://" + hostname + port + stub + "?id=" + studentID + "&key=" + studentKey + "&classid=" + classID + "&quizno=" + quizNumber + "&hostname=" + hostname + "\n\n"
             + "Sincerely yours,\n"
             + "The Academic Writing team"
         mailserver.send({
@@ -625,7 +628,6 @@ function runServer() {
             try {
                 //parse url from request object
                 var uriObj = url.parse(this.url);
-                console.log("SHOW: "+JSON.stringify(uriObj));
                 uriObj.parsedQuery = require('querystring').parse(uriObj.query);
                 var adminKey = uriObj.parsedQuery.admin;
                 var studentID = uriObj.parsedQuery.id;
@@ -738,7 +740,7 @@ function runServer() {
                             return;
                         } else if (cmd === 'sendquiz') {
                             var payload = JSON.parse(this.POSTDATA);
-                            sendQuiz(response, payload.classid,payload.quizno);
+                            sendQuiz(response, payload.classid,payload.quizno,uriObj.pathname);
                             return;
                         } else if (cmd === 'addmembers') {
                             // XXX fixme
