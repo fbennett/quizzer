@@ -10,7 +10,7 @@
     <div class="col-1-1">
       <h1>Quizzer Admin - classes</h1>
       <div>
-        <input type="button" value="Back" onclick="window.location = '?page=top&admin=' + getParameterByName('admin')"/>
+        <input type="button" value="Back" onclick="window.location = fixPath('/?admin=' + getParameterByName('admin') + '&page=top'"/>
       </div>
       <div>
         <input id="add-class-button" type="button" value="Add Class" onclick="addClass()"/>
