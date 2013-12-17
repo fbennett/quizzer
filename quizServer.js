@@ -69,24 +69,14 @@ var mailserver  = emailjs.server.connect({
 //}, function(err, message) { console.log(err || message); });
 
 
-// Subdirs to be created if necessary
-var dirs = ['answer', 'ids', 'question', 'barcodes'];
-
-// Files to be created if necessary
-var files = ['students', 'classes', 'memberships']
-
 // Pages
 var pageAdminTop = fs.readFileSync('./pages/admin/top.html');
 var pageStudents = fs.readFileSync('./pages/admin/students.html');
 var pageClasses = fs.readFileSync('./pages/admin/classes.html');
 var pageClass = fs.readFileSync('./pages/admin/class.html');
 var pageQuizAdmin = fs.readFileSync('./pages/admin/quiz.html');
-//var pageQuizEdit = fs.readFileSync('./pages/admin/quizedit.html');
-//var pageQuestionEdit = fs.readFileSync('./pages/admin/questionedit.html');
 var pageQuiz = fs.readFileSync('./pages/user/quiz.html');
 var pageQuizResult = fs.readFileSync('./pages/user/quizresult.html');
-
-//var pageQuizResult = fs.readFileSync('./pages/user/quizresult.html');
 
 // Internal access maps
 var admin = {};
@@ -94,14 +84,6 @@ var studentsById = {};
 var studentsByEmail = {};
 var classes = {};
 var memberships = {};
-
-// make data dirs as required
-for (var i=0,ilen=dirs.length;i<ilen;i+=1) {
-    var dir = dirs[i];
-    try {
-        fs.mkdirSync(dir);
-    } catch (e) {} 
-}
 
 // Create a barcode
 function makeBarcode(title, text, barc, angle){
@@ -332,7 +314,6 @@ function readClasses(classes) {
     return rows;
 }
 
-// XXX fixme
 function writeMemberships(memberships) {
     var cfh = csv().to.path('./ids/memberships.csv');
     var rows = [];
@@ -346,7 +327,6 @@ function writeMemberships(memberships) {
     return rows;
 }
 
-// XXX fixme
 function readMemberships(memberships, classID) {
     var rowsets = [[],[]];
     for (var key in studentsById) {
@@ -493,31 +473,7 @@ function writeChoice(response, classID, quizNumber, questionNumber, choice) {
 }
 
 
-
-// Initialise students.csv and classes.csv if necessary
-try {
-    fs.openSync('./ids/admin.csv', 'r')
-} catch (e) {
-    if (e.code === 'ENOENT') {
-        var lst = ['Admin', getRandomKey(8, 36)];
-        csv().to('./ids/admin.csv').write(lst);
-    } else {
-        throw e;
-    }
-}
-for (var i=0,ilen=files.length;i<ilen;i+=1) {
-    try {
-        var fh = fs.openSync('./ids/' + files[i] + '.csv', 'r');
-        fs.close(fh);
-    } catch (e) {
-        if (e.code === 'ENOENT') {
-            csv().to('./ids/' + files[i] + '.csv').write([]);
-        } else {
-            throw e;
-        }
-    }
-}
-
+require('./lib/init.js');
 
 function loadStudents() {
     // To instantiate student auth1entication data
