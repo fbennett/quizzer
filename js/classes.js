@@ -106,6 +106,7 @@ function buildClassList (rows) {
         button.setAttribute('type', 'button');
         button.setAttribute('value', 'Edit');
         button.setAttribute('onclick', 'addClass(this.parentNode)');
+        button.setAttribute('class', 'button-small');
         tr.appendChild(button);
         container.appendChild(tr);
     }

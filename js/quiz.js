@@ -130,6 +130,7 @@ function openQuestion (questionNumber) {
     button.setAttribute('type', 'button');
     button.setAttribute('value', 'Standard');
     button.setAttribute('onclick', 'standardRubric(' + questionNumber + ')')
+    button.setAttribute('class', 'button');
     rubric.appendChild(button);
     node.appendChild(rubric);
 
@@ -156,9 +157,11 @@ function openQuestion (questionNumber) {
         if (i === 0) {
             cloneButton.setAttribute('value', 'Copy to all');
             cloneButton.setAttribute('onclick', 'copyToAll(' + questionNumber + ');');
+            cloneButton.setAttribute('class', 'button');
         } else {
             cloneButton.setAttribute('value', 'Ditto');
             cloneButton.setAttribute('onclick', 'dittoPrevious(' + questionNumber + ',' + i + ');');
+            cloneButton.setAttribute('class', 'button');
         }
         choice_wrapper.appendChild(cloneButton);
         node.appendChild(choice_wrapper);
@@ -167,6 +170,7 @@ function openQuestion (questionNumber) {
     button.setAttribute('type', 'button');
     button.setAttribute('value', 'Save Question');
     button.setAttribute('onclick', 'closeQuestion("' + questionNumber + '")');
+    button.setAttribute('class', 'button');
     node.appendChild(button);
     return node;
 }
@@ -345,6 +349,7 @@ function displayQuestion (qobj, questionNumber) {
     var button = document.createElement('input');
     button.setAttribute('type', 'button');
     button.setAttribute('value', 'Edit Question');
+    button.setAttribute('class', 'button');
     button.setAttribute('onclick', 'openQuestion("' + questionNumber + '")');
     node.appendChild(button);
 }

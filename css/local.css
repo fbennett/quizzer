@@ -1,0 +1,24 @@
+input.button {
+    border-radius: 1em;
+    border:2px solid #bbbbbb;
+    padding:0.5em;
+}
+
+div.button-bold {
+    margin: 0.5em 0 0 1em;
+}
+
+div.button-bold input.button {
+    font-weight: bold;
+}
+
+input.button-small {
+    font-size: smaller;
+    border-radius: 0.7em;
+    border: 1px solid #bbbbbb;
+    padding: 0.2em;
+}
+
+input.button-small:hover {
+    font-weight: bold;
+}

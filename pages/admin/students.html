@@ -4,6 +4,7 @@
   <script type="text/javascript" src="js/local.js"></script>  
   <script type="text/javascript" src="js/students.js"></script>  
   <link rel="stylesheet" type="text/css" href="css/simple-grid.css"/>
+  <link rel="stylesheet" type="text/css" href="css/local.css"/>
   <link rel="stylesheet" type="text/css" href="css/students.css"/>
 </head>
 <body onLoad="buildStudentList();">
@@ -11,11 +12,11 @@
     <div class="col-1-1">
       <h1>Quizzer Admin - students</h1>
       <div>
-        <input type="button" value="Back" onclick="window.location = fixPath('/?admin=' + getParameterByName('admin') + '&page=top')"/>
+        <input class="button" type="button" value="Back" onclick="window.location = fixPath('/?admin=' + getParameterByName('admin') + '&page=top')"/>
       </div>
-      <div>
-        <input id="add-student-button" type="button" value="Add Student" onclick="addStudent()"/>
-        <input id="save-student-button" type="button" value="Save Student" onclick="saveStudent()" hidden="true"/>
+      <div class="button-bold">
+        <input class="button" id="add-student-button" type="button" value="Add Student" onclick="addStudent()"/>
+        <input class="button" id="save-student-button" type="button" value="Save Student" onclick="saveStudent()" hidden="true"/>
         <span id="student-boxes" hidden="true">
           Name:
           <input id="student-name" type="text" size="30"/>

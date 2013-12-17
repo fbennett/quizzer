@@ -4,17 +4,18 @@
   <script type="text/javascript" src="js/local.js"></script>  
   <script type="text/javascript" src="js/classes.js"></script>  
   <link rel="stylesheet" type="text/css" href="css/simple-grid.css"/>
+  <link rel="stylesheet" type="text/css" href="css/local.css"/>
 </head>
 <body onLoad="buildClassList()">
   <div class="grid">
     <div class="col-1-1">
       <h1>Quizzer Admin - classes</h1>
       <div>
-        <input type="button" value="Back" onclick="window.location = fixPath('/?admin=' + getParameterByName('admin') + '&page=top')"/>
+        <input class="button" type="button" value="Back" onclick="window.location = fixPath('/?admin=' + getParameterByName('admin') + '&page=top')"/>
       </div>
-      <div>
-        <input id="add-class-button" type="button" value="Add Class" onclick="addClass()"/>
-        <input id="save-class-button" type="button" value="Save Class" onclick="saveClass()" style="display:none;"/>
+      <div class="button-bold">
+        <input class="button" id="add-class-button" type="button" value="Add Class" onclick="addClass()"/>
+        <input class="button" id="save-class-button" type="button" value="Save Class" onclick="saveClass()" style="display:none;"/>
         <span id="class-boxes" style="display:none;">
           Name:
           <input id="class-name" type="text" size="30"/>
