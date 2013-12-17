@@ -4,7 +4,7 @@ function showQuizResults () {
     var classID = getParameterByName('classid');
     var quizNumber = getParameterByName('quizno');
 
-    var url = '?admin='
+    var url = '/?admin='
         + adminID
         + '&page=quizstats'
         + '&classid='
