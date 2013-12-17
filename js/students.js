@@ -19,9 +19,9 @@ function addStudent(node) {
     } else {
         studentID.disabled = false;
     }
-    addButton.setAttribute('hidden', true);
-    saveButton.removeAttribute('hidden');
-    studentBoxes.removeAttribute('hidden');
+    addButton.style.display = 'none';
+    saveButton.style.display = 'inline';
+    studentBoxes.style.display = 'inline';
 }
 
 function saveStudent() {
@@ -58,9 +58,9 @@ function saveStudent() {
         studentEmail.value = null;
         studentID.value = null;
         // Redecorate
-        addButton.removeAttribute('hidden');
-        saveButton.setAttribute('hidden', true);
-        studentBoxes.setAttribute('hidden', true);
+        addButton.style.display = 'inline';
+        saveButton.style.display = 'none';
+        studentBoxes.style.display = 'none';
     } else {
         alert("Both name and email are required");
         // Restore from server
@@ -110,7 +110,7 @@ function buildStudentList (rows) {
         emailTD.setAttribute("class", "email");
         tr.appendChild(emailTD)
         idTD.appendChild(idText);
-        idTD.hidden = true;
+        idTD.style.display = 'none';
         tr.appendChild(idTD)
         // Edit button
         var button = document.createElement('input');

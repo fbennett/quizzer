@@ -48,7 +48,7 @@ function buildQuizList (rows) {
         nameTD.appendChild(nameAnchor);
         tr.appendChild(nameTD);
         idTD.appendChild(idText);
-        idTD.hidden = true;
+        idTD.style.display = 'none';
         tr.appendChild(idTD)
         if (rows[i].isnew) {
             var newmarkText = document.createTextNode(' [new]');

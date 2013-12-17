@@ -23,11 +23,11 @@ function buildQuestionList (quizobj) {
     var sendQuiz = document.getElementById('send-quiz');
     var quizResults = document.getElementById('quiz-results');
     if (quizobj.sent) {
-        sendQuiz.hidden = true;
-        quizResults.hidden = false;
+        sendQuiz.style.display = 'none';
+        quizResults.style.display = 'inline';
     } else {
-        sendQuiz.hidden = false;
-        quizResults.hidden = true;
+        sendQuiz.style.display = 'inline';
+        quizResults.style.display = 'none';
     }
 }
 
@@ -46,8 +46,8 @@ function sendQuiz() {
         });
     var sendQuizButton = document.getElementById('send-quiz');
     var quizResultsButton = document.getElementById('quiz-results');
-    sendQuizButton.hidden = true;
-    quizResultsButton.hidden = false;
+    sendQuizButton.style.display = 'none';
+    quizResultsButton.style.display = 'inline';
 }
 
 function writeChoice(questionNumber, choice) {
