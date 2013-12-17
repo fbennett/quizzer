@@ -18,3 +18,6 @@ foreclosing late submissions.
 Students should be provided with a refreshed link to their overall
 results view (access controlled by the temporary key) in each quiz
 mailing.
+
+Add a "Vistor" toggle to student records, so that non-members
+can be excluded from summary listings, but still receive feedback.

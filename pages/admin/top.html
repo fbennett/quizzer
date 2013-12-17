@@ -10,10 +10,10 @@
     <div class="col-1-1">
       <h1>Quizzer Admin</h1>
       <div style="display:inline-block">
-        <input class="button" type="button" value="Students" onclick="window.location = '?page=students&admin=' + getParameterByName('admin')"/>
+        <input class="button" type="button" value="Students" onclick="window.location = fixPath('/?admin=' + getParameterByName('admin') + '&page=students')"/>
       </div>
       <div style="display:inline-block">
-        <input class="button" type="button" value="Classes and Quizzes" onclick="window.location = '?page=classes&admin=' + getParameterByName('admin')"/>
+        <input class="button" type="button" value="Classes and Quizzes" onclick="window.location = fixPath('/?admin=' + getParameterByName('admin') + '&page=classes')"/>
       </div>
     </div>
   </div>
