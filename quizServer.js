@@ -254,7 +254,7 @@ function quizData (response, classID, studentID, studentKey, quizNumber) {
     });
 }
 
-function writeQuizResult (response, classID, studentID, studentKey, quizNumber, quizResult) {
+function writeQuizResult (response, classID, studentID, studentKey, quizNumber, quizResult, pathName) {
     var path = './answer/' + classID + '/' + quizNumber + '/' + studentID;
     var quizResult = JSON.stringify(quizResult);
     fs.writeFile(path, quizResult, function (err) {
@@ -263,7 +263,15 @@ function writeQuizResult (response, classID, studentID, studentKey, quizNumber, 
             response.writeHead(500, {'Content-Type': 'text/plain'});
             response.end("No questions found for this URL");
         } else {
-            var resultUrl = 'http://' + hostname + ':3498/?classid=' + classID+ '&id=' + studentID + '&key=' + studentKey + '&quizno=' + quizNumber + '&hostname=' + hostname;
+
+            var port = ':3498';
+            var stub = '/';
+            if (pathName && pathName !== '/') {
+                port = '';
+                stub = pathName.replace(/(.*\/).*/, '$1/quiz.html');
+            }
+
+            var resultUrl = 'http://' + hostname + port + stub + '?classid=' + classID+ '&id=' + studentID + '&key=' + studentKey + '&quizno=' + quizNumber + '&hostname=' + hostname;
             response.writeHead(200, {'Content-Type': 'text/plain'});
             response.end(resultUrl);
         }
@@ -668,7 +676,7 @@ function runServer() {
                     return;
                 } else if (cmd === 'writequizresult' && quizNumber && studentID && studentKey && classID) {
                     var payload = JSON.parse(this.POSTDATA);
-                    writeQuizResult(response, classID, studentID, studentKey, quizNumber, payload.quizres);
+                    writeQuizResult(response, classID, studentID, studentKey, quizNumber, payload.quizres, uriObj.pathname);
                     return;
                 } else if (cmd === 'showmyquiz' && quizNumber && studentID && studentKey && classID) {
                     showQuizResultPage(response, classID, studentID, studentKey, quizNumber);
