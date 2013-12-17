@@ -4,13 +4,14 @@ function showQuizResults () {
     var classID = getParameterByName('classid');
     var quizNumber = getParameterByName('quizno');
 
-    var url = '/?admin='
-        + adminID
-        + '&page=quizstats'
-        + '&classid='
-        + classID
-        + '&quizno='
-        + quizNumber;
+    var url = fixPath(
+        '/?admin='
+            + adminID
+            + '&page=quizstats'
+            + '&classid='
+            + classID
+            + '&quizno='
+            + quizNumber);
     window.location.href = url;
 }
 
