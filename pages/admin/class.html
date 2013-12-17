@@ -12,7 +12,7 @@
       <h1>Quizzer Admin</h1>
       <h2>@@CLASS@@</h2>
       <div>
-        <input type="button" value="Back" onclick="window.location = '?page=classes&admin=' + getParameterByName('admin')"/>
+        <input type="button" value="Back" onclick="window.location = fixPath('/?admin=' + getParameterByName('admin') + '&page=classes')"/>
       </div>
       <hr/>
     </div>
