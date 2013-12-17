@@ -16,9 +16,9 @@ function addClass(node) {
     } else {
         classID.disabled = false;
     }
-    addButton.setAttribute('hidden', true);
-    saveButton.removeAttribute('hidden');
-    classBoxes.removeAttribute('hidden');
+    addButton.style.display = 'none';
+    saveButton.style.display = 'inline';
+    classBoxes.style.display = 'inline';
 }
 
 function saveClass() {
@@ -49,9 +49,9 @@ function saveClass() {
         className.value = null;
         classID.value = null;
         // Redecorate
-        addButton.removeAttribute('hidden');
-        saveButton.setAttribute('hidden', true);
-        classBoxes.setAttribute('hidden', true);
+        addButton.style.display = 'inline';
+        saveButton.style.display = 'none';
+        classBoxes.style.display = 'none';
     } else {
         alert("A name is required");
         // Restore from server
@@ -99,7 +99,7 @@ function buildClassList (rows) {
         nameTD.appendChild(nameAnchor);
         tr.appendChild(nameTD);
         idTD.appendChild(idText);
-        idTD.hidden = true;
+        idTD.style.display = 'none';
         tr.appendChild(idTD)
         // Edit button
         var button = document.createElement('input');
