@@ -8,7 +8,6 @@ function fixPath (path) {
     // If a stub exists, assume secure operation, so:
     var stub =  match && match[1];
     if (stub) {
-        console.log("XX have stub: " + stub);
         //   (1) remove &admin= value from URL
         path = path.replace(/(\?)(?:admin=[^&]*)*(.*?)(?:&)(?:admin=[^&]*)*/,'$1$2');
         //   (2) if URL begins with '/?', append stub to '/'

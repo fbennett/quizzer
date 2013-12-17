@@ -44,10 +44,10 @@ function sendQuiz() {
             classid:classID,
             quizno:quizNumber
         });
-    var sendQuiz = document.getElementById('send-quiz');
-    var quizResults = document.getElementById('quiz-results');
-    sendQuiz.hidden = true;
-    quizResults.hidden = false;
+    var sendQuizButton = document.getElementById('send-quiz');
+    var quizResultsButton = document.getElementById('quiz-results');
+    sendQuizButton.hidden = true;
+    quizResultsButton.hidden = false;
 }
 
 function writeChoice(questionNumber, choice) {

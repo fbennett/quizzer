@@ -132,6 +132,10 @@ function sendQuiz (response, classID, quizNumber) {
         var email = studentsById[studentID].email;
         var studentKey = studentsById[studentID].key;
         // Send mail messages
+
+        //var match = RegExp('https?://[^/]*/(.*?)([?#]|$)').exec(window.location.href);
+        //var stub = match && match[1];
+
         var text = "We have prepared a quiz to help you check and improve your English writing ability.\n\nClick on the link below to take the quiz:\n\n"
             + "    http://" + hostname + ":3498/?id=" + studentID + "&key=" + studentKey + "&classid=" + classID + "&quizno=" + quizNumber + "&hostname=" + hostname + "\n\n"
             + "Sincerely yours,\n"
@@ -621,6 +625,7 @@ function runServer() {
             try {
                 //parse url from request object
                 var uriObj = url.parse(this.url);
+                console.log("SHOW: "+JSON.stringify(uriObj));
                 uriObj.parsedQuery = require('querystring').parse(uriObj.query);
                 var adminKey = uriObj.parsedQuery.admin;
                 var studentID = uriObj.parsedQuery.id;
