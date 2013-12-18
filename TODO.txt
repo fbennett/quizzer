@@ -1,5 +1,13 @@
 Some ideas
 
+***
+
+Main priority at the moment is to tidy up the code in quizServer.js,
+by splitting functionality out to library modules, and implementing
+a simple pluggable framework for transaction sets.
+
+***
+
 Option to pull in a fixed number of the questions most often missed in
 previous quizzes for a class.
 
@@ -21,3 +29,4 @@ mailing.
 
 Add a "Vistor" toggle to student records, so that non-members
 can be excluded from summary listings, but still receive feedback.
+

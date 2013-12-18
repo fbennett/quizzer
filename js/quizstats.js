@@ -19,13 +19,15 @@ function buildQuestionsView () {
     // Empty the node
     //
     // Print, in grid form, the following summary info:
-    //   - Total responses, total non-responders
+    //   - Total responses, total students (excluding outsiders)
     //   - Total right, total questions
-    // Then print, in grid form, a list with the following:
-    //   - The question number, with a hover CSS reveal of the question text
-    //   - The number of responding students who got it right
+    //
     // Then maybe:
     //   - A bell curve of the class profile on this quiz
+    //
+    // Then print, in grid form, a list with the following:
+    //   - The question number, with a hovering CSS reveal of the question text
+    //   - The number of responding students who got it right
 }
 
 function buildStudentsView () {
