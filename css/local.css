@@ -10,6 +10,7 @@ div.button-bold {
 
 div.button-bold input.button {
     font-weight: bold;
+    color: #777777;
 }
 
 input.button-small {
