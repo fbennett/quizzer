@@ -1,0 +1,31 @@
+<html>
+<head>
+  <title>Quizzer Admin - classes</title>
+  <script type="text/javascript" src="js/local.js"></script>  
+  <script type="text/javascript" src="js/classes.js"></script>  
+  <link rel="stylesheet" type="text/css" href="css/simple-grid.css"/>
+  <link rel="stylesheet" type="text/css" href="css/local.css"/>
+</head>
+<body onLoad="buildClassList()">
+  <div class="grid">
+    <div class="col-1-1">
+      <h1>Quizzer Admin - classes</h1>
+      <div>
+        <input class="button" type="button" value="Back" onclick="window.location = fixPath('/?admin=' + getParameterByName('admin') + '&page=top')"/>
+      </div>
+      <div class="button-bold">
+        <input class="button" id="add-class-button" type="button" value="Add Class" onclick="addClass()"/>
+        <input class="button" id="save-class-button" type="button" value="Save Class" onclick="saveClass()" style="display:none;"/>
+        <span id="class-boxes" style="display:none;">
+          Name:
+          <input id="class-name" type="text" size="30"/>
+          <input id="class-id" type="text" size="20" style="display:none;"/>
+        </span>
+      </div>
+      <hr/>
+      <table id="class-list">
+      </table>
+    </div>
+  </div>
+</body>
+</html>
