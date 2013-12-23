@@ -37,10 +37,11 @@ function saveClass() {
         apiRequest(
             '/?admin='
                 + adminID 
+                + '&page=classes'
                 + '&cmd=addclass'
             , {
                 name:name,
-                id:id
+                classid:id
             });
         buildClassList();
     }
@@ -59,9 +60,10 @@ function saveClass() {
         var obj = apiRequest(
             '/?admin='
                 + adminID
+                + '&page=classes'
                 + '&cmd=readoneclass'
             , {
-                id:id
+                classid:id
             });
         className.value = obj.name;
     }
@@ -74,6 +76,7 @@ function buildClassList (rows) {
         var rows = apiRequest(
             '/?admin='
                 + adminID
+                + '&page=classes'
                 + '&cmd=readclasses'
         );
     }

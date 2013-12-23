@@ -1,8 +1,5 @@
 (function () {
     var cogClass = function () {};
-    cogClass.prototype.match = function (params) {
-        return false;
-    };
     cogClass.prototype.exec = function (params, request, response) {
         response.writeHead(200, {'Content-Type': 'text/html'});
         response.end(this.page);
