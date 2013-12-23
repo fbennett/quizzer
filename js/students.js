@@ -44,11 +44,12 @@ function saveStudent() {
         apiRequest(
             '/?admin='
                 + adminID
+                + '&page=students'
                 + '&cmd=addstudent'
             , {
                 email:email,
                 name:name,
-                id:id
+                studentid:id
             });
         buildStudentList();
     }
@@ -68,9 +69,10 @@ function saveStudent() {
         var obj = apiRequest(
             '/?admin='
                 + adminID
+                + '&page=students'
                 + '&cmd=readonestudent'
             , {
-                id:id
+                studentid:id
             });
         studentName.value = obj.name;
         studentEmail.value = obj.email;
@@ -84,6 +86,7 @@ function buildStudentList (rows) {
         var rows = apiRequest(
             '/?admin='
                 + adminID
+                + '&page=students'
                 + '&cmd=readstudents');
     }
     rows.sort(function (a,b) {

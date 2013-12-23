@@ -1,0 +1,34 @@
+<html>
+<head>
+  <title>Quizzer Admin - students</title>
+  <script type="text/javascript" src="js/local.js"></script>  
+  <script type="text/javascript" src="js/students.js"></script>  
+  <link rel="stylesheet" type="text/css" href="css/simple-grid.css"/>
+  <link rel="stylesheet" type="text/css" href="css/local.css"/>
+  <link rel="stylesheet" type="text/css" href="css/students.css"/>
+</head>
+<body onLoad="buildStudentList();">
+  <div class="grid">
+    <div class="col-1-1">
+      <h1>Quizzer Admin - students</h1>
+      <div>
+        <input class="button" type="button" value="Back" onclick="window.location = fixPath('/?admin=' + getParameterByName('admin'))"/>
+      </div>
+      <div class="button-bold">
+        <input class="button" id="add-student-button" type="button" value="Add Student" onclick="addStudent()"/>
+        <input class="button" id="save-student-button" type="button" value="Save Student" onclick="saveStudent()" style="display:none;"/>
+        <span id="student-boxes" style="display:none;">
+          Name:
+          <input id="student-name" type="text" size="30"/>
+          Email:
+          <input id="student-email" type="text" size="30"/>
+          <input id="student-id" type="text" size="20" style="display:none;"/>
+        </span>
+      </div>
+      <hr/>
+      <table id="student-list">
+      </table>
+    </div>
+  </div>
+</body>
+</html>
