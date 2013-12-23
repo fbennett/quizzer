@@ -1,15 +1,15 @@
+// (reads from quizServer.cfg and mypwd.txt)
+var config = require('./lib/config').config;
+
 // (creates subdirs and sqlite3 database if necessary,
 // migrates to sqlite3 db from old CSV files, and removes
 // CSV and their subdirs after validation)
 var initModule = require('./lib/init.js');
-var initClass = new initModule.initClass();
+var initClass = new initModule.initClass(config);
 var init = initClass.getInit();
 
-// (reads from quizServer.cfg and mypwd.txt)
-var config = require('./lib/config').config;
-
 var optsModule = require('./lib/opts.js');
-var optsClass = new optsModule.optsClass(config);
+var optsClass = new optsModule.optsClass(init);
 var opts = optsClass.getOpts();
 if (!opts) {
     return;
@@ -27,7 +27,7 @@ var storageClass = new storageModule.storageClass();
 var storage = storageClass.getStorage(sys);
 
 var sysModule = require('./lib/sys.js');
-var sysClass = new sysModule.sysClass(init,opts,mailer,storage);
+var sysClass = new sysModule.sysClass(opts,mailer,storage);
 var sys = sysClass.getSys();
 
 var cogsModule = require('./lib/cogs.js');
