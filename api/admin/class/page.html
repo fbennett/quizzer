@@ -1,0 +1,42 @@
+<html>
+<head>
+  <title>Quizzer Admin - @@CLASS@@</title>
+  <script type="text/javascript" src="js/local.js"></script>  
+  <script type="text/javascript" src="js/class.js"></script>
+  <link rel="stylesheet" type="text/css" href="css/simple-grid.css"/>
+  <link rel="stylesheet" type="text/css" href="css/local.css"/>
+  <link rel="stylesheet" type="text/css" href="css/class.css"/>
+</head>
+<body onLoad="buildQuizList();buildMemberLists();">
+  <div class="grid">
+    <div class="col-1-1">
+      <h1>Quizzer Admin</h1>
+      <h2>@@CLASS@@</h2>
+      <div>
+        <input class="button" type="button" value="Back" onclick="window.location = fixPath('/?admin=' + getParameterByName('admin') + '&page=classes')"/>
+      </div>
+      <div class="button-bold">
+        <input class="button" id="class-results" type="button" value="Class Results" onclick="showClassResults()"/>
+      </div>
+      <hr/>
+    </div>
+    <div class="col-1-4">
+      <h3>Quizzes</h3>
+      <div id="quiz-list">
+      </div>
+    </div>
+    <div class="col-1-4">
+      <h3>Members</h3>
+      <input class="button" type="button" value="Remove selected students ->" onclick="removeMembers()"/>
+      <div id="members">
+      </div>
+    </div>
+    <div class="col-2-4">
+      <h3>Non-Members</h3>
+      <input class="button" type="button" value="<- Add selected students" onclick="addMembers()"/>
+      <div id="non-members">
+      </div>
+    </div>
+  </div>
+</body>
+</html>

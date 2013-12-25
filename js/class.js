@@ -1,13 +1,12 @@
 function buildQuizList (rows) {
-
     var adminID = getParameterByName('admin');
     var classID = getParameterByName('classid');
-
     if (!rows) {
         // if rows is nil, call the server.
         var rows = apiRequest(
             '/?admin='
                 + adminID
+                + '&page=class'
                 + '&cmd=readquizzes'
             , {
                 classid:classID
@@ -68,9 +67,10 @@ function buildMemberLists(rowsets) {
         rowsets = apiRequest(
             '/?admin='
                 + adminID
+                + '&page=class'
                 + '&cmd=readmembers'
             , {
-                classID:classID
+                classid:classID
             }
         );
     }
@@ -89,7 +89,7 @@ function buildMemberLists(rowsets) {
             var entry = document.createElement('div');
             var checkBox = document.createElement('input');
             checkBox.setAttribute('type', 'checkbox');
-            checkBox.setAttribute('value', rowsets[i][j].id);
+            checkBox.setAttribute('value', rowsets[i][j].studentid);
             entry.appendChild(checkBox);
             var entryText = document.createTextNode(rowsets[i][j].name);
             entry.appendChild(entryText);
@@ -111,6 +111,7 @@ function addMembers () {
     var rowsets = apiRequest(
         '/?admin='
             + adminID
+            + '&page=class'
             + '&cmd=addmembers'
         , {
             classID:classID,
@@ -133,6 +134,7 @@ function removeMembers () {
     var rowsets = apiRequest(
         '/?admin='
             + adminID
+            + '&page=class'
             + '&cmd=removemembers'
         , {
             classID:classID,
