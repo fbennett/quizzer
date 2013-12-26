@@ -114,7 +114,7 @@ function addMembers () {
             + '&page=class'
             + '&cmd=addmembers'
         , {
-            classID:classID,
+            classid:classID,
             addmembers:ret
         }
     );
@@ -137,7 +137,7 @@ function removeMembers () {
             + '&page=class'
             + '&cmd=removemembers'
         , {
-            classID:classID,
+            classid:classID,
             removemembers:ret
         }
     );

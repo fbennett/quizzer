@@ -22,16 +22,16 @@ if (!mailer) {
     return;
 }
 
-var storageModule = require('./lib/storage.js');
-var storageClass = new storageModule.storageClass();
-var storage = storageClass.getStorage(sys);
-
 var sysModule = require('./lib/sys.js');
-var sysClass = new sysModule.sysClass(opts,mailer,storage);
+var sysClass = new sysModule.sysClass(opts,mailer);
 var sys = sysClass.getSys();
 
+var utilModule = require('./lib/util.js');
+var utilClass = new utilModule.utilClass(sys);
+var utils = utilClass.getUtils();
+
 var cogsModule = require('./lib/cogs.js');
-var cogsClass = new cogsModule.cogsClass(sys);
+var cogsClass = new cogsModule.cogsClass(sys,utils);
 var cogs = cogsClass.getCogs();
 
 var apiModule = require('./lib/api.js');

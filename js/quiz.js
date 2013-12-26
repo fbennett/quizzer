@@ -26,6 +26,7 @@ function buildQuestionList (quizobj) {
         var quizobj = apiRequest(
             '/?admin='
                 + adminID
+                + '&page=quiz'
                 + '&cmd=readquestions'
             , {
                 classid:classID,
