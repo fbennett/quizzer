@@ -1,19 +1,21 @@
 // (reads from quizServer.cfg and mypwd.txt)
 var config = require('./lib/config').config;
 
+var optsModule = require('./lib/opts.js');
+var optsClass = new optsModule.optsClass(config);
+var opts = optsClass.getOpts();
+if (!opts) {
+    return;
+} else if (opts.save_parameters) {
+    console.log("Save parameters!");
+}
+
 // (creates subdirs and sqlite3 database if necessary,
 // migrates to sqlite3 db from old CSV files, and removes
 // CSV and their subdirs after validation)
 var initModule = require('./lib/init.js');
-var initClass = new initModule.initClass(config);
+var initClass = new initModule.initClass(opts);
 var init = initClass.getInit();
-
-var optsModule = require('./lib/opts.js');
-var optsClass = new optsModule.optsClass(init);
-var opts = optsClass.getOpts();
-if (!opts) {
-    return;
-}
 
 var mailerModule = require('./lib/mailer.js');
 var mailerClass = new mailerModule.mailerClass(opts);

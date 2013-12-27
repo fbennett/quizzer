@@ -1,28 +1,28 @@
 (function () {
     var cogClass = function () {};
     cogClass.prototype.exec = function (params, request, response) {
-        var payload = JSON.parse(request.POSTDATA);
-        if (payload.studentid) {
-            var name = payload.name;
-            var email = payload.email;
+        var oops = this.utils.apiError;
+        if (params.studentid) {
+            var name = params.name;
+            var email = params.email;
             var db = this.sys.db;
-            db.run('INSERT OR REPLACE INTO students VALUES (?,?,?,?)',[payload.studentid,payload.name,payload.email,0],function(err){
-                if (err) console.log("Error in addstudent (1): "+err);
+            db.run('INSERT OR REPLACE INTO students VALUES (?,?,?,NULL,NULL)',[params.studentid,params.name,params.email],function(err){
+                if (err) {return oops(response,err,'students/addstudent')};
                 sendStudents();
             })
         } else {
-            var name = payload.name;
-            var email = payload.email;
+            var name = params.name;
+            var email = params.email;
             var db = this.sys.db;
-            db.run('INSERT INTO students VALUES (NULL,?,?,?)',[payload.name,payload.email,0],function(err){
-                if (err) console.log("Error in addclass (3): "+err);
+            db.run('INSERT INTO students VALUES (NULL,?,?,NULL,NULL)',[params.name,params.email],function(err){
+                if (err) {return oops(response,err,'students/addstudent')};
                 sendStudents();
             });
         }
         // XXX This is a duplicate of students/readstudents
         function sendStudents () {
             db.all('SELECT classID,name FROM classes',function(err,rows){
-                if (err) console.log("Error in addclass (4): "+err);
+                if (err||!rows) {return oops(response,err,'students/addstudent')};
                 var retRows = [];
                 for (var i=0,ilen=rows.length;i<ilen;i+=1) {
                     var row = rows[i];

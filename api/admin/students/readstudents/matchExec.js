@@ -1,8 +1,9 @@
 (function () {
     var cogClass = function () {};
     cogClass.prototype.exec = function (params, request, response) {
+        var oops = this.utils.apiError;
         this.sys.db.all('SELECT name,studentID,email FROM students',function(err,rows){
-            if (err) console.log("Error in students/readstudents: "+err);
+            if (err||!rows) {return oops(response,err,'students/readstudents')};
             var retRows = [];
             for (var i=0,ilen=rows.length;i<ilen;i+=1) {
                 var row = rows[i];

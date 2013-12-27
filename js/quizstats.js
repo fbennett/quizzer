@@ -10,6 +10,7 @@ function getQuizResults () {
             quizno:quizNumber
         }
         , false);
+    if (false === quizResults) return;
 }
 
 function buildQuestionsView () {

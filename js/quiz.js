@@ -32,6 +32,7 @@ function buildQuestionList (quizobj) {
                 classid:classID,
                 quizno:quizNumber
             });
+        if (false === quizobj) return;
     }
     displayQuestions(quizobj.questions);
     var button = document.getElementById('add-question-button');
@@ -55,6 +56,7 @@ function sendQuiz() {
     var emptystr = apiRequest(
         '/?admin='
             + adminID
+            + '&page=quiz'
             + '&cmd=sendquiz'
         , {
             classid:classID,
@@ -74,6 +76,7 @@ function writeChoice(questionNumber, choice) {
     var emptystr = apiRequest(
         '/?admin='
             + adminID 
+            + '&page=quiz'
             + '&cmd=writeonechoice'
         , {
             classid:classID,
@@ -109,6 +112,7 @@ function openQuestion (questionNumber) {
         qobj = apiRequest(
             '/?admin='
                 + adminID
+                + '&page=quiz'
                 + '&cmd=readonequestion'
             , {
                 classid:classID,
@@ -116,6 +120,7 @@ function openQuestion (questionNumber) {
                 questionno:questionNumber
             }
         );
+        if (false === qobj) return;
         // ... empty this child ...
         node = document.getElementById('quiz-question-' + questionNumber);
         for (var i=0,ilen=node.childNodes.length;i<ilen;i+=1) {
@@ -228,8 +233,10 @@ function closeQuestion (questionNumber) {
     // Extracts text-box content to object
     var node = document.getElementById('quiz-question-' + questionNumber);
     var rubric = node.childNodes[0].childNodes[0].value;
+    var abort = false;
     if (!rubric) {
-        alert("All fields must have content: "+rubric);
+        abort = true;
+        alert("Rubric is empty. All fields must have content.");
     }
     var correct = 0;
     var questions = [];
@@ -238,26 +245,31 @@ function closeQuestion (questionNumber) {
             correct = (i-1);
         }
         var content = node.childNodes[i].childNodes[1].value;
-        if (!content) {
-            alert("All fields must have content");
+        if (!content && !abort) {
+            abort = true;
+            alert("Choice " + i + " is empty. All fields must have content.");
         }
         questions.push(content);
     }
+    if (abort) return;
     var obj = {
         rubric: rubric,
         questions: questions,
         correct: correct
     }
     // Sends object to server for saving
-    var questionNumber = apiRequest('/?admin=' 
-                                    + adminID 
-                                    + '&cmd=writeonequestion'
-                                    , {
-                                        classid:classID,
-                                        quizno:quizNumber,
-                                        questionno:questionNumber,
-                                        data:obj
-                                    });
+    var questionNumber = apiRequest(
+        '/?admin=' 
+            + adminID 
+            + '&page=quiz'
+            + '&cmd=writeonequestion'
+        , {
+            classid:classID,
+            quizno:quizNumber,
+            questionno:questionNumber,
+            data:obj
+        });
+    if (false === questionNumber) return;
     node.setAttribute('id', 'quiz-question-' + questionNumber);
     for (var i=0,ilen=node.childNodes.length;i<ilen;i+=1) {
         node.removeChild(node.childNodes[0])

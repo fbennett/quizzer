@@ -12,6 +12,7 @@ function buildQuizList (rows) {
                 classid:classID
             }
         );
+        if (false === rows) return;
     }
     rows.sort(function (a,b) {
         a = parseInt(a.number,10);
@@ -73,6 +74,7 @@ function buildMemberLists(rowsets) {
                 classid:classID
             }
         );
+        if (false === rowsets) return;
     }
     // Clear lists and rewrite
     var memberContainer = document.getElementById("members");
@@ -118,6 +120,7 @@ function addMembers () {
             addmembers:ret
         }
     );
+    if (false === rowsets) return;
     buildMemberLists(rowsets);
 }
 
@@ -141,6 +144,7 @@ function removeMembers () {
             removemembers:ret
         }
     );
+    if (false === rowsets) return;
     buildMemberLists(rowsets);
 }
 

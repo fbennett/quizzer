@@ -29,6 +29,9 @@ function apiRequest (url, obj, returnAsString) {
     xhr.open('POST', url, false);
     xhr.setRequestHeader("Content-type","text/plain");
     xhr.send(obj);
+    if (200 != xhr.status) {
+        return false;
+    }
     var ret = xhr.responseText;
     if (!returnAsString) {
         ret = JSON.parse(ret);

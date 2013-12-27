@@ -74,6 +74,7 @@ function saveStudent() {
             , {
                 studentid:id
             });
+        if (false === obj) return;
         studentName.value = obj.name;
         studentEmail.value = obj.email;
     }
@@ -88,6 +89,7 @@ function buildStudentList (rows) {
                 + adminID
                 + '&page=students'
                 + '&cmd=readstudents');
+        if (false === rows) return;
     }
     rows.sort(function (a,b) {
         // Sort by ???

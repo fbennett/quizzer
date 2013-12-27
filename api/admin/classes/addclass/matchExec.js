@@ -1,25 +1,25 @@
 (function () {
     var cogClass = function () {};
     cogClass.prototype.exec = function (params, request, response) {
-        var payload = JSON.parse(request.POSTDATA);
-        if (payload.classid) {
-            var name = payload.name;
+        var oops = this.utils.apiError;
+        if (params.classid) {
+            var name = params.name;
             var db = this.sys.db;
-            db.run('INSERT OR REPLACE INTO classes VALUES (?,?)',[payload.classid,payload.name],function(err){
-                if (err) console.log("Error in addclass (1): "+err);
+            db.run('INSERT OR REPLACE INTO classes VALUES (?,?)',[params.classid,params.name],function(err){
+                if (err) {return oops(response,err,'classes/addclass')};
                 sendClasses();
             })
         } else {
-            var name = payload.name;
+            var name = params.name;
             var db = this.sys.db;
-            db.run('INSERT INTO classes VALUES (NULL,?)',[payload.name],function(err){
-                if (err) console.log("Error in addclass (3): "+err);
+            db.run('INSERT INTO classes VALUES (NULL,?)',[params.name],function(err){
+                if (err) {return oops(response,err,'classes/addclass')};
                 sendClasses();
             });
         }
         function sendClasses () {
             db.all('SELECT classID,name FROM classes',function(err,rows){
-                if (err) console.log("Error in addclass (4): "+err);
+                if (err||!rows) {return oops(response,err,'classes/addclass')};
                 var retRows = [];
                 for (var i=0,ilen=rows.length;i<ilen;i+=1) {
                     var row = rows[i];

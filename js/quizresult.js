@@ -35,6 +35,7 @@ function runResult () {
             + studentKey 
             + '&quizno=' 
             + quizNumber);
+    if (false === quizErrors) return;
 
     var resultList = document.getElementById("result-list");
 

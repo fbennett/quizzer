@@ -46,7 +46,7 @@ function runQuiz() {
             + studentKey 
             + '&quizno=' 
             + quizNumber);
-
+    if (false === quizData) return;
     for (var i=0,ilen=quizData.questions.length;i<ilen;i+=1) {
         remap = randomize(quizData.questions[i].questions);
         quizData.questions[i].remap = remap;
@@ -134,6 +134,7 @@ function ShowResult() {
             quizres:quizResult
         }
         , true);
+    if (false === resultPageUrl) return;
     window.location.href = resultPageUrl;
 }
 

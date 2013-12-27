@@ -34,7 +34,7 @@ function saveClass() {
     if (name) {
         // Save
         var adminID = getParameterByName('admin');
-        apiRequest(
+        var apires = apiRequest(
             '/?admin='
                 + adminID 
                 + '&page=classes'
@@ -43,6 +43,7 @@ function saveClass() {
                 name:name,
                 classid:id
             });
+        if (false === apires) return;
         buildClassList();
     }
     if (name || (!name && !id)) {
@@ -65,6 +66,7 @@ function saveClass() {
             , {
                 classid:id
             });
+        if (false === obj) return;
         className.value = obj.name;
     }
 }
@@ -79,6 +81,7 @@ function buildClassList (rows) {
                 + '&page=classes'
                 + '&cmd=readclasses'
         );
+        if (false === rows) return;
     }
     rows.sort(function (a,b) {
         // Sort by ???
