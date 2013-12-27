@@ -40,6 +40,7 @@
                 sys.db.run('UPDATE memberships SET studentKey=? WHERE classID=? AND studentID=?',[studentKey,classID,row.studentID],function(err){
                     if (err) {return oops(response,err,'quiz/sendquiz(2)')};
                     // Good, so this does that. Send the mail message.
+                    sys.membershipKeys[row.studentID] = studentKey;
                     sendMail(quizNumber,row.studentID,studentKey,row.name);
                 });
                 

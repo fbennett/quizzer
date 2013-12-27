@@ -22,14 +22,14 @@
             for (var i=0,ilen=rows.length;i<ilen;i+=1) {
                 var row = rows[i];
                 if (row.sent) {
-                    if (enroled > submitted) {
+                    if (row.enroled > row.submitted) {
                         retRows.push({number:row.quizNumber,isnew:1});
                     } else {
                         retRows.push({number:row.quizNumber,isnew:0});
                     }
                 } else {
                     hasNew = true;
-                    retRows.push({number:row.quizNumber,isnew:2});
+                    retRows.push({number:row.quizNumber,isnew:-1});
                 }
                 maxval = row.quizNumber;
             }
