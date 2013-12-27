@@ -2,6 +2,7 @@
     var cogClass = function () {};
     cogClass.prototype.exec = function (params, request, response) {
         var oops = this.utils.apiError;
+        var classID = params.classid;
         var db = this.sys.db;
         var getRandomKey = this.sys.getRandomKey;
         var sql = [];

@@ -13,7 +13,7 @@
             + "AND a.quizNumber=q.quizNumber "
             + "WHERE q.classID=? "
             + "GROUP BY q.quizID "
-            + "ORDER BY c.name,q.quizNumber;"
+            + "ORDER BY q.quizNumber;"
         db.all(sql,[params.classid],function(err,rows){
             if (err||!rows) {return oops(response,err,'class/readquizzes')};
             var retRows = [];

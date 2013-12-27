@@ -4,8 +4,8 @@
         var oops = this.utils.apiError;
         var db = this.sys.db;
         var getRandomKey = this.sys.getRandomKey;
+        var classID = params.classid;
         var sql = [];
-        var params = [];
         var getClassMemberships = this.utils.getClassMemberships;
         var stmt = db.prepare('INSERT INTO memberships VALUES(NULL,?,?,?);');
         for (var i=0,ilen=params.addmembers.length;i<ilen;i+=1) {
