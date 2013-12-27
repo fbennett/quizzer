@@ -51,7 +51,12 @@ function buildQuizList (rows) {
         idTD.style.display = 'none';
         tr.appendChild(idTD)
         if (rows[i].isnew) {
-            var newmarkText = document.createTextNode(' [new]');
+            var newmarkText;
+            if (rows[i].isnew === -1) {
+                newmarkText = document.createTextNode('[new]');
+            } else {
+                newmarkText = document.createTextNode('(' + rows[i].isnew + ')');
+            }
             var newmarkTD = document.createElement('td');
             newmarkTD.appendChild(newmarkText);
             tr.appendChild(newmarkTD);
@@ -122,6 +127,7 @@ function addMembers () {
     );
     if (false === rowsets) return;
     buildMemberLists(rowsets);
+    buildQuizList();
 }
 
 function removeMembers () {
@@ -146,5 +152,6 @@ function removeMembers () {
     );
     if (false === rowsets) return;
     buildMemberLists(rowsets);
+    buildQuizList();
 }
 

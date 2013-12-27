@@ -28,13 +28,12 @@
         var back = "Sincerely yours,\n"
             + "The Academic Writing team"
         // Okay. We need to refresh the student keys before running the code below.
-        sys.db.all('SELECT m.studentID,s.name FROM memberships AS m JOIN students AS s ON s.studentID=m.studentID JOIN quizzes AS q ON q.classID=m.classID WHERE m.classID=? AND q.quizNumber=? AND m.studentID NOT IN (SELECT studentID FROM answers AS a WHERE a.classID=? AND a.quizNumber=?);',[classID,quizNumber,classID,quizNumber],function(err,rows){
+        sys.db.all('SELECT m.studentID,s.name FROM memberships AS m JOIN students AS s ON s.studentID=m.studentID JOIN quizzes AS q ON q.classID=m.classID WHERE m.classID=? AND q.quizNumber=? AND (NOT q.sent OR m.studentID NOT IN (SELECT studentID FROM answers AS a WHERE a.classID=? AND a.quizNumber=?));',[classID,quizNumber,classID,quizNumber],function(err,rows){
             if (err||!rows) {return oops(response,err,'quiz/sendquiz(1)')};
             var datalst = [];
             for (var i=0,ilen=rows.length;i<ilen;i+=1) {
                 var row = rows[i];
                 var studentKey = sys.getRandomKey(8,36);
-                // All wrong.
                 // This is a list of students to receive mail in this class.
                 // Keys need to be updated for all keys of these students, in this class.
                 sys.db.run('UPDATE memberships SET studentKey=? WHERE classID=? AND studentID=?',[studentKey,classID,row.studentID],function(err){
@@ -52,7 +51,6 @@
                 .replace(/@@STUDENT_ID@@/g,studentID)
                 .replace(/@@STUDENT_KEY@@/g,studentKey)
                 .replace(/@@QUIZ_NUMBER@@/g,quizNumber);
-            console.log("Send to: "+name);
             var front = front_template.replace(/@@NAME@@/,name)
             var pastLinks = 0;
             sys.db.all('SELECT q.quizNumber FROM questions AS q JOIN quizzes AS qz ON qz.classID=q.classID AND qz.quizNumber=q.quizNumber WHERE q.classID=? AND NOT q.quizNumber=? AND qz.sent GROUP BY q.quizNumber',[classID,quizNumber],function(err,rows){

@@ -23,7 +23,7 @@
                 var row = rows[i];
                 if (row.sent) {
                     if (row.enroled > row.submitted) {
-                        retRows.push({number:row.quizNumber,isnew:1});
+                        retRows.push({number:row.quizNumber,isnew:(row.enroled - row.submitted)});
                     } else {
                         retRows.push({number:row.quizNumber,isnew:0});
                     }
@@ -33,8 +33,8 @@
                 }
                 maxval = row.quizNumber;
             }
-            if (!hasNew) {
-                retRows.push({number:maxval+1,isnew:true});
+            if (rows.length && !hasNew) {
+                retRows.push({number:maxval+1,isnew:-1});
             }
             response.writeHead(200, {'Content-Type': 'application/json'});
             response.end(JSON.stringify(retRows));

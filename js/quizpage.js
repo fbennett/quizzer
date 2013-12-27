@@ -5,13 +5,9 @@ var ansarry = new Array();
 var i;
 
 var classID = getParameterByName('classid');
-var studentID = getParameterByName('id');
-var studentKey = getParameterByName('key');
+var studentID = getParameterByName('studentid');
+var studentKey = getParameterByName('studentkey');
 var quizNumber = getParameterByName('quizno');
-var hostname = getParameterByName('hostname');
-if (!hostname) {
-    hostname = 'our.law.nagoya-u.ac.jp';
-}
 
 var quizResult = {};
 
@@ -40,9 +36,9 @@ function runQuiz() {
     quizData = apiRequest(
         '/?cmd=quizdata&classid=' 
             + classID
-            + '&id=' 
+            + '&studentid=' 
             + studentID 
-            + '&key=' 
+            + '&studentkey=' 
             + studentKey 
             + '&quizno=' 
             + quizNumber);
@@ -124,9 +120,9 @@ function ShowResult() {
     var resultPageUrl = apiRequest(
         '/?cmd=writequizresult&classid=' 
             + classID 
-            + '&id=' 
+            + '&studentid=' 
             + studentID 
-            + '&key=' 
+            + '&studentkey=' 
             + studentKey 
             + '&quizno=' 
             + quizNumber
