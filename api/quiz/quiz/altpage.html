@@ -1,0 +1,33 @@
+<!DOCTYPE html>  
+<html>  
+  <head>  
+    <link rel="stylesheet" type="text/css" href="css/simple-grid.css"/>
+    <link rel="stylesheet" type="text/css" href="css/local.css"/>
+    <link rel="stylesheet" type="text/css" href="css/quizresult.css"/>
+    <script type="text/javascript" src="js/local.js"></script>
+    <script type="text/javascript" src="node_modules/marked/lib/marked.js"></script>
+    <script type="text/javascript" src="js/quizresult.js"></script>
+  </head>  
+  <body onload="runResult()">
+  <div class="grid">
+    <div class="col-1-1">
+      <p><b>@@STUDENT_NAME@@,</b></p>
+      <p>
+        Here is your result for <b>Quiz @@QUIZ_NUMBER@@</b> of <b>@@CLASS@@</b>.
+      </p>
+      <p id="text-errors-with-help">
+        The students who gave the correct answer are listed under each
+        of your mistakes below. They can help -- ask them to explain
+        why your choice was wrong!
+      </p>
+      <p id="text-perfect" style="display:none;">
+        Congratulations!
+      </p>
+      <hr/>
+    </div>
+    <div id="result-list">
+      Hello.
+    </div>
+  </div>
+  </body>  
+</html>  
