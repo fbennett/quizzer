@@ -1,11 +1,7 @@
 var classID = getParameterByName('classid');
-var studentID = getParameterByName('id');
-var studentKey = getParameterByName('key');
+var studentID = getParameterByName('studentid');
+var studentKey = getParameterByName('studentkey');
 var quizNumber = getParameterByName('quizno');
-var hostname = getParameterByName('hostname');
-if (!hostname) {
-    hostname = 'our.law.nagoya-u.ac.jp';
-}
 
 function markdown (txt) {
     txt = txt.replace(/\(\(([a-zA-Z1-9])\)\)/g, function (aChar) {
@@ -29,9 +25,9 @@ function runResult () {
     var quizErrors = apiRequest(
         '/?cmd=myquizresult&classid=' 
             + classID
-            + '&id=' 
+            + '&studentid=' 
             + studentID 
-            + '&key=' 
+            + '&studentkey=' 
             + studentKey 
             + '&quizno=' 
             + quizNumber);
