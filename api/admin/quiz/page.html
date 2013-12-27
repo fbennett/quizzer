@@ -1,0 +1,32 @@
+<html>
+<head>
+  <title>Quizzer Admin - @@CLASS@@ - Quiz @@QUIZ_NUMBER@@</title>
+  <link rel="stylesheet" type="text/css" href="css/simple-grid.css"/>
+  <link rel="stylesheet" type="text/css" href="css/local.css"/>
+  <link rel="stylesheet" type="text/css" href="css/quiz.css"/>
+  <script type="text/javascript" src="js/local.js"></script>  
+  <script type="text/javascript" src="node_modules/marked/lib/marked.js"></script>
+  <script type="text/javascript" src="js/quiz.js"></script>  
+</head>
+<body onLoad="buildQuestionList()">
+  <div class="grid">
+    <div class="col-1-1">
+      <h1>Quizzer Admin</h1>
+      <h2>@@CLASS@@: Quiz @@QUIZ_NUMBER@@</h2>
+      <div>
+        <input class="button" type="button" value="Back" onclick="window.location = fixPath('/?admin=' + getParameterByName('admin') + '&page=class' + '&classid=' + getParameterByName('classid'))"/>
+      </div>
+      <div class="button-bold">
+        <input class="button" id="send-quiz" type="button" value="Send Quiz" onclick="sendQuiz()"/>
+        <input class="button" id="quiz-results" type="button" value="Quiz Results" onclick="showQuizResults()" style="display:none;"/>
+      </div>
+      <hr/>
+      <ol id="quiz-questions">
+      </ol>
+      <div style="clear: both;">
+        <input class="button" id="add-question-button" type="button" value="Add Question" onclick="addQuestion()"/>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
