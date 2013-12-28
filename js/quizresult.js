@@ -61,6 +61,19 @@ function runResult () {
             answerPair.appendChild(rightAnswer);
             answerPair.appendChild(wrongAnswer);
             resultList.appendChild(answerPair);
+            if (quizErrors[i].goodAnswerStudents.length) {
+                var lst = quizErrors[i].goodAnswerStudents;
+                var studentsPair = document.createElement('div');
+                var studentsLabel = document.createElement('div');
+                studentsLabel.innerHTML = "These classmates can explain why their answer was correct!"
+                studentsLabel.setAttribute("class", "correct-students-label");
+                studentsPair.appendChild(studentsLabel);
+                var studentsList = document.createElement('div');
+                studentsList.innerHTML = lst.join(", ");
+                studentsList.setAttribute("class", "correct-students-list");
+                studentsPair.appendChild(studentsList);
+                answerPair.appendChild(studentsPair);
+            }
         }
     }
 }

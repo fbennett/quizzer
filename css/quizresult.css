@@ -20,3 +20,12 @@
 .rubric {
     font-weight: bold;
 }
+
+.correct-students-label {
+    margin: 6px 0 6px 1em;
+    font-style: italic;
+}
+
+.correct-students-list {
+    margin: 6px 0 6px 3em;
+}

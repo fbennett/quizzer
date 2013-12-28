@@ -27,8 +27,11 @@ function apiRequest (url, obj, returnAsString) {
     }
     var xhr = new XMLHttpRequest();
     xhr.open('POST', url, false);
-    xhr.setRequestHeader("Content-type","text/plain");
+    xhr.setRequestHeader("Content-type","application/json");
     xhr.send(obj);
+    if (xhr.getResponseHeader('content-type') === 'text/html') {
+        document = xhr.responseXML;
+    }
     if (200 != xhr.status) {
         return false;
     }
