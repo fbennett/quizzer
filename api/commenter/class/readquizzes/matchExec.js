@@ -18,10 +18,10 @@
         // properly, but it has a way of paying back for the pain all
         // in one go.
         // 
-        var sql = "SELECT q.quizNumber,q.sent,res.comments,res.needs "
+        var sql = "SELECT q.quizNumber,q.sent,COUNT(res.comments) AS comments,COUNT(res.needs) AS needs "
             + "FROM quizzes AS q "
             + "LEFT JOIN ("
-            +   "SELECT qq.classID,qq.quizNumber,COUNT(c.commentID) AS comments,COUNT(aa.choice) AS needs "
+            +   "SELECT DISTINCT qq.classID,qq.quizNumber,c.commentID AS comments,aa.choice AS needs "
             +   "FROM questions AS qq "
             +   "JOIN answers AS aa ON aa.classID=qq.classID AND aa.quizNumber=qq.quizNumber AND aa.questionNumber=qq.questionNumber "
             +   "LEFT JOIN comments AS c ON c.classID=aa.classID AND c.quizNumber=aa.quizNumber AND c.questionNumber=aa.questionNumber AND c.choice=aa.choice "
@@ -29,7 +29,8 @@
             +   "GROUP BY aa.quizNumber, aa.questionNumber, aa.choice "
             + ") as res ON res.classID=q.classID AND res.quizNumber=q.quizNumber "
             + "WHERE q.classID=? AND q.sent=1 "
-            + "GROUP BY q.quizNumber;"
+            + "GROUP BY q.quizNumber;";
+        console.log("SQL: "+sql);
         db.all(sql,[classID,classID],function(err,rows){
             if (err||!rows) {return oops(response,err,'class/readquizzes')};
             var retRows = [];
@@ -37,7 +38,7 @@
             var maxval = 0;
             for (var i=0,ilen=rows.length;i<ilen;i+=1) {
                 var row = rows[i];
-                retRows.push({number:row.quizNumber,numberOfCommentsNeeded:(row.needs)});
+                retRows.push({number:row.quizNumber,numberOfCommentsNeeded:(row.needs - row.comments)});
             }
             response.writeHead(200, {'Content-Type': 'application/json'});
             response.end(JSON.stringify(retRows));
