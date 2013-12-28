@@ -18,7 +18,7 @@
         // properly, but it has a way of paying back for the pain all
         // in one go.
         // 
-        var sql = "SELECT q.quizNumber,q.sent,COUNT(res.comments) AS comments,COUNT(res.needs) AS needs "
+        var sql = "SELECT q.quizNumber,q.sent,(COUNT(res.needs) - COUNT(res.comments)) AS numberOfCommentsNeeded "
             + "FROM quizzes AS q "
             + "LEFT JOIN ("
             +   "SELECT DISTINCT qq.classID,qq.quizNumber,c.commentID AS comments,aa.choice AS needs "
@@ -38,7 +38,7 @@
             var maxval = 0;
             for (var i=0,ilen=rows.length;i<ilen;i+=1) {
                 var row = rows[i];
-                retRows.push({number:row.quizNumber,numberOfCommentsNeeded:(row.needs - row.comments)});
+                retRows.push({number:row.quizNumber,numberOfCommentsNeeded:row.numberOfCommentsNeeded});
             }
             response.writeHead(200, {'Content-Type': 'application/json'});
             response.end(JSON.stringify(retRows));
