@@ -75,6 +75,7 @@ function buildClassList (rows) {
     if (!rows) {
         // if rows is nil, call the server.
         var adminID = getParameterByName('admin');
+        var commenterID = getParameterByName('commenter');
         var rows = apiRequest(
             '/?admin='
                 + adminID
@@ -101,22 +102,12 @@ function buildClassList (rows) {
         var nameTD = document.createElement('td');
         var idTD = document.createElement('td');
         nameAnchor.appendChild(nameText);
-        nameAnchor.setAttribute('href', fixPath('/?admin=' + adminID + '&page=class&classid=' + rows[i][1]));
+        nameAnchor.setAttribute('href', fixPath('/?admin=' + adminID + '&page=class&classid=' + rows[i][1] + '&commenter=' + commenterID));
         nameTD.appendChild(nameAnchor);
         tr.appendChild(nameTD);
         idTD.appendChild(idText);
         idTD.style.display = 'none';
         tr.appendChild(idTD)
-        // Edit button
-        var buttonTD = document.createElement('td');
-        var button = document.createElement('input');
-        button.setAttribute('type', 'button');
-        button.setAttribute('value', 'Edit');
-        button.setAttribute('onclick', 'addClass(this.parentNode)');
-        button.setAttribute('class', 'button-small');
-        buttonTD.appendChild(button);
-        tr.appendChild(buttonTD);
         container.appendChild(tr);
     }
-    // Each class line should have an edit button
 }

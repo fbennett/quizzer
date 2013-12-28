@@ -4,7 +4,7 @@
             return function (params) {
                 if (params.admin 
                     && this.sys.admin[params.admin]
-                    && !params.commenter
+                    && params.commenter
                     && params.page === pageName
                     && params.cmd === callName) {
                     
@@ -16,7 +16,7 @@
             return function (params) {
                 if (params.admin 
                     && this.sys.admin[params.admin]
-                    && !params.commenter
+                    && params.commenter
                     && params.page === pageName
                     && !params.cmd) {
                     

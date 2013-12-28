@@ -1,0 +1,27 @@
+<html>
+<head>
+  <title>Quizzer Comments - @@CLASS@@ - @@COMMENTER@@</title>
+  <script type="text/javascript" src="js/local.js"></script>  
+  <script type="text/javascript" src="js/classcommenter.js"></script>
+  <link rel="stylesheet" type="text/css" href="css/simple-grid.css"/>
+  <link rel="stylesheet" type="text/css" href="css/local.css"/>
+  <link rel="stylesheet" type="text/css" href="css/class.css"/>
+</head>
+<body onLoad="buildQuizList();">
+  <div class="grid">
+    <div class="col-1-1">
+      <h1>Quizzer Comments</h1>
+      <h2>@@CLASS@@</h2>
+      <div>
+        <input class="button" type="button" value="Back" onclick="window.location = fixPath('/?admin=' + getParameterByName('admin') + '&page=top&commenter=' + getParameterByName('commenter'))"/>
+      </div>
+      <hr/>
+    </div>
+    <div class="col-1-1">
+      <h3>Quizzes</h3>
+      <div id="quiz-list">
+      </div>
+    </div>
+  </div>
+</body>
+</html>

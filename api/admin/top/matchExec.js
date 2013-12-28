@@ -2,6 +2,8 @@
     var cogClass = function () {};
     cogClass.prototype.match = function (params) {
         return (this.sys.validAdmin(params)
+                && !params.cmd
+                && !params.commenter
                 && (!params.page || params.page === 'top'));
     };
     cogClass.prototype.exec = function (params, request, response) {

@@ -1,3 +1,7 @@
+h1 {
+    font-size: 100%;
+}
+
 input.button {
     border-radius: 1em;
     border:2px solid #bbbbbb;
