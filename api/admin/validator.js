@@ -2,9 +2,8 @@
     function getValidator (pageName,callName) {
         if (callName) {
             return function (params) {
-                if (params.admin 
-                    && this.sys.admin[params.admin]
-                    && !params.commenter
+                if (!params.commenter
+                    && this.sys.validAdmin(params)
                     && params.page === pageName
                     && params.cmd === callName) {
                     
@@ -14,9 +13,8 @@
             }
         } else {
             return function (params) {
-                if (params.admin 
-                    && this.sys.admin[params.admin]
-                    && !params.commenter
+                if (!params.commenter
+                    && this.sys.validAdmin(params)
                     && params.page === pageName
                     && !params.cmd) {
                     

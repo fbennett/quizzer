@@ -1,21 +1,3 @@
-function markdown (txt) {
-    txt = txt.replace(/\(\(([a-zA-Z1-9])\)\)/g, function (aChar) {
-        var c, val, offset;
-        if (aChar[2].match(/[a-z]/)) {
-            val = (aChar.charCodeAt(2) - 97)
-            offset = 9424;
-        } else if (aChar[2].match(/[A-Z]/)) {
-            val = (aChar.charCodeAt(2) - 65)
-            offset = 9398;
-        } else {
-            val = (aChar.charCodeAt(2) - 49)
-            offset = 9312;
-        }
-        return String.fromCharCode(val + offset);
-    });
-    return marked.parse(txt);
-}
-
 function clearContainer (container) {
     for (var i=0,ilen=container.childNodes.length;i<ilen;i+=1) {
         container.removeChild(container.childNodes[0]);
@@ -23,27 +5,28 @@ function clearContainer (container) {
 }
 
 function showMistakes () {
-    var adminID = getParameterByName('admin');
+    var commenterID = getParameterByName('commenter');
     var classID = getParameterByName('classid');
     var quizNumber = getParameterByName('quizno');
-    var commenter = getParameterByName('commenter');
     var quizMistakes = apiRequest(
-        '/?admin='
-            + adminID
+        '/?commenter='
+            + commenterID
             +'&page=quiz&cmd=quizmistakes'
             + '&classid=' 
             + classID
             + '&quizno=' 
-            + quizNumber
-            + '&commenter='
-            + commenter);
+            + quizNumber);
     if (false === quizMistakes) return;
     // Empty the container
     var container = document.getElementById('quiz-mistakes');
     clearContainer(container);
+    // Get name of commenter from return
+    var commenter = quizMistakes.commenter;
     // For each mistake ...
-    for (var i=0,ilen=quizMistakes.length;i<ilen;i+=1) {
-        var mistake = quizMistakes[i];
+    console.log("Number of mistakes: "+quizMistakes.mistakes.length);
+    console.log("JSON: "+JSON.stringify(quizMistakes,null,2));
+    for (var i=0,ilen=quizMistakes.mistakes.length;i<ilen;i+=1) {
+        var mistake = quizMistakes.mistakes[i];
         var mistakeDiv = document.createElement('div');
         mistakeDiv.setAttribute('id', 'mistake-' + mistake.questionNumber + '-' + mistake.wrongChoice);
         var rubricText = markdown(mistake.rubric);
@@ -107,23 +90,20 @@ function buildComment (questionNumber,wrongChoice,commenter,comment) {
 }
 
 function openComment (id) {
-    var adminID = getParameterByName('admin');
+    var commenterID = getParameterByName('commenter');
     var classID = getParameterByName('classid');
     var quizNumber = getParameterByName('quizno');
-    var commenter = getParameterByName('commenter');
     var m = id.split('-');
     var questionNumber = m[2];
     var wrongChoice = m[3];
     var commentText = apiRequest(
-        '/?admin='
-            + adminID
+        '/?commenter='
+            + commenterID
             +'&page=quiz&cmd=getonecomment'
             + '&classid=' 
             + classID
             + '&quizno=' 
             + quizNumber
-            + '&commenter='
-            + commenter
         , {
             questionno:questionNumber,
             wrongchoice: wrongChoice
@@ -204,23 +184,20 @@ function setButtonMode (mode,questionNumber,wrongChoice) {
 };
 
 function writeComment (questionNumber,wrongChoice,comment) {
-    var adminID = getParameterByName('admin');
+    var commenterID = getParameterByName('commenter');
     var classID = getParameterByName('classid');
     var quizNumber = getParameterByName('quizno');
-    var commenter = getParameterByName('commenter');
     if (comment) {
         comment = comment.replace(/^\s+/,'').replace(/\s+$/,'');
     }
     var ignoreStr = apiRequest(
-        '/?admin='
-            + adminID
+        '/?commenter='
+            + commenterID
             +'&page=quiz&cmd=writeonecomment'
             + '&classid=' 
             + classID
             + '&quizno=' 
             + quizNumber
-            + '&commenter='
-            + commenter
         , {
             questionno:questionNumber,
             wrongchoice: wrongChoice,

@@ -6,7 +6,7 @@
         var sys = this.sys;
         var classID = params.classid;
         var quizNumber = params.quizno;
-        var commenter = params.commenter;
+        var commenter = this.sys.validCommenter(params);
         // This gets us a clean list of wrong answers, with rubric, correct and wrong choices, and the stringID and text for each,
         // plus a count of the frequency of each error
         //
@@ -19,7 +19,8 @@
             + "res.rubricID,r.string AS rubricText,"
             + "res.correct,res.correctID,cc.string AS correctText,"
             + "res.wrong,res.wrongID,ww.string AS wrongText,"
-            + "COUNT(res.studentID) AS count "
+            + "COUNT(res.studentID) AS count,"
+            + "COUNT(res.comment) AS commentCount "
             + "FROM quizzes AS q "
             + "LEFT JOIN ("
             +     "SELECT DISTINCT qq.classID,qq.quizNumber,qq.questionNumber,qq.correct,aa.choice AS wrong,"
@@ -35,24 +36,32 @@
             +          "WHEN aa.choice=3 THEN qq.qFourID "
             +          "ELSE 0 END "
             +     "AS wrongID,"
-            +     "qq.rubricID,aa.studentID "
+            +     "qq.rubricID,aa.studentID,"
+            +     "cc.choice AS comment "
             +     "FROM questions AS qq "
             +     "JOIN answers AS aa ON aa.classID=qq.classID AND aa.quizNumber=qq.quizNumber AND aa.questionNumber=qq.questionNumber "
+            +     "LEFT JOIN comments AS cc ON cc.classID=aa.classID AND cc.quizNumber=aa.quizNumber AND cc.questionNumber=aa.questionNumber AND cc.choice=aa.choice "
             +     "WHERE NOT aa.choice=qq.correct AND qq.classID=? AND qq.quizNumber=? "
             +     "GROUP BY aa.quizNumber,aa.questionNumber,aa.choice,aa.studentID"
             + ") as res ON res.classID=q.classID AND res.quizNumber=q.quizNumber "
-            + "JOIN strings AS r ON r.stringID=res.rubricID "
-            + "JOIN strings AS cc ON cc.stringID=res.correctID "
-            + "JOIN strings AS ww ON ww.stringID=res.wrongID "
+            + "LEFT JOIN strings AS r ON r.stringID=res.rubricID "
+            + "LEFT JOIN strings AS cc ON cc.stringID=res.correctID "
+            + "LEFT JOIN strings AS ww ON ww.stringID=res.wrongID "
             + "JOIN classes AS cls ON cls.classID=q.classID "
-            + "WHERE q.classID=? AND q.quizNumber=? "
+            + "WHERE q.classID=? AND q.quizNumber=? AND res.questionNumber IS NOT NULL "
             + "GROUP BY q.quizNumber,res.questionNumber,res.wrong "
-            + "ORDER BY count;";
+            + "ORDER BY commentCount,count;";
         var mistakeCount = 0;
-        var mistakes = []
+        var data = {commenter:commenter,mistakes:[]};
+        // ZZZ console.log("SQL: "+sql);
         sys.db.all(sql,[classID,quizNumber,classID,quizNumber],function(err,rows){
             if (err||!rows) {return oops(response,err,'**quiz/quizmistakes(1)')};
             mistakeCount += rows.length;
+            if (!mistakeCount) {
+                console.log("* No mistakes");
+                response.writeHead(200, {'Content-Type': 'application/json'});
+                response.end(JSON.stringify(data));
+            }
             for (var i=0,ilen=rows.length;i<ilen;i+=1) {
                 var row = rows[i];
                 var questionNumber = row.questionNumber;
@@ -70,7 +79,7 @@
             }
         });
         function getComments (classID,quizNumber,questionNumber,wrongChoice,obj) {
-            sys.db.all('SELECT c.commenter,s.string AS comment FROM comments AS c JOIN strings as s ON s.stringID=c.commentTextID WHERE classID=? AND quizNumber=? AND questionNumber=? AND choice=?',[classID,quizNumber,questionNumber,wrongChoice],function(err,rows){
+            sys.db.all('SELECT c.commenter,s.string AS comment FROM comments AS c LEFT JOIN strings as s ON s.stringID=c.commentTextID WHERE classID=? AND quizNumber=? AND questionNumber=? AND choice=?',[classID,quizNumber,questionNumber,wrongChoice],function(err,rows){
                 if (err||!rows) {return oops(response,err,'**quiz/quizmistakes(2)')};
                 for (var i=0,ilen=rows.length;i<ilen;i+=1) {
                     var row = rows[i];
@@ -79,11 +88,11 @@
                         obj.hasCommenterComment = true;
                     }
                 }
-                mistakes.push(obj);
+                data.mistakes.push(obj);
                 mistakeCount += -1;
                 if (!mistakeCount) {
                     response.writeHead(200, {'Content-Type': 'application/json'});
-                    response.end(JSON.stringify(mistakes));
+                    response.end(JSON.stringify(data));
                 }
             });
         }

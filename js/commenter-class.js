@@ -1,15 +1,12 @@
 function buildQuizList (rows) {
-    var adminID = getParameterByName('admin');
-    var classID = getParameterByName('classid');
     var commenterID = getParameterByName('commenter');
+    var classID = getParameterByName('classid');
     if (!rows) {
         // if rows is nil, call the server.
         var rows = apiRequest(
-            '/?admin='
-                + adminID
-                + '&page=class'
-                + '&commenter='
+            '/?commenter='
                 + commenterID
+                + '&page=class'
                 + '&cmd=readquizzes'
             , {
                 classid:classID
@@ -43,7 +40,7 @@ function buildQuizList (rows) {
         var idTD = document.createElement('td');
         nameAnchor.appendChild(nameText);
 
-        nameAnchor.setAttribute('href', fixPath('/?admin=' + adminID + '&page=quiz&classid=' + classID + '&quizno=' + rows[i].number + '&commenter=' + commenterID));
+        nameAnchor.setAttribute('href', fixPath('/?commenter=' + commenterID + '&page=quiz&classid=' + classID + '&quizno=' + rows[i].number));
 
         nameTD.appendChild(nameAnchor);
         tr.appendChild(nameTD);

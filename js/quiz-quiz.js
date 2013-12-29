@@ -11,24 +11,6 @@ var quizNumber = getParameterByName('quizno');
 
 var quizResult = {};
 
-function markdown (txt) {
-    txt = txt.replace(/\(\(([a-zA-Z1-9])\)\)/g, function (aChar) {
-        var val, offset;
-        if (aChar[2].match(/[a-z]/)) {
-            val = (aChar.charCodeAt(2) - 97)
-            offset = 9424;
-        } else if (aChar[2].match(/[A-Z]/)) {
-            val = (aChar.charCodeAt(2) - 65)
-            offset = 9398;
-        } else {
-            val = (aChar.charCodeAt(2) - 49)
-            offset = 9312;
-        }
-        return String.fromCharCode(val + offset);
-    });
-    return marked.parse(txt);
-}
-
 var quizData;
 function runQuiz() {
 

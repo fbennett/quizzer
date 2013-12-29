@@ -1,9 +1,0 @@
-h1 {
-    font-size: 100%;
-    color: #ae2020;
-}
-
-div.button-bold input.selected {
-    border: 2px solid #777777;
-    color: buttontext;
-}

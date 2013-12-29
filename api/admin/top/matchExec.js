@@ -1,7 +1,7 @@
 (function () {
     var cogClass = function () {};
     cogClass.prototype.match = function (params) {
-        return (this.sys.validAdmin(params)
+        return (this.sys.validAdmin(params,1)
                 && !params.cmd
                 && !params.commenter
                 && (!params.page || params.page === 'top'));

@@ -3,6 +3,7 @@
         if (callName) {
             return function (params) {
                 if (!params.admin
+                    && !params.commenter
                     && this.sys.membershipKeys[params.studentid]
                     && this.sys.membershipKeys[params.studentid][params.studentid]
                     && this.sys.membershipKeys[params.studentid][params.studentid] === params.studentkey
@@ -15,6 +16,7 @@
         } else {
             return function (params) {
                 if (!params.admin
+                    && !params.commenter
                     && this.sys.membershipKeys[params.studentid]
                     && this.sys.membershipKeys[params.studentid][params.studentid]
                     && this.sys.membershipKeys[params.studentid][params.studentid] === params.studentkey

@@ -3,10 +3,10 @@
   <title>Quizzer Comments - @@CLASS@@ - Quiz @@QUIZ_NUMBER@@ - @@COMMENTER@@</title>
   <link rel="stylesheet" type="text/css" href="css/simple-grid.css"/>
   <link rel="stylesheet" type="text/css" href="css/local.css"/>
-  <link rel="stylesheet" type="text/css" href="css/quizcommenter.css"/>
+  <link rel="stylesheet" type="text/css" href="css/commenter-quiz.css"/>
   <script type="text/javascript" src="js/local.js"></script>
   <script type="text/javascript" src="node_modules/marked/lib/marked.js"></script>
-  <script type="text/javascript" src="js/quizcommenter.js"></script>  
+  <script type="text/javascript" src="js/commenter-quiz.js"></script>  
 </head>
 <body onLoad="showMistakes()">
   <div class="grid">
@@ -15,7 +15,7 @@
       <h2>@@CLASS@@: Quiz @@QUIZ_NUMBER@@</h2>
       <h3>Commenting by @@COMMENTER@@</h3>
       <div>
-        <input class="button" type="button" value="Back" onclick="window.location = fixPath('/?admin=' + getParameterByName('admin') + '&page=class' + '&classid=' + getParameterByName('classid') + '&commenter=' + getParameterByName('commenter'))"/>
+        <input class="button" type="button" value="Back" onclick="window.location = fixPath('/?commenter=' + getParameterByName('commenter') + '&page=class&classid=' + getParameterByName('classid'))"/>
       </div>
       <hr/>
       <div id="quiz-mistakes">

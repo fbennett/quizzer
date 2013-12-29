@@ -3,24 +3,6 @@ var studentID = getParameterByName('studentid');
 var studentKey = getParameterByName('studentkey');
 var quizNumber = getParameterByName('quizno');
 
-function markdown (txt) {
-    txt = txt.replace(/\(\(([a-zA-Z1-9])\)\)/g, function (aChar) {
-        var c, val, offset;
-        if (aChar[2].match(/[a-z]/)) {
-            val = (aChar.charCodeAt(2) - 97)
-            offset = 9424;
-        } else if (aChar[2].match(/[A-Z]/)) {
-            val = (aChar.charCodeAt(2) - 65)
-            offset = 9398;
-        } else {
-            val = (aChar.charCodeAt(2) - 49)
-            offset = 9312;
-        }
-        return String.fromCharCode(val + offset);
-    });
-    return marked.parse(txt);
-}
-
 function runResult () {
     var quizErrors = apiRequest(
         '/?cmd=myquizresult&classid=' 
@@ -67,8 +49,9 @@ function runResult () {
             if (quizErrors[i].goodAnswerStudents.length) {
                 var lst = quizErrors[i].goodAnswerStudents;
                 var studentsPair = document.createElement('div');
+                studentsPair.setAttribute("class","students-container");
                 var studentsLabel = document.createElement('div');
-                studentsLabel.innerHTML = "These classmates can explain why their answer was correct!"
+                studentsLabel.innerHTML = "These class members got this one right. Ask them to explain why their answer was correct!"
                 studentsLabel.setAttribute("class", "correct-students-label");
                 studentsPair.appendChild(studentsLabel);
                 var studentsList = document.createElement('div');

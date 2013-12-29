@@ -7,7 +7,7 @@
         var quizNumber = params.quizno;
         var questionNumber = params.questionno;
         var wrongChoice = params.wrongchoice;
-        var commenter = params.commenter;
+        var commenter = this.sys.validCommenter(params);
         var comment = params.comment;
         if (!comment) {
             sys.db.run('DELETE FROM comments WHERE classID=? AND quizNumber=? AND questionNumber=? AND choice=? AND commenter=?',[classID,quizNumber,questionNumber,wrongChoice,commenter],function(err){

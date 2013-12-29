@@ -47,3 +47,8 @@ div.commenter-name {
     background: white;
     border: 1px solid #aaaaaa;
 }
+
+div.students-container {
+    border: 1px solid #aaaaaa;
+    margin: 0 0 0 1em;
+}

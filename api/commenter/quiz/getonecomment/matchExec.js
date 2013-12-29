@@ -7,8 +7,8 @@
         var quizNumber = params.quizno;
         var questionNumber = params.questionno;
         var wrongChoice = params.wrongchoice;
-        var commenter = params.commenter;
-        sys.db.get('SELECT s.string AS commentText FROM comments AS c JOIN strings AS s ON s.stringID=c.commentTextID WHERE classID=? AND quizNumber=? AND questionNumber=? AND choice=? AND commenter=?',[classID,quizNumber,questionNumber,wrongChoice,commenter],function(err,row){
+        var commenter = this.sys.validCommenter(params);
+        sys.db.get('SELECT s.string AS commentText FROM comments AS c LEFT JOIN strings AS s ON s.stringID=c.commentTextID WHERE classID=? AND quizNumber=? AND questionNumber=? AND choice=? AND commenter=?',[classID,quizNumber,questionNumber,wrongChoice,commenter],function(err,row){
             if (err||!row) {return oops(response,err,'**quiz/getonecomment(1)')};
             var txt = row.commentText;
             response.writeHead(200, {'Content-Type': 'application/json'});

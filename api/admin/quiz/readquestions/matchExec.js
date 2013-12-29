@@ -14,11 +14,11 @@
             + 'q.correct AS correct '
             + 'FROM questions AS q '
             + 'JOIN quizzes AS qz ON q.classID=qz.classID AND q.quizNumber=qz.quizNumber '
-            + 'JOIN strings AS r ON r.stringID=q.rubricID '
-            + 'JOIN strings AS one ON one.stringID=q.qOneID '
-            + 'JOIN strings AS two ON two.stringID=q.qTwoID '
-            + 'JOIN strings AS three ON three.stringID=q.qThreeID '
-            + 'JOIN strings AS four ON four.stringID=q.qFourID '
+            + 'LEFT JOIN strings AS r ON r.stringID=q.rubricID '
+            + 'LEFT JOIN strings AS one ON one.stringID=q.qOneID '
+            + 'LEFT JOIN strings AS two ON two.stringID=q.qTwoID '
+            + 'LEFT JOIN strings AS three ON three.stringID=q.qThreeID '
+            + 'LEFT JOIN strings AS four ON four.stringID=q.qFourID '
             + 'WHERE q.classID=? AND q.quizNumber=?';
         this.sys.db.all(sql,[classID,quizNumber],function(err,rows){
             if (err||!rows) {return oops(response,err,'quiz/readquestions')};

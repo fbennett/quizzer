@@ -30,7 +30,6 @@
             + ") as res ON res.classID=q.classID AND res.quizNumber=q.quizNumber "
             + "WHERE q.classID=? AND q.sent=1 "
             + "GROUP BY q.quizNumber;";
-        console.log("SQL: "+sql);
         db.all(sql,[classID,classID],function(err,rows){
             if (err||!rows) {return oops(response,err,'class/readquizzes')};
             var retRows = [];
