@@ -1,0 +1,43 @@
+.answer-pair {
+    margin: 0 0 10px 0;
+}
+
+.right-answer {
+    background: #e3ffe6;
+    border: 3px double black;
+    margin: 6px 0 6px 1em;
+    padding: 0 5px 0 5px
+}
+
+.wrong-answer {
+    background: #ffdfdf;
+    border: 1px solid black;
+    margin: 6px 0 6px 1em;
+    padding: 0 5px 0 5px;
+}
+
+.rubric {
+    font-weight: bold;
+    margin-top: 2em;
+}
+
+div.comment-container {
+    background: #feffb0;
+    margin: 1em 0 0 2em;
+    border: 1px solid black;
+    padding: 0 0.5em 0 0.5em;
+    vertical-align: top;
+}
+
+div.commenter-name {
+    font-weight: bold;
+    float: left;
+    margin: 0.5em 0.5em 0 0;
+    padding: 0.25em 0.8em 0.25em 0.8em;
+    border-radius: 1em;
+    background: white;
+    border: 1px solid #aaaaaa;
+}
+ div#quiz-mistakes {
+     margin-bottom:2em;
+}
