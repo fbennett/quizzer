@@ -33,6 +33,8 @@ function runResult () {
             + quizNumber);
     if (false === quizErrors) return;
 
+    console.log(JSON.stringify(quizErrors,null,2));
+
     var resultList = document.getElementById("result-list");
 
     resultList.innerHTML = "";
@@ -40,6 +42,7 @@ function runResult () {
     if (!quizErrors.length) {
         var congratsText = document.createTextNode("Congratulations! You scored 100%");
         var congrats = document.createElement("div");
+        contgrats.setAttribute('class','congratuations');
         congrats.appendChild(congratsText);
         resultList.appendChild(congrats);
     } else {
@@ -74,6 +77,25 @@ function runResult () {
                 studentsPair.appendChild(studentsList);
                 answerPair.appendChild(studentsPair);
             }
+            for (var j=0,jlen=quizErrors[i].comments.length;j<jlen;j+=1) {
+                var commentObj = quizErrors[i].comments[j];
+                var commentDiv = buildComment(commentObj.commenter,commentObj.comment);
+                answerPair.appendChild(commentDiv);
+            }
         }
     }
+}
+
+
+function buildComment (commenter,comment) {
+    var commentContainer = document.createElement('div');
+    commentContainer.setAttribute('class', 'comment-container');
+    commenterDiv = document.createElement('div');
+    commenterDiv.setAttribute('class', 'commenter-name');
+    commenterDiv.innerHTML = commenter;
+    commentDiv = document.createElement('div');
+    commentDiv.innerHTML = markdown(comment);
+    commentContainer.appendChild(commenterDiv);
+    commentContainer.appendChild(commentDiv);
+    return commentContainer;
 }

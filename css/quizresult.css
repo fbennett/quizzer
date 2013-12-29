@@ -29,3 +29,21 @@
 .correct-students-list {
     margin: 6px 0 6px 3em;
 }
+
+div.comment-container {
+    background: #feffb0;
+    margin: 1em 0 0 2em;
+    border: 1px solid black;
+    padding: 0 0.5em 0 0.5em;
+    vertical-align: top;
+}
+
+div.commenter-name {
+    font-weight: bold;
+    float: left;
+    margin: 0.5em 0.5em 0 0;
+    padding: 0.25em 0.8em 0.25em 0.8em;
+    border-radius: 1em;
+    background: white;
+    border: 1px solid #aaaaaa;
+}
