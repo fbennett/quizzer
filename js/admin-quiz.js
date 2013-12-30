@@ -17,24 +17,38 @@ function buildQuestionList (quizobj) {
             });
         if (false === quizobj) return;
     }
-    displayQuestions(quizobj.questions);
+    var questionsLst = displayQuestions(quizobj.questions);
     var button = document.getElementById('add-question-button');
     button.disabled = false;
     var sendQuiz = document.getElementById('send-quiz');
     var quizDone = document.getElementById('quiz-done');
-    if (quizobj.pending == -1) {
+    if (questionsLst.length == 0) {
+        sendQuiz.style.display = 'none';
+        quizDone.style.display = 'inline';
+        quizDone.value = "In Draft";
+    } else if (quizobj.pending == -1) {
         sendQuiz.style.display = 'inline';
         sendQuiz.value = 'Send Quiz';
         quizDone.style.display = 'none';
     } else if (quizobj.pending == 0) {
         sendQuiz.style.display = 'none';
         quizDone.style.display = 'inline';
+        quizDone.value = "Responses Complete";
+        disableEditing();
     } else {
         sendQuiz.style.display = 'inline';
-        sendQuiz.value = 'Pending: ' + quizobj.pending;
+        sendQuiz.value = 'Responses Pending: ' + quizobj.pending;
         quizDone.style.display = 'none';
+        disableEditing();
     }
 }
+
+function disableEditing () {
+    var buttons = document.getElementsByClassName('editing-button');
+    for (var i=0,ilen=buttons.length;i<ilen;i+=1) {
+        buttons[i].style.display = 'none';
+    }
+};
 
 function sendQuiz() {
     var adminID = getParameterByName('admin');
@@ -307,6 +321,7 @@ function displayQuestions (quizobj) {
         var node = document.createElement('li');
         node.setAttribute('id', 'quiz-question-' + lst[i]);
     }
+    return lst;
 }
 
 function displayQuestion (qobj, questionNumber) {
@@ -347,7 +362,7 @@ function displayQuestion (qobj, questionNumber) {
     var button = document.createElement('input');
     button.setAttribute('type', 'button');
     button.setAttribute('value', 'Edit Question');
-    button.setAttribute('class', 'button');
+    button.setAttribute('class', 'button editing-button');
     button.setAttribute('onclick', 'openQuestion("' + questionNumber + '")');
     node.appendChild(button);
 }
