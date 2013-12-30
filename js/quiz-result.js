@@ -24,7 +24,7 @@ function runResult () {
     if (!quizErrors.length) {
         var congratsText = document.createTextNode("Congratulations! You scored 100%");
         var congrats = document.createElement("div");
-        contgrats.setAttribute('class','congratuations');
+        congrats.setAttribute('class','congratuations');
         congrats.appendChild(congratsText);
         resultList.appendChild(congrats);
     } else {
