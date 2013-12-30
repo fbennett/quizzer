@@ -21,7 +21,7 @@
                 }
                 quizData.questions.push(obj);
             }
-            var quizObject = JSON.stringify(quizData);
+            var quizObject = JSON.stringify(quizData,null,2);
             response.writeHead(200, {'Content-Type': 'application/json'});
             response.end(quizObject);
         });

@@ -17,9 +17,10 @@
             +     'JOIN questions AS q ON q.classID=m.classID '
             +     'LEFT JOIN answers AS a ON a.classID=q.classID AND a.quizNumber=q.quizNumber AND a.questionNumber=q.questionNumber AND a.studentID=m.studentID '
             +     'WHERE q.classID=? AND q.quizNumber=? AND a.quizNumber IS NULL '
-            +     'GROUP BY a.studentID'
+            +     'GROUP BY q.classID,q.quizNumber,m.studentID'
             + ') AS res '
-            + 'WHERE qz.classID=? AND qz.quizNumber=?';
+            + 'WHERE qz.classID=? AND qz.quizNumber=? '
+            + 'GROUP BY res.pending';
         sys.db.get(sql,[classID,quizNumber,classID,quizNumber],function(err,row){
             if (err||!row) {return oops(response,err,'quiz/readquestions(1)')};
             var pending = row.pending;

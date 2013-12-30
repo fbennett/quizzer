@@ -13,7 +13,7 @@ var quizResult = {};
 
 var quizData;
 function runQuiz() {
-
+    console.log("Requesting quiz data!");
     // Get quiz data
     quizData = apiRequest(
         '/?cmd=quizdata&classid=' 
@@ -25,6 +25,7 @@ function runQuiz() {
             + '&quizno=' 
             + quizNumber);
     if (false === quizData) return;
+    console.log("QUIZ DATA: "+JSON.stringify(quizData,null,2));
     for (var i=0,ilen=quizData.questions.length;i<ilen;i+=1) {
         remap = randomize(quizData.questions[i].questions);
         quizData.questions[i].remap = remap;

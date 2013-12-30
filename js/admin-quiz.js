@@ -51,18 +51,21 @@ function disableEditing () {
     var radios = document.getElementsByClassName('selection');
     for (var i=0,ilen=radios.length;i<ilen;i+=1) {
         var radio = radios[i];
-        var marker = document.createElement('span');
-        marker.setAttribute('class','selection');
-        if (radio.checked) {
-            marker.innerHTML = '\u25ef';
-            marker.setAttribute('style','color:green;text-weight:bold;')
-        } else {
-            //marker.innerHTML = '\u274c';
-            marker.innerHTML = '\u00d7';
-            marker.setAttribute('style', 'color:red;');
+        console.log("tagName: "+radio.tagName);
+        if (radio.tagName.toLowerCase() == "input") {
+            var marker = document.createElement('span');
+            marker.setAttribute('class','selection');
+            if (radio.checked) {
+                marker.innerHTML = '\u25ef';
+                marker.setAttribute('style','color:green;text-weight:bold;')
+            } else {
+                //marker.innerHTML = '\u274c';
+                marker.innerHTML = '\u00d7';
+                marker.setAttribute('style', 'color:red;');
+            }
+            radio.parentNode.insertBefore(marker,radio);
+            radio.parentNode.removeChild(radio);
         }
-        radio.parentNode.insertBefore(marker,radio);
-        radio.parentNode.removeChild(radio);
     }
 };
 

@@ -7,9 +7,9 @@
                     && params.studentid
                     && params.classid
                     && params.studentkey
-                    && this.sys.membershipKeys[params.studentid]
-                    && this.sys.membershipKeys[params.studentid][params.studentid]
-                    && this.sys.membershipKeys[params.studentid][params.studentid] === params.studentkey
+                    && this.sys.membershipKeys[params.classid]
+                    && this.sys.membershipKeys[params.classid][params.studentid]
+                    && this.sys.membershipKeys[params.classid][params.studentid] === params.studentkey
                     && params.cmd === callName) {
                     
                     return true;

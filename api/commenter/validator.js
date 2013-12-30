@@ -7,7 +7,6 @@
                     && params.page === pageName
                     && params.cmd === callName) {
                     
-                    console.log("   true");
                     return true;
                 }
                 return false;

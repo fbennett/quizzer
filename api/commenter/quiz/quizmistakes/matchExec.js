@@ -58,7 +58,6 @@
             if (err||!rows) {return oops(response,err,'**quiz/quizmistakes(1)')};
             mistakeCount += rows.length;
             if (!mistakeCount) {
-                console.log("* No mistakes");
                 response.writeHead(200, {'Content-Type': 'application/json'});
                 response.end(JSON.stringify(data));
             }

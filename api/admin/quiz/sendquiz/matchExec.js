@@ -10,6 +10,7 @@
         var hostname = this.sys.proxy_hostname;
         // var port
         var port = ':' + this.sys.real_port;
+        var email_account = this.sys.email_account;
 
         // Hack for reverse proxy support
         var stub = '/';
@@ -33,21 +34,33 @@
             var datalst = [];
             for (var i=0,ilen=rows.length;i<ilen;i+=1) {
                 var row = rows[i];
+                var studentID = row.studentID;
+                var name = row.name;
+                var email = row.email;
+                var className = row.className;
                 var studentKey = sys.getRandomKey(8,36);
                 // This is a list of students to receive mail in this class.
                 // Keys need to be updated for all keys of these students, in this class.
-                sys.db.run('UPDATE memberships SET studentKey=? WHERE classID=? AND studentID=?',[studentKey,classID,row.studentID],function(err){
-                    if (err) {return oops(response,err,'quiz/sendquiz(2)')};
-                    // Good, so this does that. Flag as sent, and send the mail message.
-                    sys.db.run('UPDATE quizzes SET sent=1 WHERE classID=? AND quizNumber=?',[classID,quizNumber],function(err){
-                        if (err) {return oops(response,err,'quiz/sendquiz(3)')};
-                        sys.membershipKeys[classID][row.studentID] = studentKey;
-                        sendMail(quizNumber,row.studentID,studentKey,row.name,row.email,row.className);
-                    });
-                });
-                
+                updateStudentKeys(studentKey,classID,studentID,email,name,className);
             }
         });
+
+        function updateStudentKeys (studentKey,classID,studentID,email,name,className) {
+            sys.db.run('UPDATE memberships SET studentKey=? WHERE classID=? AND studentID=?',[studentKey,classID,studentID],function(err){
+                if (err) {return oops(response,err,'quiz/sendquiz(2)')};
+                // Good, so this does that. Flag as sent, and send the mail message.
+                updateSentFlag(studentKey,classID,studentID,email,name,className);
+            });
+            
+        };
+
+        function updateSentFlag (studentKey,classID,studentID,email,name,className) {
+            sys.db.run('UPDATE quizzes SET sent=1 WHERE classID=? AND quizNumber=?',[classID,quizNumber],function(err){
+                if (err) {return oops(response,err,'quiz/sendquiz(3)')};
+                sys.membershipKeys[classID][studentID] = studentKey;
+                sendMail(quizNumber,studentID,studentKey,name,email,className);
+            });
+        };
         
         function sendMail (quizNumber,studentID,studentKey,name,email,className) {
             var link = template_link
@@ -78,10 +91,10 @@
                         .replace(/@@LINKS@@/g,links);
                     msg = front + link + middle + back;
                 }
-                console.log(msg);
+                //console.log(msg);
                 sys.mailer.send({
                     text:    msg, 
-                    from:    "Academic Writing team <bennett@law.nagoya-u.ac.jp>", 
+                    from:    "Academic Writing team <" + email_account + ">", 
                     to:      email,
                      subject: className + ': Quiz ' + quizNumber
                 }, function(err, message) { console.log(err || message); });
