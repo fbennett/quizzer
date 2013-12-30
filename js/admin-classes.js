@@ -112,7 +112,7 @@ function buildClassList (rows) {
         var button = document.createElement('input');
         button.setAttribute('type', 'button');
         button.setAttribute('value', 'Edit');
-        button.setAttribute('onclick', 'addClass(this.parentNode)');
+        button.setAttribute('onclick', 'addClass(this.parentNode.parentNode)');
         button.setAttribute('class', 'button-small');
         buttonTD.appendChild(button);
         tr.appendChild(buttonTD);
