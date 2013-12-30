@@ -4,6 +4,9 @@
             return function (params) {
                 if (!params.admin
                     && !params.commenter
+                    && params.studentid
+                    && params.classid
+                    && params.studentkey
                     && this.sys.membershipKeys[params.studentid]
                     && this.sys.membershipKeys[params.studentid][params.studentid]
                     && this.sys.membershipKeys[params.studentid][params.studentid] === params.studentkey
@@ -17,9 +20,12 @@
             return function (params) {
                 if (!params.admin
                     && !params.commenter
-                    && this.sys.membershipKeys[params.studentid]
-                    && this.sys.membershipKeys[params.studentid][params.studentid]
-                    && this.sys.membershipKeys[params.studentid][params.studentid] === params.studentkey
+                    && params.studentid
+                    && params.classid
+                    && params.studentkey
+                    && this.sys.membershipKeys[params.classid]
+                    && this.sys.membershipKeys[params.classid][params.studentid]
+                    && this.sys.membershipKeys[params.classid][params.studentid] === params.studentkey
                     && !params.cmd) {
                     
                     return true;

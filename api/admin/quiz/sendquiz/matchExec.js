@@ -28,7 +28,7 @@
         var back = "Sincerely yours,\n"
             + "The Academic Writing team"
         // Okay. We need to refresh the student keys before running the code below.
-        sys.db.all('SELECT m.studentID,s.name FROM memberships AS m JOIN students AS s ON s.studentID=m.studentID JOIN quizzes AS q ON q.classID=m.classID WHERE m.classID=? AND q.quizNumber=? AND (NOT q.sent OR m.studentID NOT IN (SELECT studentID FROM answers AS a WHERE a.classID=? AND a.quizNumber=?));',[classID,quizNumber,classID,quizNumber],function(err,rows){
+        sys.db.all('SELECT m.studentID,s.name,s.email,c.name AS className FROM memberships AS m JOIN students AS s ON s.studentID=m.studentID JOIN quizzes AS q ON q.classID=m.classID JOIN classes AS c ON c.classID=m.classID WHERE m.classID=? AND q.quizNumber=? AND (NOT q.sent OR m.studentID NOT IN (SELECT studentID FROM answers AS a WHERE a.classID=? AND a.quizNumber=?));',[classID,quizNumber,classID,quizNumber],function(err,rows){
             if (err||!rows) {return oops(response,err,'quiz/sendquiz(1)')};
             var datalst = [];
             for (var i=0,ilen=rows.length;i<ilen;i+=1) {
@@ -39,14 +39,14 @@
                 sys.db.run('UPDATE memberships SET studentKey=? WHERE classID=? AND studentID=?',[studentKey,classID,row.studentID],function(err){
                     if (err) {return oops(response,err,'quiz/sendquiz(2)')};
                     // Good, so this does that. Send the mail message.
-                    sys.membershipKeys[row.studentID] = studentKey;
-                    sendMail(quizNumber,row.studentID,studentKey,row.name);
+                    sys.membershipKeys[classID][row.studentID] = studentKey;
+                    sendMail(quizNumber,row.studentID,studentKey,row.name,row.email,row.className);
                 });
                 
             }
         });
         
-        function sendMail (quizNumber,studentID,studentKey,name) {
+        function sendMail (quizNumber,studentID,studentKey,name,email,className) {
             var link = template_link
                 .replace(/@@STUDENT_ID@@/g,studentID)
                 .replace(/@@STUDENT_KEY@@/g,studentKey)
@@ -76,6 +76,12 @@
                     msg = front + link + middle + back;
                 }
                 console.log(msg);
+                sys.mailer.send({
+                    text:    msg, 
+                    from:    "Academic Writing team <bennett@law.nagoya-u.ac.jp>", 
+                    to:      email,
+                     subject: className + ': Quiz ' + quizNumber
+                }, function(err, message) { console.log(err || message); });
             });
         }
         //
