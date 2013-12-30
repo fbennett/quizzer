@@ -51,7 +51,7 @@ function runResult () {
                 var studentsPair = document.createElement('div');
                 studentsPair.setAttribute("class","students-container");
                 var studentsLabel = document.createElement('div');
-                studentsLabel.innerHTML = "These class members got this one right. Ask them to explain why their answer was correct!"
+                studentsLabel.innerHTML = "The following class members got this one right &mdash; ask them to explain why their answer was correct!"
                 studentsLabel.setAttribute("class", "correct-students-label");
                 studentsPair.appendChild(studentsLabel);
                 var studentsList = document.createElement('div');

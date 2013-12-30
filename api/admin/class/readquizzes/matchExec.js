@@ -14,6 +14,7 @@
             + "WHERE q.classID=? "
             + "GROUP BY q.quizID "
             + "ORDER BY q.quizNumber;"
+        console.log("XX>> "+sql);
         db.all(sql,[params.classid],function(err,rows){
             if (err||!rows) {return oops(response,err,'class/readquizzes')};
             var retRows = [];

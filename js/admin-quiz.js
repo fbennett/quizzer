@@ -1,20 +1,3 @@
-function showQuizResults () {
-
-    var adminID = getParameterByName('admin');
-    var classID = getParameterByName('classid');
-    var quizNumber = getParameterByName('quizno');
-
-    var url = fixPath(
-        '/?admin='
-            + adminID
-            + '&page=quizstats'
-            + '&classid='
-            + classID
-            + '&quizno='
-            + quizNumber);
-    window.location.href = url;
-}
-
 function buildQuestionList (quizobj) {
     var adminID = getParameterByName('admin');
     var classID = getParameterByName('classid');
@@ -38,13 +21,18 @@ function buildQuestionList (quizobj) {
     var button = document.getElementById('add-question-button');
     button.disabled = false;
     var sendQuiz = document.getElementById('send-quiz');
-    var quizResults = document.getElementById('quiz-results');
-    if (quizobj.sent) {
+    var quizDone = document.getElementById('quiz-done');
+    if (quizobj.pending == -1) {
+        sendQuiz.style.display = 'inline';
+        sendQuiz.value = 'Send Quiz';
+        quizDone.style.display = 'none';
+    } else if (quizobj.pending == 0) {
         sendQuiz.style.display = 'none';
-        quizResults.style.display = 'inline';
+        quizDone.style.display = 'inline';
     } else {
         sendQuiz.style.display = 'inline';
-        quizResults.style.display = 'none';
+        sendQuiz.value = 'Pending: ' + quizobj.pending;
+        quizDone.style.display = 'none';
     }
 }
 
