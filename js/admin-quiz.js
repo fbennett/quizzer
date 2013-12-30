@@ -48,6 +48,22 @@ function disableEditing () {
     for (var i=0,ilen=buttons.length;i<ilen;i+=1) {
         buttons[i].style.display = 'none';
     }
+    var radios = document.getElementsByClassName('selection');
+    for (var i=0,ilen=radios.length;i<ilen;i+=1) {
+        var radio = radios[i];
+        var marker = document.createElement('span');
+        marker.setAttribute('class','selection');
+        if (radio.checked) {
+            marker.innerHTML = '\u25ef';
+            marker.setAttribute('style','color:green;text-weight:bold;')
+        } else {
+            //marker.innerHTML = '\u274c';
+            marker.innerHTML = '\u00d7';
+            marker.setAttribute('style', 'color:red;');
+        }
+        radio.parentNode.insertBefore(marker,radio);
+        radio.parentNode.removeChild(radio);
+    }
 };
 
 function sendQuiz() {
@@ -65,9 +81,11 @@ function sendQuiz() {
             quizno:quizNumber
         });
     var sendQuizButton = document.getElementById('send-quiz');
-    var quizResultsButton = document.getElementById('quiz-results');
+    var quizDoneButton = document.getElementById('quiz-done');
     sendQuizButton.style.display = 'none';
-    quizResultsButton.style.display = 'inline';
+    quizDoneButton.style.display = 'inline';
+    quizDoneButton.value = 'Quiz Sent';
+    disableEditing();
 }
 
 function writeChoice(questionNumber, choice) {

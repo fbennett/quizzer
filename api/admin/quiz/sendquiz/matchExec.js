@@ -38,9 +38,12 @@
                 // Keys need to be updated for all keys of these students, in this class.
                 sys.db.run('UPDATE memberships SET studentKey=? WHERE classID=? AND studentID=?',[studentKey,classID,row.studentID],function(err){
                     if (err) {return oops(response,err,'quiz/sendquiz(2)')};
-                    // Good, so this does that. Send the mail message.
-                    sys.membershipKeys[classID][row.studentID] = studentKey;
-                    sendMail(quizNumber,row.studentID,studentKey,row.name,row.email,row.className);
+                    // Good, so this does that. Flag as sent, and send the mail message.
+                    sys.db.run('UPDATE quizzes SET sent=1 WHERE classID=? AND quizNumber=?',[classID,quizNumber],function(err){
+                        if (err) {return oops(response,err,'quiz/sendquiz(3)')};
+                        sys.membershipKeys[classID][row.studentID] = studentKey;
+                        sendMail(quizNumber,row.studentID,studentKey,row.name,row.email,row.className);
+                    });
                 });
                 
             }

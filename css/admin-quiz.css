@@ -11,7 +11,7 @@ ol#quiz-questions div.choice {
     position: relative;
     margin-left: 15px;
 }
-ol#quiz-questions input.selection {
+ol#quiz-questions .selection {
     position: absolute;
     left: -10px;
 }
