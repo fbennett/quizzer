@@ -23,8 +23,6 @@ function showMistakes () {
     // Get name of commenter from return
     var commenter = quizMistakes.commenter;
     // For each mistake ...
-    console.log("Number of mistakes: "+quizMistakes.mistakes.length);
-    console.log("JSON: "+JSON.stringify(quizMistakes,null,2));
     for (var i=0,ilen=quizMistakes.mistakes.length;i<ilen;i+=1) {
         var mistake = quizMistakes.mistakes[i];
         var mistakeDiv = document.createElement('div');
