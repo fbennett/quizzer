@@ -1,3 +1,7 @@
+span.quizzer-highlight {
+    color:green;
+}
+
 .answer-pair {
     margin: 0 0 10px 0;
 }
