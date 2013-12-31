@@ -1,5 +1,7 @@
 span.quizzer-highlight {
-    color:green;
+    color:white;
+    font-weight: bold;
+    background: #977800;
 }
 
 .answer-pair {
