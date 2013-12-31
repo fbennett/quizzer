@@ -44,7 +44,7 @@ function apiRequest (url, obj, returnAsString) {
 
 function markdown (txt) {
     if (!txt) return '<p>&nbsp;</p>';
-    txt = txt.replace(/(:-?\))/g,'(ʘ‿ʘ)');
+    txt = txt.replace(/(:-?\))/g,'(\u0298\u203f\u0298)');
     txt = txt.replace(/\(\(([a-zA-Z1-9])\s+(.*?)\)\)/g, '<span class="quizzer-highlight">(($1)) $2</span>');
     txt = txt.replace(/\(\(([a-zA-Z1-9])\)\)/g, function (aChar) {
         var c, val, offset;
