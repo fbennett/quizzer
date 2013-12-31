@@ -24,7 +24,7 @@
                     sys.db.run('INSERT OR REPLACE INTO comments VALUES (NULL,?,?,?,?,?,?)',[classID,quizNumber,questionNumber,wrongChoice,commentTextID,commenter],function(err){
                         if (err) {return oops('response',err,'**quiz/writeonecomment(4)')};
                         response.writeHead(200, {'Content-Type': 'text/plain'});
-                        response.end('success');
+                        response.end(['success']);
                     });
                 });
             });
