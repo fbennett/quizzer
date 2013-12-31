@@ -50,7 +50,7 @@
             + "JOIN classes AS cls ON cls.classID=q.classID "
             + "WHERE q.classID=? AND q.quizNumber=? AND res.questionNumber IS NOT NULL "
             + "GROUP BY q.quizNumber,res.questionNumber,res.wrong "
-            + "ORDER BY commentCount,count;";
+            + "ORDER BY commentCount,count DESC;";
         var mistakeCount = 0;
         var data = {commenter:commenter,mistakes:[]};
         // ZZZ console.log("SQL: "+sql);
