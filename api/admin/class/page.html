@@ -15,8 +15,17 @@
       <div>
         <input class="button" type="button" value="Back" onclick="window.location = fixPath('/?admin=' + getParameterByName('admin') + '&page=classes')"/>
       </div>
-      <div class="button-bold" style="display:none;">
-        <input class="button" id="class-results" type="button" value="Class Results" onclick="showClassResults()"/>
+      <div class="button-bold">
+        <input class="button" id="exam-setup" type="button" value="Exam" onclick="setupExam();"/>
+        <input class="button" id="exam-create" type="button" value="Create Exam" onclick="createExam();" style="display:none;"/>
+        <span id="exam-boxes" style="display:none;">
+          Title:
+          <input id="exam-title" type="text" size="25"/>
+          Number of questions:
+          <input id="exam-number-of-questions" type="text" size="3"/>
+          Date:
+          <input id="exam-date" type="text" size="20"/>
+        </span>
       </div>
       <hr/>
     </div>

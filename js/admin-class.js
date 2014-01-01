@@ -155,3 +155,53 @@ function removeMembers () {
     buildQuizList();
 }
 
+function setupExam () {
+    buttonMode('create-exam');
+};
+
+function createExam () {
+    var examTitle = document.getElementById('exam-title').value;
+    var examDate = document.getElementById('exam-date').value;
+    var examNumberOfQuestions = document.getElementById('exam-number-of-questions').value;
+    if (!examTitle || !examDate || !examNumberOfQuestions) {
+        buttonMode('default');
+        return;
+    } else {
+        var adminID = getParameterByName('admin');
+        var classID = getParameterByName('classid');
+        var result = apiRequest(
+            '/?admin='
+                + adminID
+                + '&page=class'
+                + '&cmd=createexam'
+            , {
+                classid:classID,
+                examtitle:examTitle,
+                examdate:examDate,
+                examnumberofquestions:examNumberOfQuestions
+            }
+        );
+        if (false === result) return;
+        
+        buttonMode('default');
+        //buildQuizList();
+    }
+};
+
+function buttonMode (mode) {
+    var setupButton = document.getElementById('exam-setup');
+    var createButton = document.getElementById('exam-create');
+    var examBoxes = document.getElementById('exam-boxes');
+    if (mode === 'create-exam') {
+        setupButton.style.display = "none";
+        createButton.style.display = "inline";
+        examBoxes.style.display = "inline";
+    } else {
+        setupButton.style.display = "inline";
+        createButton.style.display = "none";
+        examBoxes.style.display = "none";
+        document.getElementById('exam-title').value = '';
+        document.getElementById('exam-date').value = '';
+        document.getElementById('exam-number-of-questions').value = '';
+    }
+}
