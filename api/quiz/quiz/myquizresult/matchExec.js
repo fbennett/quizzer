@@ -29,7 +29,7 @@
         });
 
         function getMistakes (classID,quizNumber,questionNumber,studentID,rightAnswerFieldName,wrongAnswerFieldName) {
-            var sql = 'SELECT r.string AS rubric,qq.string AS right,aa.string AS wrong,a.choice AS wrongChoice FROM answers AS a JOIN questions AS q ON q.classID=a.classID AND q.quizNumber=a.quizNumber AND q.questionNumber=a.questionNumber LEFT JOIN strings AS r ON r.stringID=q.rubricID LEFT JOIN strings AS qq ON qq.stringID=q.' + fields[row.correct] + ' LEFT JOIN strings AS aa ON aa.stringID=q.' + fields[row.choice] + ' WHERE a.classID=? AND a.quizNumber=? AND a.questionNumber=? AND a.studentID=?';
+            var sql = 'SELECT r.string AS rubric,qq.string AS right,aa.string AS wrong,a.choice AS wrongChoice FROM answers AS a JOIN questions AS q ON q.classID=a.classID AND q.quizNumber=a.quizNumber AND q.questionNumber=a.questionNumber LEFT JOIN strings AS r ON r.stringID=q.rubricID LEFT JOIN strings AS qq ON qq.stringID=q.' + wrongAnswerFieldName + ' LEFT JOIN strings AS aa ON aa.stringID=q.' + rightAnswerFieldName + ' WHERE a.classID=? AND a.quizNumber=? AND a.questionNumber=? AND a.studentID=?';
             sys.db.get(sql,[classID,quizNumber,questionNumber,studentID],function(err,row) {
                 if (err||!row) {return oops(response,err,'*quiz/myquizresult(2)')}
                 var rubric = row.rubric;
