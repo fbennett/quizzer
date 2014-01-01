@@ -18,7 +18,7 @@
                     var questionNumber = row.questionNumber;
                     var wrongAnswerFieldName = fields[row.choice];
                     var rightAnswerFieldName = fields[row.correct];
-                    getMistakes(classID,quizNumber,questionNumber,studentID,rightAnswerFieldName,wrongAnswerFieldName);
+                    getMistakes(classID,quizNumber,questionNumber,studentID,rightAnswerFieldName,wrongAnswerFieldName,items);
 
                 }
             } else {
@@ -28,7 +28,7 @@
             }
         });
 
-        function getMistakes (classID,quizNumber,questionNumber,studentID,rightAnswerFieldName,wrongAnswerFieldName) {
+        function getMistakes (classID,quizNumber,questionNumber,studentID,rightAnswerFieldName,wrongAnswerFieldName,items) {
             var sql = 'SELECT r.string AS rubric,qq.string AS right,aa.string AS wrong,a.choice AS wrongChoice FROM answers AS a JOIN questions AS q ON q.classID=a.classID AND q.quizNumber=a.quizNumber AND q.questionNumber=a.questionNumber LEFT JOIN strings AS r ON r.stringID=q.rubricID LEFT JOIN strings AS qq ON qq.stringID=q.' + wrongAnswerFieldName + ' LEFT JOIN strings AS aa ON aa.stringID=q.' + rightAnswerFieldName + ' WHERE a.classID=? AND a.quizNumber=? AND a.questionNumber=? AND a.studentID=?';
             sys.db.get(sql,[classID,quizNumber,questionNumber,studentID],function(err,row) {
                 if (err||!row) {return oops(response,err,'*quiz/myquizresult(2)')}
@@ -36,11 +36,11 @@
                 var right = row.right;
                 var wrong = row.wrong;
                 var wrongChoice = row.wrongChoice;
-                getGoodAnswerStudents(classID,quizNumber,questionNumber,wrongChoice);
+                getGoodAnswerStudents(classID,quizNumber,questionNumber,wrongChoice,items);
             });
         }
 
-        function getGoodAnswerStudents(classID,quizNumber,questionNumber,wrongChoice) {
+        function getGoodAnswerStudents(classID,quizNumber,questionNumber,wrongChoice,items) {
             sys.db.all('SELECT s.name FROM answers AS a JOIN questions AS q ON q.classID=a.classID AND q.quizNumber=a.quizNumber AND q.questionNumber=a.questionNumber JOIN students AS s ON s.studentID=a.studentID WHERE a.classID=? AND a.quizNumber=? AND a.questionNumber=? AND q.correct=a.choice',[classID,quizNumber,questionNumber],function(err,rows){
                 if (err||!rows) {return oops(response,err,'*quiz/myquizresult(3)')}
                 var goodAnswerStudents = [];
@@ -48,11 +48,11 @@
                     var row = rows[i];
                     goodAnswerStudents.push(row.name);
                 }
-                getComments(classID,quizNumber,questionNumber,wrongChoice);
+                getComments(classID,quizNumber,questionNumber,wrongChoice,items);
             });
         }
 
-        function getComments(classID,quizNumber,questionNumber,wrongChoice) {
+        function getComments(classID,quizNumber,questionNumber,wrongChoice,items) {
             sys.db.all('SELECT c.commenter,s.string AS comment FROM comments AS c LEFT JOIN strings AS s ON s.stringID=c.commentTextID WHERE classID=? AND quizNumber=? AND questionNumber=? AND choice=?',[classID,quizNumber,questionNumber,wrongChoice],function(err,rows){
                 if (err||!rows) {return oops(response,err,'*quiz/myquizresults(4)')};
                 var comments = [];
