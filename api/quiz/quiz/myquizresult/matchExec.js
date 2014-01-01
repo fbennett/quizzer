@@ -40,7 +40,7 @@
             });
         }
 
-        function getGoodAnswerStudents(classID,quizNumber,questionNumber) {
+        function getGoodAnswerStudents(classID,quizNumber,questionNumber,wrongChoice) {
             sys.db.all('SELECT s.name FROM answers AS a JOIN questions AS q ON q.classID=a.classID AND q.quizNumber=a.quizNumber AND q.questionNumber=a.questionNumber JOIN students AS s ON s.studentID=a.studentID WHERE a.classID=? AND a.quizNumber=? AND a.questionNumber=? AND q.correct=a.choice',[classID,quizNumber,questionNumber],function(err,rows){
                 if (err||!rows) {return oops(response,err,'*quiz/myquizresult(3)')}
                 var goodAnswerStudents = [];
