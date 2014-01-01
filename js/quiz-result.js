@@ -44,7 +44,6 @@ function runResult () {
             rightAnswer.innerHTML = markdown(quizErrors[i].right);
             answerPair.appendChild(rubric);
             answerPair.appendChild(rightAnswer);
-            answerPair.appendChild(wrongAnswer);
             resultList.appendChild(answerPair);
             if (quizErrors[i].goodAnswerStudents.length) {
                 var lst = quizErrors[i].goodAnswerStudents;
@@ -60,6 +59,7 @@ function runResult () {
                 studentsPair.appendChild(studentsList);
                 answerPair.appendChild(studentsPair);
             }
+            answerPair.appendChild(wrongAnswer);
             for (var j=0,jlen=quizErrors[i].comments.length;j<jlen;j+=1) {
                 var commentObj = quizErrors[i].comments[j];
                 var commentDiv = buildComment(commentObj.commenter,commentObj.comment);
