@@ -36,11 +36,11 @@
                 var right = row.right;
                 var wrong = row.wrong;
                 var wrongChoice = row.wrongChoice;
-                getGoodAnswerStudents(classID,quizNumber,questionNumber,wrongChoice,items);
+                getGoodAnswerStudents(classID,quizNumber,questionNumber,wrongChoice,items,rubric,right,wrong);
             });
         }
 
-        function getGoodAnswerStudents(classID,quizNumber,questionNumber,wrongChoice,items) {
+        function getGoodAnswerStudents(classID,quizNumber,questionNumber,wrongChoice,items,rubric,right,wrong) {
             sys.db.all('SELECT s.name FROM answers AS a JOIN questions AS q ON q.classID=a.classID AND q.quizNumber=a.quizNumber AND q.questionNumber=a.questionNumber JOIN students AS s ON s.studentID=a.studentID WHERE a.classID=? AND a.quizNumber=? AND a.questionNumber=? AND q.correct=a.choice',[classID,quizNumber,questionNumber],function(err,rows){
                 if (err||!rows) {return oops(response,err,'*quiz/myquizresult(3)')}
                 var goodAnswerStudents = [];
@@ -48,11 +48,11 @@
                     var row = rows[i];
                     goodAnswerStudents.push(row.name);
                 }
-                getComments(classID,quizNumber,questionNumber,wrongChoice,items);
+                getComments(classID,quizNumber,questionNumber,wrongChoice,items,rubric,right,wrong,goodAnswerStudents);
             });
         }
 
-        function getComments(classID,quizNumber,questionNumber,wrongChoice,items) {
+        function getComments(classID,quizNumber,questionNumber,wrongChoice,items,rubric,right,wrong,goodAnswerStudents) {
             sys.db.all('SELECT c.commenter,s.string AS comment FROM comments AS c LEFT JOIN strings AS s ON s.stringID=c.commentTextID WHERE classID=? AND quizNumber=? AND questionNumber=? AND choice=?',[classID,quizNumber,questionNumber,wrongChoice],function(err,rows){
                 if (err||!rows) {return oops(response,err,'*quiz/myquizresults(4)')};
                 var comments = [];
