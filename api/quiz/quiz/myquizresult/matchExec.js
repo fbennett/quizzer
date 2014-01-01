@@ -36,7 +36,7 @@
                 var right = row.right;
                 var wrong = row.wrong;
                 var wrongChoice = row.wrongChoice;
-                getGoodAnswerStudents(classID,quizNumber,questionNumber);
+                getGoodAnswerStudents(classID,quizNumber,questionNumber,wrongChoice);
             });
         }
 
