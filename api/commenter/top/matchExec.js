@@ -7,7 +7,8 @@
     };
     cogClass.prototype.exec = function (params, request, response) {
         var oops = this.utils.apiError;
-        var commenter = this.sys.validCommenter(params);
+        var commenter = this.sys.validCommenter(params).name;
+        var commenterID = this.sys.validCommenter(params).id;
         var myPage = this.page.toString().replace(/@@COMMENTER@@/g, commenter);
         response.writeHead(200, {'Content-Type': 'text/html'});
         response.end(myPage);
