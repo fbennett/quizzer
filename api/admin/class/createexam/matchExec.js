@@ -86,7 +86,7 @@
             console.log("RUN: saveExam()");
             // Create a fresh quiz, with sent=-1
             var quizNumber = quizNumberMax + 1;
-            sys.db.run('INSERT OR REPLACE INTO quizzes VALUES (NULL,?,?,?)',[classID,quizNumber,-1],function(err){
+            sys.db.run('INSERT OR REPLACE INTO quizzes VALUES (NULL,?,?,?,?,?)',[classID,quizNumber,-1,examTitle,examDate],function(err){
                 if (err) {return oops(response,err,'class/createexam(3)')};
                 saveQuestions(quizNumber,quizQuestions)
             });
