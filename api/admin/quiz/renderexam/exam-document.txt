@@ -1,0 +1,43 @@
+\documentclass[a4paper,11pt]{exam}
+
+\usepackage{marginnote}
+\usepackage{graphicx}
+\usepackage{tikz}
+
+\newcommand*\mycirc[1]{\tikz[baseline=(char.base)]{{\small
+  \node[shape=circle,draw,inner sep=1.5pt] (char) {#1};}}}
+
+\raggedbottom
+
+\pagestyle{headandfoot}
+\firstpageheader{@@COURSE_NAME@@}{@@EXAM_TITLE@@}{@@EXAM_DATE@@}
+\runningheader{@@COURSE_NAME@@}{@@EXAM_TITLE@@}{@@EXAM_DATE@@}
+\firstpagefooter{}{}{}
+\runningfooter{\textbf{@@STUDENT_NAME@@}}{}{Page \thepage\ of \numpages}
+
+\begin{document}
+
+\begin{center}
+\fbox{\fbox{\parbox{5.5in}{\centering
+  This is a multiple-choice examination.\par
+  All questions have equal weight.\par
+  Circle the letter (A, B, C or D) next to your chosen answer.\par
+  If you do not choose an answer, one will be selected for you at random.
+}}}
+\end{center}
+\vspace{0.1in}
+\makebox[\textwidth]{Examination paper for:\enspace\textbf{@@STUDENT_NAME@@}}
+\vspace{0.1in}
+
+\newlength{\questionwidth}
+\setlength{\questionwidth}{\linewidth}
+\addtolength{\questionwidth}{-2cm}
+
+\clearpage
+
+\begin{questions}
+
+@@QUESTIONS@@
+
+\end{questions}
+\end{document}

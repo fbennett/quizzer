@@ -6,7 +6,8 @@
         var sys = this.sys;
         var classID = params.classid;
         var quizNumber = params.quizno;
-        var commenter = this.sys.validCommenter(params);
+        var commenter = this.sys.validCommenter(params).name;
+        var commenterID = this.sys.validCommenter(params).id;
         // This gets us a clean list of wrong answers, with rubric, correct and wrong choices, and the stringID and text for each,
         // plus a count of the frequency of each error
         //
@@ -52,7 +53,7 @@
             + "GROUP BY q.quizNumber,res.questionNumber,res.wrong "
             + "ORDER BY commentCount,count DESC;";
         var mistakeCount = 0;
-        var data = {commenter:commenter,mistakes:[]};
+        var data = {commenter:commenter,commenterID:commenterID,mistakes:[]};
         // ZZZ console.log("SQL: "+sql);
         sys.db.all(sql,[classID,quizNumber,classID,quizNumber],function(err,rows){
             if (err||!rows) {return oops(response,err,'**quiz/quizmistakes(1)')};
@@ -78,12 +79,12 @@
             }
         });
         function getComments (classID,quizNumber,questionNumber,wrongChoice,obj) {
-            sys.db.all('SELECT c.commenter,s.string AS comment FROM comments AS c LEFT JOIN strings as s ON s.stringID=c.commentTextID WHERE classID=? AND quizNumber=? AND questionNumber=? AND choice=?',[classID,quizNumber,questionNumber,wrongChoice],function(err,rows){
+            sys.db.all('SELECT c.commenterID,admin.name AS commenter,s.string AS comment FROM comments AS c JOIN admin AS admin ON admin.adminID=c.commenterID LEFT JOIN strings as s ON s.stringID=c.commentTextID WHERE classID=? AND quizNumber=? AND questionNumber=? AND choice=?',[classID,quizNumber,questionNumber,wrongChoice],function(err,rows){
                 if (err||!rows) {return oops(response,err,'**quiz/quizmistakes(2)')};
                 for (var i=0,ilen=rows.length;i<ilen;i+=1) {
                     var row = rows[i];
-                    obj.comments.push({commenter:row.commenter,comment:row.comment});
-                    if (commenter === row.commenter) {
+                    obj.comments.push({commenter:row.commenter,comment:row.comment,commenterID:row.commenterID});
+                    if (commenterID === row.commenterID) {
                         obj.hasCommenterComment = true;
                     }
                 }

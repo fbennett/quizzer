@@ -6,7 +6,8 @@
         var sys = this.sys;
         var classID = params.classid;
         var quizNumber = params.quizno;
-        var commenter = this.sys.validCommenter(params);
+        var commenter = this.sys.validCommenter(params).name;
+        var commenterID = this.sys.validCommenter(params).id;
         this.sys.db.get('SELECT name FROM classes WHERE classID=?',[classID],function(err,row){
             if (err||!row) {return oops(response,err,'class')};
             var myPage = page.toString().replace(/@@CLASS@@/g, row.name);

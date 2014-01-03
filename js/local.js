@@ -46,6 +46,9 @@ function markdown (txt) {
     if (!txt) return '<p>&nbsp;</p>';
     txt = txt.replace(/(:-?\))/g,'(\u0298\u203f\u0298)');
     txt = txt.replace(/(:-\/)/g,'_(\u0361\u0e4f\u032f\u0361\u0e4f)_');
+    txt = txt.replace(/^>>>\s+(.*)/,'__Rule\u21b4__\n\n>>> $1');
+    txt = txt.replace(/^>>\s+(.*)/,'__Pattern\u21b4__\n\n>> $1');
+    txt = txt.replace(/^>\s+(.*)/,'__Explanation\u21b4__\n\n> $1');
     txt = txt.replace(/\(\(([a-zA-Z1-9])\s+(.*?)\)\)/g, '<span class="quizzer-highlight">(($1)) $2</span>');
     txt = txt.replace(/\(\(([a-zA-Z1-9])\)\)/g, function (aChar) {
         var c, val, offset;

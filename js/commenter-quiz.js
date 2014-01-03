@@ -4,13 +4,15 @@ function clearContainer (container) {
     }
 }
 
+var commenterInfo = {};
+
 function showMistakes () {
-    var commenterID = getParameterByName('commenter');
+    var commenterKey = getParameterByName('commenter');
     var classID = getParameterByName('classid');
     var quizNumber = getParameterByName('quizno');
     var quizMistakes = apiRequest(
         '/?commenter='
-            + commenterID
+            + commenterKey
             +'&page=quiz&cmd=quizmistakes'
             + '&classid=' 
             + classID
@@ -21,7 +23,8 @@ function showMistakes () {
     var container = document.getElementById('quiz-mistakes');
     clearContainer(container);
     // Get name of commenter from return
-    var commenter = quizMistakes.commenter;
+    commenterInfo.commenter = quizMistakes.commenter;
+    commenterInfo.commenterID = quizMistakes.commenterID;
     // For each mistake ...
     for (var i=0,ilen=quizMistakes.mistakes.length;i<ilen;i+=1) {
         var mistake = quizMistakes.mistakes[i];
@@ -43,29 +46,30 @@ function showMistakes () {
             + 'style="display:'
             + buttonMode.comment
             + '" value="Comment" '
-            + 'onclick="newComment(this,\'comment-' + commenter + '-' + mistake.questionNumber + '-' + mistake.wrongChoice + '\')"'
+            + 'onclick="newComment(this,\'comment-' + commenterInfo.commenterID + '-' + mistake.questionNumber + '-' + mistake.wrongChoice + '\')"'
             +'/>'
             + '<input type="button" class="button" '
             + 'id="edit-button-' + mistake.questionNumber + '-' + mistake.wrongChoice + '" '
             + 'style="display:'
             + buttonMode.edit
             + '" value="Edit" '
-            + 'onclick="openComment(\'comment-' + commenter + '-' + mistake.questionNumber + '-' + mistake.wrongChoice + '\')"'
+            + 'onclick="openComment(\'comment-' + commenterInfo.commenterID + '-' + mistake.questionNumber + '-' + mistake.wrongChoice + '\')"'
             +'/>'
             + '<input type="button" class="button" '
             + 'id="save-button-' + mistake.questionNumber + '-' + mistake.wrongChoice + '" '
             + 'style="display:'
             + buttonMode.save
             + '" value="Save" '
-            + 'onclick="saveComment(\'comment-' + commenter + '-' + mistake.questionNumber + '-' + mistake.wrongChoice + '\')"'
+            + 'onclick="saveComment(\'comment-' + commenterInfo.commenterID + '-' + mistake.questionNumber + '-' + mistake.wrongChoice + '\')"'
             +'/>'
             + '</div>';
         var questionNumber = mistake.questionNumber;
         var wrongChoice = mistake.wrongChoice;
         for (var j=0,jlen=mistake.comments.length;j<jlen;j+=1) {
             var commenter = mistake.comments[j].commenter;
+            var commenterID = mistake.comments[j].commenterID;
             var comment = mistake.comments[j].comment;
-            var commentContainer = buildComment(questionNumber,wrongChoice,commenter,comment);
+            var commentContainer = buildComment(questionNumber,wrongChoice,commenter,commenterID,comment);
             mistakeDiv.appendChild(commentContainer);
         }
         container.appendChild(mistakeDiv);
@@ -73,10 +77,10 @@ function showMistakes () {
     }
 }
 
-function buildComment (questionNumber,wrongChoice,commenter,comment) {
+function buildComment (questionNumber,wrongChoice,commenter,commenterID,comment) {
     var commentContainer = document.createElement('div');
     commentContainer.setAttribute('class', 'comment-container');
-    commentContainer.setAttribute('id','comment-' + commenter + '-' + questionNumber + '-' + wrongChoice);
+    commentContainer.setAttribute('id','comment-' + commenterID + '-' + questionNumber + '-' + wrongChoice);
     commenterDiv = document.createElement('div');
     commenterDiv.setAttribute('class', 'commenter-name');
     commenterDiv.innerHTML = commenter;
@@ -88,7 +92,7 @@ function buildComment (questionNumber,wrongChoice,commenter,comment) {
 }
 
 function openComment (id) {
-    var commenterID = getParameterByName('commenter');
+    var commenterKey = getParameterByName('commenter');
     var classID = getParameterByName('classid');
     var quizNumber = getParameterByName('quizno');
     var m = id.split('-');
@@ -96,7 +100,7 @@ function openComment (id) {
     var wrongChoice = m[3];
     var commentText = apiRequest(
         '/?commenter='
-            + commenterID
+            + commenterKey
             +'&page=quiz&cmd=getonecomment'
             + '&classid=' 
             + classID
@@ -124,15 +128,16 @@ function saveComment (id) {
     var adminID = getParameterByName('admin');
     var classID = getParameterByName('classid');
     var quizNumber = getParameterByName('quizno');
-    var commenter = getParameterByName('commenter');
+    //var commenterID = getParameterByName('commenter');
     var m = id.split('-');
     var questionNumber = m[2];
     var wrongChoice = m[3];
-    var commenter = m[1];
+    var commenterID = m[1];
     var node = document.getElementById(id);
     var comment = node.firstChild.value;
     if (comment) {
-        var commentBlock = buildComment(questionNumber,wrongChoice,commenter,comment);
+        console.log("commenter="+commenterInfo.commenter+", commenterID="+commenterInfo.commenterID);
+        var commentBlock = buildComment(questionNumber,wrongChoice,commenterInfo.commenter,commenterInfo.commenterID,comment);
         node.parentNode.insertBefore(commentBlock,node);
         node.parentNode.removeChild(node);
         setButtonMode('edit',questionNumber,wrongChoice);
@@ -150,11 +155,11 @@ function newComment(button,id) {
     var adminID = getParameterByName('admin');
     var classID = getParameterByName('classid');
     var quizNumber = getParameterByName('quizno');
-    var commenter = getParameterByName('commenter');
+    //var commenterID = getParameterByName('commenter');
     var m = id.split('-');
     var questionNumber = m[2];
     var wrongChoice = m[3];
-    var commenter = m[1];
+    //var commenterID = m[1];
     var commentContainer = document.createElement('div');
     commentContainer.setAttribute('id',id);
     commentContainer.setAttribute('class','comment-container');
@@ -182,7 +187,7 @@ function setButtonMode (mode,questionNumber,wrongChoice) {
 };
 
 function writeComment (questionNumber,wrongChoice,comment) {
-    var commenterID = getParameterByName('commenter');
+    var commenterKey = getParameterByName('commenter');
     var classID = getParameterByName('classid');
     var quizNumber = getParameterByName('quizno');
     if (comment) {
@@ -190,7 +195,7 @@ function writeComment (questionNumber,wrongChoice,comment) {
     }
     var ignoreStr = apiRequest(
         '/?commenter='
-            + commenterID
+            + commenterKey
             +'&page=quiz&cmd=writeonecomment'
             + '&classid=' 
             + classID
