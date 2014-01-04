@@ -248,7 +248,7 @@
                 //console.log(data.toString());
             });
             ltx.stderr.on('close', function (code) {
-                console.log("Rendered PDF: "+data);
+                console.log("Rendered exam PDF: "+data);
                 callback();
                 documentCount += -1;
                 if (!documentCount) {
@@ -260,7 +260,7 @@
         function pandocIterator (data, callback) {
             sys.pandoc.convert('html',data.obj[data.key],['latex'],function(result, err){
                 if (err) {
-                    throw "OUCH! " + err;
+                    throw "Error in pandocIterator(): " + err;
                 }
                 data.obj[data.key] = result.latex;
                 callback();
