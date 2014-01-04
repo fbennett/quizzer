@@ -1,74 +1,14 @@
 Some ideas
 
-***
+* Set foreign key constraints in database schema.
 
-Held code:
+* Implement barcode marking of printed exams.
 
-        var adminKey = uriObj.parsedQuery.admin;
-        var studentID = uriObj.parsedQuery.id;
-        var studentKey = uriObj.parsedQuery.key;
-        var classID = uriObj.parsedQuery.classid;
-        var pageKey = uriObj.parsedQuery.page;
-        var quizNumber = uriObj.parsedQuery.quizno;
-        var cmd = uriObj.parsedQuery.cmd;
+* Allow setting of external toggle on "student" records, and
+  suppress in Stragglers and exam paper runs.
 
+* Provide CSV download of exam results.
 
-***
-
-Main priority at the moment is to tidy up the code in quizServer.js,
-by splitting functionality out to library modules, and implementing
-a simple pluggable framework for transaction sets.
-
-Remove students listing and top page, and support adding/editing
-of student records in classes UI.
-
-Add search support.
-
-Add student records upload to class view, with "new" toggle to force display of records.
-
-Add a Confirm button to class view, to remove "new" toggle and conceal all Non-Member
-records by default.
-
-Add a Select All tick-box to Members listing in class view.
-
-Add a Purge button to cull student records that are not associated
-with a class.
-
-Implement report views.
-
-Implement written tests.
-
-Implement marking of written tests.
-
-Include a list of current urls in quiz mailings.
-
-Add a Reset Keys tick-box next to Send Quiz in class view.
-
-Implement flash cards based on missed items. Cards will have a hint
-and a limited-vocabulary pattern to commit to memory printed on their
-face. Student can transcribe the hint on the back in the language of
-their choice, and drill themselves. Will depend on an additional,
-optional feedback field in questions.
-
-How to deliver the above? As a standard set, or as a targeted printout?
-Probably the former makes more sense -- a study pack for all students,
-based on errors commonly observed in their work.
-
-Bundle as npm and release.
-
-***
-
-Bundled download of questions for archiving and reuse.
-
-Content-sharing consent toggle on student record.
-
-Student keys should be set on memberships, not on student records.
-Key can then be reset.
-
-Students should be provided with a refreshed link to their overall
-results view (access controlled by the temporary key) in each quiz
-mailing.
-
-Add a "Vistor" toggle to student records, so that non-members
-can be excluded from summary listings, but still receive feedback.
-
+* Allow scheduled notifications to external class members
+  and commenters, resetting access keys at each notice
+  interval.
