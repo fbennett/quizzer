@@ -1,0 +1,3 @@
+\choice
+\marginnote{\hbox{\vbox{\kern-2cm\barcode{@@BARCODE@@}}}}[0.1\baselineskip]
+@@CHOICE_TEXT@@
