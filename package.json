@@ -33,6 +33,7 @@
     "css/",
     "js/",
     "lib/",
+    "examples/",
     "quizzer.js",
     "resource/"
   ],
