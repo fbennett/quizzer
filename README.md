@@ -53,7 +53,7 @@ The initial inspiration for this particular attempt to do better was a
 simple [code
 sample](http://chetan0389.blogspot.jp/2013/06/quiz-using-htmlcss-jquery-xml-javascript.html)
 posted by Chetan Jain. The code has been refactored and extended considerably
-for this project, but I gratefully acknowledge that it was the starting
+for this project, but I gratefully acknowledge the starting
 point for this frolic.
 
 ## Basic Installation
