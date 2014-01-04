@@ -1,106 +1,241 @@
 # Quizzer
 
-A simple, lightweight, low-security quiz engine implemented in JavaScript, with a
-node.js backend.
+A lightweight, low-security quiz engine
 
 --------------------
+
+## Overview
+
+Quizzer is a tool for writing instruction, tailored to the needs of
+second language learners and students encountering the demands of
+formal writing for the first time. The system and method are designed
+to make efficient use of staff time, and to motivate students by
+applying a non-punitive 'fail early, fail often' approach to the
+writing process. The system is simple to set up (see below).
+
+In or Academic Writing program in the Nagoya University Faculty of
+Law, Quizzer supports the following workflow:
+
+1. Students submit a 400-word essay once each week on an arbitrary
+   topic.
+2. The instructor selects one poorly-written sentence from each
+   essay, and composes a multiple-choice question consisting of the
+   student's own sentence, two alternatives that also contain errors,
+   and a corrected version. *The essays themselves are not assessed.*
+3. After constructing one question from each submitted essay, students
+   are sent personalized links to the resulting quiz.
+4. Students submit their responses, which are recorded on the Quizzer
+   server. Student receive feedback immediately feedback on their
+   incorrect responses.
+5. Class commenters (TAs, instructors, and other experienced writers)
+   post short explanations of why the wrong answers were wrong.
+6. When students revisit their quiz links, they will find
+   both the comments, and a list of classmates who gave the correct answer
+   to the questions that they missed.
+7. Students are given an assessed, paper-based, multiple-choice
+   supplementary mid-term and final exam, consisting entirely of
+   questions from the quizzes.
+
+Quiz distribtion, commenting, exam composition, and marking are all
+managed by Quizzer. Paper tests are randomized as a hedge against
+cheating, and marked with a barcode reader for quick assessment.
 
 The original motivation for this work was an unpleasant encounter with
 the products of a commercial vendor. Quizzes are *simple* things. They
 should be easy to customise, and deploying a quiz to a given group of
 students should not require weeks of effort, large volumes of email,
 numerous meetings and progress reports, or extensive trial-and-error
-exploration of a byzantine menu system. It should just do its job,
-so that we can get on with our own.
+exploration of a byzantine menu system. Software is supposed to save
+time, not the other way around. It should just do its job, so that we
+can get on with our own.
 
-The initial inspiration for this particular attempt to do better was a [code
+The initial inspiration for this particular attempt to do better was a
+simple [code
 sample](http://chetan0389.blogspot.jp/2013/06/quiz-using-htmlcss-jquery-xml-javascript.html)
-posted by Chetan Jain.
+posted by Chetan Jain. The code has been refactored and extended considerably
+for this project, but I gratefully acknowledge that it was the starting
+point for this frolic.
 
-The descriptions below may make it sound like this is a working product
-already. Don't be deceived: I've only begin working on the code, and it
-will likely be a couple of months before it's ready for deployment. When
-done, it will be simple to install and run, though, so if you keep an eye
-on this space, you shouldn't be disappointed.
+## Basic Installation
 
-Frank Bennett, 7 December 2013
+Install quizzer from the `npm` repository:
 
---------------------
+    npm install quizzer
 
-## General design
+In addition to the dependencies pulled in by `npm`, Quizzer needs to
+have access to the external programs `pandoc` and `pdflatex`. Both
+should be available as package installs on your operating system (the
+latter as part of the `texlive` package).
 
-The idea is to build quizzes from 400-word essays submitted by
-students, using grammatical errors, errors in usage, and examples of
-awkward expression as raw material. In composing questions, the bad
-example, an equally bad example, a corrected sentence, and a corrected
-sentence containing a common error are composed and saved
-(manually). The engine randomizes the sequence of questions and
-responses, and flags the correct answer in each for final marking.
+Run the server by saving the following code to a file (such as `quizServer.js`,
+say):
 
-Quiz responses are saved only when the full quiz has been completed.
-If the quiz page is refreshed before completion, the quiz is
-re-randomized, and starts over from the beginning. There is no time
-limit: this is a tool for study, rather than examination.
+    var qz = require('quizzer');
+    qz.run();
 
-For ease of administration, the system uses one-time passwords
-embedded in the URL for each quiz instance.  A management screen for
-each quiz, available only to instructors, is used to send the quiz
-link to each student. Student simply clicks on the link and takes the
-quiz. The students' one-time passwords change with each new mailing.
+Run the script from command line like this:
 
-Administrators all have global write access, and the administrator URL
-can be reset either by deleting the admin.csv file, or by replacing it
-with another version manually, and restarting the server.  There is no
-other security.
+    node ./quizServer.js
 
-The result of a quiz can be called up by an instructor in a quick-view
-response screen (useful for in-class exercises), and can be downloaded
-in CSV format for the final course record held on the instructor's own
-computer.
+The script will whinge on first run, asking for some essential
+details:
 
-## Quizzes administered in the field
-
-For admissions purposes, it may be desireable to administer a basic
-writing skills test in the field. Personalized, fully randomized
-copies of a quiz can be printed from the adminstrator's view, which
-contain barcodes for marking purposes. The class and test-taker ID
-is embedded in the barcode for each answer, so scanning the codes
-into a single data file provides enough information to mark the
-results with a suitable script.
-
-## Dependencies
-
-The node server has some dependencies:
-
-    npm install csv
-    npm install argparse
-    npm install emailjs
-    npm install marked
-    npm install barc
+    usage: quizServer.js [-h] [-v] [-H PROXY_HOSTNAME] [-p REAL_PORT]
+                         [-e EMAIL_ACCOUNT] [-s SMTP_HOST]
+                         
     
+    Quizzer, a quiz server
+    
+    Optional arguments:
+      -h, --help            Show this help message and exit.
+      -v, --version         Show program's version number and exit.
+      -H PROXY_HOSTNAME, --proxy-hostname PROXY_HOSTNAME
+                            Host name for external access
+      -p REAL_PORT, --real-port REAL_PORT
+                            Port on which to listen for local connections
+      -e EMAIL_ACCOUNT, --email-account EMAIL_ACCOUNT
+                            Full username of email account (e.g. useme@gmail.com)
+      -s SMTP_HOST, --smtp-host SMTP_HOST
+                            SMTP host name (e.g. smtp.gmail.com)
+      ERROR: must set option smtp_host
+      ERROR: must set option proxy_hostname
+      ERROR: must set option email_account
 
+A GMail account can be used as `EMAIL_ACCOUNT`, with `smtp.gmail.com` as `SMTP_HOST`.
+`REAL_PORT` will default to `3498`, but can be set to other values for multiple
+server instances. For initial testing, `PROXY_HOSTNAME` should be set to `127.0.0.1`
+or `localhost`. Running again will yield this:
 
-## Disk files
+    ERROR: file mypwd.txt not found: Error: ENOENT, no such file or directory './mypwd.txt'
 
-  * Administrators (CSV): ID, key
-  * Classes (CSV): Name, ID
-  * Students (CSV): Name, email, ID, key [supplied if not present]
-  * Results: (class/student+question).json
+Save the email account password to disk in a file `mypwd.txt` (only the user running
+Quizzer should have access permissions on the file, obviously). This will get the server
+running:
 
-## Screens
+    Wrote config parameters to quizzer-3498.cfg
+    Quizzer can now be run with the single option: -p 3498
+    Admin URL: http://localhost:3498/?admin=fyvg19vx
+    Adding admin role
+    Loaded class membership keys
+    Done. Ready to shake, rattle and roll!
 
-  * Admin:
-    * Top-level: students / classes [done]
-    * Course-admin: add course / edit course [done]
-    * Student-admin: add student / edit student [done]
-    * Course-level: add quiz / add student / remove student
-    * Quiz-level
-      * add question / edit question (active until sending)
-      * send quiz links to students  (active until sending)
-      * view results by question (active after sending)
-      * view results by student  (active after sending)
+Connect to the listed URL with a browser, and you're ready to go.  The
+database and configuration files are created in the directory from
+which the script is run, named after the port number. The server can
+be shut down with `CTRL-c` (`SIGINT`), and as the startup message
+says, it can be restarted with the single option `-p \<REAL_PORT\>`
+(Note that the `admin` key is automatically generated, and will differ
+from that shown in the example above.)
 
-  * Student:
-    * Quiz engine cycle only. One shot and out per question, no time limit.
-    * On completion, link to incorrect answers is displayed, with correct answer highlighted.
+## Running Quizzer behind a Proxy
+
+When `PROXY_HOSTNAME` is set to a fully qualified domain name
+(e.g. `myschool.edu`), it will assume that it is being run behind a
+reverse proxy, and adjust URLs accordingly. Quizzer itself has only
+the thinnest concept of security, and should be run behind a proxy in
+production (and preferably over SSL). Access to the administrator
+display depends on a key set in the URL of a GET request. Rewrite
+rules on the front-end web server should be used to assure that
+attempts to set the key directly are rerouted through a
+password-protected URL.
+
+If `lighttpd` is used as the front-end server, and Quizzer is run from
+a directory `quizzer` to which the server has access, configuration
+settings like the following should do the trick:
+
+    url.rewrite = (
+      "^(?!/quizzer)(.*)\?admin=[^&]+(?:&(.*))*" => "/quizzer/admin.html$1?$2",
+      "^(?!/quizzer)(.*)&admin=[^&]+(?:&(.*))*" => "/quizzer/admin.html$1&$2",
+      "^/quizzer/admin.html$" => "/quizzer/admin.html?admin=fyvg19vx",
+      "^/quizzer/admin.html\?(.*)$" => "/quizzer/admin.html?admin=fyvg19vx&$1"
+    )
+    
+    $HTTP["host"] == "faculty.of.things.edu" {
+      proxy.server = ( "/quizzer" => ( ( "host" => "127.0.0.1", "port" => 3498 ) ) )
+    }
+    
+    auth.backend = "htdigest"
+    auth.backend.htdigest.userfile = "/etc/lighttpd/lighttpd.user"
+    
+    auth.require = ( "/quizzer/admin.html" =>
+      (
+        "method" => "basic",
+        "realm" => "Quiz Admin",
+        "require" => "user=quizmaster"
+      )
+    )
+    
+## Adding Commenters
+
+Quizzer data is held in an `sqlite3` database, located in the directory
+from which the script is run, and named after the port number under
+which the instance is running. 
+
+commenters are held in the `admin` table of the Quizzer database.
+There is no web interface to this table: add commenters by inserting
+them directly, using the `sqlite3` access tool, like so:
+
+    sqlite3> INSERT INTO admin VALUES (NULL, 'jeff', 'ahTh3nie', 2, 0);
+
+The `NULL` value in the first column is for the automatically-assigned
+numeric ID of the database row. The second column is the screen
+name of the commenter, which must be unique. The third column is the
+access key that will be included in the personal URL of the commenter,
+and must also be unique. Under Linux, the `pwgen` utility is a handy
+tool for creating these. The fourth column is the role of the commenter,
+and must be set to `2`. The fifth column is currently unused, but may
+eventually control the intervals at which scheduled key resets and
+reminder mailings occur.
+
+After commenters have been added to the `admin` table, their
+access URLs will be reported in the startup chatter. For example:
+
+    Reading config from quizzer-3498.cfg
+    Admin URL: http://localhost:3498/?admin=fyvg19vx
+    Adding admin role
+    Adding commenter 'adam' with URL http://localhost:3498/?commenter=En5chaej
+    Adding commenter 'bob' with URL http://localhost:3498/?commenter=koosha1D
+    Adding commenter 'chris' with URL http://localhost:3498/?commenter=Ro5aise5
+    Loaded class membership keys
+    Done. Ready to shake, rattle and roll!
+
+The commenter links show a list of courses, and course links a list
+of quizzes with the number of uncommented mistakes, if any. Clicking on
+a quiz link opens a list of wrong answers, sorted in descending order
+of frequency among quiz-takers, and with already-commented answers
+pushed to the bottom.
+
+`Markdown` syntax is recognized in comment text, with a few small
+extensions. To set markers in text, enclose a number or letter in
+double parens:
+
+    This will render as a circle-A: ((A))
+
+For an explanation of why a wrong answer was wrong,
+set a single `>` character at the beginning of the line,
+followed by the pasted text of the wrong answer to be explained:
+
+    > Many new legislations were passed in 2010.
+
+Mark text targeted for specific comment by wrapping it in
+double-quotes, opening with a single letter or number:
+
+    > ((1 Many)) new ((2 legislations)) ((3 were)) passed in 2010.
+
+    ((2)) is a non-countable noun, and is *never* written
+    with an 's'. With a non-countable noun, use 'much', not
+    'many' at ((1)), and the singular verb form at ((3)).
+
+For a comment that states a pattern, open with two '>' characters:
+
+    >> I studied *for* two hours.
+
+For a comment that states a grammatical rule, open with
+three '>' characters:
+
+    >>> Never use the word "nowadays" in formal writing.
+
+When set at the very beginning of an entry, the explanation,
+pattern, and rule prefixes trigger a tidy heading in the displayed
+entry.
 
