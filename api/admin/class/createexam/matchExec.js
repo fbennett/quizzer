@@ -12,18 +12,16 @@
 
         console.log("Creating exam: title='"+examTitle+"', date='"+examDate+"', number-of-questions="+examNumberOfQuestions);
         // Get the questionID for questions in each quiz for this class that is not an examination
-        // (i.e. all that have sent=1 exactly set in the quizzes table)
-        // (exams will have sent=-1 or sent=2)
         getQuizzes();
 
         function getQuizzes () {
-            sys.db.all('SELECT q.quizNumber,qq.questionID,q.sent FROM quizzes AS q JOIN questions AS qq ON qq.classID=q.classID AND qq.quizNumber=q.quizNumber WHERE q.classID=? ORDER BY q.quizNumber',[classID],function(err,rows){
+            sys.db.all('SELECT q.quizNumber,qq.questionID,q.sent,q.examName FROM quizzes AS q JOIN questions AS qq ON qq.classID=q.classID AND qq.quizNumber=q.quizNumber WHERE q.classID=? ORDER BY q.quizNumber',[classID],function(err,rows){
                 if (err||!rows) {return oops(response,err,'class/createexam(1)')};
                 var quizQuestionIDs = [];
                 for (var i=0,ilen=rows.length;i<ilen;i+=1) {
                     var row = rows[i];
                     quizNumberMax = row.quizNumber;
-                    if (row.sent !== 1) continue;
+                    if (row.sent !== 1 || row.examName) continue;
                     quizQuestionIDs.push(row.questionID);
                 }
                 sys.randomize(quizQuestionIDs);
@@ -86,7 +84,7 @@
             console.log("RUN: saveExam()");
             // Create a fresh quiz, with sent=-1
             var quizNumber = quizNumberMax + 1;
-            sys.db.run('INSERT OR REPLACE INTO quizzes VALUES (NULL,?,?,?,?,?)',[classID,quizNumber,-1,examTitle,examDate],function(err){
+            sys.db.run('INSERT OR REPLACE INTO quizzes VALUES (NULL,?,?,?,?,?)',[classID,quizNumber,0,examTitle,examDate],function(err){
                 if (err) {return oops(response,err,'class/createexam(3)')};
                 saveQuestions(quizNumber,quizQuestions)
             });

@@ -11,7 +11,8 @@
         // Set flag to -1 if quiz is unsent
         // Set flag to 0 if the quiz has been sent and all students have responded
         // Otherwise set flag to number of pending entries
-        var sql = 'SELECT CASE WHEN qz.sent IS NULL OR qz.sent=0 THEN -1 ELSE COUNT(res.pending) END AS pending '
+        var sql = 'SELECT CASE WHEN qz.sent IS NULL OR qz.sent=0 THEN -1 ELSE COUNT(res.pending) END AS pending,'
+            + 'qz.examName '
             + 'FROM quizzes AS qz LEFT JOIN ('
             +     'SELECT q.quizNumber AS pending FROM memberships AS m '
             +     'JOIN questions AS q ON q.classID=m.classID '
@@ -24,6 +25,7 @@
         sys.db.get(sql,[classID,quizNumber,classID,quizNumber],function(err,row){
             if (err||!row) {return oops(response,err,'quiz/readquestions(1)')};
             var pending = row.pending;
+            var examName = row.examName;
             var sql = 'SELECT q.questionNumber AS questionNumber,'
                 + 'r.string AS rubric,'
                 + 'one.string AS one,'
@@ -41,7 +43,7 @@
                 + 'WHERE q.classID=? AND q.quizNumber=?';
             sys.db.all(sql,[classID,quizNumber],function(err,rows){
                 if (err||!rows) {return oops(response,err,'quiz/readquestions')};
-                var quizobj = {pending:pending,questions:{}};
+                var quizobj = {pending:pending,examName:examName,questions:{}};
                 for (var i=0,ilen=rows.length;i<ilen;i+=1) {
                     var row = rows[i];
                     quizobj.questions[row.questionNumber] = {

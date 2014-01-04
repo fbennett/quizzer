@@ -1,0 +1,16 @@
+thead tr td {
+    font-weight:bold;
+    padding: 0 0 0.5em 0;
+}
+
+.email {
+    font-family:ariel,courier,mono;
+}
+
+.even {
+    background:white;
+}
+
+.odd {
+    background:#f5f5f5;
+}

@@ -9,16 +9,18 @@
   <script type="text/javascript" src="js/admin-quiz.js"></script>  
 </head>
 <body onLoad="buildQuestionList()">
+  <iframe id="download-frame" style="display:none"></iframe>
   <div class="grid">
     <div class="col-1-1">
       <h1>Quizzer Admin</h1>
-      <h2>@@CLASS@@: Quiz @@QUIZ_NUMBER@@</h2>
+      <h2><span id="course-name">@@CLASS@@</span>: <span id="exam-title">@@QUIZ_LABEL@@</span></h2>
       <div>
         <input class="button" type="button" value="Back" onclick="window.location = fixPath('/?admin=' + getParameterByName('admin') + '&page=class' + '&classid=' + getParameterByName('classid'))"/>
       </div>
       <div class="button-bold">
         <input class="button" id="send-quiz" type="button" value="Send Quiz" onclick="sendQuiz()"/>
-        <input class="button" id="quiz-done" type="button" value="All Done" style="display:none;"/>
+        <input class="button" id="download-exam" type="button" value="Download Exam" onclick="downloadExam()" style="display:none;"/>
+        <input class="button" id="quiz-done" type="button" value="Exam Complete" style="display:none;"/>
       </div>
       <hr/>
       <ol id="quiz-questions">

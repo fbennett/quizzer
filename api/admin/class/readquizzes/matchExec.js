@@ -4,7 +4,7 @@
         var oops = this.utils.apiError;
         var classID = params.classid;
         var db = this.sys.db;
-        var sql = 'SELECT qz.quizNumber,CASE WHEN qz.sent IS NULL OR qz.sent=0 THEN -1 ELSE COUNT(res.pending) END AS pending '
+        var sql = 'SELECT qz.quizNumber,qz.examName,CASE WHEN qz.sent IS NULL OR qz.sent=0 THEN -1 ELSE COUNT(res.pending) END AS pending '
             + 'FROM quizzes AS qz LEFT JOIN ('
             +     'SELECT q.quizNumber AS pending FROM memberships AS m '
             +     'JOIN questions AS q ON q.classID=m.classID '
@@ -25,7 +25,7 @@
                 if (row.pending == -1) {
                     hasNew = true;
                 }
-                retRows.push({number:row.quizNumber,isnew:row.pending});
+                retRows.push({name:row.examName,number:row.quizNumber,isnew:row.pending});
                 maxval = row.quizNumber;
             }
             if (rows.length && !hasNew) {

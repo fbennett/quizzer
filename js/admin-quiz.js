@@ -1,3 +1,18 @@
+function downloadExam () {
+    var adminID = getParameterByName('admin');
+    var classID = getParameterByName('classid');
+    var quizNumber = getParameterByName('quizno');
+    var downloadFrame = document.getElementById('download-frame');
+    downloadFrame.src = '/?admin='
+        + adminID
+        + '&page=quiz'
+        + '&cmd=downloadexam'
+        + '&classid='
+        + classID
+        + '&quizno='
+        + quizNumber
+};
+
 function buildQuestionList (quizobj) {
     var adminID = getParameterByName('admin');
     var classID = getParameterByName('classid');
@@ -20,26 +35,11 @@ function buildQuestionList (quizobj) {
     var questionsLst = displayQuestions(quizobj.questions);
     var button = document.getElementById('add-question-button');
     button.disabled = false;
-    var sendQuiz = document.getElementById('send-quiz');
-    var quizDone = document.getElementById('quiz-done');
-    if (questionsLst.length == 0) {
-        sendQuiz.style.display = 'none';
-        quizDone.style.display = 'inline';
-        quizDone.value = "In Draft";
-    } else if (quizobj.pending == -1) {
-        sendQuiz.style.display = 'inline';
-        sendQuiz.value = 'Send Quiz';
-        quizDone.style.display = 'none';
-    } else if (quizobj.pending == 0) {
-        sendQuiz.style.display = 'none';
-        quizDone.style.display = 'inline';
-        quizDone.value = "Responses Complete";
-        disableEditing();
+    if (quizobj.examName) {
+        console.log("SETTING EXAM BUTTON");
+        setButtonState('download-exam',questionsLst,quizobj.pending);
     } else {
-        sendQuiz.style.display = 'inline';
-        sendQuiz.value = 'Responses Pending: ' + quizobj.pending;
-        quizDone.style.display = 'none';
-        disableEditing();
+        setButtonState('send-quiz',questionsLst,quizobj.pending);
     }
 }
 
@@ -83,12 +83,7 @@ function sendQuiz() {
             classid:classID,
             quizno:quizNumber
         });
-    var sendQuizButton = document.getElementById('send-quiz');
-    var quizDoneButton = document.getElementById('quiz-done');
-    sendQuizButton.style.display = 'none';
-    quizDoneButton.style.display = 'inline';
-    quizDoneButton.value = 'Quiz Sent';
-    disableEditing();
+    setButtonState('quiz-done');
 }
 
 function writeChoice(questionNumber, choice) {
@@ -298,19 +293,7 @@ function closeQuestion (questionNumber) {
         node.removeChild(node.childNodes[0])
     }
     displayQuestion(obj, questionNumber);
-    setSendButton([1]);
-    // Add some magic to change the button back to "Add Question"
-    var button = document.getElementById('add-question-button');
-    button.disabled = false;
-}
-
-function setSendButton (lst) {
-    var sendQuiz = document.getElementById("send-quiz");
-    if (!lst.length) {
-        sendQuiz.disabled = true;
-    } else {
-        sendQuiz.disabled = false;
-    }
+    setButtonState('send-quiz');
 }
 
 function displayQuestions (quizobj) {
@@ -335,7 +318,7 @@ function displayQuestions (quizobj) {
             return 0;
         }
     });
-    setSendButton(lst);
+    setButtonState('send-quiz',lst);
     // Display objects in lst
     for (var i=0,ilen=lst.length;i<ilen;i+=1) {
         displayQuestion(quizobj[lst[i]], lst[i]);
@@ -387,3 +370,62 @@ function displayQuestion (qobj, questionNumber) {
     button.setAttribute('onclick', 'openQuestion("' + questionNumber + '")');
     node.appendChild(button);
 }
+
+function setButtonState (state,lst,pending) {
+    if ("undefined" === typeof lst) {
+        lst = [1];
+    }
+    var sendQuiz = document.getElementById('send-quiz');
+    var quizDone = document.getElementById('quiz-done');
+    var downloadExam = document.getElementById('download-exam');
+    var addQuestion = document.getElementById('add-question-button');
+    if (lst.length == 0) {
+        sendQuiz.disabled = true;
+    } else {
+        sendQuiz.disabled = false;
+    }
+    console.log("  Running button state with "+state);
+    switch (state) {
+    case 'send-quiz':
+        downloadExam.style.display = 'none';
+        if (lst.length == 0) {
+            sendQuiz.style.display = 'none';
+            quizDone.style.display = 'inline';
+            quizDone.value = "In Draft";
+        } else if (pending == -1) {
+            sendQuiz.style.display = 'inline';
+            sendQuiz.value = 'Send Quiz';
+            quizDone.style.display = 'none';
+        } else if (pending === 0) {
+            sendQuiz.style.display = 'none';
+            quizDone.style.display = 'inline';
+            quizDone.value = "Responses Complete";
+            disableEditing();
+        } else {
+            sendQuiz.style.display = 'inline';
+            sendQuiz.value = 'Responses Pending: ' + pending;
+            quizDone.style.display = 'none';
+            disableEditing();
+        }
+        break;
+    case 'quiz-done':
+        sendQuiz.style.display = 'none';
+        quizDone.style.display = 'inline';
+        quizDone.value = 'Quiz Sent';
+        downloadExam.style.display = 'none';
+        disableEditing();
+        break;
+    case 'download-exam':
+        console.log("  Set download-exam");
+        sendQuiz.style.display = 'none';
+        quizDone.style.display = 'none';
+        downloadExam.style.display = 'inline';
+        break;
+    default:
+        sendQuiz.style.display = 'inline';
+        quizDone.style.display = 'none';
+        downloadExam.style.display = 'none';
+        break;
+    }
+}
+

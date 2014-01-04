@@ -1,3 +1,11 @@
+function showStragglers () {
+    buttonMode('non-submitters-display');
+};
+
+function restoreMain () {
+    buttonMode('main-display');
+};
+
 function buildQuizList (rows) {
     var adminID = getParameterByName('admin');
     var classID = getParameterByName('classid');
@@ -14,6 +22,7 @@ function buildQuizList (rows) {
         );
         if (false === rows) return;
     }
+    console.log(JSON.stringify(rows,null,2));
     rows.sort(function (a,b) {
         a = parseInt(a.number,10);
         b = parseInt(b.number,10);
@@ -32,8 +41,14 @@ function buildQuizList (rows) {
     }
     // Rebuild container content
     for (var i=0,ilen=rows.length;i<ilen;i+=1) {
-        var nameText = document.createTextNode("Quiz "+rows[i].number);
-        var idText = document.createTextNode(rows[i].number);
+        var row = rows[i];
+        var nameText;
+        if (row.name) {
+            nameText = document.createTextNode(row.name);
+        } else {
+            nameText = document.createTextNode("Quiz "+row.number);
+        }
+        var idText = document.createTextNode(row.number);
         var tr = document.createElement('tr');
         var nameAnchor = document.createElement('a');
         var nameTD = document.createElement('td');
@@ -188,14 +203,88 @@ function createExam () {
     }
 };
 
+function showNonSubmitters () {
+    var adminID = getParameterByName('admin');
+    var classID = getParameterByName('classid');
+    var result = apiRequest(
+        '/?admin='
+            + adminID
+            + '&page=class'
+            + '&cmd=getnonsubmitters'
+        , {
+            classid:classID
+        }
+    );
+    if (false === result) return;
+    
+    var nonSubmittersList = document.getElementById('non-submitters-list');
+    for (var i=0,ilen=nonSubmittersList.childNodes.length;i<ilen;i+=1) {
+        nonSubmittersList.removeChild(nonSubmittersList.childNodes[0]);
+    }
+    var colspec = ['name','quizzes','email'];
+    for (var i=0,ilen=result.length;i<ilen;i+=1) {
+        var nonsubTR = document.createElement('tr');
+        if (i % 2) {
+            nonsubTR.setAttribute('class','even');
+        } else {
+            nonsubTR.setAttribute('class','odd');
+        }
+        var line = result[i];
+        for (var j=0,jlen=3;j<jlen;j+=1) {
+            var node = document.createElement('td');
+            if (j === 2) {
+                node.setAttribute('class', 'email');
+            }
+            node.innerHTML = line[colspec[j]];
+            nonsubTR.appendChild(node);
+        }
+        nonSubmittersList.appendChild(nonsubTR);
+    }
+};
+
 function buttonMode (mode) {
     var setupButton = document.getElementById('exam-setup');
     var createButton = document.getElementById('exam-create');
     var examBoxes = document.getElementById('exam-boxes');
+
+    var mainDisplayButton = document.getElementById('main-display-button');
+    var mainDisplay = document.getElementsByClassName('main-display');
+
+    var nonSubmittersButton = document.getElementById('non-submitters-button');
+    var nonSubmittersDisplay = document.getElementsByClassName('non-submitters-display');
+
     if (mode === 'create-exam') {
         setupButton.style.display = "none";
         createButton.style.display = "inline";
         examBoxes.style.display = "inline";
+        nonSubmittersButton.style.display = 'none';
+    } else if (mode === 'non-submitters-display') {
+        setupButton.style.display = 'none';
+        setupButton.disabled = true;
+        createButton.style.display = 'none';
+        examBoxes.style.display = 'none';
+        mainDisplayButton.style.display = 'inline';
+        for (var i=0,ilen=mainDisplay.length;i<ilen;i+=1) {
+            mainDisplay[i].style.display = 'none';
+        }
+        for (var i=0,ilen=nonSubmittersDisplay.length;i<ilen;i+=1) {
+            nonSubmittersDisplay[i].style.display = 'block';
+        }
+        nonSubmittersButton.style.display = 'none';
+        showNonSubmitters();
+    } else if (mode === 'main-display') {
+        setupButton.style.display = 'inline';
+        setupButton.disabled = false;
+        createButton.style.display = 'none';
+        examBoxes.style.display = 'none';
+        mainDisplayButton.style.display = 'none';
+        for (var i=0,ilen=mainDisplay.length;i<ilen;i+=1) {
+            mainDisplay[i].style.display = 'block';
+        }
+        for (var i=0,ilen=nonSubmittersDisplay.length;i<ilen;i+=1) {
+            nonSubmittersDisplay[i].style.display = 'none';
+        }
+        nonSubmittersButton.style.display = 'inline';
     } else {
         setupButton.style.display = "inline";
         createButton.style.display = "none";
@@ -203,5 +292,6 @@ function buttonMode (mode) {
         document.getElementById('exam-title').value = '';
         document.getElementById('exam-date').value = '';
         document.getElementById('exam-number-of-questions').value = '';
+        nonSubmittersButton.style.display = 'inline';
     }
 }

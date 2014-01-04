@@ -1,3 +1,0 @@
-\choice
-\marginnote{\kern-1cm\hbox{\vbox{\includegraphics[width=2cm,height=0.9\baselineskip]{@@BARCODE_FILENAME@@}}}}[0.1\baselineskip]%
-@@CHOICE_TEXT@@
