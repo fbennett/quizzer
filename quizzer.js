@@ -1,5 +1,6 @@
 (function () {
     function run () {
+       
         // (reads from quizServer.cfg and mypwd.txt)
         var config = require('./lib/config').config;
 
