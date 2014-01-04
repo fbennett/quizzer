@@ -38,7 +38,7 @@
                 } else {
                     response.writeHead(200, {
                         'Content-Type': 'application/octet-stream',
-                        'Content-Disposition': 'attachment; filename="' + zipFileName + '"'
+                        'Content-Disposition': 'attachment; filename="' + quizObject.zipName + '.zip"'
                     });
                     response.end(data);
                 }
@@ -223,7 +223,18 @@
                 }
 	            var mydata = zip.generate({base64:false,compression:'DEFLATE'});
 	            sys.fs.writeFileSync(quizObject.zipDirName + '.zip', mydata, 'binary');
-                console.log('done!')
+                console.log('Done!\nSend the bundle back to the client.');
+                sys.fs.readFile(quizObject.zipDirName + '.zip',function(err, data){
+                    if (err) {
+                        console.log("Oh, darn. "+err);
+                    } else {
+                        response.writeHead(200, {
+                            'Content-Type': 'application/octet-stream',
+                            'Content-Disposition': 'attachment; filename="' + quizObject.zipName + '.zip"'
+                        });
+                        response.end(data);
+                    }
+                });
             });
 
         };
