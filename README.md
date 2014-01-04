@@ -123,7 +123,7 @@ Connect to the listed URL with a browser, and you're ready to go.  The
 database and configuration files are created in the directory from
 which the script is run, named after the port number. The server can
 be shut down with `CTRL-c` (`SIGINT`), and as the startup message
-says, it can be restarted with the single option `-p \<REAL_PORT\>`
+says, it can be restarted with the single option `-p <REAL_PORT>`
 (Note that the `admin` key is automatically generated, and will differ
 from that shown in the example above.)
 
