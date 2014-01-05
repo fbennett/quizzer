@@ -9,7 +9,7 @@
         sys.db.get('SELECT c.name,q.quizNumber,q.examName FROM classes AS c JOIN quizzes AS q ON q.classID=c.classID WHERE q.classID=? AND q.quizNumber=?',[classID,quizNumber],function(err,row){
             if (err) {return oops(response,err,'quiz(1)')};
             if (!row) {
-                sys.db.run('INSERT INTO quizzes VALUES (NULL,?,?,0)',[classID,quizNumber],function(err){
+                sys.db.run('INSERT INTO quizzes VALUES (NULL,?,?,0,NULL,NULL)',[classID,quizNumber],function(err){
                     if (err) {return oops(response,err,'quiz(2)')};
                     sys.db.get('SELECT c.name,q.quizNumber FROM classes AS c JOIN quizzes AS q ON q.classID=c.classID WHERE q.classID=? AND q.quizNumber=?',[classID,quizNumber],function(err,row){
                         if (err||!row) {return oops(response,err,'quiz(3)')};
