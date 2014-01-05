@@ -83,13 +83,13 @@
         function convertStringsToLatex () {
             for (var i=0,ilen=quizObject.questions.length;i<ilen;i+=1) {
                 var question = quizObject.questions[i];
-                var rubricText = sys.markdown(question.rubric);
+                question.rubric = sys.markdown(question.rubric);
                 stringsToConvert.push({
                     obj:question,
                     key:'rubric'
                 });
                 for (var k=0,klen=question.choices.length;k<klen;k+=1) {
-                    var choiceText = sys.markdown(question.choices[k]);
+                    question.choices[k] = sys.markdown(question.choices[k]);
                     stringsToConvert.push({
                         obj:question.choices,
                         key:k
@@ -169,7 +169,7 @@
                         var studentIDoffset = '' + ('' + studentInfo.studentID).length;
                         var questionNumberoffset = '' + ('' + origQuestionNumber).length;
                         var barCode = studentIDoffset + questionNumberoffset + ('' + studentInfo.studentID) + ('' + origQuestionNumber) + ('' + origChoice);
-                        if (barCode.length % 2) {
+                        while (barCode.length < 10) {
                             barCode = '0' + barCode;
                         }
                         latexChoice = latexChoice.replace(/@@BARCODE@@/,barCode);
