@@ -1,3 +1,25 @@
+var quizInfo = {};
+function markExam () {
+    var questionsDisplayNodes = document.getElementsByClassName('questions-display');
+    var markingDisplayNodes = document.getElementsByClassName('marking-display');
+    for (var i=0,ilen=questionsDisplayNodes.length;i<ilen;i+=1) {
+        questionsDisplayNodes[i].style.display = 'none';
+    }
+    
+    for (var i=0,ilen=markingDisplayNodes.length;i<ilen;i+=1) {
+        markingDisplayNodes[i].style.display = 'block';
+    }
+    // Call server and get an object with the correct answers
+    // Capture keystroke events
+    // Parse string
+    // Validate entry and record locally
+    // On failure, delete conflicting entries and request reinput
+    // On student completion or change of student
+    //   Validate exam and record to server
+    //   On failure, request additional input
+    // On exam completion, show Exam Results button and revert to questions
+};
+
 function downloadExam () {
     var adminID = getParameterByName('admin');
     var classID = getParameterByName('classid');
@@ -11,6 +33,7 @@ function downloadExam () {
         + classID
         + '&quizno='
         + quizNumber
+    setButtonState('mark-exam');
 };
 
 function buildQuestionList (quizobj) {
@@ -35,13 +58,23 @@ function buildQuestionList (quizobj) {
     var questionsLst = displayQuestions(quizobj.questions);
     var button = document.getElementById('add-question-button');
     button.disabled = false;
+    quizInfo.pending = quizobj.pending;
     if (quizobj.examName) {
         console.log("SETTING EXAM BUTTON");
+        
         setButtonState('download-exam',questionsLst,quizobj.pending);
     } else {
         setButtonState('send-quiz',questionsLst,quizobj.pending);
     }
 }
+
+function enableEditing () {
+    var buttons = document.getElementsByClassName('editing-button');
+    for (var i=0,ilen=buttons.length;i<ilen;i+=1) {
+        buttons[i].style.display = 'inline';
+        buttons[i].disabled = false;
+    }
+};
 
 function disableEditing () {
     var buttons = document.getElementsByClassName('editing-button');
@@ -371,20 +404,24 @@ function displayQuestion (qobj, questionNumber) {
     node.appendChild(button);
 }
 
-function setButtonState (state,lst,pending) {
+function setButtonState (state,lst) {
+    var pending = quizInfo.pending;
     if ("undefined" === typeof lst) {
         lst = [1];
     }
     var sendQuiz = document.getElementById('send-quiz');
     var quizDone = document.getElementById('quiz-done');
     var downloadExam = document.getElementById('download-exam');
+    var markExam = document.getElementById('mark-exam');
     var addQuestion = document.getElementById('add-question-button');
     if (lst.length == 0) {
         sendQuiz.disabled = true;
     } else {
         sendQuiz.disabled = false;
     }
-    console.log("  Running button state with "+state);
+    if ('download-exam' === state && pending > 0) {
+        state = 'mark-exam';
+    }
     switch (state) {
     case 'send-quiz':
         downloadExam.style.display = 'none';
@@ -392,10 +429,12 @@ function setButtonState (state,lst,pending) {
             sendQuiz.style.display = 'none';
             quizDone.style.display = 'inline';
             quizDone.value = "In Draft";
+            enableEditing();
         } else if (pending == -1) {
             sendQuiz.style.display = 'inline';
             sendQuiz.value = 'Send Quiz';
             quizDone.style.display = 'none';
+            enableEditing();
         } else if (pending === 0) {
             sendQuiz.style.display = 'none';
             quizDone.style.display = 'inline';
@@ -420,6 +459,15 @@ function setButtonState (state,lst,pending) {
         sendQuiz.style.display = 'none';
         quizDone.style.display = 'none';
         downloadExam.style.display = 'inline';
+        markExam.style.display = 'none';
+        break;
+    case 'mark-exam':
+        console.log("  Set mark-exam");
+        sendQuiz.style.display = 'none';
+        quizDone.style.display = 'none';
+        downloadExam.style.display = 'none';
+        markExam.style.display = 'inline';
+        disableEditing();
         break;
     default:
         sendQuiz.style.display = 'inline';
