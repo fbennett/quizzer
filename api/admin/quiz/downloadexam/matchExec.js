@@ -233,6 +233,10 @@
                             'Content-Disposition': 'attachment; filename="' + quizObject.zipName + '.zip"'
                         });
                         response.end(data);
+                        sys.db.run('UPDATE quizzes SET sent=? WHERE classID=? AND quizNumber=?',[1,classID,quizNumber],function(err){
+                            if (err) console.log("Warning: attempt to rest quiz sent status failed");
+                        });
+
                     }
                 });
             });
