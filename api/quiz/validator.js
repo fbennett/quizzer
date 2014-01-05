@@ -18,6 +18,7 @@
             }
         } else {
             return function (params) {
+                console.log('PAGE PARAMS!');
                 if (!params.admin
                     && !params.commenter
                     && params.studentid

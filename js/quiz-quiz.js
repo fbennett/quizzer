@@ -12,8 +12,8 @@ var quizNumber = getParameterByName('quizno');
 var quizResult = {};
 
 var quizData;
-function runQuiz() {
-    console.log("Requesting quiz data!");
+
+function showQuiz() {
     // Get quiz data
     quizData = apiRequest(
         '/?cmd=quizdata&classid=' 
@@ -25,7 +25,20 @@ function runQuiz() {
             + '&quizno=' 
             + quizNumber);
     if (false === quizData) return;
-    console.log("QUIZ DATA: "+JSON.stringify(quizData,null,2));
+    
+    var numberOfQuestionsNode = document.getElementById('number-of-questions');
+    numberOfQuestionsNode.innerHTML = quizData.questions.length;
+
+};
+
+function runQuiz() {
+
+    var quizSplash = document.getElementById('quiz-splash');
+    var quizBody = document.getElementById('quiz-body');
+    
+    quizSplash.style.display = 'none';
+    quizBody.style.display = 'block';
+    
     for (var i=0,ilen=quizData.questions.length;i<ilen;i+=1) {
         remap = randomize(quizData.questions[i].questions);
         quizData.questions[i].remap = remap;
@@ -35,7 +48,7 @@ function runQuiz() {
     displaychild(quizData);
 }
 
-function displaychild(quizData) {  
+function displaychild() {  
     document.getElementById("nextButton").disabled = true;  
 	if (document.getElementById("nextButton").innerHTML == "Show&nbsp;Result") {  
         document.getElementById("nextButton").onclick = ShowResult;

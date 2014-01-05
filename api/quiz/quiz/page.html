@@ -7,13 +7,37 @@
     <script type="text/javascript" src="js/marked.js"></script>
     <script type="text/javascript" src="js/quiz-quiz.js"></script>
  </head>  
-  <body onload="runQuiz()">  
+  <body onload="showQuiz()">  
 	<div id="wrapper">
-	  <div id="question">
+      <div id="quiz-splash">
+        <h1>@@CLASS@@: @@QUIZ_LABEL@@</h1>
+        <p>
+          This quiz consists
+          of <span id="number-of-questions">99</span> questions.
+        </p>
+        <p>
+          To choose an answer, tick its box and 
+          click "Next".  It is perfectly okay to guess!
+        </p>
+        <div id="start-button-container">
+          <input type="button" class="start-button" value="Start" onclick="runQuiz();"/>
+        </div>
+        <p>
+          You may
+          restart the quiz at any time by refreshing this page in your
+          web browser.
+          Your results will appear immediately after you complete
+          the last question.
+        </p>
+        
       </div>
-	  <ul id="options">
-	  </ul>
-	  <button class="button" id="nextButton" onclick="FunNextNode()">Next</button>  
+      <div id="quiz-body" style="display:none">
+	    <div id="question">
+        </div>
+	    <ul id="options">
+	    </ul>
+	    <button class="button" id="nextButton" onclick="FunNextNode()">Next</button>  
+      </div>
     </div>
   </body>  
 </html>  
