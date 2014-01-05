@@ -19,16 +19,41 @@
       </div>
       <div class="button-bold">
         <input class="button" id="send-quiz" type="button" value="Send Quiz" onclick="sendQuiz()"/>
+        <input class="button" id="quiz-done" type="button" value="Quiz Done" style="display:none;"/>
         <input class="button" id="download-exam" type="button" value="Download Exam" onclick="downloadExam()" style="display:none;"/>
-        <input class="button" id="quiz-done" type="button" value="Exam Complete" style="display:none;"/>
+        <input class="button" id="mark-exam" type="button" value="Mark Exam" onclick="markExam()" style="display:none;"/>
       </div>
       <hr/>
-      <ol id="quiz-questions">
+      <ol id="quiz-questions" class="questions-display">
       </ol>
-      <div style="clear: both;">
+      <div class="questions-display" style="clear: both;">
         <input class="button editing-button" id="add-question-button" type="button" value="Add Question" onclick="addQuestion()"/>
       </div>
     </div>
+    <div class="col-1-1 marking-display" style="display:none;">
+      <h2>
+        Marking for:
+        <span id="student-name">???</span>
+        <input id="string-input" type="text" style="visibility:hidden;"/>
+      </h2>
+    </div>
+    <div class="col-1-4 marking-display" style="display:none;">
+      <table id="answer-column-1">
+      </table>
+    </div>
+    <div class="col-1-4 marking-display" style="display:none;">
+      <table id="answer-column-2">
+      </table>
+    </div>
+    <div class="col-1-4 marking-display" style="display:none;">
+      <table id="answer-column-3">
+      </table>
+    </div>
+    <div class="col-1-4 marking-display" style="display:none;">
+      <table id="answer-column-4">
+      </table>
+    </div>
   </div>
+</div>
 </body>
 </html>
