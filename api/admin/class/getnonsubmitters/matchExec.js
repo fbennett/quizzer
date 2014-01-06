@@ -19,7 +19,7 @@
             +     'AND a.quizNumber=q.quizNumber '
             +     'AND a.questionNumber=q.questionNumber '
             +     'AND a.studentID=m.studentID '
-            +   'WHERE qz.classID=? AND a.studentID IS NULL AND qz.sent=1 AND qz.examTitle IS NULL '
+            +   'WHERE qz.classID=? AND a.studentID IS NULL AND qz.sent=1 AND qz.examName IS NULL '
             +   'GROUP BY qz.quizNumber,m.studentID '
             +   'ORDER BY qz.quizNumber '
             + ') AS nonsub '
