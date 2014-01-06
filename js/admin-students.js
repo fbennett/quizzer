@@ -8,11 +8,13 @@ function addStudent(node) {
     var studentID = document.getElementById('student-id');
     var studentStatus = document.getElementById('student-status');
     if (node) {
-        var name = node.childNodes[0].textContent;
-        var email = node.childNodes[1].textContent;
-        var id = node.childNodes[2].textContent;
-        var status = node.className;
-        console.log("CLASS NAME: "+node.className);
+        var name = node.textContent;
+        var email = node.getAttribute('alt');
+        var id = node.getAttribute('id');
+        var status = false;
+        if (node.className && node.className.match(/private/)) {
+            var status = 'private';
+        };
         studentName.value = name;
         studentEmail.value = email;
         if (status) {
@@ -116,33 +118,20 @@ function buildStudentList (rows) {
     }
     // Rebuild container content
     for (var i=0,ilen=rows.length;i<ilen;i+=1) {
-        var nameText = document.createTextNode(rows[i][0]);
-        var emailText = document.createTextNode(rows[i][1]);
-        var idText = document.createTextNode(rows[i][2]);
-        var tr = document.createElement('tr');
-        var nameTD = document.createElement('td');
-        var emailTD = document.createElement('td');
-        var idTD = document.createElement('td');
-        nameTD.appendChild(nameText);
-        tr.appendChild(nameTD);
+        var nameSpan = document.createElement('span');
+        nameSpan.innerHTML = rows[i][0];
+        nameSpan.setAttribute('title',rows[i][1]);
+        nameSpan.setAttribute('alt',rows[i][1]);
+        nameSpan.setAttribute('id',rows[i][2]);
         if (rows[i][3]) {
-            console.log("PRIVATE? "+rows[i][3]);
-            tr.setAttribute('class','private');
+            nameSpan.setAttribute('class','bubble private');
+        } else {
+            nameSpan.setAttribute('class','bubble');
         }
-        emailTD.appendChild(emailText);
-        emailTD.setAttribute("class", "email");
-        tr.appendChild(emailTD)
-        idTD.appendChild(idText);
-        idTD.style.display = 'none';
-        tr.appendChild(idTD)
-        // Edit button
-        var button = document.createElement('input');
-        button.setAttribute('type', 'button');
-        button.setAttribute('value', 'Edit');
-        button.setAttribute('onclick', 'addStudent(this.parentNode)');
-        button.setAttribute('class', 'button-small');
-        tr.appendChild(button);
-        container.appendChild(tr);
+        nameSpan.setAttribute('onclick', 'addStudent(this)');
+        container.appendChild(nameSpan);
+        var space = document.createTextNode(' ');
+        container.appendChild(space);
     }
     // Each student line should have an edit button
 }

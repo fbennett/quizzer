@@ -6,3 +6,17 @@
 .private {
     background: #eeeeee;
 }
+
+div#student-list span {
+    padding: 0.5em;
+    margin: 2px;
+    border-radius:1.2em;
+    border: 1px solid #aaaaaa;
+    line-height: 2.8em;
+    white-space: nowrap;
+    cursor:pointer;
+}
+
+div#student-list span:hover {
+    background: #fafafa;
+}
