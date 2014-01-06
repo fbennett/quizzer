@@ -161,12 +161,16 @@
                 var questionsStr = '';
                 for (var j=0,jlen=studentInfo.questions.length;j<jlen;j+=1) {
                     var question = studentInfo.questions[j];
+                    // Reverse the remap
+                    var remap = {};
+                    for (var key in question.remap) {
+                        remap[question.remap] = key;
+                    }
                     var origQuestionNumber = question.questionNumber;
                     var choicesStr = '';
                     for (var k=0,klen=4;k<klen;k+=1) {
                         var latexChoice = examChoiceTemplate;
-                        // Oh! It's hitting this def four times ... but that's right, isn't it?
-                        var origChoice = question.remap[k];
+                        var origChoice = remap[k];
                         var studentIDoffset = '' + ('' + studentInfo.studentID).length;
                         var questionNumberoffset = '' + ('' + origQuestionNumber).length;
                         var barCode = studentIDoffset + questionNumberoffset + ('' + studentInfo.studentID) + ('' + origQuestionNumber) + ('' + origChoice);
