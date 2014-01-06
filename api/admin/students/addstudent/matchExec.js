@@ -2,19 +2,20 @@
     var cogClass = function () {};
     cogClass.prototype.exec = function (params, request, response) {
         var oops = this.utils.apiError;
-        if (params.studentid) {
-            var name = params.name;
-            var email = params.email;
+        var studentID = params.studentid;
+        var name = params.name;
+        var email = params.email;
+        var privacy = params.privacy ? 1 : 0;
+        console.log("Got param: "+params.privacy);
+        if (studentID) {
             var db = this.sys.db;
-            db.run('INSERT OR REPLACE INTO students VALUES (?,?,?,NULL,NULL)',[params.studentid,params.name,params.email],function(err){
+            db.run('INSERT OR REPLACE INTO students VALUES (?,?,?,?,NULL)',[studentID,name,email,privacy],function(err){
                 if (err) {return oops(response,err,'students/addstudent')};
                 sendStudents();
             })
         } else {
-            var name = params.name;
-            var email = params.email;
             var db = this.sys.db;
-            db.run('INSERT INTO students VALUES (NULL,?,?,NULL,NULL)',[params.name,params.email],function(err){
+            db.run('INSERT INTO students VALUES (NULL,?,?,?,NULL)',[name,email,privacy],function(err){
                 if (err) {return oops(response,err,'students/addstudent')};
                 sendStudents();
             });
@@ -26,7 +27,7 @@
                 var retRows = [];
                 for (var i=0,ilen=rows.length;i<ilen;i+=1) {
                     var row = rows[i];
-                    var retRow = [row.name, row.email, row.studentID, 'somekey'];
+                    var retRow = [row.name, row.email, row.studentID, privacy];
                     retRows.push(retRow);
                 }
                 response.writeHead(200, {'Content-Type': 'application/json'});

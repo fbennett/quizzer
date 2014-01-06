@@ -1,5 +1,23 @@
-var quizInfo = {};
+var qzi = {};
 function markExam () {
+    var adminID = getParameterByName('admin');
+    var classID = getParameterByName('classid');
+    var quizNumber = getParameterByName('quizno');
+    // Call server and get an object with the correct answers
+    var result = apiRequest(
+        '/?admin='
+            + adminID
+            + '&page=quiz'
+            + '&cmd=getcorrectanswers'
+        , {
+            classid:classID,
+            quizno:quizNumber
+        });
+    if (false === result) return;
+    qzi.correctAnswers = result.correctAnswers;
+    qzi.serverResults = result.serverResults;
+    qzi.clientResult = {};
+    qzi.currentStudentID = false;
     var questionsDisplayNodes = document.getElementsByClassName('questions-display');
     var markingDisplayNodes = document.getElementsByClassName('marking-display');
     for (var i=0,ilen=questionsDisplayNodes.length;i<ilen;i+=1) {
@@ -9,15 +27,118 @@ function markExam () {
     for (var i=0,ilen=markingDisplayNodes.length;i<ilen;i+=1) {
         markingDisplayNodes[i].style.display = 'block';
     }
-    // Call server and get an object with the correct answers
-    // Capture keystroke events
-    // Parse string
-    // Validate entry and record locally
-    // On failure, delete conflicting entries and request reinput
-    // On student completion or change of student
-    //   Validate exam and record to server
-    //   On failure, request additional input
-    // On exam completion, show Exam Results button and revert to questions
+    var inputNode = document.getElementById('string-input');
+    inputNode.setAttribute('onkeypress','keystrokeHandler(event);');
+    inputNode.focus();
+};
+
+function keystrokeHandler(event) {
+    var adminID = getParameterByName('admin');
+    var classID = getParameterByName('classid');
+    var quizNumber = getParameterByName('quizno');
+    var inputNode = document.getElementById('string-input');
+    var inputVal = '';
+    if (event.key === 'Enter') {
+        // alert(inputNode.value);
+        // Capture entry
+        var ans = {};
+        var inputVal = inputNode.value;
+        inputNode.value = '';
+        inputVal = inputVal.replace(/^0*/,'');
+        var studentOffset = parseInt(inputVal.slice(0,1),10);
+        var questionOffset = parseInt(inputVal.slice(1,2),10);
+        ans.studentID = inputVal.slice(3,3+studentOffset);
+        ans.questionNumber = inputVal.slice(3+studentOffset,3+studentOffset+questionOffset);
+        ans.choice = inputVal.slice(3+studentOffset+questionOffset,3+studentOffset+questionOffset+1);
+        checkAlreadyDone(ans);
+    }
+};
+
+function checkAlreadyDone(ans) {
+    clearError();
+    // Is this student already done?
+    if (qzi.serverResults[ans.studentID]) {
+        showError([qzi.studentNames[ans.studentID] + ' is already done.']);
+    } else {
+        checkIncomplete(ans);
+    }
+};
+
+function checkIncomplete(ans) {
+    // If there was a previous exam, is it complete?
+    if (qzi.currentStudentID && qzi.currentStudentID !== ans.studentID) {
+        showError(['Answers for ' + qzi.studentNames[ans.studentID] + ' are not yet complete']);
+    } else {
+        qzi.currentStudentID = ans.studentID;
+        checkAlreadyAnswered(ans);
+    }
+};
+
+function checkAlreadyAnswered(ans) {
+    // Does this answer conflict? If so, it's an error
+    if ("undefined" !== typeof qzi.clientResult[ans.questionNumber]) {
+        showError(['Question ' + answer.questionNumber + ' is already done.'],
+                  ['Deleting both responses, please try again.']);
+        delete qzi.clientResult[ans.questionNumber];
+        showAnswers();
+    } else {
+        recordAnswer(ans);
+    }
+};
+
+function recordAnswer (ans) {
+    qzi.clientResult[ans.questionNumber] = ans.choice;
+    showAnswers();
+    checkExamComplete(ans);
+};
+
+function checkExamComplete(ans) {
+    // Is the exam complete?
+    var numberOfAnswers = 0;
+    for (var key in qzi.clientResult) {
+        numberOfAnswers += 1;
+    }
+    if (qzi.numberOfQuestions === numberOfAnswers) {
+        recordExamResult(ans);
+    }
+};
+
+function recordExamResult(ans) {
+    // Fire and forget
+    apiRequest(
+        
+    );
+    qzi.serverResults[ans.studentID] = qzi.clientResult;
+    qzi.clientResult = {};
+    qzi.currentStudentID = false;
+    checkExamsComplete();
+};
+
+function checkExamsComplete() {
+    // Are there no more exams to process?
+    var numberOfStudents = 0;
+    for (var key in qzi.serverResults) {
+        numberOfStudents += 1;
+    }
+    if (qzi.numberOfStudents === numberOfStudents) {
+        setButtonState('exam-completely-marked');
+    }
+};
+
+function showError (lst) {
+    
+};
+
+function clearError () {
+    
+};
+
+function showAnswers () {
+    var rightAnswer = false;
+    if (ans.choice === qzi.correctAnswers[ans.questionNumber]) {
+        rightAnswer = true;
+    }
+    
 };
 
 function downloadExam () {
@@ -41,6 +162,10 @@ function buildQuestionList (quizobj) {
     var classID = getParameterByName('classid');
     var quizNumber = getParameterByName('quizno');
 
+    var inputNode = document.getElementById('string-input');
+    inputNode.setAttribute('onkeypress','keystrokeHandler(event);');
+    inputNode.blur();
+
     // Call for quiz questions
     if (!quizobj) {
         // if rows is nil, call the server.
@@ -58,7 +183,7 @@ function buildQuestionList (quizobj) {
     var questionsLst = displayQuestions(quizobj.questions);
     var button = document.getElementById('add-question-button');
     button.disabled = false;
-    quizInfo.pending = quizobj.pending;
+    qzi.pending = quizobj.pending;
     if (quizobj.examName) {
         console.log("SETTING EXAM BUTTON");
         
@@ -405,7 +530,7 @@ function displayQuestion (qobj, questionNumber) {
 }
 
 function setButtonState (state,lst) {
-    var pending = quizInfo.pending;
+    var pending = qzi.pending;
     if ("undefined" === typeof lst) {
         lst = [1];
     }

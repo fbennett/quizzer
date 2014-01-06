@@ -6,12 +6,20 @@ function addStudent(node) {
     var studentName = document.getElementById('student-name');
     var studentEmail = document.getElementById('student-email');
     var studentID = document.getElementById('student-id');
+    var studentStatus = document.getElementById('student-status');
     if (node) {
         var name = node.childNodes[0].textContent;
         var email = node.childNodes[1].textContent;
         var id = node.childNodes[2].textContent;
+        var status = node.className;
+        console.log("CLASS NAME: "+node.className);
         studentName.value = name;
         studentEmail.value = email;
+        if (status) {
+            studentStatus.checked = true;
+        } else {
+            studentStatus.checked = false;
+        }
         studentID.value = id;
     }
     if (studentID.value) {
@@ -31,10 +39,13 @@ function saveStudent() {
     var studentBoxes = document.getElementById('student-boxes');
     var studentName = document.getElementById('student-name');
     var studentEmail = document.getElementById('student-email');
+    var studentStatus = document.getElementById('student-status');
     var studentID = document.getElementById('student-id');
     // Values
     var name = studentName.value;
     var email = studentEmail.value;
+    var status = studentStatus.checked;
+    console.log("STATUS: "+status);
     name = name ? name.replace(/^\s+/,'').replace(/\s+$/,'') : '';
     email = email ? email.replace(/^\s+/,'').replace(/\s+$/,'') : '';
     var id = studentID.value;
@@ -49,7 +60,8 @@ function saveStudent() {
             , {
                 email:email,
                 name:name,
-                studentid:id
+                studentid:id,
+                privacy:status
             });
         buildStudentList();
     }
@@ -58,6 +70,7 @@ function saveStudent() {
         studentName.value = null;
         studentEmail.value = null;
         studentID.value = null;
+        studentStatus.checked = false;
         // Redecorate
         addButton.style.display = 'inline';
         saveButton.style.display = 'none';
@@ -77,6 +90,7 @@ function saveStudent() {
         if (false === obj) return;
         studentName.value = obj.name;
         studentEmail.value = obj.email;
+        studentStatus.checked = obj.privacy;
     }
 }
 
@@ -111,6 +125,10 @@ function buildStudentList (rows) {
         var idTD = document.createElement('td');
         nameTD.appendChild(nameText);
         tr.appendChild(nameTD);
+        if (rows[i][3]) {
+            console.log("PRIVATE? "+rows[i][3]);
+            tr.setAttribute('class','private');
+        }
         emailTD.appendChild(emailText);
         emailTD.setAttribute("class", "email");
         tr.appendChild(emailTD)

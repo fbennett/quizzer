@@ -24,7 +24,7 @@
             +   'ORDER BY qz.quizNumber '
             + ') AS nonsub '
             + 'ON nonsub.studentID=s.studentID '
-            + 'WHERE mm.classID=? '
+            + 'WHERE mm.classID=? AND (s.privacy IS NULL OR s.privacy=0) '
             + 'GROUP BY s.name '
             + 'ORDER BY count DESC';
         sys.db.all(sql,[classID,classID],function(err,rows){
