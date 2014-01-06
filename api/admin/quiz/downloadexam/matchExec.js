@@ -165,6 +165,7 @@
                     var choicesStr = '';
                     for (var k=0,klen=4;k<klen;k+=1) {
                         var latexChoice = examChoiceTemplate;
+                        // Oh! It's hitting this def four times ... but that's right, isn't it?
                         var origChoice = question.remap[k];
                         var studentIDoffset = '' + ('' + studentInfo.studentID).length;
                         var questionNumberoffset = '' + ('' + origQuestionNumber).length;

@@ -54,7 +54,7 @@
         }
 
         function getComments(classID,quizNumber,questionNumber,wrongChoice,items,rubric,right,wrong,goodAnswerStudents) {
-            sys.db.all('SELECT cc.string AS commenter,s.string AS comment FROM comments AS c JOIN strings AS cc ON cc.stringID=c.commenterID LEFT JOIN strings AS s ON s.stringID=c.commentTextID WHERE classID=? AND quizNumber=? AND questionNumber=? AND choice=?',[classID,quizNumber,questionNumber,wrongChoice],function(err,rows){
+            sys.db.all('SELECT ad.name AS commenter,s.string AS comment FROM comments AS c JOIN admin AS ad ON ad.adminID=c.commenterID LEFT JOIN strings AS s ON s.stringID=c.commentTextID WHERE classID=? AND quizNumber=? AND questionNumber=? AND choice=?',[classID,quizNumber,questionNumber,wrongChoice],function(err,rows){
                 if (err||!rows) {return oops(response,err,'*quiz/myquizresults(4)')};
                 var comments = [];
                 for (var i=0,ilen=rows.length;i<ilen;i+=1) {

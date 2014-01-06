@@ -15,7 +15,10 @@ function markExam () {
         });
     if (false === result) return;
     qzi.correctAnswers = result.correctAnswers;
+    qzi.studentNames = result.studentNames;
     qzi.serverResults = result.serverResults;
+    qzi.numberOfStudents = result.numberOfStudents;
+    qzi.numberOfQuestions = result.numberOfQuestions;
     qzi.clientResult = {};
     qzi.currentStudentID = false;
     var questionsDisplayNodes = document.getElementsByClassName('questions-display');
@@ -27,6 +30,7 @@ function markExam () {
     for (var i=0,ilen=markingDisplayNodes.length;i<ilen;i+=1) {
         markingDisplayNodes[i].style.display = 'block';
     }
+    showStudents();
     var inputNode = document.getElementById('string-input');
     inputNode.setAttribute('onkeypress','keystrokeHandler(event);');
     inputNode.focus();
@@ -43,13 +47,14 @@ function keystrokeHandler(event) {
         // Capture entry
         var ans = {};
         var inputVal = inputNode.value;
+        console.log("RAW STRING: "+inputVal);
         inputNode.value = '';
         inputVal = inputVal.replace(/^0*/,'');
         var studentOffset = parseInt(inputVal.slice(0,1),10);
         var questionOffset = parseInt(inputVal.slice(1,2),10);
-        ans.studentID = inputVal.slice(3,3+studentOffset);
-        ans.questionNumber = inputVal.slice(3+studentOffset,3+studentOffset+questionOffset);
-        ans.choice = inputVal.slice(3+studentOffset+questionOffset,3+studentOffset+questionOffset+1);
+        ans.studentID = inputVal.slice(2,2+studentOffset);
+        ans.questionNumber = inputVal.slice(2+studentOffset,2+studentOffset+questionOffset);
+        ans.choice = inputVal.slice(2+studentOffset+questionOffset,2+studentOffset+questionOffset+1);
         checkAlreadyDone(ans);
     }
 };
@@ -57,8 +62,9 @@ function keystrokeHandler(event) {
 function checkAlreadyDone(ans) {
     clearError();
     // Is this student already done?
+    console.log("checkAlreadyDone()");
     if (qzi.serverResults[ans.studentID]) {
-        showError([qzi.studentNames[ans.studentID] + ' is already done.']);
+        showError([qzi.studentNames[ans.studentID] + ' is already done']);
     } else {
         checkIncomplete(ans);
     }
@@ -66,19 +72,24 @@ function checkAlreadyDone(ans) {
 
 function checkIncomplete(ans) {
     // If there was a previous exam, is it complete?
-    if (qzi.currentStudentID && qzi.currentStudentID !== ans.studentID) {
+    console.log("checkIncomplete()");
+    if (qzi.currentStudentID && qzi.currentStudentID != ans.studentID) {
         showError(['Answers for ' + qzi.studentNames[ans.studentID] + ' are not yet complete']);
     } else {
         qzi.currentStudentID = ans.studentID;
+        var studentName = document.getElementById('student-name');
+        studentName.innerHTML = qzi.studentNames[ans.studentID];
         checkAlreadyAnswered(ans);
     }
 };
 
 function checkAlreadyAnswered(ans) {
     // Does this answer conflict? If so, it's an error
+    console.log("checkAlreadyAnswered()");
     if ("undefined" !== typeof qzi.clientResult[ans.questionNumber]) {
-        showError(['Question ' + answer.questionNumber + ' is already done.'],
-                  ['Deleting both responses, please try again.']);
+        console.log("");
+        showError(['Question ' + ans.questionNumber + ' is already done.',
+                  'Deleting both responses, please try again.']);
         delete qzi.clientResult[ans.questionNumber];
         showAnswers();
     } else {
@@ -87,6 +98,7 @@ function checkAlreadyAnswered(ans) {
 };
 
 function recordAnswer (ans) {
+    console.log("recordAnswer()");
     qzi.clientResult[ans.questionNumber] = ans.choice;
     showAnswers();
     checkExamComplete(ans);
@@ -94,20 +106,34 @@ function recordAnswer (ans) {
 
 function checkExamComplete(ans) {
     // Is the exam complete?
+    console.log("checkExamComplete()");
     var numberOfAnswers = 0;
     for (var key in qzi.clientResult) {
         numberOfAnswers += 1;
     }
     if (qzi.numberOfQuestions === numberOfAnswers) {
-        recordExamResult(ans);
+        recordExamResult();
     }
 };
 
-function recordExamResult(ans) {
+function recordExamResult() {
+    console.log("recordExamResult()");
+    var adminID = getParameterByName('admin');
+    var classID = getParameterByName('classid');
+    var quizNumber = getParameterByName('quizno');
     // Fire and forget
-    apiRequest(
-        
-    );
+    var ignore = apiRequest(
+        '/?admin='
+            + adminID
+            + '&page=quiz'
+            + '&cmd=recordexamresult'
+        , {
+            classid:classID,
+            quizno:quizNumber,
+            studentid:qzi.currentStudentID,
+            answers:qzi.clientResult
+        });
+    if (false === ignore) return;
     qzi.serverResults[ans.studentID] = qzi.clientResult;
     qzi.clientResult = {};
     qzi.currentStudentID = false;
@@ -115,6 +141,7 @@ function recordExamResult(ans) {
 };
 
 function checkExamsComplete() {
+    console.log("checkExamsComplete()");
     // Are there no more exams to process?
     var numberOfStudents = 0;
     for (var key in qzi.serverResults) {
@@ -126,19 +153,93 @@ function checkExamsComplete() {
 };
 
 function showError (lst) {
-    
+    console.log("showError(): "+lst);
+    var showErrors = document.getElementById('show-errors');
+    for (var i=0,ilen=showErrors.childNodes.length;i<ilen;i+=1) {
+        showErrors.removeChild(showErrors.childNodes[0]);
+    }
+    showErrors.style.visibility = 'visible';
+    for (var i=0,ilen=lst.length;i<ilen;i+=1) {
+        console.log("  appending"+i+" "+lst[i]);
+        var node = document.createElement('div');
+        node.innerHTML = lst[i];
+        showErrors.appendChild(node);
+        console.log("  appended"+i+" "+lst[i]);
+    }
 };
 
 function clearError () {
-    
+    var showErrors = document.getElementById('show-errors');
+    for (var i=0,ilen=showErrors.childNodes.length;i<ilen;i+=1) {
+        showErrors.removeChild(showErrors.childNodes[0]);
+    }
+    var placeholder = document.createElement('div');
+    placeholder.innerHTML = '&nbsp;';
+    showErrors.appendChild(placeholder);
+    showErrors.style.visibility = 'hidden';    
 };
 
 function showAnswers () {
-    var rightAnswer = false;
-    if (ans.choice === qzi.correctAnswers[ans.questionNumber]) {
-        rightAnswer = true;
+    console.log("showAnswers()");
+    var column = {};
+    var questionCol = {};
+    var questionNumbers = [];
+    for (var questionNumber in qzi.correctAnswers) {
+        questionNumbers.push(parseInt(questionNumber,10));
     }
-    
+    questionNumbers.sort(function(a,b){if(a>b){return 1}else if(a<b){return -1}else{return 0}});
+    // round up
+    var segLen = parseInt(questionNumbers.length/3)+1;
+    for (var i=1,ilen=4;i<ilen;i+=1) {
+        // Set column splits
+        var segStart = segLen * (i-1);
+        var segEnd = segLen * i;
+        console.log("Column "+i+": "+segStart+" to "+segEnd);
+        var seg = questionNumbers.slice(segStart,segEnd);
+        console.log("SEG: "+seg);
+        for (var j=0,jlen=seg.length;j<jlen;j+=1) {
+            questionCol[seg[j]] = i;
+        }
+        // Clear the columns
+        column[i] = document.getElementById('answer-column-' + i);
+        for (var j=0,jlen=column[i].childNodes.length;j<jlen;j+=1) {
+            column[i].removeChild(column[i].childNodes[0]);
+        }
+    }
+    console.log("showAnswers()[2]");
+    // Write available results to columns
+    var myQuestionNumbers = [];
+    for (var questionNumber in qzi.clientResult) {
+        myQuestionNumbers.push(parseInt(questionNumber,10));
+    }
+    myQuestionNumbers.sort(function(a,b){if(a>b){return 1}else if(a<b){return -1}else{return 0}});
+    console.log("showAnswers()[3]: "+myQuestionNumbers.length);
+    for (var i=0,ilen=myQuestionNumbers.length;i<ilen;i+=1) {
+        var questionLabel = 'Question ' + myQuestionNumbers[i];
+        var rightWrong = document.createElement('span');
+        console.log("XX "+myQuestionNumbers[i]+" "+qzi.clientResult[myQuestionNumbers[i]] + " " + qzi.correctAnswers[myQuestionNumbers[i]]);
+        if (qzi.clientResult[myQuestionNumbers[i]] == qzi.correctAnswers[myQuestionNumbers[i]]) {
+            rightWrong.innerHTML = '\u25ef';
+            rightWrong.setAttribute('style','color:green;text-weight:bold;')
+        } else {
+            rightWrong.innerHTML = '\u00d7';
+            rightWrong.setAttribute('style', 'color:red;font-size:larger;');
+        }
+        var tRow = document.createElement('tr');
+        var tLabel = document.createElement('td');
+        tLabel.innerHTML = questionLabel;
+        var tResult = document.createElement('td');
+        tResult.appendChild(rightWrong);
+        tRow.appendChild(tLabel);
+        tRow.appendChild(tResult);
+        var container = column[questionCol[myQuestionNumbers[i]]];
+        console.log("showAnswers()[appending row child]");
+        container.appendChild(tRow);
+    }
+};
+
+function showStudents () {
+
 };
 
 function downloadExam () {

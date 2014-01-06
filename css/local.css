@@ -58,7 +58,22 @@ span.quizzer-highlight {
 
 .rubric {
     font-weight: bold;
+    font-size: 120%;
     margin-top: 2em;
+}
+
+div.rubric blockquote {
+    margin: 1em;
+    padding: 1px 1em 1px 1em;
+    font-weight:normal;
+    border: 1px solid #000000;
+}
+
+div.rubric blockquote {
+    margin: 1em;
+    padding: 1px 1em 1px 1em;
+    font-weight:normal;
+    border: 1px solid #000000;
 }
 
 div.comment-container {
