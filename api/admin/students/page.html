@@ -16,7 +16,7 @@
       </div>
       <div class="button-bold">
         <input class="button" id="add-student-button" type="button" value="Add Student" onclick="addStudent()"/>
-        <input class="button" id="save-student-button" type="button" value="Save Student" onclick="saveStudent()" style="display:none;"/>
+        <input class="button" id="save-student-button" type="button" value="Save Student" onclick="saveAddStudent()" style="display:none;"/>
         <span id="student-boxes" style="display:none;">
           Name:
           <input id="student-name" type="text" size="20"/>
@@ -24,7 +24,10 @@
           <input id="student-email" type="text" size="20"/>
           External:
           <input id="student-status" type="checkbox"/>
+          Language:
+          <select id="student-language"/>
           <input id="student-id" type="text" size="5" style="display:none;"/>
+          
         </span>
       </div>
       <hr/>

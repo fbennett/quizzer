@@ -7,14 +7,24 @@
     background: #eeeeee;
 }
 
-div#student-list span {
+div#student-list span, div.bubble-edit {
     padding: 0.5em;
     margin: 2px;
     border-radius:1.2em;
     border: 1px solid #aaaaaa;
     line-height: 2.8em;
     white-space: nowrap;
+}
+
+div#student-list span {
     cursor:pointer;
+}
+
+div.bubble-edit {
+    border: 3px solid #aaaaaa;
+    border-radius:2em;
+    margin:0.5em 2px 0.5em 2px;
+    background:#f3f3f3;
 }
 
 div#student-list span:hover {
