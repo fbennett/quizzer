@@ -1,4 +1,4 @@
--- 3
+-- 4
 
 CREATE TABLE IF NOT EXISTS admin (
        adminID INTEGER PRIMARY KEY,
@@ -46,4 +46,4 @@ CREATE UNIQUE INDEX IF NOT EXISTS strings_idx ON strings(string);
 
 CREATE TABLE IF NOT EXISTS version (schema TEXT PRIMARY KEY, version INT);
 
-INSERT INTO version VALUES ('quizzer',3);
+INSERT INTO version VALUES ('quizzer',4);
