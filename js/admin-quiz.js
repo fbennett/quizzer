@@ -247,14 +247,14 @@ function downloadExam () {
     var classID = getParameterByName('classid');
     var quizNumber = getParameterByName('quizno');
     var downloadFrame = document.getElementById('download-frame');
-    downloadFrame.src = '/?admin='
-        + adminID
-        + '&page=quiz'
-        + '&cmd=downloadexam'
-        + '&classid='
-        + classID
-        + '&quizno='
-        + quizNumber
+    downloadFrame.src = fixPath('/quizzer/admin.html?admin='
+                                + adminID
+                                + '&page=quiz'
+                                + '&cmd=downloadexam'
+                                + '&classid='
+                                + classID
+                                + '&quizno='
+                                + quizNumber);
     setButtonState('mark-exam');
 };
 
