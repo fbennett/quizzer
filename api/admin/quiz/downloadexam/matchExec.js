@@ -138,7 +138,7 @@
             // We can just extend studentsInfo for this
             for (var i=0,ilen=studentsInfo.length;i<ilen;i+=1) {
                 var studentInfo = studentsInfo[i];
-                studentInfo.questions = quizObject.questions.slice();
+                studentInfo.questions = JSON.parse(JSON.stringify(quizObject.questions));
                 studentInfo.remap = sys.randomize(studentInfo.questions);
                 for (var j=0,jlen=studentInfo.questions.length;j<jlen;j+=1) {
                     var question = studentInfo.questions[j];
@@ -161,16 +161,11 @@
                 var questionsStr = '';
                 for (var j=0,jlen=studentInfo.questions.length;j<jlen;j+=1) {
                     var question = studentInfo.questions[j];
-                    // Reverse the remap
-                    var remap = {};
-                    for (var key in question.remap) {
-                        remap[question.remap] = key;
-                    }
                     var origQuestionNumber = question.questionNumber;
                     var choicesStr = '';
                     for (var k=0,klen=4;k<klen;k+=1) {
                         var latexChoice = examChoiceTemplate;
-                        var origChoice = remap[k];
+                        var origChoice = question.remap[k];
                         var studentIDoffset = '' + ('' + studentInfo.studentID).length;
                         var questionNumberoffset = '' + ('' + origQuestionNumber).length;
                         var barCode = studentIDoffset + questionNumberoffset + ('' + studentInfo.studentID) + ('' + origQuestionNumber) + ('' + origChoice);
@@ -226,7 +221,7 @@
                     var buf = sys.fs.readFileSync(latexDir + fileName);
                     zip.file(quizObject.zipName + '/' + fileName, buf.toString('base64'),{base64:true});
                 }
-	            var mydata = zip.generate({base64:false,compression:'DEFLATE'});
+	            var mydata = zip.generate({base64:false});
 	            sys.fs.writeFileSync(quizObject.zipDirName + '.zip', mydata, 'binary');
                 console.log('Done!\nSend the bundle back to the client.');
                 sys.fs.readFile(quizObject.zipDirName + '.zip',function(err, data){
