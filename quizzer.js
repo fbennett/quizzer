@@ -39,12 +39,16 @@
         var cogsClass = new cogsModule.cogsClass(sys,utils);
         var cogs = cogsClass.getCogs();
 
+        var scheduleModule = require('./lib/scheduler.js');
+        var scheduleClass = new scheduleModule.scheduleClass(sys);
+        scheduleClass.run();
+
         var apiModule = require('./lib/api.js');
         var apiClass = new apiModule.apiClass(sys,cogs);
         var api = apiClass.getApi();
 
         var serverModule = require('./lib/server.js');
-        var serverClass = new serverModule.serverClass(sys,api);
+        var serverClass = new serverModule.serverClass(sys,api,utils);
         serverClass.runServer();
     }
     exports.run = run;
