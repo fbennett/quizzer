@@ -21,7 +21,8 @@
             + "res.correct,res.correctID,cc.string AS correctText,"
             + "res.wrong,res.wrongID,ww.string AS wrongText,"
             + "COUNT(res.studentID) AS count,"
-            + "COUNT(res.comment) AS commentCount "
+            + "COUNT(res.comment) AS commentCount,"
+            + "group_concat(distinct res.lang) AS langs "
             + "FROM quizzes AS q "
             + "LEFT JOIN ("
             +     "SELECT DISTINCT qq.classID,qq.quizNumber,qq.questionNumber,qq.correct,aa.choice AS wrong,"
@@ -38,9 +39,11 @@
             +          "ELSE 0 END "
             +     "AS wrongID,"
             +     "qq.rubricID,aa.studentID,"
-            +     "cc.choice AS comment "
+            +     "cc.choice AS comment,"
+            +     "s.lang "
             +     "FROM questions AS qq "
             +     "JOIN answers AS aa ON aa.classID=qq.classID AND aa.quizNumber=qq.quizNumber AND aa.questionNumber=qq.questionNumber "
+            +     "JOIN students AS s ON s.studentID=aa.studentID "
             +     "LEFT JOIN comments AS cc ON cc.classID=aa.classID AND cc.quizNumber=aa.quizNumber AND cc.questionNumber=aa.questionNumber AND cc.choice=aa.choice "
             +     "WHERE NOT aa.choice=qq.correct AND qq.classID=? AND qq.quizNumber=? "
             +     "GROUP BY aa.quizNumber,aa.questionNumber,aa.choice,aa.studentID"
@@ -51,7 +54,7 @@
             + "JOIN classes AS cls ON cls.classID=q.classID "
             + "WHERE q.classID=? AND q.quizNumber=? AND res.questionNumber IS NOT NULL "
             + "GROUP BY q.quizNumber,res.questionNumber,res.wrong "
-            + "ORDER BY commentCount,count DESC;";
+            + "ORDER BY commentCount,count DESC,langs;";
         var mistakeCount = 0;
         var data = {commenter:commenter,commenterID:commenterID,mistakes:[]};
         // ZZZ console.log("SQL: "+sql);
@@ -66,9 +69,11 @@
                 var row = rows[i];
                 var questionNumber = row.questionNumber;
                 var wrongChoice = row.wrong;
+                var langs = row.langs;
                 var obj = {
                     questionNumber: questionNumber,
                     wrongChoice: wrongChoice,
+                    langs:langs,
                     rubric: row.rubricText,
                     correct: row.correctText,
                     wrong: row.wrongText,

@@ -32,7 +32,12 @@ function showMistakes () {
         mistakeDiv.setAttribute('id', 'mistake-' + mistake.questionNumber + '-' + mistake.wrongChoice);
         var rubricText = markdown(mistake.rubric);
         var correctText = markdown(mistake.correct);
-        var wrongText = markdown(mistake.wrong);
+        var langBubbles = '';
+        if (mistake.langs) {
+            var langs = mistake.langs.split(',');
+            langBubbles = ' <div class="language-bubble">' + langs.join('</div> <div class="language-bubble">') + '</div>';
+        }
+        var wrongText = markdown(langBubbles + mistake.wrong);
         var buttonMode = {edit:'none',comment:'inline',save:'none'};
         if (mistake.hasCommenterComment) {
             buttonMode = {edit:'inline',comment:'none',save:'none'};

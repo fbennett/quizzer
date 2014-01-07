@@ -1,3 +1,18 @@
 div#quiz-mistakes {
      margin-bottom:2em;
 }
+
+.language-bubble {
+    font-family:mono;
+    border:1px solid black;
+    padding: 0.3em;
+    border-radius:1em;
+    background:white;
+    float:right;
+    margin-top:-0.8em;
+}
+
+.wrong-answer {
+    position:relative;
+}
+
