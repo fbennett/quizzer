@@ -42,7 +42,10 @@
             sys.db.all('SELECT questionNumber,choice FROM answers WHERE classID=? AND quizNumber=? AND studentID=?',[classID,quizNumber,studentID],function(err,rows){
                 if (err||!rows) {return oops(response,err,'quiz/getcorrectanswers(3)')};
                 for (var i=0,ilen=rows.length;i<ilen;i+=1) {
-                    quizInfo.serverResults[studentID] = {};
+                    var row = rows[i];
+                    if (!quizInfo.serverResults[studentID]) {
+                        quizInfo.serverResults[studentID] = {};
+                    }
                     quizInfo.serverResults[studentID][row.questionNumber] = row.choice;
                 };
                 studentsCount += -1;

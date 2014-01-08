@@ -1,5 +1,6 @@
 var qzi = {};
 function markExam () {
+    console.log("markExam()");
     var adminID = getParameterByName('admin');
     var classID = getParameterByName('classid');
     var quizNumber = getParameterByName('quizno');
@@ -17,20 +18,13 @@ function markExam () {
     qzi.correctAnswers = result.correctAnswers;
     qzi.studentNames = result.studentNames;
     qzi.serverResults = result.serverResults;
+    console.log("SERVER RESULTS: "+JSON.stringify(qzi.serverResults));
     qzi.numberOfStudents = result.numberOfStudents;
     qzi.numberOfQuestions = result.numberOfQuestions;
     qzi.clientResult = {};
     qzi.currentStudentID = false;
-    var questionsDisplayNodes = document.getElementsByClassName('questions-display');
-    var markingDisplayNodes = document.getElementsByClassName('marking-display');
-    for (var i=0,ilen=questionsDisplayNodes.length;i<ilen;i+=1) {
-        questionsDisplayNodes[i].style.display = 'none';
-    }
-    
-    for (var i=0,ilen=markingDisplayNodes.length;i<ilen;i+=1) {
-        markingDisplayNodes[i].style.display = 'block';
-    }
-    showStudents();
+    setDisplayMode('marking');
+    clearMarksheet();
     var inputNode = document.getElementById('string-input');
     inputNode.setAttribute('onkeypress','keystrokeHandler(event);');
     inputNode.focus();
@@ -60,6 +54,7 @@ function keystrokeHandler(event) {
 };
 
 function checkAlreadyDone(ans) {
+    console.log("checkAlreadyDone()");
     clearError();
     // Is this student already done?
     console.log("checkAlreadyDone()");
@@ -71,6 +66,7 @@ function checkAlreadyDone(ans) {
 };
 
 function checkIncomplete(ans) {
+    console.log("checkIncomplete()");
     // If there was a previous exam, is it complete?
     console.log("checkIncomplete()");
     if (qzi.currentStudentID && qzi.currentStudentID != ans.studentID) {
@@ -87,7 +83,6 @@ function checkAlreadyAnswered(ans) {
     // Does this answer conflict? If so, it's an error
     console.log("checkAlreadyAnswered()");
     if ("undefined" !== typeof qzi.clientResult[ans.questionNumber]) {
-        console.log("");
         showError(['Question ' + ans.questionNumber + ' is already done.',
                   'Deleting both responses, please try again.']);
         delete qzi.clientResult[ans.questionNumber];
@@ -112,16 +107,17 @@ function checkExamComplete(ans) {
         numberOfAnswers += 1;
     }
     if (qzi.numberOfQuestions === numberOfAnswers) {
-        recordExamResult();
+        recordExamResult(ans);
     }
 };
 
-function recordExamResult() {
+function recordExamResult(ans) {
     console.log("recordExamResult()");
     var adminID = getParameterByName('admin');
     var classID = getParameterByName('classid');
     var quizNumber = getParameterByName('quizno');
     // Fire and forget
+    console.log("CALLING: recordexamresult");
     var ignore = apiRequest(
         '/?admin='
             + adminID
@@ -137,6 +133,11 @@ function recordExamResult() {
     qzi.serverResults[ans.studentID] = qzi.clientResult;
     qzi.clientResult = {};
     qzi.currentStudentID = false;
+    updateStudentsComplete();
+};
+
+function updateStudentsComplete() {
+    clearMarksheet();
     checkExamsComplete();
 };
 
@@ -148,7 +149,9 @@ function checkExamsComplete() {
         numberOfStudents += 1;
     }
     if (qzi.numberOfStudents === numberOfStudents) {
-        setButtonState('exam-completely-marked');
+        setButtonState('exam-results');
+        buildQuestionList();
+        //setDisplayMode('marking');
     }
 };
 
@@ -160,11 +163,9 @@ function showError (lst) {
     }
     showErrors.style.visibility = 'visible';
     for (var i=0,ilen=lst.length;i<ilen;i+=1) {
-        console.log("  appending"+i+" "+lst[i]);
         var node = document.createElement('div');
         node.innerHTML = lst[i];
         showErrors.appendChild(node);
-        console.log("  appended"+i+" "+lst[i]);
     }
 };
 
@@ -194,9 +195,7 @@ function showAnswers () {
         // Set column splits
         var segStart = segLen * (i-1);
         var segEnd = segLen * i;
-        console.log("Column "+i+": "+segStart+" to "+segEnd);
         var seg = questionNumbers.slice(segStart,segEnd);
-        console.log("SEG: "+seg);
         for (var j=0,jlen=seg.length;j<jlen;j+=1) {
             questionCol[seg[j]] = i;
         }
@@ -217,7 +216,6 @@ function showAnswers () {
     for (var i=0,ilen=myQuestionNumbers.length;i<ilen;i+=1) {
         var questionLabel = 'Question ' + myQuestionNumbers[i];
         var rightWrong = document.createElement('span');
-        console.log("XX "+myQuestionNumbers[i]+" "+qzi.clientResult[myQuestionNumbers[i]] + " " + qzi.correctAnswers[myQuestionNumbers[i]]);
         if (qzi.clientResult[myQuestionNumbers[i]] == qzi.correctAnswers[myQuestionNumbers[i]]) {
             rightWrong.innerHTML = '\u25ef';
             rightWrong.setAttribute('style','color:green;text-weight:bold;')
@@ -233,13 +231,63 @@ function showAnswers () {
         tRow.appendChild(tLabel);
         tRow.appendChild(tResult);
         var container = column[questionCol[myQuestionNumbers[i]]];
-        console.log("showAnswers()[appending row child]");
         container.appendChild(tRow);
     }
 };
 
-function showStudents () {
+function clearMarksheet () {
+    var cols = [];
+    for (var i=1,ilen=4;i<ilen;i+=1) {
+        var col = document.getElementById('answer-column-' + i);
+        for (var j=0,jlen=col.childNodes.length;j<jlen;j+=1) {
+            col.removeChild(col.childNodes[0]);
+        }
+    }
+    var studentName = document.getElementById('student-name');
+    studentName.innerHTML = '???';
+    showStudents();
+};
 
+function showStudents () {
+    console.log("showStudents()");
+    var studentList = document.getElementById("student-list");
+    for (var i=0,ilen=studentList.childNodes.length;i<ilen;i+=1) {
+        studentList.removeChild(studentList.childNodes[0]);
+    }
+    // Sort in descending order of score
+    var lst = [];
+    for (var studentID in qzi.serverResults) {
+        var score = 0;
+        for (var questionNumber in qzi.serverResults[studentID]) {
+            if (qzi.correctAnswers[questionNumber] == qzi.serverResults[studentID][questionNumber]) {
+                score += 1;
+            }
+        }
+        var obj = {
+            studentID:studentID,
+            score:score
+        }
+        lst.push(obj);
+    }
+    lst.sort(
+        function (a,b) {
+            if (a.score>b.score) {
+                return -11;
+            } else if (a.score<b.score) {
+                return 1;
+            } else {
+                return 0;
+            }
+        }
+    );
+    // Display
+    for (var i=0,ilen=lst.length;i<ilen;i+=1) {
+        var obj = lst[i];
+        var studentTR = document.createElement('tr');
+        studentTR.innerHTML = '<td><b>' + qzi.studentNames[obj.studentID] + '</b></td>'
+            + '<td style="text-align:right;">(' + obj.score + '/' + qzi.numberOfQuestions + ')</td>';
+        studentList.appendChild(studentTR);
+    }
 };
 
 function downloadExam () {
@@ -259,6 +307,7 @@ function downloadExam () {
 };
 
 function buildQuestionList (quizobj) {
+    console.log("buildQuestionList()");
     var adminID = getParameterByName('admin');
     var classID = getParameterByName('classid');
     var quizNumber = getParameterByName('quizno');
@@ -270,6 +319,7 @@ function buildQuestionList (quizobj) {
     // Call for quiz questions
     if (!quizobj) {
         // if rows is nil, call the server.
+        console.log("CALLING: readquestions");
         var quizobj = apiRequest(
             '/?admin='
                 + adminID
@@ -286,8 +336,6 @@ function buildQuestionList (quizobj) {
     button.disabled = false;
     qzi.pending = quizobj.pending;
     if (quizobj.examName) {
-        console.log("SETTING EXAM BUTTON");
-        
         setButtonState('download-exam',questionsLst,quizobj.pending);
     } else {
         setButtonState('send-quiz',questionsLst,quizobj.pending);
@@ -310,7 +358,6 @@ function disableEditing () {
     var radios = document.getElementsByClassName('selection');
     for (var i=0,ilen=radios.length;i<ilen;i+=1) {
         var radio = radios[i];
-        console.log("tagName: "+radio.tagName);
         if (radio.tagName.toLowerCase() == "input") {
             var marker = document.createElement('span');
             marker.setAttribute('class','selection');
@@ -630,6 +677,25 @@ function displayQuestion (qobj, questionNumber) {
     node.appendChild(button);
 }
 
+function setDisplayMode (mode) {
+    if (mode === 'marking') {
+        questionsMode = 'none';
+        markingMode = 'block';
+    } else {
+        questionsMode = 'block';
+        markingMode = 'none';
+    }
+    var questionsDisplayNodes = document.getElementsByClassName('questions-display');
+    var markingDisplayNodes = document.getElementsByClassName('marking-display');
+    for (var i=0,ilen=questionsDisplayNodes.length;i<ilen;i+=1) {
+        questionsDisplayNodes[i].style.display = questionsMode;
+    }
+    
+    for (var i=0,ilen=markingDisplayNodes.length;i<ilen;i+=1) {
+        markingDisplayNodes[i].style.display = markingMode;
+    }
+};
+
 function setButtonState (state,lst) {
     var pending = qzi.pending;
     if ("undefined" === typeof lst) {
@@ -645,8 +711,12 @@ function setButtonState (state,lst) {
     } else {
         sendQuiz.disabled = false;
     }
-    if ('download-exam' === state && pending > 0) {
-        state = 'mark-exam';
+    if ('download-exam' === state) {
+        if (pending > 0) {
+            state = 'mark-exam';
+        } else if (pending === 0) {
+            state = 'exam-results';
+        }
     }
     switch (state) {
     case 'send-quiz':
@@ -686,6 +756,15 @@ function setButtonState (state,lst) {
         quizDone.style.display = 'none';
         downloadExam.style.display = 'inline';
         markExam.style.display = 'none';
+        break;
+    case 'exam-results':
+        console.log("  Set exam-results");
+        quizDone.style.display = 'none';
+        downloadExam.style.display = 'none';
+        markExam.value = 'Display Results';
+        markExam.style.display = 'inline';
+        sendQuiz.style.display = 'none';
+        disableEditing();
         break;
     case 'mark-exam':
         console.log("  Set mark-exam");
