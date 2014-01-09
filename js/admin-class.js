@@ -40,6 +40,9 @@ function buildQuizList (rows) {
         container.removeChild(container.childNodes[0]);
     }
     // Rebuild container content
+    if (rows.length === 0) {
+        rows = [{number:1,isnew:-1}];
+    }
     for (var i=0,ilen=rows.length;i<ilen;i+=1) {
         var row = rows[i];
         var nameText;
