@@ -15,7 +15,9 @@
 
         sys.db.get('SELECT qz.examName,c.name AS className FROM classes AS c LEFT JOIN quizzes AS qz ON c.classID=qz.classID WHERE qz.classID=? AND qz.quizNumber=?',[classID,quizNumber],function(err,row){
             if (err) {return oops(response,err,'*quiz(1)')};
-            getQuizOrResult(row.className,row.examName);
+            if (row) {
+                getQuizOrResult(row.className,row.examName);
+            }
         });
         
         function getQuizOrResult(className,examName) {
