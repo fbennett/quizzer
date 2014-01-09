@@ -5,12 +5,14 @@
         var classID = params.classid;
         var quizNumber = params.quizno;
         var pathName = params.pathname;
+        var forcemail = params.forcemail;
         var sys = this.sys;
         // var hostname 
         var hostname = this.sys.proxy_hostname;
         // var port
         var port = ':' + this.sys.real_port;
         var email_account = this.sys.email_account;
+        var studentCount = 0;
 
         // Hack for reverse proxy support
         var stub = '/';
@@ -28,40 +30,60 @@
             + "@@LINKS@@"
         var back = "Sincerely yours,\n"
             + "The Academic Writing team"
-        // Okay. We need to refresh the student keys before running the code below.
-        sys.db.all('SELECT m.studentID,s.name,s.email,c.name AS className FROM memberships AS m JOIN students AS s ON s.studentID=m.studentID JOIN quizzes AS q ON q.classID=m.classID JOIN classes AS c ON c.classID=m.classID WHERE m.classID=? AND q.quizNumber=? AND (NOT q.sent OR m.studentID NOT IN (SELECT studentID FROM answers AS a WHERE a.classID=? AND a.quizNumber=?));',[classID,quizNumber,classID,quizNumber],function(err,rows){
+
+        // Okay.
+        // Get list of recipients
+        // update recipient keys
+        // 
+        var sql = 'SELECT m.studentID,s.name,s.email,c.name AS className '
+            + 'FROM memberships AS m '
+            + 'JOIN students AS s ON s.studentID=m.studentID '
+            + 'JOIN quizzes AS q ON q.classID=m.classID '
+            + 'JOIN classes AS c ON c.classID=m.classID '
+            + 'WHERE m.classID=? AND q.quizNumber=? '
+            +   'AND ('
+            +     'q.sent=0 '
+            +     'OR ('
+            +       'q.sent=1 AND ('
+            +         'm.last_mail_date IS NULL '
+            +         "OR JULIANDAY('now')-JULIANDAY(m.last_mail_date)>6"
+            +       ') '
+            +       'AND m.studentID NOT IN ('
+            +         'SELECT studentID '
+            +           'FROM answers AS a '
+            +           'WHERE a.classID=? '
+            +             'AND a.quizNumber=?'
+            +       ')'
+            +     ')'
+            +   ');';
+
+        // Get students for processing
+        sys.db.all(sql,[classID,quizNumber,classID,quizNumber],function(err,rows){
             if (err||!rows) {return oops(response,err,'quiz/sendquiz(1)')};
             var datalst = [];
+            studentCount += rows.length;
             for (var i=0,ilen=rows.length;i<ilen;i+=1) {
                 var row = rows[i];
                 var studentID = row.studentID;
                 var name = row.name;
                 var email = row.email;
                 var className = row.className;
-                var studentKey = sys.getRandomKey(8,36);
                 // This is a list of students to receive mail in this class.
                 // Keys need to be updated for all keys of these students, in this class.
-                updateStudentKeys(studentKey,classID,studentID,email,name,className);
+                updateStudentKey(classID,studentID,email,name,className);
             }
         });
 
-        function updateStudentKeys (studentKey,classID,studentID,email,name,className) {
+        function updateStudentKey (classID,studentID,email,name,className) {
+            var studentKey = sys.getRandomKey(8,36);
             sys.db.run('UPDATE memberships SET studentKey=? WHERE classID=? AND studentID=?',[studentKey,classID,studentID],function(err){
                 if (err) {return oops(response,err,'quiz/sendquiz(2)')};
                 // Good, so this does that. Flag as sent, and send the mail message.
-                updateSentFlag(studentKey,classID,studentID,email,name,className);
-            });
-            
-        };
-
-        function updateSentFlag (studentKey,classID,studentID,email,name,className) {
-            sys.db.run('UPDATE quizzes SET sent=1 WHERE classID=? AND quizNumber=?',[classID,quizNumber],function(err){
-                if (err) {return oops(response,err,'quiz/sendquiz(3)')};
                 sys.membershipKeys[classID][studentID] = studentKey;
                 sendMail(quizNumber,studentID,studentKey,name,email,className);
             });
         };
-        
+
         function sendMail (quizNumber,studentID,studentKey,name,email,className) {
             var link = template_link
                 .replace(/@@STUDENT_ID@@/g,studentID)
@@ -69,7 +91,7 @@
                 .replace(/@@QUIZ_NUMBER@@/g,quizNumber);
             var front = front_template.replace(/@@NAME@@/,name)
             var pastLinks = 0;
-            sys.db.all('SELECT q.quizNumber FROM questions AS q JOIN quizzes AS qz ON qz.classID=q.classID AND qz.quizNumber=q.quizNumber WHERE q.classID=? AND NOT q.quizNumber=? AND qz.sent GROUP BY q.quizNumber',[classID,quizNumber],function(err,rows){
+            sys.db.all('SELECT q.quizNumber FROM questions AS q JOIN quizzes AS qz ON qz.classID=q.classID AND qz.quizNumber=q.quizNumber WHERE q.classID=? AND NOT q.quizNumber=? AND qz.sent=1 GROUP BY q.quizNumber',[classID,quizNumber],function(err,rows){
                 if (err) {return oops(response,err,'quiz/sendquiz(3)')};
                 var middle = '';
                 var msg;
@@ -79,13 +101,14 @@
                 } else {
                     // add note of past quiz links
                     var links = '';
+                    var otherQuizNumber;
                     for (var i=0,ilen=rows.length;i<ilen;i+=1) {
                         var row = rows[i];
-                        quizNumber = row.quizNumber;
+                        otherQuizNumber = row.quizNumber;
                         links += template_link
                             .replace(/@@STUDENT_ID@@/g,studentID)
                             .replace(/@@STUDENT_KEY@@/g,studentKey)
-                            .replace(/@@QUIZ_NUMBER@@/g,quizNumber);
+                            .replace(/@@QUIZ_NUMBER@@/g,otherQuizNumber);
                     }
                     var middle = template_middle
                         .replace(/@@LINKS@@/g,links);
@@ -98,8 +121,30 @@
                     to:      email,
                      subject: className + ': Quiz ' + quizNumber
                 }, function(err, message) { console.log(err || message); });
+
+                refreshDateStamp(classID,studentID);
             });
         }
+
+        function refreshDateStamp(classID,studentID) {
+            sys.db.run('UPDATE memberships SET last_mail_date=DATE("now") WHERE classID=? AND studentID=?',[classID,studentID],function(err){
+                if (err) {return oops(response,err,'quiz/sendquiz(4)')};
+                studentCount += -1;
+                console.log("Student count is now: "+studentCount);
+                if (!studentCount) {
+                    updateSentFlag(classID,quizNumber);
+                }
+            });
+        }
+
+        function updateSentFlag (classID,quizNumber) {
+            sys.db.run('UPDATE quizzes SET sent=1 WHERE classID=? AND quizNumber=?',[classID,quizNumber],function(err){
+                if (err) {return oops(response,err,'quiz/sendquiz(5)')};
+                console.log("Updated SENT flag at last!");
+            });
+        };
+
+
         //
         response.writeHead(500, {'Content-Type': 'text/plain'});
         response.end("Testing ...");

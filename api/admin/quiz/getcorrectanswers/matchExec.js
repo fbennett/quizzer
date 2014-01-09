@@ -29,12 +29,17 @@
         function getStudentNames () {
             sys.db.all('SELECT s.name,s.studentID FROM memberships AS m JOIN students AS s ON s.studentID=m.studentID WHERE m.classID=? AND (s.privacy IS NULL OR s.privacy=0)',[classID],function(err,rows){
                 if (err||!rows) {return oops(response,err,'quiz/getcorrectanswers(2)')};
-                studentsCount += rows.length;
-                for (var i=0,ilen=rows.length;i<ilen;i+=1) {
-                    var row = rows[i];
-                    quizInfo.studentNames[row.studentID] = row.name;
-                    quizInfo.numberOfStudents += 1;
-                    getAnswers(row.studentID);
+                if (rows.length) {
+                    studentsCount += rows.length;
+                    for (var i=0,ilen=rows.length;i<ilen;i+=1) {
+                        var row = rows[i];
+                        quizInfo.studentNames[row.studentID] = row.name;
+                        quizInfo.numberOfStudents += 1;
+                        getAnswers(row.studentID);
+                    }
+                } else {
+                    response.writeHead(200, {'Content-Type': 'application/json'});
+                    response.end(JSON.stringify(quizInfo));
                 }
             });
         };
