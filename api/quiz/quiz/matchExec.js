@@ -11,7 +11,8 @@
         var studentID = params.studentid;
         var page = this.page.toString();
         var altpage = this.altpage.toString();
-        var errpage = this.errpage;
+        var errpage = '<html>\n'
+            + '<head><title>Page removed</title></head><body><h1>Our apologies!</h1><p>This page has been removed. Sorry for the inconvenience.</p></body></html>';
 
         console.log("Errpage: "+errpage);
 
