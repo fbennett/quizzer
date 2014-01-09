@@ -295,3 +295,18 @@ function buttonMode (mode) {
         nonSubmittersButton.style.display = 'inline';
     }
 }
+
+function setUploadURL () {
+    var adminID = getParameterByName('admin');
+    var classID = getParameterByName('classid');
+    var uploadURL = fixPath(
+        '?admin='
+            + adminID
+            + '&page=class'
+            + '&cmd=uploadstudentlist'
+            + '&classid='
+            + classID
+    );
+    var classRegistrationWidget = document.getElementById('class-registration-widget');
+    classRegistrationWidget.setAttribute('action',uploadURL);
+};

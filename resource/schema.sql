@@ -41,6 +41,7 @@ CREATE TABLE IF NOT EXISTS comments (commentID INTEGER PRIMARY KEY, classID INTE
 CREATE UNIQUE INDEX IF NOT EXISTS comments_idx ON comments(classID,quizNumber,questionNumber,choice,commenter);
 
 CREATE TABLE IF NOT EXISTS showing (showID INTEGER PRIMARY KEY, adminID INTEGER, classID INTEGER, studentID INTEGER);
+CREATE UNIQUE INDEX IF NOT EXISTS showing_idx ON showing(adminID,classID,studentID);
 
 CREATE TABLE IF NOT EXISTS strings (stringID INTEGER PRIMARY KEY, string TEXT);
 CREATE UNIQUE INDEX IF NOT EXISTS strings_idx ON strings(string);

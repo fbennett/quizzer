@@ -295,7 +295,7 @@ function downloadExam () {
     var classID = getParameterByName('classid');
     var quizNumber = getParameterByName('quizno');
     var downloadFrame = document.getElementById('download-frame');
-    downloadFrame.src = fixPath('/quizzer/admin.html?admin='
+    downloadFrame.src = fixPath('?admin='
                                 + adminID
                                 + '&page=quiz'
                                 + '&cmd=downloadexam'

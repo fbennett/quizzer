@@ -1,13 +1,14 @@
 <html>
 <head>
   <title>Quizzer Admin - @@CLASS@@</title>
+  <meta charset="UTF-8">
   <script type="text/javascript" src="js/local.js"></script>  
   <script type="text/javascript" src="js/admin-class.js"></script>
   <link rel="stylesheet" type="text/css" href="css/simple-grid.css"/>
   <link rel="stylesheet" type="text/css" href="css/local.css"/>
   <link rel="stylesheet" type="text/css" href="css/admin-class.css"/>
 </head>
-<body onLoad="buildQuizList();buildMemberLists();">
+<body onLoad="buildQuizList();buildMemberLists();setUploadURL();">
   <div class="grid grid-pad">
     <div class="col-1-1">
       <h1>Quizzer Admin</h1>
@@ -16,6 +17,13 @@
         <input class="button" type="button" value="Back" onclick="window.location = fixPath('/?admin=' + getParameterByName('admin') + '&page=classes')"/>
       </div>
       <div class="button-bold">
+        <form id="class-registration-widget"
+              enctype="multipart/form-data"
+              action="SET_BY_BROWSER_JS"
+              method="post">
+          <input type="file" id="class-registration-list" name="classRegistrationList" />
+          <input type="submit" value="Submit">
+        </form>
         <input class="button" id="exam-setup" type="button" value="Exam" onclick="setupExam();"/>
         <input class="button" id="exam-create" type="button" value="Create Exam" onclick="createExam();" style="display:none;"/>
         <span id="exam-boxes" style="display:none;">
