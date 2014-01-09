@@ -11,12 +11,17 @@
         var studentID = params.studentid;
         var page = this.page.toString();
         var altpage = this.altpage.toString();
+        var errpage = this.errpage;
 
+        console.log("Errpage: "+errpage);
 
         sys.db.get('SELECT qz.examName,c.name AS className FROM classes AS c LEFT JOIN quizzes AS qz ON c.classID=qz.classID WHERE qz.classID=? AND qz.quizNumber=?',[classID,quizNumber],function(err,row){
             if (err) {return oops(response,err,'*quiz(1)')};
             if (row) {
                 getQuizOrResult(row.className,row.examName);
+            } else {
+                response.writeHead(404, {'Content-Type': 'text/html'});
+                response.end(errpage);
             }
         });
         
