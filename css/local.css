@@ -119,3 +119,19 @@ div.commenter-name {
     background: white;
     border: 1px solid #aaaaaa;
 }
+
+table {
+    border-collapse:separate;
+    border-spacing: 0.5em;
+}
+
+th {
+    padding: 0.5em;
+    background:#eeeeee;
+    text-align:center !important;
+}
+
+td {
+    text-align:right;
+    padding: 0 0.5em 0 0.5em;
+}
