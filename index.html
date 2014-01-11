@@ -1,42 +1,136 @@
-<h1 id="quizzer">Quizzer</h1>
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <link href='https://fonts.googleapis.com/css?family=Chivo:900' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <title>Quizzer by fbennett</title>
+  </head>
+
+  <body>
+    <div id="container">
+      <div class="inner">
+
+        <header>
+          <h1>Quizzer</h1>
+          <h2>A simple and lightweight quiz engine with a node.js backend</h2>
+        </header>
+
+        <section id="downloads" class="clearfix">
+          <a href="https://github.com/fbennett/quizzer/zipball/master" id="download-zip" class="button"><span>Download .zip</span></a>
+          <a href="https://github.com/fbennett/quizzer/tarball/master" id="download-tar-gz" class="button"><span>Download .tar.gz</span></a>
+          <a href="https://github.com/fbennett/quizzer" id="view-on-github" class="button"><span>View on GitHub</span></a>
+        </section>
+
+        <hr>
+
+        <section id="main_content">
+          <h1>
+<a name="quizzer" class="anchor" href="#quizzer"><span class="octicon octicon-link"></span></a>Quizzer</h1>
+
 <p>A lightweight quiz engine for <code>node.js</code></p>
-<hr />
-<h2 id="overview">Overview</h2>
-<p>Quizzer is a tool for writing instruction. It is particularly suitable for:</p>
+
+<hr><h2>
+<a name="overview" class="anchor" href="#overview"><span class="octicon octicon-link"></span></a>Overview</h2>
+
+<p>Quizzer is a tool for writing instruction. It is particularly suitable
+for:</p>
+
 <ul>
 <li>Second language learners</li>
 <li>Students facing novel stylistic demands (such as in law school)</li>
 <li>Any teaching environment where staff resources are in short supply</li>
-</ul>
-<p>In contrast to many commercial offerings in the online education &quot;sphere&quot;, Quizzer is not designed to replace the instructor: it was build <em>by</em> an instructor, to enable more efficient and positive interaction with students over issues of grammar and style.</p>
-<p>Quizzer is simple to install and use. A couple of highlights to encourage the reader:</p>
+</ul><p>In contrast to many commercial offerings in the online education
+"sphere", Quizzer is not designed to replace the instructor: it was
+build <em>by</em> an instructor, to enable more efficient and positive
+interaction with students over issues of grammar and style.</p>
+
+<p>Quizzer is simple to install and use. A couple of highlights to
+encourage the reader:</p>
+
 <ul>
 <li>Students do not need to be issued IDs and passwords. It just works.</li>
 <li>The entire system can be installed with a single command.</li>
-</ul>
-<p>Quizzer makes intensive use of multiple-choice quizzes, <em>not</em> as a test of knowledge or of skill &quot;level&quot;, but as a lightweight means of encouraging students to engage positively with flaws in their writing. In our Academic Writing program in the Nagoya University Faculty of Law, Quizzer supports the following workflow:</p>
-<ol style="list-style-type: decimal">
-<li>Students submit a 400-word essay once each week on an arbitrary topic.</li>
-<li>The instructor selects one poorly-written sentence from each essay, and composes a multiple-choice question consisting of the student's own sentence, two alternatives that also contain errors, and a corrected version. <em>The essays themselves are not assessed.</em></li>
-<li>After constructing one question from each submitted essay, students are sent personalized links to the resulting quiz.</li>
-<li>Students submit their responses, which are recorded on the Quizzer server. Student receive feedback immediately feedback on their incorrect responses.</li>
-<li>Class commenters (TAs, instructors, and other experienced writers) post short explanations of why the wrong answers were wrong.</li>
-<li>When students revisit their quiz links, they will find both the comments, and a list of classmates who gave the correct answer to the questions that they missed.</li>
-<li>Students are given an assessed, paper-based, multiple-choice supplementary mid-term and final exam, consisting entirely of questions from the quizzes.</li>
-</ol>
-<p>Quiz distribtion, commenting, exam composition, and marking are all managed by Quizzer. Paper tests are randomized as a hedge against cheating, and marked with a barcode reader for quick assessment.</p>
-<p>As an additional feature suited to our own environment, the native languages of students choosing each wrong answer are shown in the commenter view. This allows satellite commenters (alumni with strong English writing skills, in our case) to provide guidance in the native language of the students concerned.</p>
-<p>The initial inspiration for Quizzer was a small <a href="http://chetan0389.blogspot.jp/2013/06/quiz-using-htmlcss-jquery-xml-javascript.html">code sample</a> posted by Chetan Jain. The code has been refactored and extended considerably for this project, but I gratefully acknowledge the starting point for this frolic. Hats off also to the developers of <code>node.js</code>, and <code>LaTeX</code> and, well, everything else. Quizzer was built on short notice to fill a critical need, and it has been a real pleasure to see how quickly the whole thing could be brought together.</p>
-<h2 id="basic-installation">Basic Installation</h2>
+</ul><p>Quizzer makes intensive use of multiple-choice quizzes, <em>not</em> as a
+test of knowledge or of skill "level", but as a lightweight means of
+encouraging students to engage positively with flaws in their
+writing. In our Academic Writing program in the Nagoya University
+Faculty of Law, Quizzer supports the following workflow:</p>
+
+<ol>
+<li>Students submit a 400-word essay once each week on an arbitrary
+topic.</li>
+<li>The instructor selects one poorly-written sentence from each
+essay, and composes a multiple-choice question consisting of the
+student's own sentence, two alternatives that also contain errors,
+and a corrected version. <em>The essays themselves are not assessed.</em>
+</li>
+<li>After constructing one question from each submitted essay, students
+are sent personalized links to the resulting quiz.</li>
+<li>Students submit their responses, which are recorded on the Quizzer
+server. Student receive feedback immediately feedback on their
+incorrect responses.</li>
+<li>Class commenters (TAs, instructors, and other experienced writers)
+post short explanations of why the wrong answers were wrong.</li>
+<li>When students revisit their quiz links, they will find
+both the comments, and a list of classmates who gave the correct answer
+to the questions that they missed.</li>
+<li>Students are given an assessed, paper-based, multiple-choice
+supplementary mid-term and final exam, consisting entirely of
+questions from the quizzes.</li>
+</ol><p>Quiz distribtion, commenting, exam composition, and marking are all
+managed by Quizzer. Paper tests are randomized as a hedge against
+cheating, and marked with a barcode reader for quick assessment.</p>
+
+<p>As an additional feature suited to our own environment, the native
+languages of students choosing each wrong answer are shown in the
+commenter view. This allows satellite commenters (alumni with
+strong English writing skills, in our case) to provide guidance
+in the native language of the students concerned.</p>
+
+<p>The initial inspiration for Quizzer was a small <a href="http://chetan0389.blogspot.jp/2013/06/quiz-using-htmlcss-jquery-xml-javascript.html">code
+sample</a>
+posted by Chetan Jain. The code has been refactored and extended
+considerably for this project, but I gratefully acknowledge the
+starting point for this frolic. Hats off also to the developers of
+<code>node.js</code>, and <code>LaTeX</code> and, well, everything else. Quizzer was built
+on short notice to fill a critical need, and it has been a real
+pleasure to see how quickly the whole thing could be brought together.</p>
+
+<h2>
+<a name="basic-installation" class="anchor" href="#basic-installation"><span class="octicon octicon-link"></span></a>Basic Installation</h2>
+
 <p>Install quizzer from the <code>npm</code> repository:</p>
-<pre><code>npm install quizzer</code></pre>
-<p>In addition to the dependencies pulled in by <code>npm</code>, Quizzer needs to have access to the external programs <code>pandoc</code> and <code>pdflatex</code>. Both should be available as package installs on your operating system (the latter as part of the <code>texlive</code> package).</p>
-<p>Run the server by saving the following code to a file (such as <code>quizServer.js</code>, say):</p>
-<pre><code>var qz = require(&#39;quizzer&#39;);
-qz.run();</code></pre>
+
+<pre><code>npm install quizzer
+</code></pre>
+
+<p>In addition to the dependencies pulled in by <code>npm</code>, Quizzer needs to
+have access to the external programs <code>pandoc</code> and <code>pdflatex</code>. Both
+should be available as package installs on your operating system (the
+latter as part of the <code>texlive</code> package).</p>
+
+<p>Run the server by saving the following code to a file (such as <code>quizServer.js</code>,
+say):</p>
+
+<pre><code>var qz = require('quizzer');
+qz.run();
+</code></pre>
+
 <p>Run the script from command line like this:</p>
-<pre><code>node ./quizServer.js</code></pre>
-<p>The script will whinge on first run, asking for some essential details:</p>
+
+<pre><code>node ./quizServer.js
+</code></pre>
+
+<p>The script will whinge on first run, asking for some essential
+details:</p>
+
 <pre><code>usage: quizServer.js [-h] [-v] [-H PROXY_HOSTNAME] [-p REAL_PORT]
                      [-e EMAIL_ACCOUNT] [-s SMTP_HOST]
 
@@ -45,7 +139,7 @@ Quizzer, a quiz server
 
 Optional arguments:
   -h, --help            Show this help message and exit.
-  -v, --version         Show program&#39;s version number and exit.
+  -v, --version         Show program's version number and exit.
   -H PROXY_HOSTNAME, --proxy-hostname PROXY_HOSTNAME
                         Host name for external access
   -p REAL_PORT, --real-port REAL_PORT
@@ -56,68 +150,167 @@ Optional arguments:
                         SMTP host name (e.g. smtp.gmail.com)
   ERROR: must set option smtp_host
   ERROR: must set option proxy_hostname
-  ERROR: must set option email_account</code></pre>
-<p>A GMail account can be used as <code>EMAIL_ACCOUNT</code>, with <code>smtp.gmail.com</code> as <code>SMTP_HOST</code>. <code>REAL_PORT</code> will default to <code>3498</code>, but can be set to other values for multiple server instances. For initial testing, <code>PROXY_HOSTNAME</code> should be set to <code>127.0.0.1</code> or <code>localhost</code>. Running again will yield this:</p>
-<pre><code>ERROR: file mypwd.txt not found: Error: ENOENT, no such file or directory &#39;./mypwd.txt&#39;</code></pre>
-<p>Save the email account password to disk in a file <code>mypwd.txt</code> (only the user running Quizzer should have access permissions on the file, obviously). This will get the server running:</p>
+  ERROR: must set option email_account
+</code></pre>
+
+<p>A GMail account can be used as <code>EMAIL_ACCOUNT</code>, with <code>smtp.gmail.com</code> as <code>SMTP_HOST</code>.
+<code>REAL_PORT</code> will default to <code>3498</code>, but can be set to other values for multiple
+server instances. For initial testing, <code>PROXY_HOSTNAME</code> should be set to <code>127.0.0.1</code>
+or <code>localhost</code>. Running again will yield this:</p>
+
+<pre><code>ERROR: file mypwd.txt not found: Error: ENOENT, no such file or directory './mypwd.txt'
+</code></pre>
+
+<p>Save the email account password to disk in a file <code>mypwd.txt</code> (only the user running
+Quizzer should have access permissions on the file, obviously). This will get the server
+running:</p>
+
 <pre><code>Wrote config parameters to quizzer-3498.cfg
 Quizzer can now be run with the single option: -p 3498
 Admin URL: http://localhost:3498/?admin=fyvg19vx
 Adding admin role
 Loaded class membership keys
-Done. Ready to shake, rattle and roll!</code></pre>
-<p>Connect to the listed URL with a browser, and you're ready to go. The database and configuration files are created in the directory from which the script is run, named after the port number. The server can be shut down with <code>CTRL-c</code> (<code>SIGINT</code>), and as the startup message says, it can be restarted with the single option <code>-p &lt;REAL_PORT&gt;</code> (Note that the <code>admin</code> key is automatically generated, and will differ from that shown in the example above.)</p>
-<h2 id="running-quizzer-behind-a-proxy">Running Quizzer behind a Proxy</h2>
-<p>When <code>PROXY_HOSTNAME</code> is set to a fully qualified domain name (e.g. <code>myschool.edu</code>), it will assume that it is being run behind a reverse proxy, and adjust URLs accordingly. Quizzer itself has only the thinnest concept of security, and should be run behind a proxy in production (and preferably over SSL). Access to the administrator display depends on a key set in the URL of a GET request. Rewrite rules on the front-end web server should be used to assure that attempts to set the key directly are rerouted through a password-protected URL.</p>
-<p>If <code>lighttpd</code> is used as the front-end server, and Quizzer is run from a directory <code>quizzer</code> to which the server has access, configuration settings like the following should do the trick:</p>
+Done. Ready to shake, rattle and roll!
+</code></pre>
+
+<p>Connect to the listed URL with a browser, and you're ready to go.  The
+database and configuration files are created in the directory from
+which the script is run, named after the port number. The server can
+be shut down with <code>CTRL-c</code> (<code>SIGINT</code>), and as the startup message
+says, it can be restarted with the single option <code>-p &lt;REAL_PORT&gt;</code>
+(Note that the <code>admin</code> key is automatically generated, and will differ
+from that shown in the example above.)</p>
+
+<h2>
+<a name="running-quizzer-behind-a-proxy" class="anchor" href="#running-quizzer-behind-a-proxy"><span class="octicon octicon-link"></span></a>Running Quizzer behind a Proxy</h2>
+
+<p>When <code>PROXY_HOSTNAME</code> is set to a fully qualified domain name
+(e.g. <code>myschool.edu</code>), it will assume that it is being run behind a
+reverse proxy, and adjust URLs accordingly. Quizzer itself has only
+the thinnest concept of security, and should be run behind a proxy in
+production (and preferably over SSL). Access to the administrator
+display depends on a key set in the URL of a GET request. Rewrite
+rules on the front-end web server should be used to assure that
+attempts to set the key directly are rerouted through a
+password-protected URL.</p>
+
+<p>If <code>lighttpd</code> is used as the front-end server, and Quizzer is run from
+a directory <code>quizzer</code> to which the server has access, configuration
+settings like the following should do the trick:</p>
+
 <pre><code>url.rewrite = (
-  &quot;^(?!/quizzer)(.*)\?admin=[^&amp;]+(?:&amp;(.*))*&quot; =&gt; &quot;/quizzer/admin.html$1?$2&quot;,
-  &quot;^(?!/quizzer)(.*)&amp;admin=[^&amp;]+(?:&amp;(.*))*&quot; =&gt; &quot;/quizzer/admin.html$1&amp;$2&quot;,
-  &quot;^/quizzer/admin.html$&quot; =&gt; &quot;/quizzer/admin.html?admin=fyvg19vx&quot;,
-  &quot;^/quizzer/admin.html\?(.*)$&quot; =&gt; &quot;/quizzer/admin.html?admin=fyvg19vx&amp;$1&quot;
+  "^(?!/quizzer)(.*)\?admin=[^&amp;]+(?:&amp;(.*))*" =&gt; "/quizzer/admin.html$1?$2",
+  "^(?!/quizzer)(.*)&amp;admin=[^&amp;]+(?:&amp;(.*))*" =&gt; "/quizzer/admin.html$1&amp;$2",
+  "^/quizzer/admin.html$" =&gt; "/quizzer/admin.html?admin=fyvg19vx",
+  "^/quizzer/admin.html\?(.*)$" =&gt; "/quizzer/admin.html?admin=fyvg19vx&amp;$1"
 )
 
-$HTTP[&quot;host&quot;] == &quot;faculty.of.things.edu&quot; {
-  proxy.server = ( &quot;/quizzer&quot; =&gt; ( ( &quot;host&quot; =&gt; &quot;127.0.0.1&quot;, &quot;port&quot; =&gt; 3498 ) ) )
+$HTTP["host"] == "faculty.of.things.edu" {
+  proxy.server = ( "/quizzer" =&gt; ( ( "host" =&gt; "127.0.0.1", "port" =&gt; 3498 ) ) )
 }
 
-auth.backend = &quot;htdigest&quot;
-auth.backend.htdigest.userfile = &quot;/etc/lighttpd/lighttpd.user&quot;
+auth.backend = "htdigest"
+auth.backend.htdigest.userfile = "/etc/lighttpd/lighttpd.user"
 
-auth.require = ( &quot;/quizzer/admin.html&quot; =&gt;
+auth.require = ( "/quizzer/admin.html" =&gt;
   (
-    &quot;method&quot; =&gt; &quot;basic&quot;,
-    &quot;realm&quot; =&gt; &quot;Quiz Admin&quot;,
-    &quot;require&quot; =&gt; &quot;user=quizmaster&quot;
+    "method" =&gt; "basic",
+    "realm" =&gt; "Quiz Admin",
+    "require" =&gt; "user=quizmaster"
   )
-)</code></pre>
-<h2 id="adding-commenters">Adding Commenters</h2>
-<p>Quizzer data is held in an <code>sqlite3</code> database, located in the directory from which the script is run, and named after the port number under which the instance is running.</p>
-<p>commenters are held in the <code>admin</code> table of the Quizzer database. There is no web interface to this table: add commenters by inserting them directly, using the <code>sqlite3</code> access tool, like so:</p>
-<pre><code>sqlite3&gt; INSERT INTO admin VALUES (NULL, &#39;jeff&#39;, &#39;ahTh3nie&#39;, 2, 0);</code></pre>
-<p>The <code>NULL</code> value in the first column is for the automatically-assigned numeric ID of the database row. The second column is the screen name of the commenter, which must be unique. The third column is the access key that will be included in the personal URL of the commenter, and must also be unique. Under Linux, the <code>pwgen</code> utility is a handy tool for creating these. The fourth column is the role of the commenter, and must be set to <code>2</code>. The fifth column is currently unused, but may eventually control the intervals at which scheduled key resets and reminder mailings occur.</p>
-<p>After commenters have been added to the <code>admin</code> table, their access URLs will be reported in the startup chatter. For example:</p>
+)
+</code></pre>
+
+<h2>
+<a name="adding-commenters" class="anchor" href="#adding-commenters"><span class="octicon octicon-link"></span></a>Adding Commenters</h2>
+
+<p>Quizzer data is held in an <code>sqlite3</code> database, located in the directory
+from which the script is run, and named after the port number under
+which the instance is running. </p>
+
+<p>commenters are held in the <code>admin</code> table of the Quizzer database.
+There is no web interface to this table: add commenters by inserting
+them directly, using the <code>sqlite3</code> access tool, like so:</p>
+
+<pre><code>sqlite3&gt; INSERT INTO admin VALUES (NULL, 'jeff', 'ahTh3nie', 2, 0);
+</code></pre>
+
+<p>The <code>NULL</code> value in the first column is for the automatically-assigned
+numeric ID of the database row. The second column is the screen
+name of the commenter, which must be unique. The third column is the
+access key that will be included in the personal URL of the commenter,
+and must also be unique. Under Linux, the <code>pwgen</code> utility is a handy
+tool for creating these. The fourth column is the role of the commenter,
+and must be set to <code>2</code>. The fifth column is currently unused, but may
+eventually control the intervals at which scheduled key resets and
+reminder mailings occur.</p>
+
+<p>After commenters have been added to the <code>admin</code> table, their
+access URLs will be reported in the startup chatter. For example:</p>
+
 <pre><code>Reading config from quizzer-3498.cfg
 Admin URL: http://localhost:3498/?admin=fyvg19vx
 Adding admin role
-Adding commenter &#39;adam&#39; with URL http://localhost:3498/?commenter=En5chaej
-Adding commenter &#39;bob&#39; with URL http://localhost:3498/?commenter=koosha1D
-Adding commenter &#39;chris&#39; with URL http://localhost:3498/?commenter=Ro5aise5
+Adding commenter 'adam' with URL http://localhost:3498/?commenter=En5chaej
+Adding commenter 'bob' with URL http://localhost:3498/?commenter=koosha1D
+Adding commenter 'chris' with URL http://localhost:3498/?commenter=Ro5aise5
 Loaded class membership keys
-Done. Ready to shake, rattle and roll!</code></pre>
-<p>The commenter links show a list of courses, and course links a list of quizzes with the number of uncommented mistakes, if any. Clicking on a quiz link opens a list of wrong answers, sorted in descending order of frequency among quiz-takers, and with already-commented answers pushed to the bottom.</p>
-<p><code>Markdown</code> syntax is recognized in comment text, with a few small extensions. To set markers in text, enclose a number or letter in double parens:</p>
-<pre><code>This will render as a circle-A: ((A))</code></pre>
-<p>For an explanation of why a wrong answer was wrong, set a single <code>&gt;</code> character at the beginning of the line, followed by the pasted text of the wrong answer to be explained:</p>
-<pre><code>&gt; Many new legislations were passed in 2010.</code></pre>
-<p>Mark text targeted for specific comment by wrapping it in double-quotes, opening with a single letter or number:</p>
+Done. Ready to shake, rattle and roll!
+</code></pre>
+
+<p>The commenter links show a list of courses, and course links a list
+of quizzes with the number of uncommented mistakes, if any. Clicking on
+a quiz link opens a list of wrong answers, sorted in descending order
+of frequency among quiz-takers, and with already-commented answers
+pushed to the bottom.</p>
+
+<p><code>Markdown</code> syntax is recognized in comment text, with a few small
+extensions. To set markers in text, enclose a number or letter in
+double parens:</p>
+
+<pre><code>This will render as a circle-A: ((A))
+</code></pre>
+
+<p>For an explanation of why a wrong answer was wrong,
+set a single <code>&gt;</code> character at the beginning of the line,
+followed by the pasted text of the wrong answer to be explained:</p>
+
+<pre><code>&gt; Many new legislations were passed in 2010.
+</code></pre>
+
+<p>Mark text targeted for specific comment by wrapping it in
+double-quotes, opening with a single letter or number:</p>
+
 <pre><code>&gt; ((1 Many)) new ((2 legislations)) ((3 were)) passed in 2010.
 
 ((2)) is a non-countable noun, and is *never* written
-with an &#39;s&#39;. With a non-countable noun, use &#39;much&#39;, not
-&#39;many&#39; at ((1)), and the singular verb form at ((3)).</code></pre>
+with an 's'. With a non-countable noun, use 'much', not
+'many' at ((1)), and the singular verb form at ((3)).
+</code></pre>
+
 <p>For a comment that states a pattern, open with two '&gt;' characters:</p>
-<pre><code>&gt;&gt; I studied *for* two hours.</code></pre>
-<p>For a comment that states a grammatical rule, open with three '&gt;' characters:</p>
-<pre><code>&gt;&gt;&gt; Never use the word &quot;nowadays&quot; in formal writing.</code></pre>
-<p>When set at the very beginning of an entry, the explanation, pattern, and rule prefixes trigger a tidy heading in the displayed entry.</p>
+
+<pre><code>&gt;&gt; I studied *for* two hours.
+</code></pre>
+
+<p>For a comment that states a grammatical rule, open with
+three '&gt;' characters:</p>
+
+<pre><code>&gt;&gt;&gt; Never use the word "nowadays" in formal writing.
+</code></pre>
+
+<p>When set at the very beginning of an entry, the explanation,
+pattern, and rule prefixes trigger a tidy heading in the displayed
+entry.</p>
+        </section>
+
+        <footer>
+          Quizzer is maintained by <a href="https://github.com/fbennett">fbennett</a><br>
+          This page was generated by <a href="http://pages.github.com">GitHub Pages</a>. Tactile theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.
+        </footer>
+
+        
+      </div>
+    </div>
+  </body>
+</html>
