@@ -77,7 +77,7 @@ and a corrected version. <em>The essays themselves are not assessed.</em>
 <li>After constructing one question from each submitted essay, students
 are sent personalized links to the resulting quiz.</li>
 <li>Students submit their responses, which are recorded on the Quizzer
-server. Student receive feedback immediately feedback on their
+server. Students receive feedback immediately feedback on their
 incorrect responses.</li>
 <li>Class commenters (TAs, instructors, and other experienced writers)
 post short explanations of why the wrong answers were wrong.</li>
@@ -102,7 +102,7 @@ sample</a>
 posted by Chetan Jain. The code has been refactored and extended
 considerably for this project, but I gratefully acknowledge the
 starting point for this frolic. Hats off also to the developers of
-<code>node.js</code>, and <code>LaTeX</code> and, well, everything else. Quizzer was built
+<code>node.js</code>, and LaTeX and, well, everything else. Quizzer was built
 on short notice to fill a critical need, and it has been a real
 pleasure to see how quickly the whole thing could be brought together.</p>
 
@@ -117,7 +117,8 @@ pleasure to see how quickly the whole thing could be brought together.</p>
 <p>In addition to the dependencies pulled in by <code>npm</code>, Quizzer needs to
 have access to the external programs <code>pandoc</code> and <code>pdflatex</code>. Both
 should be available as package installs on your operating system (the
-latter as part of the <code>texlive</code> package).</p>
+latter as part of the <code>texlive</code> package (on some systems, it
+may be necessary to obtain and install the <code>makebarcode</code> LaTeX package separately).</p>
 
 <p>Run the server by saving the following code to a file (such as <code>quizServer.js</code>,
 say):</p>
