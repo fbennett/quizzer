@@ -48,4 +48,3 @@ CREATE UNIQUE INDEX IF NOT EXISTS strings_idx ON strings(string);
 
 CREATE TABLE IF NOT EXISTS version (schema TEXT PRIMARY KEY, version INT);
 
-INSERT INTO version VALUES ('quizzer',6);
