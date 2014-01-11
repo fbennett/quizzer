@@ -313,3 +313,16 @@ function setUploadURL () {
     var classRegistrationWidget = document.getElementById('class-registration-widget');
     classRegistrationWidget.setAttribute('action',uploadURL);
 };
+
+function downloadClassList () {
+    var adminID = getParameterByName('admin');
+    var classID = getParameterByName('classid');
+    var downloadFrame = document.getElementById('download-frame');
+    downloadFrame.src = fixPath('?admin='
+                                + adminID
+                                + '&page=class'
+                                + '&cmd=downloadcsv'
+                                + '&classid='
+                                + classID);
+};
+
