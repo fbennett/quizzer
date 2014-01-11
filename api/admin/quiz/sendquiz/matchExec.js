@@ -51,8 +51,10 @@
             +       'AND m.studentID NOT IN ('
             +         'SELECT studentID '
             +           'FROM answers AS a '
-            +           'WHERE a.classID=? '
-            +             'AND a.quizNumber=?'
+            +           'JOIN questions AS qq '
+            +           'ON qq.questionID=a.questionID '
+            +           'WHERE qq.classID=? '
+            +             'AND qq.quizNumber=?'
             +       ')'
             +     ')'
             +   ');';

@@ -23,10 +23,10 @@
             + "LEFT JOIN ("
             +   "SELECT DISTINCT qq.classID,qq.quizNumber,qq.questionNumber,aa.choice "
             +   "FROM questions AS qq "
-            +   "JOIN answers AS aa ON aa.classID=qq.classID AND aa.quizNumber=qq.quizNumber AND aa.questionNumber=qq.questionNumber "
-            +   "LEFT JOIN comments AS c ON c.classID=aa.classID AND c.quizNumber=aa.quizNumber AND c.questionNumber=aa.questionNumber AND c.choice=aa.choice "
+            +   "JOIN answers AS aa ON aa.questionID=qq.questionID "
+            +   "LEFT JOIN comments AS c ON c.classID=qq.classID AND c.quizNumber=qq.quizNumber AND c.questionNumber=qq.questionNumber AND c.choice=aa.choice "
             +   "WHERE NOT aa.choice=qq.correct AND qq.classID=? AND c.choice IS NULL "
-            +   "GROUP BY aa.quizNumber, aa.questionNumber, aa.choice "
+            +   "GROUP BY qq.quizNumber, qq.questionNumber, aa.choice "
             + ") as res ON res.classID=q.classID AND res.quizNumber=q.quizNumber "
             + "WHERE q.classID=? AND q.sent=1 "
             + "GROUP BY q.quizNumber;";

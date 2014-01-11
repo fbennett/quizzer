@@ -17,7 +17,7 @@
             recordResult(classID,quizNumber,questionNumber,studentID,choice);
         }
         function recordResult(classID,quizNumber,questionNumber,studentID,choice) {
-            sys.db.run('INSERT OR REPLACE INTO answers VALUES (NULL,?,?,?,?,?)',[classID,quizNumber,questionNumber,studentID,choice],function(err){
+            sys.db.run('INSERT OR REPLACE INTO answers (questionID,studentID,choice) SELECT q.questionID,?,? FROM questions AS q WHERE q.classID=? AND q.quizNumber=? AND q.questionNumber=?',[studentID,choice,classID,quizNumber,questionNumber],function(err){
                 if (err) {return oops(response,err,'quiz/recordexamresult')};
                 console.log("Comleted okay! "+classID+" "+quizNumber+" "+questionNumber+" "+studentID+" "+choice);
                 answerCount += -1;

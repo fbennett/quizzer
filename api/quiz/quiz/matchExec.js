@@ -2,8 +2,6 @@
     var cogClass = function () {};
     cogClass.prototype.exec = function (params, request, response) {
 
-        console.log("HELLO");
-
         var oops = this.utils.apiError;
         var sys = this.sys;
         var classID = params.classid;
@@ -13,8 +11,6 @@
         var altpage = this.altpage.toString();
         var errpage = '<html>\n'
             + '<head><title>Page removed</title></head><body><h1>Our apologies!</h1><p>This page has been removed. Sorry for the inconvenience.</p></body></html>';
-
-        console.log("Errpage: "+errpage);
 
         sys.db.get('SELECT qz.examName,c.name AS className FROM classes AS c LEFT JOIN quizzes AS qz ON c.classID=qz.classID WHERE qz.classID=? AND qz.quizNumber=?',[classID,quizNumber],function(err,row){
             if (err) {return oops(response,err,'*quiz(1)')};
@@ -27,7 +23,7 @@
         });
         
         function getQuizOrResult(className,examName) {
-            sys.db.get('SELECT s.name AS studentName,c.name AS className FROM answers AS a JOIN students AS s ON s.studentID=a.studentID JOIN classes AS c ON c.classID=a.classID WHERE a.classID=? AND a.quizNumber=? AND a.studentID=?',[classID,quizNumber,studentID],function(err,row){
+            sys.db.get('SELECT s.name AS studentName,c.name AS className FROM answers AS a JOIN questions AS q ON q.questionID=a.questionID JOIN students AS s ON s.studentID=a.studentID JOIN classes AS c ON c.classID=q.classID WHERE q.classID=? AND q.quizNumber=? AND a.studentID=?',[classID,quizNumber,studentID],function(err,row){
                 if (err) {return oops(response,err,'*quiz(2)')}
                 var quizLabel;
                 if (examName) {

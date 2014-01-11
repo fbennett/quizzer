@@ -1,4 +1,4 @@
--- 6
+-- 8
 
 CREATE TABLE IF NOT EXISTS admin (
        adminID INTEGER PRIMARY KEY,
@@ -22,8 +22,8 @@ CREATE UNIQUE INDEX IF NOT EXISTS quizzes_idx ON quizzes(classID,quizNumber);
 CREATE TABLE IF NOT EXISTS questions (questionID INTEGER PRIMARY KEY, classID INTEGER, quizNumber INTEGER, questionNumber INTEGER, correct INTEGER, rubricID INTEGER, qOneID INTEGER, qTwoID INTEGER, qThreeID INTEGER, qFourID INTEGER);
 CREATE UNIQUE INDEX IF NOT EXISTS questions_idx ON questions(classID,quizNumber,questionNumber);
 
-CREATE TABLE IF NOT EXISTS answers (answerID INTEGER PRIMARY KEY, classID INTEGER, quizNumber INTEGER, questionNumber INTEGER, studentID INTEGER, choice INTEGER);
-CREATE UNIQUE INDEX IF NOT EXISTS answers_idx ON answers(classID,quizNumber,questionNumber,studentID,choice);
+CREATE TABLE IF NOT EXISTS answers (answerID INTEGER PRIMARY KEY, questionID INTEGER, studentID INTEGER, choice INTEGER);
+CREATE UNIQUE INDEX IF NOT EXISTS answers_idx ON answers(questionID,studentID,choice);
 
 CREATE TABLE IF NOT EXISTS comments(
   commentID INT PRIMARY KEY,
