@@ -24,3 +24,14 @@ thead tr td {
     right:2px;
     top:2px;
 }
+
+.non-member-entry {
+    position:relative;
+    margin: 0.3em 0 0.3em 0;
+    z-index: 1000;
+}
+
+.non-member-del-button {
+    position:absolute;
+    right:0px;
+}

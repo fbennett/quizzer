@@ -112,6 +112,10 @@ function buildMemberLists(rowsets) {
         }
         for (var j=0,jlen=rowsets[i].length;j<jlen;j+=1) {
             var entry = document.createElement('div');
+            if (i === 1) {
+                entry.setAttribute("class","non-member-entry");
+                entry.innerHTML = '<div class="non-member-del-button"><input type="button" value="Del" class="button-small" onclick="confirmNonMemberRemoval(this);"/></div>'
+            }
             var checkBox = document.createElement('input');
             checkBox.setAttribute('type', 'checkbox');
             checkBox.setAttribute('value', rowsets[i][j].studentid);
@@ -123,12 +127,36 @@ function buildMemberLists(rowsets) {
     }
 }
 
+function confirmNonMemberRemoval (node) {
+    node.value="Really?",
+    node.style.color = 'red';
+    node.parentNode.style['border-color'] = 'red';
+    node.setAttribute('onclick', 'executeNonMemberRemoval(this)');
+}
+
+function executeNonMemberRemoval (node) {
+    var adminID = getParameterByName('admin');
+    var classID = getParameterByName('classid');
+    var studentID = node.parentNode.nextSibling.value;
+    var ignore = apiRequest(
+        '/?admin='
+            + adminID
+            + '&page=class'
+            + '&cmd=removenonmember'
+        , {
+            classid:classID,
+            studentid:studentID
+        }
+    );
+    buildMemberLists();
+}
+
 function addMembers () {
     var ret = [];
     var nonMembers = document.getElementById('non-members');
     for (var i=0,ilen=nonMembers.childNodes.length;i<ilen;i+=1) {
-        if (nonMembers.childNodes[i].childNodes[0].checked) {
-            ret.push(nonMembers.childNodes[i].childNodes[0].value);
+        if (nonMembers.childNodes[i].childNodes[1].checked) {
+            ret.push(nonMembers.childNodes[i].childNodes[1].value);
         }
     }
     var adminID = getParameterByName('admin');

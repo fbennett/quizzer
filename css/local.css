@@ -21,7 +21,7 @@ input.button-small {
     font-size: smaller;
     border-radius: 0.7em;
     border: 1px solid #bbbbbb;
-    padding: 0.2em;
+    padding: 0.15em;
 }
 
 input.button-small:hover {
