@@ -1,6 +1,6 @@
 # Quizzer
 
-A lightweight, low-security quiz engine
+A lightweight quiz engine for `node.js`
 
 --------------------
 
