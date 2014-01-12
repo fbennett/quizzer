@@ -18,7 +18,6 @@ function markExam () {
     qzi.correctAnswers = result.correctAnswers;
     qzi.studentNames = result.studentNames;
     qzi.serverResults = result.serverResults;
-    console.log("SERVER RESULTS: "+JSON.stringify(qzi.serverResults));
     qzi.numberOfStudents = result.numberOfStudents;
     qzi.numberOfQuestions = result.numberOfQuestions;
     qzi.clientResult = {};
@@ -41,7 +40,6 @@ function keystrokeHandler(event) {
         // Capture entry
         var ans = {};
         var inputVal = inputNode.value;
-        console.log("RAW STRING: "+inputVal);
         inputNode.value = '';
         inputVal = inputVal.replace(/^0*/,'');
         var studentOffset = parseInt(inputVal.slice(0,1),10);
@@ -57,7 +55,6 @@ function checkAlreadyDone(ans) {
     console.log("checkAlreadyDone()");
     clearError();
     // Is this student already done?
-    console.log("checkAlreadyDone()");
     if (qzi.serverResults[ans.studentID]) {
         showError([qzi.studentNames[ans.studentID] + ' is already done']);
     } else {
@@ -68,7 +65,6 @@ function checkAlreadyDone(ans) {
 function checkIncomplete(ans) {
     console.log("checkIncomplete()");
     // If there was a previous exam, is it complete?
-    console.log("checkIncomplete()");
     if (qzi.currentStudentID && qzi.currentStudentID != ans.studentID) {
         showError(['Answers for ' + qzi.studentNames[ans.studentID] + ' are not yet complete']);
     } else {
@@ -117,7 +113,6 @@ function recordExamResult(ans) {
     var classID = getParameterByName('classid');
     var quizNumber = getParameterByName('quizno');
     // Fire and forget
-    console.log("CALLING: recordexamresult");
     var ignore = apiRequest(
         '/?admin='
             + adminID
@@ -205,14 +200,12 @@ function showAnswers () {
             column[i].removeChild(column[i].childNodes[0]);
         }
     }
-    console.log("showAnswers()[2]");
     // Write available results to columns
     var myQuestionNumbers = [];
     for (var questionNumber in qzi.clientResult) {
         myQuestionNumbers.push(parseInt(questionNumber,10));
     }
     myQuestionNumbers.sort(function(a,b){if(a>b){return 1}else if(a<b){return -1}else{return 0}});
-    console.log("showAnswers()[3]: "+myQuestionNumbers.length);
     for (var i=0,ilen=myQuestionNumbers.length;i<ilen;i+=1) {
         var questionLabel = 'Question ' + myQuestionNumbers[i];
         var rightWrong = document.createElement('span');
@@ -319,7 +312,6 @@ function buildQuestionList (quizobj) {
     // Call for quiz questions
     if (!quizobj) {
         // if rows is nil, call the server.
-        console.log("CALLING: readquestions");
         var quizobj = apiRequest(
             '/?admin='
                 + adminID
@@ -751,14 +743,12 @@ function setButtonState (state,lst) {
         disableEditing();
         break;
     case 'download-exam':
-        console.log("  Set download-exam");
         sendQuiz.style.display = 'none';
         quizDone.style.display = 'none';
         downloadExam.style.display = 'inline';
         markExam.style.display = 'none';
         break;
     case 'exam-results':
-        console.log("  Set exam-results");
         quizDone.style.display = 'none';
         downloadExam.style.display = 'none';
         markExam.value = 'Display Results';
@@ -767,7 +757,6 @@ function setButtonState (state,lst) {
         disableEditing();
         break;
     case 'mark-exam':
-        console.log("  Set mark-exam");
         sendQuiz.style.display = 'none';
         quizDone.style.display = 'none';
         downloadExam.style.display = 'none';

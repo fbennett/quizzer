@@ -1,0 +1,57 @@
+<html>
+<head>
+  <title>Quizzer Admin - commenters</title>
+  <script type="text/javascript" src="js/local.js"></script>  
+  <script type="text/javascript" src="js/admin-commenters.js"></script>  
+  <link rel="stylesheet" type="text/css" href="css/simple-grid.css"/>
+  <link rel="stylesheet" type="text/css" href="css/local.css"/>
+  <link rel="stylesheet" type="text/css" href="css/admin-commenters.css"/>
+</head>
+<body onLoad="buildCommenterList()">
+  <div class="grid">
+    <div class="col-1-1">
+      <h1>Quizzer Admin</h1>
+      <h2>Commenters</h2>
+      <div>
+        <input class="button" type="button" value="Back" onclick="window.location = fixPath('/?admin=' + getParameterByName('admin'))"/>
+      </div>
+      <div class="button-bold">
+        <input class="button" id="add-commenter-button" type="button" value="Add Commenter" onclick="addCommenter()"/>
+        <input class="button" id="save-commenter-button" type="button" value="Save Commenter" onclick="saveCommenter()" style="display:none;"/>
+        <span id="commenter-boxes" style="display:none;">
+          Name:
+          <input id="commenter-name" type="text" size="20"/>
+          Mail day:
+          <select id="commenter-dow">
+            <option value="none">none</option>
+            <option value="0">Sunday</option>
+            <option value="1">Monday</option>
+            <option value="2">Tuesday</option>
+            <option value="3">Wednesday</option>
+            <option value="4">Thursday</option>
+            <option value="5">Friday</option>
+            <option value="6">Saturday</option>
+          </select>
+          Email:
+          <input id="commenter-email" type="text" size="20"/>
+          <input id="commenter-key" type="text" style="display:none;"/>
+        </span>
+      </div>
+      <hr/>
+      <table>
+        <thead>
+          <tr>
+            <td>Name</td>
+            <td>Mail day</td>
+            <td>Email</td>
+            <td style="display:none;">adminKey</td>
+            <td></td>
+          </tr>
+        </thead>
+        <tbody id="commenter-list">
+        </tbody>
+      </table>
+    </div>
+  </div>
+</body>
+</html>

@@ -15,8 +15,6 @@ function runResult () {
             + quizNumber);
     if (false === quizErrors) return;
 
-    console.log(JSON.stringify(quizErrors,null,2));
-
     var resultList = document.getElementById("result-list");
 
     resultList.innerHTML = "";

@@ -89,7 +89,6 @@ function saveAddStudent(node) {
     var name = studentName.value;
     var email = studentEmail.value;
     var status = studentStatus.checked;
-    console.log("STATUS: "+status);
     name = name ? name.replace(/^\s+/,'').replace(/\s+$/,'') : '';
     email = email ? email.replace(/^\s+/,'').replace(/\s+$/,'') : '';
     var id = studentID.value;
@@ -115,8 +114,6 @@ function saveEditStudent(node){
     var privacy = document.getElementById('bubble-privacy').checked;
     var lang = document.getElementById('bubble-language').value;
 
-    console.log("VALUE FROM NODE: "+lang);
-    
     var result = saveStudent(name,email,privacy,lang,id);
 
     if (result === 'done') {
@@ -144,7 +141,6 @@ function saveStudent(name,email,status,language,id) {
     if (name && email) {
         // Save
         var adminID = getParameterByName('admin');
-        console.log("LANG TO SERVER: "+language);
         apiRequest(
             '/?admin='
                 + adminID

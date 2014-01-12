@@ -13,19 +13,21 @@
             console.log("Save parameters!");
         }
 
-        // (creates subdirs and sqlite3 database if necessary,
-        // migrates to sqlite3 db from old CSV files, and removes
-        // CSV and their subdirs after validation)
-        var initModule = require('./lib/init.js');
-        var initClass = new initModule.initClass(opts);
-        var init = initClass.getInit();
-
         var mailerModule = require('./lib/mailer.js');
         var mailerClass = new mailerModule.mailerClass(opts);
         var mailer = mailerClass.getMailer();
         if (!mailer) {
             return;
         }
+        var scheduleModule = require('./lib/scheduler.js');
+        var scheduler = new scheduleModule.scheduleClass(opts,mailer);
+
+        // (creates subdirs and sqlite3 database if necessary,
+        // migrates to sqlite3 db from old CSV files, and removes
+        // CSV and their subdirs after validation)
+        var initModule = require('./lib/init.js');
+        var initClass = new initModule.initClass(opts,mailer,scheduler);
+        var init = initClass.getInit();
 
         var sysModule = require('./lib/sys.js');
         var sysClass = new sysModule.sysClass(opts,mailer);
@@ -38,10 +40,6 @@
         var cogsModule = require('./lib/cogs.js');
         var cogsClass = new cogsModule.cogsClass(sys,utils);
         var cogs = cogsClass.getCogs();
-
-        var scheduleModule = require('./lib/scheduler.js');
-        var scheduleClass = new scheduleModule.scheduleClass(sys);
-        scheduleClass.run();
 
         var apiModule = require('./lib/api.js');
         var apiClass = new apiModule.apiClass(sys,cogs);

@@ -1,0 +1,55 @@
+@@NAME@@:
+
+Thank you for offering to comment on student work in our writing
+program. We appreciate the value of your time, and our students will
+benefit greatly from any constructive feedback you can offer.
+
+Your personal link to the commenting system is updated regularly as a
+security measure. The link below is valid for the coming week:
+
+    http://@@HOST_NAME@@@@QUIZZER_PATH@@staff.html?commenter=@@COMMENTER_KEY@@
+
+After navigating to the quizzes for a class, you will find a list of
+mistaken responses students have made to questions on grammatical and
+style issues. Many responses are tagged with the native language of
+students who missed that particular question.  Comments in the
+students' own language can be particularly helpful, as this is often
+beyond our own capacity.
+
+A few shorthand forms are available to make preparing clear, targeted
+guidance as simple as possible. To set up the "wrong" answer as an
+example, paste it into the text box, and put a single ">" character at
+the beginning of the line:
+
+    > This article is of the laws of Utopia nowadays.
+
+You can mark a specific portion of the example by enclosing it in double
+parens, and adding a single letter or number after the opening parens:
+
+    > This article is ((1 of)) the laws of Utopia ((2 nowadays)).
+
+To state a pattern, begin the line with two ">" characters (the
+example below also illustrates how to add italics):
+
+    >> The story is *about* soccer.
+
+To state a rule, use three ">" characters:
+
+    >>> Never use the word "nowadays" in formal writing.
+
+Circled markers can also be written by enclosing a single letter or
+number in double parens:
+
+    This was ((1)) first reform of corporate law.
+
+That's about all there is to it. Again, we are grateful for your
+contribution. If you can spend a few minutes this week reviewing quiz
+errors, our students will be motivated to put in their very effort
+during their period of study.
+
+Sincerely yours,
+
+Frank Bennett
+Faculty of Law
+Nagoya University
+Japan

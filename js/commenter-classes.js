@@ -1,5 +1,4 @@
 function buildClassList (rows) {
-    console.log("TRY");
     if (!rows) {
         // if rows is nil, call the server.
         var commenterID = getParameterByName('commenter');

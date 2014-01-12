@@ -141,7 +141,6 @@ function saveComment (id) {
     var node = document.getElementById(id);
     var comment = node.firstChild.value;
     if (comment) {
-        console.log("commenter="+commenterInfo.commenter+", commenterID="+commenterInfo.commenterID);
         var commentBlock = buildComment(questionNumber,wrongChoice,commenterInfo.commenter,commenterInfo.commenterID,comment);
         node.parentNode.insertBefore(commentBlock,node);
         node.parentNode.removeChild(node);

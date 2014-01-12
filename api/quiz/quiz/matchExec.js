@@ -32,7 +32,6 @@
                     quizLabel = 'Quiz ' + quizNumber;
                 }
                 if (!row) {
-                    console.log("HEY!");
                     page = page
                         .replace(/@@CLASS@@/g,className)
                         .replace(/@@QUIZ_LABEL@@/g,quizLabel);

@@ -22,7 +22,6 @@ function buildQuizList (rows) {
         );
         if (false === rows) return;
     }
-    console.log(JSON.stringify(rows,null,2));
     rows.sort(function (a,b) {
         a = parseInt(a.number,10);
         b = parseInt(b.number,10);
