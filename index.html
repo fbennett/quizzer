@@ -46,8 +46,8 @@
 for:</p>
 
 <ul>
-<li>Second language learners</li>
 <li>Students facing novel stylistic demands (such as in law school)</li>
+<li>Second language learners</li>
 <li>Any teaching environment where staff resources are in short supply</li>
 </ul><p>In contrast to many commercial offerings in the online education
 "sphere", Quizzer is not designed to replace the instructor: it was
@@ -77,7 +77,7 @@ and a corrected version. <em>The essays themselves are not assessed.</em>
 <li>After constructing one question from each submitted essay, students
 are sent personalized links to the resulting quiz.</li>
 <li>Students submit their responses, which are recorded on the Quizzer
-server. Student receive feedback immediately feedback on their
+server. Students receive feedback immediately feedback on their
 incorrect responses.</li>
 <li>Class commenters (TAs, instructors, and other experienced writers)
 post short explanations of why the wrong answers were wrong.</li>
@@ -102,7 +102,7 @@ sample</a>
 posted by Chetan Jain. The code has been refactored and extended
 considerably for this project, but I gratefully acknowledge the
 starting point for this frolic. Hats off also to the developers of
-<code>node.js</code>, and <code>LaTeX</code> and, well, everything else. Quizzer was built
+<code>node.js</code>, and LaTeX and, well, everything else. Quizzer was built
 on short notice to fill a critical need, and it has been a real
 pleasure to see how quickly the whole thing could be brought together.</p>
 
@@ -117,7 +117,8 @@ pleasure to see how quickly the whole thing could be brought together.</p>
 <p>In addition to the dependencies pulled in by <code>npm</code>, Quizzer needs to
 have access to the external programs <code>pandoc</code> and <code>pdflatex</code>. Both
 should be available as package installs on your operating system (the
-latter as part of the <code>texlive</code> package).</p>
+latter as part of the <code>texlive</code> package (on some systems, it
+may be necessary to obtain and install the <code>makebarcode</code> LaTeX package separately).</p>
 
 <p>Run the server by saving the following code to a file (such as <code>quizServer.js</code>,
 say):</p>
@@ -231,24 +232,23 @@ auth.require = ( "/quizzer/admin.html" =&gt;
 from which the script is run, and named after the port number under
 which the instance is running. </p>
 
-<p>commenters are held in the <code>admin</code> table of the Quizzer database.
+<p>Commenter IDs are held in the <code>admin</code> table of the Quizzer database.
 There is no web interface to this table: add commenters by inserting
 them directly, using the <code>sqlite3</code> access tool, like so:</p>
 
-<pre><code>sqlite3&gt; INSERT INTO admin VALUES (NULL, 'jeff', 'ahTh3nie', 2, 0);
+<pre><code>sqlite3&gt; INSERT INTO admin VALUES (NULL, 'jeff', 'ahTh3nie', 2, 1, 'jeffmail@mailything.com');
 </code></pre>
 
-<p>The <code>NULL</code> value in the first column is for the automatically-assigned
-numeric ID of the database row. The second column is the screen
-name of the commenter, which must be unique. The third column is the
-access key that will be included in the personal URL of the commenter,
-and must also be unique. Under Linux, the <code>pwgen</code> utility is a handy
-tool for creating these. The fourth column is the role of the commenter,
-and must be set to <code>2</code>. The fifth column is currently unused, but may
-eventually control the intervals at which scheduled key resets and
-reminder mailings occur.</p>
+<p>The field values have the following roles:</p>
 
-<p>After commenters have been added to the <code>admin</code> table, their
+<ul>
+<li>The <code>NULL</code> value in the first column is for the automatically-assigned numeric ID of the database row.</li>
+<li>The second column is the screen name of the commenter, which must be unique.</li>
+<li>The third column is the access key that will be included in the personal URL of the commenter. It must also be unique. These settings will eventually be opened to the user interface, but meanwhile the <code>pwgen</code> utility (under Linux) is a handy tool for creating these.</li>
+<li>The fourth column is the role of the commenter, and must be set to <code>2</code>.</li>
+<li>The fifth column is an integer between 0 and 6 that controls the day on which a weekly reminder mail is sent to the commenter. If this field is NULL, no mail is sent.</li>
+<li>The sixth column holds the email address of the commenter.</li>
+</ul><p>After commenters have been added to the <code>admin</code> table, their
 access URLs will be reported in the startup chatter. For example:</p>
 
 <pre><code>Reading config from quizzer-3498.cfg
