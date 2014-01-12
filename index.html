@@ -35,9 +35,10 @@
 
 <ul>
 <li><a href="#overview">Overview</a></li>
+<li><a href="#commenting">Commenting</a></li>
+<li><a href="#storage-and-files">Storage and files</a></li>
 <li><a href="#basic-installation">Basic Installation</a></li>
 <li><a href="#running-quizzer-behind-a-proxy">Running Quizzer behind a Proxy</a></li>
-<li><a href="#commenters-and-commenting">Commenters and Commenting</a></li>
 <li><a href="#screenshots">Screenshots</a></li>
 </ul><h2>
 <a name="overview" class="anchor" href="#overview"><span class="octicon octicon-link"></span></a>Overview</h2>
@@ -89,7 +90,9 @@ supplementary mid-term and final exam, consisting entirely of
 questions from the quizzes.</li>
 </ol><p>Quiz distribution, commenting, exam composition, and marking are all
 managed by Quizzer. Paper tests are randomized as a hedge against
-cheating, and marked with a barcode reader for quick assessment.</p>
+cheating, and marked with a barcode reader for quick assessment.
+(Tip: a scanning wand is both more convenient and cheaper for this
+particular purpose than a laser scanner).</p>
 
 <p>As an additional feature suited to our own environment, the native
 languages of students choosing each wrong answer are shown in the
@@ -105,6 +108,82 @@ starting point for this frolic. Hats off also to the developers of
 <code>node.js</code>, and LaTeX and, well, everything else. Quizzer was built
 on short notice to fill a critical need, and it has been a real
 pleasure to see how quickly the whole thing could be brought together.</p>
+
+<h2>
+<a name="commenting" class="anchor" href="#commenting"><span class="octicon octicon-link"></span></a>Commenting</h2>
+
+<p>The most important phase of the Quizzer cycle for teaching purposes
+is commenting on wrong answers. At this point, students have engaged
+with style requirements to produce their original submission, and
+engaged with one anothers' mistakes through the quizzes. Targeted
+feedback is the capstone that helps the class grow more confident
+in their next submission.</p>
+
+<p>Use the Commenters page to register trusted contributors. If the
+setting is enabled, a commenter receives a mail message once each
+week, containing a personal link to the comment views. The link
+changes with each mailing.</p>
+
+<p>In the commenter view, a list of courses opens onto a list of
+quizzes for each course. The quiz views show a list of wrong
+answers, sorted by frequency of error, and with already-commented
+items pushed to the bottom of the list.</p>
+
+<p><code>Markdown</code> syntax is recognized in comment text, with a few small
+extensions. To set markers in text, enclose a number or letter in
+double parens:</p>
+
+<pre><code>This will render as a circle-A: ((A))
+</code></pre>
+
+<p>For an explanation of why a wrong answer was wrong,
+set a single <code>&gt;</code> character at the beginning of the line,
+followed by the pasted text of the wrong answer to be explained:</p>
+
+<pre><code>&gt; Many new legislations were passed in 2010.
+</code></pre>
+
+<p>Mark text targeted for specific comment by wrapping it in
+double-quotes, opening with a single letter or number:</p>
+
+<pre><code>&gt; ((1 Many)) new ((2 legislations)) ((3 were)) passed in 2010.
+
+((2)) is a non-countable noun, and is *never* written
+with an 's'. With a non-countable noun, use 'much', not
+'many' at ((1)), and the singular verb form at ((3)).
+</code></pre>
+
+<p>For a comment that states a pattern, open with two '&gt;' characters:</p>
+
+<pre><code>&gt;&gt; I studied *for* two hours.
+</code></pre>
+
+<p>For a comment that states a grammatical rule, open with
+three '&gt;' characters:</p>
+
+<pre><code>&gt;&gt;&gt; Never use the word "nowadays" in formal writing.
+</code></pre>
+
+<p>When set at the very beginning of an entry, the explanation,
+pattern, and rule prefixes trigger a tidy heading in the displayed
+entry.</p>
+
+<h2>
+<a name="storage-and-files" class="anchor" href="#storage-and-files"><span class="octicon octicon-link"></span></a>Storage and files</h2>
+
+<p>Quizzer data is held in an <code>sqlite3</code> database, located in the directory
+from which the script is run, and named after the port number under
+which the instance is running. A companion configuration file with the 
+extension <code>.cfg</code> holds the runtime parameters.</p>
+
+<p>An editable template of the weekly message to be sent to commenters registered on the
+Quizzer instance will be written into the directory from which the script is run.
+Be sure to touch up the text of the message to suit your requirements. The sample
+template has my signature at the bottom; you can and should remove my name and
+replace it with your own.</p>
+
+<p>When examination papers are generated, they will be placed in an <code>exams</code> subdirectory and Quizzer will create to house them, together with the LaTeX source of the quizzes. Quizzer offers the exam paper text to the administrator with a one-click download, so there should be no need enter the directory, but the
+files are there if you need them, or if you are curious about the LaTeX behind the formatting.</p>
 
 <h2>
 <a name="basic-installation" class="anchor" href="#basic-installation"><span class="octicon octicon-link"></span></a>Basic Installation</h2>
@@ -226,87 +305,6 @@ auth.require = ( "/quizzer/admin.html" =&gt;
 </code></pre>
 
 <h2>
-<a name="commenters-and-commenting" class="anchor" href="#commenters-and-commenting"><span class="octicon octicon-link"></span></a>Commenters and Commenting</h2>
-
-<p>Quizzer data is held in an <code>sqlite3</code> database, located in the directory
-from which the script is run, and named after the port number under
-which the instance is running. </p>
-
-<p>Commenter IDs are held in the <code>admin</code> table of the Quizzer database.
-There is no web interface to this table: add commenters by inserting
-them directly, using the <code>sqlite3</code> access tool, like so:</p>
-
-<pre><code>sqlite3&gt; INSERT INTO admin VALUES (NULL, 'jeff', 'ahTh3nie', 2, 1, 'jeffmail@mailything.com');
-</code></pre>
-
-<p>The field values have the following roles:</p>
-
-<ul>
-<li>The <code>NULL</code> value in the first column is for the automatically-assigned numeric ID of the database row.</li>
-<li>The second column is the screen name of the commenter, which must be unique.</li>
-<li>The third column is the access key that will be included in the personal URL of the commenter. It must also be unique. These settings will eventually be opened to the user interface, but meanwhile the <code>pwgen</code> utility (under Linux) is a handy tool for creating these.</li>
-<li>The fourth column is the role of the commenter, and must be set to <code>2</code>.</li>
-<li>The fifth column is an integer between 0 and 6 that controls the day on which a weekly reminder mail is sent to the commenter. If this field is NULL, no mail is sent.</li>
-<li>The sixth column holds the email address of the commenter.</li>
-</ul><p>After commenters have been added to the <code>admin</code> table, their
-access URLs will be reported in the startup chatter. For example:</p>
-
-<pre><code>Reading config from quizzer-3498.cfg
-Admin URL: http://localhost:3498/?admin=fyvg19vx
-Adding admin role
-Adding commenter 'adam' with URL http://localhost:3498/?commenter=En5chaej
-Adding commenter 'bob' with URL http://localhost:3498/?commenter=koosha1D
-Adding commenter 'chris' with URL http://localhost:3498/?commenter=Ro5aise5
-Loaded class membership keys
-Done. Ready to shake, rattle and roll!
-</code></pre>
-
-<p>The commenter links show a list of courses, and course links a list
-of quizzes with the number of uncommented mistakes, if any. Clicking on
-a quiz link opens a list of wrong answers, sorted in descending order
-of frequency among quiz-takers, and with already-commented answers
-pushed to the bottom.</p>
-
-<p><code>Markdown</code> syntax is recognized in comment text, with a few small
-extensions. To set markers in text, enclose a number or letter in
-double parens:</p>
-
-<pre><code>This will render as a circle-A: ((A))
-</code></pre>
-
-<p>For an explanation of why a wrong answer was wrong,
-set a single <code>&gt;</code> character at the beginning of the line,
-followed by the pasted text of the wrong answer to be explained:</p>
-
-<pre><code>&gt; Many new legislations were passed in 2010.
-</code></pre>
-
-<p>Mark text targeted for specific comment by wrapping it in
-double-quotes, opening with a single letter or number:</p>
-
-<pre><code>&gt; ((1 Many)) new ((2 legislations)) ((3 were)) passed in 2010.
-
-((2)) is a non-countable noun, and is *never* written
-with an 's'. With a non-countable noun, use 'much', not
-'many' at ((1)), and the singular verb form at ((3)).
-</code></pre>
-
-<p>For a comment that states a pattern, open with two '&gt;' characters:</p>
-
-<pre><code>&gt;&gt; I studied *for* two hours.
-</code></pre>
-
-<p>For a comment that states a grammatical rule, open with
-three '&gt;' characters:</p>
-
-<pre><code>&gt;&gt;&gt; Never use the word "nowadays" in formal writing.
-</code></pre>
-
-<p>When set at the very beginning of an entry, the explanation,
-pattern, and rule prefixes trigger a tidy heading in the displayed
-entry.</p>
-
-<h2>
 <a name="screenshots" class="anchor" href="#screenshots"><span class="octicon octicon-link"></span></a>Screenshots</h2>
 
 <p>The page layouts are pretty basic, but the buttons all work.</p>
@@ -340,6 +338,11 @@ entry.</p>
 <a name="submission-stragglers" class="anchor" href="#submission-stragglers"><span class="octicon octicon-link"></span></a>Submission stragglers</h3>
 
 <p><img src="quizzer-stragglers.png" alt="Stragglers view"></p>
+
+<h3>
+<a name="commenters-admin" class="anchor" href="#commenters-admin"><span class="octicon octicon-link"></span></a>Commenters admin</h3>
+
+<p><img src="quizzer-commenters.png" alt="Commenters"></p>
 
 <h3>
 <a name="commenter-view" class="anchor" href="#commenter-view"><span class="octicon octicon-link"></span></a>Commenter view</h3>
