@@ -67,6 +67,13 @@ function showMistakes () {
             + '" value="Save" '
             + 'onclick="saveComment(\'comment-' + commenterInfo.commenterID + '-' + mistake.questionNumber + '-' + mistake.wrongChoice + '\')"'
             +'/>'
+            + '<input type="button" class="button" '
+            + 'id="eg-button-' + mistake.questionNumber + '-' + mistake.wrongChoice + '" '
+            + 'style="display:'
+            + buttonMode.save
+            + '" value="e.g." '
+            + 'onclick="copyDown(\'comment-' + commenterInfo.commenterID + '-' + mistake.questionNumber + '-' + mistake.wrongChoice + '\')"'
+            +'/>'
             + '</div>';
         var questionNumber = mistake.questionNumber;
         var wrongChoice = mistake.wrongChoice;
@@ -80,6 +87,35 @@ function showMistakes () {
         container.appendChild(mistakeDiv);
         
     }
+}
+
+function copyDown(id) {
+    var targetNode = document.getElementById(id);
+    if (targetNode.childNodes[0].textContent) {
+        return;
+    }
+    var commenterKey = getParameterByName('commenter');
+    var classID = getParameterByName('classid');
+    var quizNumber = getParameterByName('quizno');
+    var m = id.split('-');
+    var questionNumber = m[2];
+    var wrongChoice = m[3];
+    var source = apiRequest(
+        '/?commenter='
+            + commenterKey
+            +'&page=quiz&cmd=getonewronganswer'
+            + '&classid=' 
+            + classID
+            + '&quizno=' 
+            + quizNumber
+        , {
+            questionno:questionNumber,
+            wrongchoice: wrongChoice
+        }
+    );
+    if (false === source) return;
+    console.log('wrongChoice: '+source.wrongChoice);
+    targetNode.childNodes[0].innerHTML = '> ' + source.wrongChoice;
 }
 
 function buildComment (questionNumber,wrongChoice,commenter,commenterID,comment) {
@@ -175,18 +211,22 @@ function setButtonMode (mode,questionNumber,wrongChoice) {
     var commentButton = document.getElementById('comment-button-' + questionNumber + '-' + wrongChoice);
     var editButton = document.getElementById('edit-button-' + questionNumber + '-' + wrongChoice);
     var saveButton = document.getElementById('save-button-' + questionNumber + '-' + wrongChoice);
+    var egButton = document.getElementById('eg-button-' + questionNumber + '-' + wrongChoice);
     if (mode === 'edit') {
         commentButton.setAttribute('style', 'display:none');
         editButton.setAttribute('style', 'display:inline');
         saveButton.setAttribute('style', 'display:none');
+        egButton.setAttribute('style', 'display:none');
     } else if (mode === 'save') {
         commentButton.setAttribute('style', 'display:none');
         editButton.setAttribute('style', 'display:none');
         saveButton.setAttribute('style', 'display:inline');
+        egButton.setAttribute('style', 'display:inline');
     } else {
         commentButton.setAttribute('style', 'display:inline');
         editButton.setAttribute('style', 'display:none');
         saveButton.setAttribute('style', 'display:none');
+        egButton.setAttribute('style', 'display:none');
     }
 };
 
