@@ -18,7 +18,11 @@ function buildCommenterList (rows) {
     // Rebuild container content
     for (var i=0,ilen=rows.length;i<ilen;i+=1) {
         var row = rows[i];
+        console.log(">> "+row.complete+" "+row.name);
         var commenterTR = document.createElement('tr');
+        if (row.complete == 0) {
+            commenterTR.setAttribute('class','inactive');
+        }
         commenterTR.innerHTML = '<td>' + row.name + '</td>'
             + '<td>' + getMailDaySelect(row.adminKey,row.interval) + '</td>'
             + '<td class="email">' + getEmail(row.email)  + '</td>'
@@ -67,6 +71,7 @@ function setCommenterMailDay (node,commenterKey) {
         }
     );
     if (false === rows) return;
+    buildCommenterList();
 }
 
 function addCommenter(node) {
