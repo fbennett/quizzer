@@ -640,8 +640,12 @@ function displayQuestion (qobj, questionNumber) {
         questions.appendChild(node);
     }
     var rubric = document.createElement('div');
-    rubric.setAttribute("class", "rubric");
-    rubric.innerHTML = markdown(qobj.rubric);
+    rubric.setAttribute('class','rubric-wrapper');
+    rubric.innerHTML = '<div class="raw-text-wrapper">'
+        + '<div class="raw-text-marker">Source</div>'
+        + '<pre class="raw-text">' + qobj.rubric+ '</pre>'
+        + '</div>'
+        + '<div class="rubric">' + markdown(qobj.rubric) + '</div>'
     node.appendChild(rubric);
     for (var i=0,ilen=qobj.questions.length;i<ilen;i+=1) {
         var choice_wrapper = document.createElement('div');

@@ -15,3 +15,52 @@ ol#quiz-questions .selection-text {
     margin-left: 15px;
     vertical-align: top;
 }
+
+div.rubric-wrapper {
+    position:relative;
+}
+
+div.raw-text-wrapper {
+    position:absolute;
+    right:0px;
+    top:0px;
+}
+
+div.raw-text-marker {
+    font-size: smaller;
+    border: 1px solid black;
+    border-radius:1.2em;
+    padding:0.2em 0.5em 0.2em 0.5em;
+    z-index:1;
+}
+
+pre.raw-text {
+    position:absolute;
+    visibility:hidden;
+    opacity:0;
+    border: 1px solid black;
+    background:#f5f5f5;
+    z-index:2;
+    padding:1em;
+    border-radius:0.5em;
+    font-family:ariel,mono;
+    top:0px;
+    right:0px;
+    white-space: pre-wrap;
+    width:50em;
+    -webkit-transition:visibility 0s linear 0.6s,opacity 0.6s linear;
+	-moz-transition:visibility 0s linear 0.6s,opacity 0.6s linear;
+	-ms-transition:visibility 0s linear 0.6s,opacity 0.6s linear;
+	-o-transition:visibility 0s linear 0.6s,opacity 0.6s linear;
+	transition:visibility 0s linear 0.6s,opacity 0.6s linear;
+}
+
+div.raw-text-wrapper:hover > pre {
+    visibility:visible;
+    opacity:1;
+	-webkit-transition-delay:0s;
+	-moz-transition-delay:0s;
+	-ms-transition-delay:0s;
+	-o-transition-delay:0s;
+	transition-delay:0s;
+}
