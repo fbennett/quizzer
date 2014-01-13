@@ -46,7 +46,7 @@ code.raw-text {
     font-family:ariel,mono;
     top:0px;
     right:0px;
-    overflow:scroll;
+    white-space: pre-wrap;
     width:50em;
     -webkit-transition:visibility 0s linear 0.6s,opacity 0.6s linear;
 	-moz-transition:visibility 0s linear 0.6s,opacity 0.6s linear;
