@@ -34,7 +34,7 @@ div.raw-text-marker {
     z-index:1;
 }
 
-pre.raw-text {
+code.raw-text {
     position:absolute;
     visibility:hidden;
     opacity:0;
@@ -55,7 +55,7 @@ pre.raw-text {
 	transition:visibility 0s linear 0.6s,opacity 0.6s linear;
 }
 
-div.raw-text-wrapper:hover > pre {
+div.raw-text-wrapper:hover > code {
     visibility:visible;
     opacity:1;
 	-webkit-transition-delay:0s;
