@@ -643,7 +643,7 @@ function displayQuestion (qobj, questionNumber) {
     rubric.setAttribute('class','rubric-wrapper');
     rubric.innerHTML = '<div class="raw-text-wrapper">'
         + '<div class="raw-text-marker">Source</div>'
-        + '<code class="raw-text">' + qobj.rubric+ '</code>'
+        + '<pre class="raw-text">' + qobj.rubric+ '</pre>'
         + '</div>'
         + '<div class="rubric">' + markdown(qobj.rubric) + '</div>'
     node.appendChild(rubric);
