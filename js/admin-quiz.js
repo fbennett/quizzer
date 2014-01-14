@@ -323,14 +323,14 @@ function buildQuestionList (quizobj) {
             });
         if (false === quizobj) return;
     }
+    qzi.pending = quizobj.pending;
     var questionsLst = displayQuestions(quizobj.questions);
     var button = document.getElementById('add-question-button');
     button.disabled = false;
-    qzi.pending = quizobj.pending;
     if (quizobj.examName) {
-        setButtonState('download-exam',questionsLst,quizobj.pending);
+        setButtonState('download-exam',questionsLst);
     } else {
-        setButtonState('send-quiz',questionsLst,quizobj.pending);
+        setButtonState('send-quiz',questionsLst);
     }
 }
 

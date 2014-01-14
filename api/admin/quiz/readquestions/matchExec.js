@@ -18,7 +18,7 @@
             +     'JOIN students AS s ON s.studentID=m.studentID '
             +     'JOIN questions AS q ON q.classID=m.classID '
             +     'LEFT JOIN answers AS a ON a.questionID=q.questionID AND a.studentID=m.studentID '
-            +     'WHERE q.classID=? AND q.quizNumber=? AND q.quizNumber IS NULL AND (s.privacy IS NULL OR s.privacy=0) '
+            +     'WHERE q.classID=? AND q.quizNumber=? AND a.studentID IS NULL AND (s.privacy IS NULL OR s.privacy=0) '
             +     'GROUP BY q.classID,q.quizNumber,m.studentID'
             + ') AS res '
             + 'WHERE qz.classID=? AND qz.quizNumber=? '
