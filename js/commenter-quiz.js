@@ -72,8 +72,9 @@ function showMistakes () {
             + 'style="display:'
             + buttonMode.save
             + '" value="e.g." '
-            + 'onclick="copyDown(\'comment-' + commenterInfo.commenterID + '-' + mistake.questionNumber + '-' + mistake.wrongChoice + '\')"'
+            + 'onclick="copyDown(this,\'comment-' + commenterInfo.commenterID + '-' + mistake.questionNumber + '-' + mistake.wrongChoice + '\')"'
             +'/>'
+            + '<div style="display:none;">' + mistake.wrong + '</div>'
             + '</div>';
         var questionNumber = mistake.questionNumber;
         var wrongChoice = mistake.wrongChoice;
@@ -89,33 +90,13 @@ function showMistakes () {
     }
 }
 
-function copyDown(id) {
+function copyDown(node,id) {
     var targetNode = document.getElementById(id);
     if (targetNode.childNodes[0].textContent) {
         return;
     }
-    var commenterKey = getParameterByName('commenter');
-    var classID = getParameterByName('classid');
-    var quizNumber = getParameterByName('quizno');
-    var m = id.split('-');
-    var questionNumber = m[2];
-    var wrongChoice = m[3];
-    var source = apiRequest(
-        '/?commenter='
-            + commenterKey
-            +'&page=quiz&cmd=getonewronganswer'
-            + '&classid=' 
-            + classID
-            + '&quizno=' 
-            + quizNumber
-        , {
-            questionno:questionNumber,
-            wrongchoice: wrongChoice
-        }
-    );
-    if (false === source) return;
-    console.log('wrongChoice: '+source.wrongChoice);
-    targetNode.childNodes[0].innerHTML = '> ' + source.wrongChoice;
+    var wrongText = node.nextSibling.textContent;
+    targetNode.childNodes[0].innerHTML = '> ' + wrongText;
 }
 
 function buildComment (questionNumber,wrongChoice,commenter,commenterID,comment) {
