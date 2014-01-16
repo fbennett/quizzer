@@ -82,6 +82,8 @@ function addStudent(node) {
         addButton.style.display = 'none';
         saveButton.style.display = 'inline';
         studentBoxes.style.display = 'inline';
+        var externalLeagueTablesButton = document.getElementById('external-league-tables-button');
+        externalLeagueTablesButton.style.display = 'none';
     }
 }
 
@@ -161,6 +163,8 @@ function saveAddStudent(node) {
         saveButton.style.display = 'none';
         studentBoxes.style.display = 'none';
     }
+    var externalLeagueTablesButton = document.getElementById('external-league-tables-button');
+    externalLeagueTablesButton.style.display = 'inline';
 }
 
 function saveEditStudent(node){
