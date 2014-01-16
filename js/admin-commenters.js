@@ -27,6 +27,7 @@ function buildCommenterList (rows) {
             + '<td>' + getMailDaySelect(row.adminKey,row.interval) + '</td>'
             + '<td class="email">' + getEmail(row.email)  + '</td>'
             + '<td style="display:none;">' + row.adminKey + '</td>'
+            + '<td>' + row.numberOfComments + '</td>'
             + '<td><input class="button-small" type="button" value="Edit" onclick="addCommenter(this)"/></td>';
         container.appendChild(commenterTR);
     }
