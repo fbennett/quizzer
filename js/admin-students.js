@@ -30,6 +30,17 @@ function getExternalLeagueTablesData () {
     return lst;
 };
 
+function showStudents () {
+    var studentList = document.getElementById('student-list');
+    var externalLeagueTables = document.getElementById('external-league-tables');
+    externalLeagueTables.style.display = 'none';
+    studentList.style.display = 'block';
+    var externalLeagueTablesButton = document.getElementById('external-league-tables-button');
+    var mainDisplayButton = document.getElementById('main-display-button');
+    externalLeagueTablesButton.style.display = 'inline';
+    mainDisplayButton.style.display = 'none';
+};
+
 function showExternalLeagueTables () {
     var lst = getExternalLeagueTablesData();
     if (!lst) return;
@@ -54,6 +65,10 @@ function showExternalLeagueTables () {
     var externalLeagueTables = document.getElementById('external-league-tables');
     studentList.style.display = 'none';
     externalLeagueTables.style.display = 'block';
+    var mainDisplayButton = document.getElementById('main-display-button');
+    var externalLeagueTablesButton = document.getElementById('external-league-tables-button');
+    mainDisplayButton.style.display = 'inline';
+    externalLeagueTablesButton.style.display = 'none';
 };
 
 function addStudent(node) {
