@@ -7,7 +7,7 @@
   <link rel="stylesheet" type="text/css" href="css/local.css"/>
   <link rel="stylesheet" type="text/css" href="css/admin-students.css"/>
 </head>
-<body onLoad="buildStudentList();">
+<body onLoad="buildStudentList();getExternalLeagueTablesData();">
   <div class="grid">
     <div class="col-1-1">
       <h1>Quizzer Admin - students</h1>
@@ -17,6 +17,8 @@
       <div class="button-bold">
         <input class="button" id="add-student-button" type="button" value="Add Student" onclick="addStudent()"/>
         <input class="button" id="save-student-button" type="button" value="Save Student" onclick="saveAddStudent()" style="display:none;"/>
+        <input class="button" id="external-league-tables-button" type="button" value="External League Tables" onclick="showExternalLeagueTables()" style="display:none;"/>
+        <input class="button" id="main-display-button" type="button" value="Return to Main Display" onclick="showStudents()" style="display:none;"/>
         <span id="student-boxes" style="display:none;">
           Name:
           <input id="student-name" type="text" size="20"/>
@@ -33,6 +35,17 @@
       <hr/>
       <div id="student-list">
       </div>
+      <table id="external-league-tables">
+        <thead>
+          <tr>
+            <td>Name</td>
+            <td>Answers</td>
+            <td>Average</td>
+          </tr>
+        </thead>
+        <tbody id="external-league-tables-list">
+        </tbody>
+      </table>
     </div>
   </div>
 </body>

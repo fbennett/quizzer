@@ -25,3 +25,7 @@ div.bubble-edit {
 div#student-list span:hover {
     background: #fafafa;
 }
+
+thead {
+    font-weight:bold;
+}
