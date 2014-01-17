@@ -4,7 +4,10 @@
   <meta charset="UTF-8">
   <script type="text/javascript" src="js/local.js"></script>  
   <script type="text/javascript" src="js/admin-class.js"></script>
+  <script type="text/javascript" src="js/d3.min.js"></script>
+  <script type="text/javascript" src="js/xcharts.min.js"></script>
   <link rel="stylesheet" type="text/css" href="css/simple-grid.css"/>
+  <link rel="stylesheet" type="text/css" href="css/xcharts.min.css"/>
   <link rel="stylesheet" type="text/css" href="css/local.css"/>
   <link rel="stylesheet" type="text/css" href="css/admin-class.css"/>
 </head>
@@ -29,6 +32,7 @@
           <input id="exam-date" type="text" size="20"/>
         </span>
         <input class="button" id="non-submitters-button" type="button" value="Stragglers" onclick="showStragglers();"/>
+        <input class="button" id="class-profile-button" type="button" value="Class Profile" onclick="showProfile();"/>
         <input class="button" id="main-display-button" type="button" value="Return to Main Display" onclick="restoreMain();" style="display:none;"/>
       </div>
       <hr/>
@@ -88,6 +92,8 @@
           </tr>
         </tbody>
       </table>
+    </div>
+    <div class="col-1-1 class-profile-display" style="display:none;" id="profile-chart" style="height:300px;">
     </div>
   </div>
 </body>

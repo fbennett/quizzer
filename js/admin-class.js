@@ -272,49 +272,112 @@ function showNonSubmitters () {
     }
 };
 
+function showProfile () {
+    generateProfileChart();
+    buttonMode('profile-display');
+}
+
+function generateProfileChart() {
+    var adminID = getParameterByName('admin');
+    var classID = getParameterByName('classid');
+    var students = apiRequest(
+        '/?admin='
+            + adminID
+            + '&page=class'
+            + '&cmd=getprofiledata'
+        , {
+            classid:classID
+        }
+    );
+    if (false === students) return;
+
+    var quintiles = {0:[],1:[],2:[],3:[],4:[]};
+    for (var i=0,ilen=students.length;i<ilen;i+=1) {
+        var student = students[i];
+        quintiles[parseInt((student.percentageCorrect/20) % 5,10)].push(student);
+    }
+    var numbers = [{x:0,y:0}];
+    for (var i=0,ilen=5;i<ilen;i+=1) {
+        var obj = {x:0,y:0};
+        obj.x = (20*i)+10;
+        if (quintiles[i].length) {
+            total = 0;
+            for (var j=0,jlen=quintiles[i].length;j<jlen;j+=1) {
+                total += quintiles[i][j].percentageCorrect;
+            }
+            obj.x = (total/quintiles[i].length);
+        }
+        obj.y = quintiles[i].length;
+        numbers.push(obj);
+    }
+    numbers.push({x:100,y:0});
+    var data = {
+        xScale: 'linear',
+        yScale: 'linear',
+        type: 'line',
+        main: [
+            {
+                className: '.pizza',
+                data: numbers
+            }
+        ]
+    }
+    var opts = {};
+    console.log("SHOW: "+JSON.stringify(data,null,2));
+    var myChart = new xChart('line', data, '#profile-chart', opts);
+}
+
 function buttonMode (mode) {
     var setupButton = document.getElementById('exam-setup');
     var createButton = document.getElementById('exam-create');
     var examBoxes = document.getElementById('exam-boxes');
 
     var mainDisplayButton = document.getElementById('main-display-button');
-    var mainDisplay = document.getElementsByClassName('main-display');
 
     var nonSubmittersButton = document.getElementById('non-submitters-button');
     var nonSubmittersDisplay = document.getElementsByClassName('non-submitters-display');
+
+    var profileButton = document.getElementById('class-profile-button');
 
     if (mode === 'create-exam') {
         setupButton.style.display = "none";
         createButton.style.display = "inline";
         examBoxes.style.display = "inline";
         nonSubmittersButton.style.display = 'none';
+        profileButton.style.display = 'none';
     } else if (mode === 'non-submitters-display') {
         setupButton.style.display = 'none';
         setupButton.disabled = true;
         createButton.style.display = 'none';
         examBoxes.style.display = 'none';
         mainDisplayButton.style.display = 'inline';
-        for (var i=0,ilen=mainDisplay.length;i<ilen;i+=1) {
-            mainDisplay[i].style.display = 'none';
-        }
+        hideRevealMainDisplay('none');
         for (var i=0,ilen=nonSubmittersDisplay.length;i<ilen;i+=1) {
             nonSubmittersDisplay[i].style.display = 'block';
         }
+        profileButton.style.display = 'none';
         nonSubmittersButton.style.display = 'none';
         showNonSubmitters();
+    } else if (mode === 'profile-display') {
+        mainDisplayButton.style.display = 'inline';
+        nonSubmittersButton.style.display = 'none';
+        profileButton.style.display = 'none';
+        setupButton.style.display = "none";
+        hideRevealMainDisplay('none');
+        hideRevealProfileDisplay('block');
     } else if (mode === 'main-display') {
         setupButton.style.display = 'inline';
         setupButton.disabled = false;
         createButton.style.display = 'none';
+        hideRevealProfileDisplay('none');
         examBoxes.style.display = 'none';
         mainDisplayButton.style.display = 'none';
-        for (var i=0,ilen=mainDisplay.length;i<ilen;i+=1) {
-            mainDisplay[i].style.display = 'block';
-        }
+        hideRevealMainDisplay('block');
         for (var i=0,ilen=nonSubmittersDisplay.length;i<ilen;i+=1) {
             nonSubmittersDisplay[i].style.display = 'none';
         }
         nonSubmittersButton.style.display = 'inline';
+        profileButton.style.display = 'inline';
     } else {
         setupButton.style.display = "inline";
         createButton.style.display = "none";
@@ -323,6 +386,21 @@ function buttonMode (mode) {
         document.getElementById('exam-date').value = '';
         document.getElementById('exam-number-of-questions').value = '';
         nonSubmittersButton.style.display = 'inline';
+        profileButton.style.display = 'inline';
+    }
+}
+
+function hideRevealMainDisplay (arg) {
+    var mainDisplay = document.getElementsByClassName('main-display');
+    for (var i=0,ilen=mainDisplay.length;i<ilen;i+=1) {
+        mainDisplay[i].style.display = arg;
+    }
+}
+
+function hideRevealProfileDisplay (arg) {
+    var profileDisplay = document.getElementsByClassName('class-profile-display');
+    for (var i=0,ilen=profileDisplay.length;i<ilen;i+=1) {
+        profileDisplay[i].style.display = arg;
     }
 }
 

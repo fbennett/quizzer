@@ -1,3 +1,8 @@
+div#profile-chart {
+    height:500px;
+    width:800px;
+}
+
 thead tr td {
     font-weight:bold;
     padding: 0 0 0.5em 0;
