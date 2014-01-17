@@ -1,6 +1,6 @@
 {
   "name":"quizzer",
-  "version":"1.0.8",
+  "version":"1.0.9",
   "description":"Quizzer is a webserver for collaborative writing lab support. Based on a 'fail early, fail often' approach to written language, the tool is particularly suited to second-language learners. The workflow (essay - error - quiz - exam) treats mistakes as an opportunity for learning, and emphasizes rapid pattern-practice iterations based on students' own writing samples. This approach makes more efficient use of staff time than the traditional essay-and-appraisal approach. So that's the pitch -- give it a try.",
   "keywords":[
     "english",
