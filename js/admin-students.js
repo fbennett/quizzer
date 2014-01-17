@@ -39,6 +39,8 @@ function showStudents () {
     var mainDisplayButton = document.getElementById('main-display-button');
     externalLeagueTablesButton.style.display = 'inline';
     mainDisplayButton.style.display = 'none';
+    var addButton = document.getElementById('add-student-button');
+    addButton.style.display = 'inline';
 };
 
 function showExternalLeagueTables () {
@@ -69,6 +71,8 @@ function showExternalLeagueTables () {
     var externalLeagueTablesButton = document.getElementById('external-league-tables-button');
     mainDisplayButton.style.display = 'inline';
     externalLeagueTablesButton.style.display = 'none';
+    var addButton = document.getElementById('add-student-button');
+    addButton.style.display = 'none';
 };
 
 function addStudent(node) {
