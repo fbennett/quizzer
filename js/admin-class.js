@@ -294,7 +294,8 @@ function generateProfileChart() {
     var quintiles = {0:[],1:[],2:[],3:[],4:[]};
     for (var i=0,ilen=students.length;i<ilen;i+=1) {
         var student = students[i];
-        quintiles[parseInt((student.percentageCorrect/20) % 5,10)].push(student);
+        var quintpos = parseInt((student.percentageCorrect/20) % 5,10);
+        quintiles[quintpos].push(student);
     }
     var numbers = [{x:0,y:0}];
     for (var i=0,ilen=5;i<ilen;i+=1) {
@@ -323,7 +324,6 @@ function generateProfileChart() {
         ]
     }
     var opts = {};
-    console.log("SHOW: "+JSON.stringify(data,null,2));
     var myChart = new xChart('line', data, '#profile-chart', opts);
 }
 

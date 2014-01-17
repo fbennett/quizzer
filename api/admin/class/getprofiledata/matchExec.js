@@ -5,7 +5,7 @@
         var adminID = params.adminid;
         var classID = params.classid;
         var sys = this.sys;
-        var sql = 'SELECT s.studentID,((CAST(COUNT(correct.questionID) AS REAL)-(0.25*(CAST(COUNT(total.questionID) AS REAL)-CAST(COUNT(correct.questionID) AS REAL))))/CAST(COUNT(total.questionID) AS REAL))*100 AS percentageCorrect '
+        var sql = 'SELECT s.studentID,CAST(COUNT(correct.questionID) AS REAL)*100/CAST(COUNT(total.questionID) AS REAL) AS percentageCorrect '
             + 'FROM memberships AS m '
             + 'JOIN students AS s ON s.studentID=m.studentID '
             + 'JOIN ('
