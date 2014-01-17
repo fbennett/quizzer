@@ -44,7 +44,7 @@
             });
         };
         function getAnswers (studentID) {
-            sys.db.all('SELECT a.questionNumber,a.choice FROM answers AS a JOIN questions AS q ON a.questionID=q.questionID WHERE q.classID=? AND q.quizNumber=? AND a.studentID=?',[classID,quizNumber,studentID],function(err,rows){
+            sys.db.all('SELECT q.questionNumber,a.choice FROM answers AS a JOIN questions AS q ON a.questionID=q.questionID WHERE q.classID=? AND q.quizNumber=? AND a.studentID=?',[classID,quizNumber,studentID],function(err,rows){
                 if (err||!rows) {return oops(response,err,'quiz/getcorrectanswers(3)')};
                 for (var i=0,ilen=rows.length;i<ilen;i+=1) {
                     var row = rows[i];
