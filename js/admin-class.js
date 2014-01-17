@@ -291,16 +291,16 @@ function generateProfileChart() {
     );
     if (false === students) return;
 
-    var quintiles = {0:[],1:[],2:[],3:[],4:[]};
+    var quintiles = {0:[],1:[],2:[],3:[],4:[],5:[],6:[],7:[],8:[],9:[]};
     for (var i=0,ilen=students.length;i<ilen;i+=1) {
         var student = students[i];
-        var quintpos = parseInt((student.percentageCorrect/20) % 5,10);
+        var quintpos = parseInt((student.percentageCorrect/10) % 10,10);
         quintiles[quintpos].push(student);
     }
     var numbers = [{x:0,y:0}];
-    for (var i=0,ilen=5;i<ilen;i+=1) {
+    for (var i=0,ilen=10;i<ilen;i+=1) {
         var obj = {x:0,y:0};
-        obj.x = (20*i)+10;
+        obj.x = (10*i)+5;
         if (quintiles[i].length) {
             total = 0;
             for (var j=0,jlen=quintiles[i].length;j<jlen;j+=1) {
