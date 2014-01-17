@@ -301,7 +301,7 @@ function generateProfileChart() {
     for (var i=0,ilen=10;i<ilen;i+=1) {
         var obj = {x:0,y:0};
         obj.x = (10*i)+5;
-        if (quintiles[i].length) {
+        if (quintiles[i].length && false) {
             total = 0;
             for (var j=0,jlen=quintiles[i].length;j<jlen;j+=1) {
                 total += quintiles[i][j].percentageCorrect;
