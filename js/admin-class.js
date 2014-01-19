@@ -229,7 +229,7 @@ function createExam () {
         if (false === result) return;
         
         buttonMode('default');
-        //buildQuizList();
+        buildQuizList();
     }
 };
 

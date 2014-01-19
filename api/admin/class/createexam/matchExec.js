@@ -3,19 +3,26 @@
     cogClass.prototype.exec = function (params, request, response) {
         var oops = this.utils.apiError;
         var sys = this.sys;
-        var classID = params.classid;
-        var examTitle = params.examtitle;
-        var examDate = params.examdate;
+        var data = {};
+        data.classID = params.classid;
+        data.examTitle = params.examtitle;
+        data.examDate = params.examdate;
+        data.questions = [];
         var examNumberOfQuestions = params.examnumberofquestions;
         var quizNumberMax;
-        var quizQuestionCount = 0;
+        var choicesCount = 0;
 
-        console.log("Creating exam: title='"+examTitle+"', date='"+examDate+"', number-of-questions="+examNumberOfQuestions);
+        console.log("Creating exam: title='"+data.examTitle+"', date='"+data.examDate+"', number-of-questions="+examNumberOfQuestions);
         // Get the questionID for questions in each quiz for this class that is not an examination
         getQuizzes();
 
         function getQuizzes () {
-            sys.db.all('SELECT q.quizNumber,qq.questionID,q.sent,q.examName FROM quizzes AS q JOIN questions AS qq ON qq.classID=q.classID AND qq.quizNumber=q.quizNumber WHERE q.classID=? ORDER BY q.quizNumber',[classID],function(err,rows){
+            var sql = 'SELECT quizNumber,questionID,sent,examName '
+                + 'FROM quizzes '
+                + 'NATURAL JOIN questions '
+                + 'WHERE classID=? '
+                + 'ORDER BY quizNumber;'
+            sys.db.all(sql,[data.classID],function(err,rows){
                 if (err||!rows) {return oops(response,err,'class/createexam(1)')};
                 var quizQuestionIDs = [];
                 for (var i=0,ilen=rows.length;i<ilen;i+=1) {
@@ -32,89 +39,94 @@
 
         function getQuestions(quizQuestionIDs) {
             console.log("RUN: getQuestions()");
-            var sqlslots = [];
             var sqlparams = [];
             for (i=0,ilen=quizQuestionIDs.length;i<ilen;i+=1) {
                 sqlparams.push(quizQuestionIDs[i]);
-                sqlslots.push('?');
             }
             console.log("  getting these questions: "+sqlparams);
-            var sql = 'SELECT q.rubricID,'
-                + 'q.correct,'
-                + 'q.qOneID,q.qTwoID,q.qThreeID,q.qFourID,'
-                + 'r.string AS rubric,'
-                + 'one.string AS one,two.string AS two,three.string AS three,four.string AS four '
-                + 'FROM questions AS q '
-                + 'LEFT JOIN strings AS r ON r.stringID=q.rubricID '
-                + 'LEFT JOIN strings AS one ON one.stringID=q.qOneID '
-                + 'LEFT JOIN strings AS two ON two.stringID=q.qTwoID '
-                + 'LEFT JOIN strings AS three ON three.stringID=q.qThreeID ' 
-                + 'LEFT JOIN strings AS four ON four.stringID=q.qFourID '
-                + 'WHERE q.questionID IN (' + sqlslots.join(',') + ')'
-            sys.db.all(sql,sqlparams,function(err,rows){
-                if (err||!rows) {return oops(response,err,'class/createexam(2)')};
-                var quizQuestions = [];
-                for (var i=0,ilen=rows.length;i<ilen;i+=1) {
+            var sql = 'SELECT correct,stringID,questionID FROM questions WHERE questionID IN (' + sqlparams + ')';
+            sys.db.all(sql,function(err,rows){
+                if (err||!rows) {return oops(response,err,'class/createexam(1)')};
+                choicesCount += (rows.length * 4);
+                console.log("choicesCount set to: "+choicesCount);
+                for (i=0,ilen=rows.length;i<ilen;i+=1) {
                     var row = rows[i];
-                    quizQuestions.push({
-                        rubricID:row.rubricID,
+                    var qobj = {
                         correct:row.correct,
-                        qOneID:row.qOneID,
-                        qTwoID:row.qTwoID,
-                        qThreeID:row.qThreeID,
-                        qFourID:row.qFourID,
-                        rubric:row.rubric,
-                        choices: [
-                            row.one,
-                            row.two,
-                            row.three,
-                            row.four
-                        ]
-                    });
+                        rubricID:row.stringID,
+                        choices:[]
+                    }
+                    data.questions.push(qobj);
+                    getChoicesRepeater(qobj,row.questionID,0,4);
                 }
-                // Randomize the list of questions
-                sys.randomize(quizQuestions);
-                // Slice off the first N questions; this is our set
-                quizQuestions = quizQuestions.slice(0,examNumberOfQuestions);
-                saveExam(quizQuestions);
             });
-        }
-
-        function saveExam(quizQuestions) {
-            console.log("RUN: saveExam()");
-            // Create a fresh quiz, with sent=-1
-            var quizNumber = quizNumberMax + 1;
-            sys.db.run('INSERT OR REPLACE INTO quizzes VALUES (NULL,?,?,?,?,?)',[classID,quizNumber,0,examTitle,examDate],function(err){
-                if (err) {return oops(response,err,'class/createexam(3)')};
-                saveQuestions(quizNumber,quizQuestions)
-            });
-        }
-
-        function saveQuestions(quizNumber,quizQuestions) {
-            console.log("RUN: saveQuestions()");
-            // Recast the questions on the fresh quiz
-            quizQuestionCount += quizQuestions.length;
-            for (var i=0,ilen=quizQuestions.length;i<ilen;i+=1) {
-                quizQuestion = quizQuestions[i];
-                var questionNumber = (i + 1);
-                var rubricID = quizQuestion.rubricID;
-                var correct = quizQuestion.correct;
-                var qOneID = quizQuestion.qOneID;
-                var qTwoID = quizQuestion.qTwoID;
-                var qThreeID = quizQuestion.qThreeID;
-                var qFourID = quizQuestion.qFourID;
-                //console.log("  try database insert: "+classID+" "+quizNumber+" "+questionNumber+" "+correct+" "+rubricID+" "+qOneID+" "+qTwoID+" "+qThreeID+" "+qFourID);
-                sys.db.run('INSERT INTO questions VALUES (NULL,?,?,?,?,?,?,?,?,?)',[classID,quizNumber,questionNumber,correct,rubricID,qOneID,qTwoID,qThreeID,qFourID],function(err){
-                    if (err) {return oops(response,err,'class/createexam(4)')};
-                    quizQuestionCount += -1;
-                    if (!quizQuestionCount) {
-                        response.writeHead(200, {'Content-Type': 'application/json'});
-                        response.end(JSON.stringify({success:true}));
+            function getChoicesRepeater(qobj,questionID,pos,limit) {
+                var sql = 'SELECT stringID FROM choices WHERE questionID=? AND choice=?';
+                sys.db.get(sql,[questionID,pos],function(err,row){
+                    if (err) {return oops(response,err,'class/createexam(2)')};
+                    if (pos < limit) {
+                        console.log("choicesCount decremented to: "+choicesCount);
+                        qobj.choices[pos] = row.stringID;
+                        getChoicesRepeater(qobj,questionID,pos+1,limit);
+                        choicesCount += -1;
+                        if (!choicesCount) {
+                            saveExam();
+                        }
                     }
                 });
             }
         }
 
+        function saveExam() {
+            console.log("RUN: saveExam()");
+            // Create a fresh quiz, with sent=-1
+            var quizNumber = quizNumberMax + 1;
+            sys.db.run('INSERT INTO quizzes VALUES (NULL,?,?,?,?,?)',[data.classID,quizNumber,0,data.examTitle,data.examDate],function(err){
+                if (err) {return oops(response,err,'class/createexam(3)')};
+                var quizID = this.lastID;
+                choicesCount += (data.questions.length * 4);
+                saveQuestionsRepeater(quizID,quizNumber,0,data.questions.length);
+            });
+        }
+
+        function saveQuestionsRepeater(quizID,quizNumber,pos,limit) {
+            if (pos < limit) {
+                console.log("RUN: saveQuestionsRepeater("+pos+")");
+                // Recast the questions on the fresh quiz
+                var questionNumber = (pos + 1);
+                var correct = data.questions[pos].correct;
+                var stringID = data.questions[pos].rubricID;
+                var sql = 'INSERT INTO questions VALUES (NULL,?,?,?,?)';
+                sys.db.run(sql,[quizID,questionNumber,correct,stringID],function(err){
+                    if (err) {return oops(response,err,'class/createexam(4)')};
+                    saveQuestionsRepeater(quizID,quizNumber,pos+1,limit);
+                    var questionID = this.lastID;
+                    saveChoicesRepeater(questionID,pos,0,4);
+                });
+            } else {
+                // Finished registering questions
+                // This will finish before choices are all registered, so
+                // do nothing.
+            }
+        }
+        function saveChoicesRepeater(questionID,qindex,pos,limit){
+            console.log("saveChoicesRepeater: "+questionID+" "+qindex+" "+pos+" "+limit);
+            if (pos < limit) {
+                var stringID = data.questions[qindex].choices[pos];
+                var sql = 'INSERT INTO choices VALUES (NULL,?,?,?)';
+                sys.db.run(sql,[questionID,pos,stringID],function(err){
+                    if (err) {return oops(response,err,'class/createexam(5)')};
+                    saveChoicesRepeater(questionID,qindex,pos+1,limit);
+                    choicesCount += -1;
+                    console.log("choicesCount is: "+choicesCount);
+                    if (!choicesCount) {
+                        // Done! What now?
+                        response.writeHead(200, {'Content-Type': 'application/json'});
+                        response.end(JSON.stringify(['success']));
+                    }
+                });
+            }
+        };
     }
     exports.cogClass = cogClass;
 })();

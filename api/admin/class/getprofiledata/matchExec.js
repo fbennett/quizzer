@@ -5,21 +5,22 @@
         var adminID = params.adminid;
         var classID = params.classid;
         var sys = this.sys;
-        var sql = 'SELECT s.studentID,CAST(COUNT(correct.questionID) AS REAL)*100/CAST(COUNT(total.questionID) AS REAL) AS percentageCorrect '
-            + 'FROM memberships AS m '
-            + 'JOIN students AS s ON s.studentID=m.studentID '
+        var sql = 'SELECT students.studentID,'
+            + 'CAST(COUNT(correct.questionID) AS REAL)*100/CAST(COUNT(total.questionID) AS REAL) AS percentageCorrect '
+            + 'FROM memberships '
+            + 'NATURAL JOIN students '
             + 'JOIN ('
             +   'SELECT questionID,studentID '
             +   'FROM answers'
-            + ') AS total ON total.studentID=s.studentID '
+            + ') AS total ON total.studentID=students.studentID '
             + 'LEFT JOIN ('
-            +   'SELECT a.questionID,a.studentID '
-            +   'FROM answers AS a '
-            +   'JOIN questions AS q ON q.questionID=a.questionID '
-            +   'WHERE a.choice=q.correct'
-            + ') AS correct ON correct.studentID=s.studentID AND correct.questionID=total.questionID '
-            + 'WHERE s.privacy=0 AND m.classID=? '
-            + 'GROUP BY s.studentID '
+            +   'SELECT answers.questionID,answers.studentID '
+            +   'FROM questions '
+            +   'NATURAL JOIN answers '
+            +   'WHERE choice=correct'
+            + ') AS correct USING(studentID,questionID) '
+            + 'WHERE privacy=0 AND memberships.classID=? '
+            + 'GROUP BY students.studentID '
             + 'ORDER BY percentageCorrect DESC;'
         sys.db.all(sql,[classID],function(err,rows){
             if (err||!rows) {return oops(response,err,'class/getprofiledata(1)')}

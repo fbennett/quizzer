@@ -4,18 +4,22 @@
         var oops = this.utils.apiError;
         var classID = params.classid;
         var db = this.sys.db;
-        var sql = 'SELECT qz.quizNumber,qz.examName,CASE WHEN qz.sent IS NULL OR qz.sent=0 THEN -1 ELSE COUNT(res.pending) END AS pending '
-            + 'FROM quizzes AS qz LEFT JOIN ('
-            +     'SELECT q.quizNumber AS pending FROM memberships AS m '
-            +     'JOIN students AS s ON s.studentID=m.studentID '
-            +     'JOIN questions AS q ON q.classID=m.classID '
-            +     'LEFT JOIN answers AS a ON a.questionID=q.questionID AND a.studentID=m.studentID '
-            +     'WHERE q.classID=? AND a.questionID IS NULL AND (s.privacy IS NULL OR s.privacy=0) '
-            +     'GROUP BY q.classID,q.quizNumber,m.studentID'
-            + ') AS res ON res.pending=qz.quizNumber '
-            + 'WHERE qz.classID=? '
-            + "GROUP BY qz.classID,qz.quizNumber "
-            + "ORDER BY qz.quizNumber;"
+        var sql = 'SELECT quizNumber,examName,CASE WHEN sent IS NULL OR sent=0 THEN -1 ELSE COUNT(pending) END AS pending '
+            + 'FROM quizzes '
+            + 'LEFT JOIN ('
+            +     'SELECT quizNumber AS pending '
+            +     'FROM memberships '
+            +     'NATURAL JOIN students '
+            +     'NATURAL JOIN classes '
+            +     'NATURAL JOIN quizzes '
+            +     'NATURAL JOIN questions '
+            +     'LEFT JOIN answers USING (questionID,studentID) '
+            +     'WHERE memberships.classID=? AND answers.questionID IS NULL AND (privacy IS NULL OR privacy=0) '
+            +     'GROUP BY memberships.classID,quizNumber,memberships.studentID'
+            + ') AS res ON res.pending=quizNumber '
+            + 'WHERE classID=? '
+            + "GROUP BY classID,quizNumber "
+            + "ORDER BY quizNumber;"
         db.all(sql,[classID,classID],function(err,rows){
             if (err||!rows) {return oops(response,err,'class/readquizzes')};
             var retRows = [];

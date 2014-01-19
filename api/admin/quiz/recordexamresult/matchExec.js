@@ -17,9 +17,12 @@
             recordResult(classID,quizNumber,questionNumber,studentID,choice);
         }
         function recordResult(classID,quizNumber,questionNumber,studentID,choice) {
-            sys.db.run('INSERT OR REPLACE INTO answers (questionID,studentID,choice) SELECT q.questionID,?,? FROM questions AS q WHERE q.classID=? AND q.quizNumber=? AND q.questionNumber=?',[studentID,choice,classID,quizNumber,questionNumber],function(err){
+            var sql = 'INSERT OR REPLACE INTO answers (questionID,studentID,choice) '
+                + 'SELECT questions.questionID,?,? FROM quizzes '
+                + 'NATURAL JOIN questions '
+                + 'WHERE quizzes.classID=? AND quizzes.quizNumber=? AND questions.questionNumber=?'
+            sys.db.run(sql,[studentID,choice,classID,quizNumber,questionNumber],function(err){
                 if (err) {return oops(response,err,'quiz/recordexamresult')};
-                console.log("Comleted okay! "+classID+" "+quizNumber+" "+questionNumber+" "+studentID+" "+choice);
                 answerCount += -1;
                 if (!answerCount) {
                     response.writeHead(200, {'Content-Type': 'application/json'});

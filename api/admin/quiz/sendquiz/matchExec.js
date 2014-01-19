@@ -35,33 +35,35 @@
         // Get list of recipients
         // update recipient keys
         // 
-        var sql = 'SELECT m.studentID,s.name,s.email,c.name AS className '
-            + 'FROM memberships AS m '
-            + 'JOIN students AS s ON s.studentID=m.studentID '
-            + 'JOIN quizzes AS q ON q.classID=m.classID '
-            + 'JOIN classes AS c ON c.classID=m.classID '
-            + 'WHERE m.classID=? AND q.quizNumber=? '
+        var sql = 'SELECT memberships.studentID,students.name,email,classes.name AS className '
+            + 'FROM memberships '
+            + 'NATURAL JOIN students '
+            + 'JOIN classes USING(classID) '
+            + 'JOIN quizzes USING(classID) '
+            + 'WHERE memberships.classID=? AND quizzes.quizNumber=? '
             +   'AND ('
-            +     'q.sent=0 '
+            +     'sent=0 '
             +     'OR ('
-            +       'q.sent=1 AND ('
-            +         'm.last_mail_date IS NULL '
-            +         "OR JULIANDAY('now')-JULIANDAY(m.last_mail_date)>6"
+            +       'sent=1 AND ('
+            +         'last_mail_date IS NULL '
+            +         "OR JULIANDAY('now')-JULIANDAY(last_mail_date)>6"
             +       ') '
-            +       'AND m.studentID NOT IN ('
+            +       'AND memberships.studentID NOT IN ('
             +         'SELECT studentID '
-            +           'FROM answers AS a '
-            +           'JOIN questions AS qq '
-            +           'ON qq.questionID=a.questionID '
-            +           'WHERE qq.classID=? '
-            +             'AND qq.quizNumber=?'
+            +           'FROM quizzes '
+            +           'NATURAL JOIN questions '
+            +           'NATURAL JOIN answers '
+            +           'WHERE quizzes.classID=? '
+            +           'AND quizNumber=? '
+            +           'GROUP BY studentID'
             +       ')'
             +     ')'
             +   ');';
-
+        console.log("SQL: "+sql);
         // Get students for processing
         sys.db.all(sql,[classID,quizNumber,classID,quizNumber],function(err,rows){
             if (err||!rows) {return oops(response,err,'quiz/sendquiz(1)')};
+            console.log("(1) "+rows);
             var datalst = [];
             studentCount += rows.length;
             for (var i=0,ilen=rows.length;i<ilen;i+=1) {
@@ -77,6 +79,7 @@
         });
 
         function updateStudentKey (classID,studentID,email,name,className) {
+            console.log("(2)");
             var studentKey = sys.getRandomKey(8,36);
             sys.db.run('UPDATE memberships SET studentKey=? WHERE classID=? AND studentID=?',[studentKey,classID,studentID],function(err){
                 if (err) {return oops(response,err,'quiz/sendquiz(2)')};
@@ -87,14 +90,20 @@
         };
 
         function sendMail (quizNumber,studentID,studentKey,name,email,className) {
+            console.log("(3)");
             var link = template_link
                 .replace(/@@STUDENT_ID@@/g,studentID)
                 .replace(/@@STUDENT_KEY@@/g,studentKey)
                 .replace(/@@QUIZ_NUMBER@@/g,quizNumber);
             var front = front_template.replace(/@@NAME@@/,name)
             var pastLinks = 0;
-            sys.db.all('SELECT q.quizNumber FROM questions AS q JOIN quizzes AS qz ON qz.classID=q.classID AND qz.quizNumber=q.quizNumber WHERE q.classID=? AND NOT q.quizNumber=? AND qz.sent=1 GROUP BY q.quizNumber',[classID,quizNumber],function(err,rows){
+            var sql = 'SELECT quizNumber '
+                + 'FROM quizzes '
+                + 'NATURAL JOIN questions '
+                + 'WHERE classID=? AND NOT quizNumber=? AND sent=1 GROUP BY quizNumber'
+            sys.db.all(sql,[classID,quizNumber],function(err,rows){
                 if (err) {return oops(response,err,'quiz/sendquiz(3)')};
+                console.log("(4)");
                 var middle = '';
                 var msg;
                 if (!rows || !rows.length) {

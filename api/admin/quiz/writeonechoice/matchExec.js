@@ -7,7 +7,12 @@
         var quizNumber = params.quizno;
         var questionNumber = params.questionno;
         var correct = params.choice;
-        sys.db.run('UPDATE questions SET correct=? WHERE classID=? AND quizNumber=? AND questionNumber=?',[correct,classID,quizNumber,questionNumber],function(err){
+        var sql = 'INSERT OR REPLACE INTO questions (questionID,quizID,questionNumber,correct,stringID) '
+            + 'SELECT questionID,quizzes.quizID,questionNumber,?,stringID '
+            + 'FROM quizzes '
+            + 'NATURAL JOIN questions '
+            + 'WHERE classID=? AND quizNumber=? AND questionNumber=?';
+        sys.db.run(sql,[correct,classID,quizNumber,questionNumber],function(err){
             if (err) {return oops(response,err,'quiz/writeonechoice')};
             response.writeHead(200, {'Content-Type': 'text/plain'});
             response.end('done');

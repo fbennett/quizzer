@@ -15,8 +15,12 @@
         };
         
         // Also send:
-        
-        sys.db.all('SELECT q.questionNumber,q.correct FROM questions AS q WHERE q.classID=? AND q.quizNumber=?',[classID,quizNumber],function(err,rows){
+
+        var sql = 'SELECT questionNumber,correct '
+            + 'FROM quizzes '
+            + 'NATURAL JOIN questions '
+            + 'WHERE classID=? AND quizNumber=?';
+            sys.db.all(sql,[classID,quizNumber],function(err,rows){
             if (err||!rows) {return oops(response,err,'quiz/getcorrectanswers(1)')};
             for (var i=0,ilen=rows.length;i<ilen;i+=1) {
                 var row = rows[i];
@@ -27,7 +31,11 @@
         });
 
         function getStudentNames () {
-            sys.db.all('SELECT s.name,s.studentID FROM memberships AS m JOIN students AS s ON s.studentID=m.studentID WHERE m.classID=? AND (s.privacy IS NULL OR s.privacy=0)',[classID],function(err,rows){
+            var sql = 'SELECT name,students.studentID '
+                + 'FROM memberships '
+                + 'NATURAL JOIN students '
+                + 'WHERE classID=? AND (privacy IS NULL OR privacy=0)';
+            sys.db.all(sql,[classID],function(err,rows){
                 if (err||!rows) {return oops(response,err,'quiz/getcorrectanswers(2)')};
                 if (rows.length) {
                     studentsCount += rows.length;
@@ -44,7 +52,12 @@
             });
         };
         function getAnswers (studentID) {
-            sys.db.all('SELECT q.questionNumber,a.choice FROM answers AS a JOIN questions AS q ON a.questionID=q.questionID WHERE q.classID=? AND q.quizNumber=? AND a.studentID=?',[classID,quizNumber,studentID],function(err,rows){
+            var sql = 'SELECT questionNumber,choice '
+                + 'FROM quizzes '
+                + 'NATURAL JOIN questions '
+                + 'NATURAL JOIN answers '
+                + 'WHERE classID=? AND quizNumber=? AND studentID=?'
+            sys.db.all(sql,[classID,quizNumber,studentID],function(err,rows){
                 if (err||!rows) {return oops(response,err,'quiz/getcorrectanswers(3)')};
                 for (var i=0,ilen=rows.length;i<ilen;i+=1) {
                     var row = rows[i];

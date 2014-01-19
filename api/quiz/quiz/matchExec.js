@@ -23,7 +23,14 @@
         });
         
         function getQuizOrResult(className,examName) {
-            sys.db.get('SELECT s.name AS studentName,c.name AS className FROM answers AS a JOIN questions AS q ON q.questionID=a.questionID JOIN students AS s ON s.studentID=a.studentID JOIN classes AS c ON c.classID=q.classID WHERE q.classID=? AND q.quizNumber=? AND a.studentID=?',[classID,quizNumber,studentID],function(err,row){
+            var sql = 'SELECT students.name AS studentName,classes.name AS className '
+                + 'FROM answers '
+                + 'NATURAL JOIN questions '
+                + 'JOIN quizzes USING(quizID) '
+                + 'JOIN students USING(studentID) '
+                + 'JOIN classes USING(classID) '
+                + 'WHERE quizzes.classID=? AND quizzes.quizNumber=? AND answers.studentID=?'
+            sys.db.get(sql,[classID,quizNumber,studentID],function(err,row){
                 if (err) {return oops(response,err,'*quiz(2)')}
                 var quizLabel;
                 if (examName) {

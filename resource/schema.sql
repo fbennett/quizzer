@@ -1,10 +1,10 @@
--- 9
+-- 10
 
 CREATE TABLE version (
        schema TEXT PRIMARY KEY,
        version INT NOT NULL
 );
-CREATE INDEX schema ON version(schema);
+CREATE INDEX version_idx ON version(schema);
 
 CREATE TABLE admin (
        adminID INTEGER PRIMARY KEY,
@@ -34,17 +34,23 @@ CREATE TABLE memberships (
        membershipID INTEGER PRIMARY KEY,
        classID INTEGER,
        studentID INTEGER,
-       studentKey TEXT,
-       last_mail_date DATE
+       studentKey TEXT NOT NULL,
+       last_mail_date DATE,
+       UNIQUE (studentID,classID),
+       FOREIGN KEY (studentID) REFERENCES students(studentID),
+       FOREIGN KEY (classID) REFERENCES classes(classID)       
 );
 
 CREATE TABLE showing (
        showID INTEGER PRIMARY KEY,
        adminID INTEGER,
        classID INTEGER,
-       studentID INTEGER
+       studentID INTEGER,
+       UNIQUE (adminID,classID,studentID),
+       FOREIGN KEY (adminID) REFERENCES admin(adminID),
+       FOREIGN KEY (classID) REFERENCES classes(classID),
+       FOREIGN KEY (studentID) REFERENCES students(studentID)       
 );
-CREATE UNIQUE INDEX showing_idx ON showing(adminID,classID,studentID);
 
 CREATE TABLE quizzes (
        quizID INTEGER PRIMARY KEY,
@@ -52,45 +58,76 @@ CREATE TABLE quizzes (
        quizNumber INTEGER,
        sent BOOLEAN,
        examName TEXT,
-       examDate TEXT
+       examDate TEXT,
+       UNIQUE (classID,quizNumber),
+       FOREIGN KEY (classID) REFERENCES classes(classID)
 );
-CREATE UNIQUE INDEX quizzes_idx ON quizzes(classID,quizNumber);
 
 CREATE TABLE questions (
        questionID INTEGER PRIMARY KEY,
-       classID INTEGER,
-       quizNumber INTEGER,
+       quizID INTEGER,
        questionNumber INTEGER,
        correct INTEGER,
-       rubricID INTEGER,
-       qOneID INTEGER,
-       qTwoID INTEGER,
-       qThreeID INTEGER,
-       qFourID INTEGER
+       stringID INTEGER,
+       UNIQUE (quizID,questionNumber),       
+       FOREIGN KEY (quizID) REFERENCES quizzes(quizID),
+       FOREIGN KEY (stringID) REFERENCES strings(stringID)
 );
-CREATE UNIQUE INDEX questions_idx ON questions(classID,quizNumber,questionNumber);
+
+CREATE TABLE choices (
+       choiceID INTEGER PRIMARY KEY,
+       questionID INTEGER,
+       choice INTEGER,
+       stringID INTEGER,
+       UNIQUE (questionID,choice),
+       FOREIGN KEY (questionID) REFERENCES questions(questionID),
+       FOREIGN KEY (stringID) REFERENCES strings(stringID)
+);
 
 CREATE TABLE strings (
        stringID INTEGER PRIMARY KEY,
-       string TEXT
+       string TEXT NOT NULL,
+       UNIQUE (string)
 );
-CREATE UNIQUE INDEX strings_idx ON strings(string);
 
 CREATE TABLE answers(
        answerID INTEGER PRIMARY KEY AUTOINCREMENT,
        questionID INTEGER,
        studentID INTEGER,
-       choice INTEGER
+       choice INTEGER,
+       FOREIGN KEY (questionID) REFERENCES questions(questionID)
 );
 CREATE UNIQUE INDEX answers_idx ON answers(questionID,studentID,choice);
 
 CREATE TABLE comments (
        commentID INTEGER PRIMARY KEY,
-       classID INTEGER,
-       quizNumber INTEGER,
-       questionNumber INTEGER,
-       choice INTEGER,
-       commentTextID INTEGER,
-       commenterID INTEGER
+       choiceID INTEGER,
+       adminID INTEGER,
+       stringID INTEGER,
+       UNIQUE (choiceID,stringID),
+       FOREIGN KEY (choiceID) REFERENCES choices(choiceID),
+       FOREIGN KEY (adminID) REFERENCES admin(adminID),
+       FOREIGN KEY (stringID) REFERENCES strings(stringID)
 );
-CREATE UNIQUE INDEX comments_idx ON comments(classID,quizNumber,questionNumber,choice,commenterID);
+
+CREATE TABLE rules (
+       ruleID INTEGER PRIMARY KEY,
+       ruleStringID INTEGER,
+       FOREIGN KEY (ruleStringID) REFERENCES ruleStrings(ruleStringID)
+);
+
+CREATE TABLE ruleStrings (
+       ruleStringID INTEGER PRIMARY KEY,
+       string TEXT NOT NULL,
+       UNIQUE (string)
+);
+CREATE UNIQUE INDEX rulestrings_idx ON ruleStrings(string);
+
+CREATE TABLE rulesToChoices (
+       ruleToChoiceID INTEGER PRIMARY KEY,
+       choiceID INTEGER,
+       ruleID INTEGER,
+       UNIQUE (choiceID,ruleID),
+       FOREIGN KEY (choiceID) REFERENCES choices(choiceID),
+       FOREIGN KEY (ruleID) REFERENCES rules(ruleID)
+);

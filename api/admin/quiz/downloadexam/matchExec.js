@@ -107,7 +107,11 @@
             console.log("RUN: getStudents()");
             // Get a list of students enroled in the class
             
-            sys.db.all('SELECT s.studentID,s.name FROM memberships as m JOIN students AS s ON s.studentID=m.studentID WHERE m.classID=? AND (s.privacy IS NULL OR s.privacy=?)',[classID,0],function(err,rows){
+            var sql = 'SELECT students.studentID,students.name '
+                + 'FROM memberships '
+                + 'NATURAL JOIN students '
+                + 'WHERE memberships.classID=? AND (privacy IS NULL OR privacy=?)';
+            sys.db.all(sql,[classID,0],function(err,rows){
                 if (err||!rows) {return oops(response,err,'class/createexam(5)')};
                 if (rows.length) {
                     for (var i=0,ilen=rows.length;i<ilen;i+=1) {
