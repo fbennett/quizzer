@@ -46,20 +46,42 @@
         });
 
         function getQuizQuestions () {
-            var sql = 'SELECT q.questionNumber,'
+            var sql = 'SELECT questionNumber,'
                 +   'r.string AS rubric,'
                 +   'one.string AS one,'
                 +   'two.string AS two,'
                 +   'three.string AS three,'
                 +   'four.string AS four '
-                + 'FROM questions AS q '
-                + 'LEFT JOIN strings AS r ON r.stringID=q.rubricID '
-                + 'LEFT JOIN strings AS one ON one.stringID=q.qOneID '
-                + 'LEFT JOIN strings AS two ON two.stringID=q.qTwoID '
-                + 'LEFT JOIN strings AS three ON three.stringID=q.qThreeID '
-                + 'LEFT JOIN strings AS four ON four.stringID=q.qFourID '
-                + 'WHERE classID=? AND quizNumber=?'
+                + 'FROM quizzes '
+                + 'JOIN questions AS q USING(quizID) '
+                + 'JOIN strings AS r ON r.stringID=q.stringID '
+                + 'JOIN ('
+                +     'SELECT questionID,string '
+                +     'FROM choices '
+                +     'JOIN strings USING(stringID) '
+                +     'WHERE choices.choice=0'
+                + ') AS one USING(questionID) '
+                + 'JOIN ('
+                +     'SELECT questionID,string '
+                +     'FROM choices '
+                +     'JOIN strings USING(stringID) '
+                +     'WHERE choices.choice=1'
+                + ') AS two USING(questionID) '
+                + 'JOIN ('
+                +     'SELECT questionID,string '
+                +     'FROM choices '
+                +     'JOIN strings USING(stringID) '
+                +     'WHERE choices.choice=2'
+                + ') AS three USING(questionID) '
+                + 'JOIN ('
+                +     'SELECT questionID,string '
+                +     'FROM choices '
+                +     'JOIN strings USING(stringID) '
+                +     'WHERE choices.choice=3'
+                + ') AS four USING(questionID) '
+                + 'WHERE quizzes.classID=? AND quizzes.quizNumber=? '
                 + 'ORDER BY q.questionNumber';
+            console.log("SQL: "+sql+" "+classID+" "+quizNumber);
             sys.db.all(sql,[classID,quizNumber],function(err,rows){
                 if (err||!rows) {return oops(response,err,'quiz/downloadexam(1)')}
                 for (var i=0,ilen=rows.length;i<ilen;i+=1) {
@@ -81,6 +103,7 @@
         };
 
         function convertStringsToLatex () {
+            console.log("convertStringsToLatex()")
             for (var i=0,ilen=quizObject.questions.length;i<ilen;i+=1) {
                 var question = quizObject.questions[i];
                 question.rubric = sys.markdown(question.rubric);
@@ -98,6 +121,7 @@
             }
             // Now latex-ify the string content of the object
             stringsCount += stringsToConvert.length;
+            console.log("Gonna try: "+stringsToConvert);
             sys.async.eachLimit(stringsToConvert, 1, pandocIterator, function(err){
                 if (err) { console.log("ERROR: "+err) }
             });
@@ -267,6 +291,7 @@
 
         function pandocIterator (data, callback) {
             sys.pandoc.convert('html',data.obj[data.key],['latex'],function(result, err){
+                console.log("Run pandoc");
                 if (err) {
                     throw "Error in pandocIterator(): " + err;
                 }
