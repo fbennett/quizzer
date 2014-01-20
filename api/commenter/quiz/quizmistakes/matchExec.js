@@ -76,6 +76,7 @@
                     count: row.count,
                     comments:[]
                 };
+                data.mistakes.push(obj);
                 getComments(classID,quizNumber,questionNumber,wrongChoice,obj);
             }
         });
@@ -101,7 +102,6 @@
                         obj.hasCommenterComment = true;
                     }
                 }
-                data.mistakes.push(obj);
                 mistakeCount += -1;
                 if (!mistakeCount) {
                     response.writeHead(200, {'Content-Type': 'application/json'});
