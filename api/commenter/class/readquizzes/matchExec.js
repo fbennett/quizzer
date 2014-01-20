@@ -18,18 +18,20 @@
         // properly, but it has a way of paying back for the pain all
         // in one go.
         // 
-        var sql = "SELECT q.quizNumber,q.examName,COUNT(res.choice) AS numberOfCommentsNeeded "
-            + "FROM quizzes AS q "
+        var sql = "SELECT quizzes.quizNumber,examName,COUNT(res.choiceID) AS numberOfCommentsNeeded "
+            + "FROM quizzes "
             + "LEFT JOIN ("
-            +   "SELECT DISTINCT qq.classID,qq.quizNumber,qq.questionNumber,aa.choice "
-            +   "FROM questions AS qq "
-            +   "JOIN answers AS aa ON aa.questionID=qq.questionID "
-            +   "LEFT JOIN comments AS c ON c.classID=qq.classID AND c.quizNumber=qq.quizNumber AND c.questionNumber=qq.questionNumber AND c.choice=aa.choice "
-            +   "WHERE NOT aa.choice=qq.correct AND qq.classID=? AND c.choice IS NULL "
-            +   "GROUP BY qq.quizNumber, qq.questionNumber, aa.choice "
-            + ") as res ON res.classID=q.classID AND res.quizNumber=q.quizNumber "
-            + "WHERE q.classID=? AND q.sent=1 "
-            + "GROUP BY q.quizNumber;";
+            +   "SELECT DISTINCT classID,quizzes.quizNumber,questionNumber,comments.choiceID "
+            +   "FROM quizzes "
+            +   "JOIN questions USING(quizID) "
+            +   'JOIN choices USING(questionID) '
+            +   "JOIN answers USING(questionID) "
+            +   "LEFT JOIN comments USING(choiceID) "
+            +   "WHERE NOT answers.choice=questions.correct AND quizzes.classID=? AND comments.choiceID IS NULL "
+            +   "GROUP BY quizzes.quizNumber, questions.questionNumber, answers.choice "
+            + ") as res ON res.classID=quizzes.classID AND res.quizNumber=quizzes.quizNumber "
+            + "WHERE quizzes.classID=? AND sent=1 "
+            + "GROUP BY quizzes.quizNumber;";
         db.all(sql,[classID,classID],function(err,rows){
             if (err||!rows) {return oops(response,err,'class/readquizzes')};
             var retRows = [];
