@@ -18,20 +18,22 @@
         // properly, but it has a way of paying back for the pain all
         // in one go.
         // 
-        var sql = "SELECT quizzes.quizNumber,examName,COUNT(res.choiceID) AS numberOfCommentsNeeded "
+        var sql = "SELECT quizzes.quizNumber,examName,COUNT(res.commentNeeded) AS numberOfCommentsNeeded "
             + "FROM quizzes "
             + "LEFT JOIN ("
-            +   "SELECT DISTINCT classID,quizzes.quizNumber,questionNumber,comments.choiceID "
-            +   "FROM quizzes "
-            +   "JOIN questions USING(quizID) "
-            +   'JOIN choices USING(questionID) '
-            +   "JOIN answers USING(questionID) "
+            +   "SELECT classID,quizNumber,CASE WHEN comments.choiceID IS NULL THEN 1 ELSE NULL END AS commentNeeded "
+            +   "FROM choices "
+            +   "JOIN questions USING(questionID) "
+            +   "JOIN answers USING(questionID,choice) "
+            +   "JOIN quizzes USING(quizID) "
             +   "LEFT JOIN comments USING(choiceID) "
             +   "WHERE NOT answers.choice=questions.correct AND quizzes.classID=? AND comments.choiceID IS NULL "
-            +   "GROUP BY quizzes.quizNumber, questions.questionNumber, answers.choice "
+            +   "GROUP BY quizzes.quizNumber, questions.questionNumber, choices.choice "
             + ") as res ON res.classID=quizzes.classID AND res.quizNumber=quizzes.quizNumber "
             + "WHERE quizzes.classID=? AND sent=1 "
             + "GROUP BY quizzes.quizNumber;";
+        console.log("SQL: "+sql);
+        console.log("PARAMS: "+classID);
         db.all(sql,[classID,classID],function(err,rows){
             if (err||!rows) {return oops(response,err,'class/readquizzes')};
             var retRows = [];

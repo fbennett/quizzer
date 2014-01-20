@@ -53,7 +53,6 @@
             + "ORDER BY commentCount,count DESC,langs;";
         var mistakeCount = 0;
         var data = {commenter:commenter,commenterID:commenterID,mistakes:[]};
-        // ZZZ console.log("SQL: "+sql);
         sys.db.all(sql,[classID,quizNumber,classID,quizNumber],function(err,rows){
             if (err||!rows) {return oops(response,err,'**quiz/quizmistakes(1)')};
             mistakeCount += rows.length;
@@ -91,8 +90,6 @@
                 + 'JOIN admin AS admin USING(adminID) '
                 + 'LEFT JOIN strings as s ON s.stringID=c.stringID '
                 + 'WHERE classID=? AND quizNumber=? AND questionNumber=? AND ch.choice=?'
-            //console.log("SQL: "+sql);
-            console.log("READ: "+classID+" "+quizNumber+" "+questionNumber+" "+wrongChoice);
             sys.db.all(sql,[classID,quizNumber,questionNumber,wrongChoice],function(err,rows){
                 if (err||!rows) {return oops(response,err,'**quiz/quizmistakes(2)')};
                 for (var i=0,ilen=rows.length;i<ilen;i+=1) {
