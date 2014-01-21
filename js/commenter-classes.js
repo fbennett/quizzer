@@ -10,10 +10,6 @@ function buildClassList (rows) {
         );
         if (false === rows) return;
     }
-    rows.sort(function (a,b) {
-        // Sort by ???
-        return a[0].localeCompare(b[0]);
-    });
     // Delete children from container
     var container = document.getElementById('class-list');
     for (var i=0,ilen=container.childNodes.length;i<ilen;i+=1) {
@@ -21,19 +17,20 @@ function buildClassList (rows) {
     }
     // Rebuild container content
     for (var i=0,ilen=rows.length;i<ilen;i+=1) {
-        var nameText = document.createTextNode(rows[i][0]);
-        var idText = document.createTextNode(rows[i][1]);
+        var row = rows[i];
+        var numberOfCommentsNeeded = '';
+        if (row.numberOfCommentsNeeded > 0) {
+            numberOfCommentsNeeded = '(' + row.numberOfCommentsNeeded + ')'
+        }
         var tr = document.createElement('tr');
-        var nameAnchor = document.createElement('a');
-        var nameTD = document.createElement('td');
-        var idTD = document.createElement('td');
-        nameAnchor.appendChild(nameText);
-        nameAnchor.setAttribute('href', fixPath('/?commenter=' + commenterID + '&page=class&classid=' + rows[i][1]));
-        nameTD.appendChild(nameAnchor);
-        tr.appendChild(nameTD);
-        idTD.appendChild(idText);
-        idTD.style.display = 'none';
-        tr.appendChild(idTD)
+        tr.innerHTML = '<td>'
+            + '<a href="' 
+            + fixPath('/?commenter=' + commenterID + '&page=class&classid=' + rows[i].classID) + '">'
+            + row.name 
+            + '</a>'
+            + '</td>'
+            + '<td>' + numberOfCommentsNeeded + '</td>'
+            + '<td style="display:none;">' + row.classID + '</td>'
         container.appendChild(tr);
     }
 }
