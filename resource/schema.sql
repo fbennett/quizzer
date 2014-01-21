@@ -1,13 +1,11 @@
--- 11
+-- 13
 
--- no changes
 CREATE TABLE version (
        schema TEXT PRIMARY KEY,
        version INT NOT NULL
 );
 CREATE INDEX version_idx ON version(schema);
 
--- no changes
 CREATE TABLE admin (
        adminID INTEGER PRIMARY KEY,
        name TEXT,
@@ -19,7 +17,6 @@ CREATE TABLE admin (
 CREATE UNIQUE INDEX admin_key_idx ON admin(adminKey);
 CREATE UNIQUE INDEX admin_name_idx ON admin(name);
 
--- no changes
 CREATE TABLE students (
        studentID INTEGER PRIMARY KEY,
        name TEXT,
@@ -28,13 +25,11 @@ CREATE TABLE students (
        lang TEXT DEFAULT 'en'
 );
 
--- no changes
 CREATE TABLE classes (
        classID INTEGER PRIMARY KEY,
        name TEXT
 );
 
--- straight export, recreate, reimport
 CREATE TABLE memberships (
        membershipID INTEGER PRIMARY KEY,
        classID INTEGER,
@@ -46,7 +41,6 @@ CREATE TABLE memberships (
        FOREIGN KEY (classID) REFERENCES classes(classID)       
 );
 
--- straight export, recreate, reimport
 CREATE TABLE showing (
        showID INTEGER PRIMARY KEY,
        adminID INTEGER,
@@ -58,7 +52,6 @@ CREATE TABLE showing (
        FOREIGN KEY (studentID) REFERENCES students(studentID)       
 );
 
--- straight export, recreate, reimport
 CREATE TABLE quizzes (
        quizID INTEGER PRIMARY KEY,
        classID INTEGER,
@@ -70,8 +63,6 @@ CREATE TABLE quizzes (
        FOREIGN KEY (classID) REFERENCES classes(classID)
 );
 
--- NEEDS quizid ADDED in export, reimport will drop fields
--- create temp, add field, set value, recreate table, reimport
 CREATE TABLE questions (
        questionID INTEGER PRIMARY KEY,
        quizID INTEGER,
@@ -83,10 +74,6 @@ CREATE TABLE questions (
        FOREIGN KEY (stringID) REFERENCES strings(stringID)
 );
 
--- NEW TABLE, impacts comments
--- export temp with all parent fields, set questionID
--- then set choiceID in temp comments table using parent data
--- then reimport both tables
 CREATE TABLE choices (
        choiceID INTEGER PRIMARY KEY,
        questionID INTEGER,
@@ -97,14 +84,12 @@ CREATE TABLE choices (
        FOREIGN KEY (stringID) REFERENCES strings(stringID)
 );
 
--- no changes
 CREATE TABLE strings (
        stringID INTEGER PRIMARY KEY,
        string TEXT NOT NULL,
        UNIQUE (string)
 );
 
--- straight export, recreate, reimport
 CREATE TABLE answers(
        answerID INTEGER PRIMARY KEY AUTOINCREMENT,
        questionID INTEGER,
@@ -114,9 +99,6 @@ CREATE TABLE answers(
 );
 CREATE UNIQUE INDEX answers_idx ON answers(questionID,studentID,choice);
 
--- NEEDS choiceID
--- create temp with choiceID field
--- set from temporary choices table
 CREATE TABLE comments (
        commentID INTEGER PRIMARY KEY,
        choiceID INTEGER,
@@ -128,14 +110,14 @@ CREATE TABLE comments (
        FOREIGN KEY (stringID) REFERENCES strings(stringID)
 );
 
--- NEW TABLE, no side effects
 CREATE TABLE rules (
        ruleID INTEGER PRIMARY KEY,
        ruleStringID INTEGER,
+       adminID INTEGER,
+       FOREIGN KEY (adminID) REFERENCES admin(adminID),
        FOREIGN KEY (ruleStringID) REFERENCES ruleStrings(ruleStringID)
 );
 
--- NEW TABLE, no side effects
 CREATE TABLE ruleStrings (
        ruleStringID INTEGER PRIMARY KEY,
        string TEXT NOT NULL,
@@ -143,7 +125,16 @@ CREATE TABLE ruleStrings (
 );
 CREATE UNIQUE INDEX rulestrings_idx ON ruleStrings(string);
 
--- NEW TABLE, no side effects
+CREATE TABLE ruleTranslations (
+       ruleTranslationID INTEGER PRIMARY KEY,
+       ruleID NOT NULL,
+       string TEXT NOT NULL,
+       lang TEXT NOT NULL
+       UNIQUE (string),
+       UNIQUE (ruleID,lang),
+       FOREIGN KEY (ruleID) REFERENCES rules(ruleID)
+);
+
 CREATE TABLE rulesToChoices (
        ruleToChoiceID INTEGER PRIMARY KEY,
        choiceID INTEGER,

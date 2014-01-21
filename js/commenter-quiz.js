@@ -74,6 +74,7 @@ function showMistakes () {
             + '" value="e.g." '
             + 'onclick="copyDown(this,\'comment-' + commenterInfo.commenterID + '-' + mistake.questionNumber + '-' + mistake.wrongChoice + '\')"'
             +'/>'
+            + '<select class="rule-dropdown" onclick="" id="rule-dropdown-' + mistake.questionNumber + '-' + mistake.wrongChoice + '"><option value="none">none</option></select>'
             + '<div style="display:none;">' + mistake.wrong + '</div>'
             + '</div>';
         var questionNumber = mistake.questionNumber;
@@ -103,15 +104,21 @@ function buildComment (questionNumber,wrongChoice,commenter,commenterID,comment)
     var commentContainer = document.createElement('div');
     commentContainer.setAttribute('class', 'comment-container');
     commentContainer.setAttribute('id','comment-' + commenterID + '-' + questionNumber + '-' + wrongChoice);
-    commenterDiv = document.createElement('div');
-    commenterDiv.setAttribute('class', 'commenter-name');
-    commenterDiv.innerHTML = commenter;
-    commentDiv = document.createElement('div');
-    commentDiv.innerHTML = markdown(comment);
-    commentContainer.appendChild(commenterDiv);
-    commentContainer.appendChild(commentDiv);
+    commentContainer.innerHTML = '<div class="commenter-name">' + commenter + '</div>'
+        + '<div>' + markdown(comment) + '</div>';
     return commentContainer;
 }
+
+function buildRule (questionNumber,wrongChoice,ruleID,ruleText) {
+    // Build the object
+    var ruleContainer = document.createElement('div');
+    ruleContainer.setAttribute('class', 'rule-container');
+    ruleContainer.setAttribute('id', 'rule-' + ruleID + '-' + questionNumber + '-' +wrongChoice);
+    // XXXX
+    ruleContainer.innerHTML = '<div class="rule-button"><input onclick="removeRule();" value="Del"/></div><div>' + ruleText + '</div>';
+    // Return
+    return ruleContainer;
+};
 
 function openComment (id) {
     var commenterKey = getParameterByName('commenter');
@@ -148,6 +155,7 @@ function buildOpenComment(node,questionNumber,wrongChoice,commentText) {
 
 function saveComment (id) {
     var adminID = getParameterByName('admin');
+    var commenterKey = getParameterByName('commenter');
     var classID = getParameterByName('classid');
     var quizNumber = getParameterByName('quizno');
     //var commenterID = getParameterByName('commenter');
@@ -157,6 +165,52 @@ function saveComment (id) {
     var commenterID = m[1];
     var node = document.getElementById(id);
     var comment = node.firstChild.value;
+
+    // Check whether the comment text contains one or more rules
+    var lst = comment.split('\n\n');
+    var rules = {top:null,other:[]};
+    for (var i=lst.length-1;i>-1;i+=-1) {
+        var m = lst[i].match(/^>>>(.*)/);
+        if (m) {
+            var rule = m[1].replace(/^\s+/,'').replace(/\s+$/,'');
+            if (i === 0) {
+                rules.top = rule;
+                lst = lst.slice(1);
+            } else {
+                rules.other.push(rule);
+            }
+        }
+    }
+    // Reconstruct comment
+    comment = lst.join('\n\n').replace(/^\s+/,'');
+    // Rules
+    if (rules.top || rules.other.length) {
+        // Send rules to server for saving
+        var ruleData = apiRequest(
+            '/?commenter='
+                + commenterKey
+                +'&page=quiz&cmd=getrule'
+                + '&classid=' 
+                + classID
+                + '&quizno=' 
+                + quizNumber
+            , {
+                questionno:questionNumber,
+                wrongchoice: wrongChoice,
+                rules:rules
+            }
+        );
+        if (false === ruleData) return;
+        // Refresh dropdown list
+        refreshDropdownList(ruleData,questionNumber,wrongChoice);
+
+        // Add top rule to UI
+        if (rules.top) {
+            var ruleBlock = buildRule(rule.top,questionNumber,wrongChoice);
+            node.parentNode.insertBefore(ruleBlock,node);
+        }
+    }
+    // Handle comment
     if (comment) {
         var commentBlock = buildComment(questionNumber,wrongChoice,commenterInfo.commenter,commenterInfo.commenterID,comment);
         node.parentNode.insertBefore(commentBlock,node);
@@ -168,6 +222,20 @@ function saveComment (id) {
         setButtonMode('comment',questionNumber,wrongChoice)
     }
     writeComment(questionNumber,wrongChoice,comment);
+}
+
+function refreshDropdownList (ruleData,questionNumber,wrongChoice) {
+    var dropdownList = document.getElementById('rule-dropdown-' + questionNumber + '-' + wrongChoice);
+    for (var i=1,ilen=dropdownList.childNodes.length;i<ilen;i+=1) {
+        dropdownList.removeChild(dropdownList.childNodes[1]);
+    }
+    for (var i=0,ilen=ruleData.length;i<ilen;i+=1) {
+        var option = document.createElement('option');
+        option.setAttribute('value',ruleData[i].ruleID);
+        option.innerHTML = ruleData[i].ruleText
+        dropdownList.appendChild(option);
+    }
+    
 }
 
 function newComment(button,id) {
