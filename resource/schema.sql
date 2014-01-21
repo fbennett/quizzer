@@ -1,4 +1,4 @@
--- 10
+-- 11
 
 -- no changes
 CREATE TABLE version (
