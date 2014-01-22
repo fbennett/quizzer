@@ -5,12 +5,13 @@ function clearContainer (container) {
 }
 
 var commenterInfo = {};
+var quizMistakes;
 
 function showMistakes () {
     var commenterKey = getParameterByName('commenter');
     var classID = getParameterByName('classid');
     var quizNumber = getParameterByName('quizno');
-    var quizMistakes = apiRequest(
+    quizMistakes = apiRequest(
         '/?commenter='
             + commenterKey
             +'&page=quiz&cmd=quizmistakes'
@@ -74,7 +75,7 @@ function showMistakes () {
             + '" value="e.g." '
             + 'onclick="copyDown(this,\'comment-' + commenterInfo.commenterID + '-' + mistake.questionNumber + '-' + mistake.wrongChoice + '\')"'
             +'/>'
-            + '<select class="rule-dropdown" onclick="" id="rule-dropdown-' + mistake.questionNumber + '-' + mistake.wrongChoice + '"><option value="none">none</option></select>'
+            + '<select class="rule-dropdown" onclick="" id="rule-' + mistake.questionNumber + '-' + mistake.wrongChoice + '" onfocus="buildRuleSelect(this);" onchange="addRuleToMistake(this)"><option value="none">Tag with a rule</option></select>'
             + '<div style="display:none;">' + mistake.wrong + '</div>'
             + '</div>';
         var questionNumber = mistake.questionNumber;
@@ -94,6 +95,57 @@ function showMistakes () {
         container.appendChild(mistakeDiv);
     }
 }
+
+function addRuleToMistake (node) {
+    var commenterKey = getParameterByName('commenter');
+    var classID = getParameterByName('classid');
+    var quizNumber = getParameterByName('quizno');
+    // Figure out which choice we're looking at
+    var m = node.id.split('-');
+    var questionNumber = m[1];
+    var wrongChoice = m[2];
+    var ruleid = node.value;
+
+    // Call the server to attach the rule if necessary,
+    // and to find out whether it needs to be added
+    // in the UI.
+    var ruleData = apiRequest(
+        '/?commenter='
+            + commenterKey
+            +'&page=quiz&cmd=attachrule'
+            + '&classid=' 
+            + classID
+            + '&quizno=' 
+            + quizNumber
+        , {
+            questionno:questionNumber,
+            wrongchoice: wrongChoice,
+            ruleid:ruleid
+        }
+    );
+    if (false === ruleData) return;
+    
+    // If it needs to be added, add it.
+    if (ruleData.ruleID) {
+        var pairNode = node.parentNode.previousSibling;
+        var ruleNode = buildRule(questionNumber,wrongChoice,ruleData.ruleID,ruleData.ruleText);
+        pairNode.appendChild(ruleNode);
+    }
+    // Then reset the value on the select
+};
+
+function buildRuleSelect (node) {
+    for (var i=1,ilen=node.childNodes.length;i<ilen;i+=1) {
+        node.removeChild(node.childNodes[1]);
+    }
+    for (var i=0,ilen=quizMistakes.selections.length;i<ilen;i+=1) {
+        var rule = quizMistakes.selections[i];
+        var option = document.createElement('option');
+        option.setAttribute('value',rule.ruleid);
+        option.innerHTML = rule.ruletext;
+        node.appendChild(option);
+    }
+};
 
 function copyDown(node,id) {
     var targetNode = document.getElementById(id);
@@ -196,7 +248,7 @@ function saveComment (id) {
         );
         if (false === ruleData) return;
         // Refresh dropdown list
-        refreshDropdownList(ruleData,questionNumber,wrongChoice);
+        quizMistakes.selections = ruleData.selections;
 
         // Add top rule to UI
         if (ruleData.ruleID && rules.top) {
@@ -231,7 +283,7 @@ function buildRule (questionNumber,wrongChoice,ruleID,ruleText) {
 };
 
 function refreshDropdownList (ruleData,questionNumber,wrongChoice) {
-    var dropdownList = document.getElementById('rule-dropdown-' + questionNumber + '-' + wrongChoice);
+    var dropdownList = document.getElementById('rule-' + questionNumber + '-' + wrongChoice);
     for (var i=1,ilen=dropdownList.childNodes.length;i<ilen;i+=1) {
         dropdownList.removeChild(dropdownList.childNodes[1]);
     }
