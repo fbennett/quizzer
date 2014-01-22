@@ -73,12 +73,31 @@
                     correct: row.correctText,
                     wrong: row.wrongText,
                     count: row.count,
-                    comments:[]
+                    comments:[],
+                    rules:[]
                 };
                 data.mistakes.push(obj);
-                getComments(classID,quizNumber,questionNumber,wrongChoice,obj);
+                getRules(classID,quizNumber,questionNumber,wrongChoice,obj);
             }
         });
+        function getRules (classID,quizNumber,questionNumber,wrongChoice,obj) {
+            var sql = 'SELECT rules.ruleID,ruleStrings.string AS ruleText '
+                + 'FROM quizzes '
+                + 'JOIN questions USING(quizID) '
+                + 'JOIN choices USING(questionID) '
+                + 'JOIN rulesToChoices USING(choiceID) '
+                + 'JOIN rules USING(ruleID) '
+                + 'JOIN ruleStrings USING(ruleStringID) '
+                + 'WHERE classID=? AND quizNumber=? AND questionNumber=? AND choice=?';
+            sys.db.all(sql,[classID,quizNumber,questionNumber,wrongChoice],function(err,rows){
+                if (err||!rows) {return oops(response,err,'**quiz/quizmistakes(2)')};
+                for (var i=0,ilen=rows.length;i<ilen;i+=1) {
+                    var row = rows[i];
+                    obj.rules.push({ruleid:row.ruleID,ruletext:row.ruleText});
+                }
+                getComments(classID,quizNumber,questionNumber,wrongChoice,obj);
+            });
+        };
         function getComments (classID,quizNumber,questionNumber,wrongChoice,obj) {
             var sql = 'SELECT c.adminID AS commenterID,'
                 + 'admin.name AS commenter,'

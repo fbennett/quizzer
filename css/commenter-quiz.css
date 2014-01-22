@@ -16,3 +16,17 @@ div#quiz-mistakes {
     position:relative;
 }
 
+div.rule-container {
+    font-size:larger;
+    position:relative;
+    border: 0.8em solid #30c001;
+    border-radius: 1em;
+    margin: 6px 0 6px 1em;
+    padding: 0.5em 1em 0.5em 1em;
+}
+
+div.rule-button {
+    position: absolute;
+    right:0.5em;
+    top:0.3em;
+}

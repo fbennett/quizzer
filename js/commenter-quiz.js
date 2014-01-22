@@ -86,8 +86,12 @@ function showMistakes () {
             var commentContainer = buildComment(questionNumber,wrongChoice,commenter,commenterID,comment);
             mistakeDiv.appendChild(commentContainer);
         }
+        for (var j=0,jlen=mistake.rules.length;j<jlen;j+=1) {
+            var rule = mistake.rules[j];
+            var ruleNode = buildRule(questionNumber,wrongChoice,rule.ruleid,rule.ruletext);
+            mistakeDiv.childNodes[0].appendChild(ruleNode);
+        }
         container.appendChild(mistakeDiv);
-        
     }
 }
 
@@ -108,17 +112,6 @@ function buildComment (questionNumber,wrongChoice,commenter,commenterID,comment)
         + '<div>' + markdown(comment) + '</div>';
     return commentContainer;
 }
-
-function buildRule (questionNumber,wrongChoice,ruleID,ruleText) {
-    // Build the object
-    var ruleContainer = document.createElement('div');
-    ruleContainer.setAttribute('class', 'rule-container');
-    ruleContainer.setAttribute('id', 'rule-' + ruleID + '-' + questionNumber + '-' +wrongChoice);
-    // XXXX
-    ruleContainer.innerHTML = '<div class="rule-button"><input onclick="removeRule();" value="Del"/></div><div>' + ruleText + '</div>';
-    // Return
-    return ruleContainer;
-};
 
 function openComment (id) {
     var commenterKey = getParameterByName('commenter');
@@ -181,6 +174,7 @@ function saveComment (id) {
             }
         }
     }
+    //console.log("XX "+JSON.stringify(rules));
     // Reconstruct comment
     comment = lst.join('\n\n').replace(/^\s+/,'');
     // Rules
@@ -205,9 +199,10 @@ function saveComment (id) {
         refreshDropdownList(ruleData,questionNumber,wrongChoice);
 
         // Add top rule to UI
-        if (rules.top) {
-            var ruleBlock = buildRule(rule.top,questionNumber,wrongChoice);
-            node.parentNode.insertBefore(ruleBlock,node);
+        if (ruleData.ruleID && rules.top) {
+            var ruleBlock = buildRule(questionNumber,wrongChoice,ruleData.ruleID,rules.top);
+            var answerPairNode = node.previousSibling.previousSibling;
+            answerPairNode.appendChild(ruleBlock);
         }
     }
     // Handle comment
@@ -224,15 +219,27 @@ function saveComment (id) {
     writeComment(questionNumber,wrongChoice,comment);
 }
 
+function buildRule (questionNumber,wrongChoice,ruleID,ruleText) {
+    // Build the object
+    var ruleContainer = document.createElement('div');
+    ruleContainer.setAttribute('class', 'rule-container');
+    ruleContainer.setAttribute('id', 'rule-' + ruleID + '-' + questionNumber + '-' +wrongChoice);
+    // XXXX
+    ruleContainer.innerHTML = '<div class="rule-button"><input type="button" class="button-small" onclick="removeRule();" value="Del"/></div><div>' + ruleText + '</div>';
+    // Return
+    return ruleContainer;
+};
+
 function refreshDropdownList (ruleData,questionNumber,wrongChoice) {
     var dropdownList = document.getElementById('rule-dropdown-' + questionNumber + '-' + wrongChoice);
     for (var i=1,ilen=dropdownList.childNodes.length;i<ilen;i+=1) {
         dropdownList.removeChild(dropdownList.childNodes[1]);
     }
-    for (var i=0,ilen=ruleData.length;i<ilen;i+=1) {
+    for (var i=0,ilen=ruleData.selections.length;i<ilen;i+=1) {
+        var selection = ruleData.selections[i];
         var option = document.createElement('option');
-        option.setAttribute('value',ruleData[i].ruleID);
-        option.innerHTML = ruleData[i].ruleText
+        option.setAttribute('value',selection.ruleID);
+        option.innerHTML = selection.ruleText
         dropdownList.appendChild(option);
     }
     
