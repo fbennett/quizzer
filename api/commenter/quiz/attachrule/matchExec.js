@@ -11,21 +11,9 @@
         var ruleID = params.ruleid;
         var commenter = this.sys.validCommenter(params).name;
         var commenterID = this.sys.validCommenter(params).id;
-        attachRule();
+        getRule();
 
-        function attachRule () {
-            var sql = 'INSERT OR IGNORE INTO rulesToChoices (choiceID,ruleID) '
-                + 'SELECT choiceID,? '
-                + 'FROM quizzes '
-                + 'JOIN questions USING(quizID) '
-                + 'JOIN choices USING(questionID) '
-                + 'WHERE classID=? AND quizNumber=? AND questionNumber=? AND choices.choice=?';
-            sys.db.run(sql,[ruleID,classID,quizNumber,questionNumber,wrongChoice],function(err){
-                if (err) {return oops(response,err,'**quiz/attachrule(1)')};
-                returnRule(this.lastID);
-            });
-        }
-        function returnRule (addedRule) {
+        function getRule (httpRespond) {
             var sql = 'SELECT ruleID,string AS ruleText '
                 + 'FROM quizzes '
                 + 'JOIN questions USING(quizID) '
@@ -35,14 +23,30 @@
                 + 'JOIN ruleStrings USING(ruleStringID) '
                 + 'WHERE classID=? AND quizNumber=? AND questionNumber=? AND choices.choice=? AND rules.ruleID=?';
             sys.db.get(sql,[classID,quizNumber,questionNumber,wrongChoice,ruleID],function(err,row){
-                if (err||!row) {return oops(response,err,'**quiz/attachrule(2)')};
-                if (addedRule) {
-                    response.writeHead(200, {'Content-Type': 'application/json'});
-                    response.end(JSON.stringify(row));
+                if (err) {return oops(response,err,'**quiz/attachrule(2)')};
+                if (!httpRespond) {
+                    if (row) {
+                        response.writeHead(200, {'Content-Type': 'application/json'});
+                        response.end(JSON.stringify({}));
+                    } else {
+                        attachRule();
+                    }
                 } else {
                     response.writeHead(200, {'Content-Type': 'application/json'});
-                    response.end(JSON.stringify(['success']));
+                    response.end(JSON.stringify(row));
                 }
+            });
+        };
+        function attachRule () {
+            var sql = 'INSERT OR IGNORE INTO rulesToChoices (choiceID,ruleID) '
+                + 'SELECT choiceID,? '
+                + 'FROM quizzes '
+                + 'JOIN questions USING(quizID) '
+                + 'JOIN choices USING(questionID) '
+                + 'WHERE classID=? AND quizNumber=? AND questionNumber=? AND choices.choice=?';
+            sys.db.run(sql,[ruleID,classID,quizNumber,questionNumber,wrongChoice],function(err){
+                if (err) {return oops(response,err,'**quiz/attachrule(1)')};
+                getRule(true);
             });
         }
     }
