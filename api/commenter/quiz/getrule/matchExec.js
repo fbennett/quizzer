@@ -54,7 +54,7 @@
             var sql = 'INSERT INTO ruleStrings VALUES (NULL,?);';
             sys.db.run(sql,[ruleString],function(err){
                 if (err) {return oops(response,err,'**quiz/getrule(2)')};
-                createRule(this.lastID);
+                createRule(this.lastID,pos);
             });
         };
         function createRule(ruleStringID,pos) {
@@ -62,7 +62,8 @@
             var sql = 'INSERT INTO rules VALUES (NULL,?,?);';
             sys.db.run(sql,[ruleStringID,commenterID],function(err){
                 if (err) {return oops(response,err,'**quiz/getrule(3)')};
-                if (pos === 0 && retObj.ruleID === 'true') {
+                console.log("CREATING RULE: "+pos+" "+retObj.ruleID+" "+typeof retObj.ruleID+" "+this.lastID);
+                if (pos === 0 && retObj.ruleID === true) {
                     retObj.ruleID = this.lastID;
                     attachRule(retObj.ruleID);
                 }
@@ -88,7 +89,7 @@
         function returnList () {
             //console.log("returnList();");
             // adminID=1 is admin user, with the keys to the fort
-            var sql = 'SELECT ruleID,string AS ruleText '
+            var sql = 'SELECT ruleID AS ruleid,string AS ruletext '
                 + 'FROM rules '
                 + 'JOIN ruleStrings USING(ruleStringID) '
                 + 'WHERE adminID IN (1,?) '

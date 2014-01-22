@@ -252,8 +252,9 @@ function saveComment (id) {
 
         // Add top rule to UI
         if (ruleData.ruleID && rules.top) {
+            var editButton = document.getElementById('edit-button-' + questionNumber + '-' +wrongChoice);
             var ruleBlock = buildRule(questionNumber,wrongChoice,ruleData.ruleID,rules.top);
-            var answerPairNode = node.previousSibling.previousSibling;
+            var answerPairNode = editButton.parentNode.previousSibling;
             answerPairNode.appendChild(ruleBlock);
         }
     }
