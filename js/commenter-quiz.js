@@ -271,13 +271,18 @@ function saveComment (id) {
     writeComment(questionNumber,wrongChoice,comment);
 }
 
+function removeRule (questionNumber,wrongChoice,ruleID) {
+    // XXX
+    // API call
+};
+
 function buildRule (questionNumber,wrongChoice,ruleID,ruleText) {
     // Build the object
     var ruleContainer = document.createElement('div');
     ruleContainer.setAttribute('class', 'rule-container');
     ruleContainer.setAttribute('id', 'rule-' + ruleID + '-' + questionNumber + '-' +wrongChoice);
     // XXXX
-    ruleContainer.innerHTML = '<div class="rule-button"><input type="button" class="button-small" onclick="removeRule();" value="Del"/></div><div>' + ruleText + '</div>';
+    ruleContainer.innerHTML = '<div class="rule-button"><input type="button" class="button-small" onclick="removeRule(' + questionNumber + ',' + wrongChoice + ',' + ruleID + ');" value="Del"/></div><div>' + ruleText + '</div>';
     // Return
     return ruleContainer;
 };
