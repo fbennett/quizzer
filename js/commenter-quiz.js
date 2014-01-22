@@ -271,9 +271,27 @@ function saveComment (id) {
     writeComment(questionNumber,wrongChoice,comment);
 }
 
-function removeRule (questionNumber,wrongChoice,ruleID) {
+function removeRule (node,questionNumber,wrongChoice,ruleID) {
     // XXX
-    // API call
+    // Simple API call
+    var commenterKey = getParameterByName('commenter');
+    var classID = getParameterByName('classid');
+    var quizNumber = getParameterByName('quizno');
+    apiRequest(
+        '/?commenter='
+            + commenterKey
+            +'&page=quiz&cmd=removerule'
+            + '&classid=' 
+            + classID
+            + '&quizno=' 
+            + quizNumber
+        , {
+            questionno:questionNumber,
+            wrongchoice: wrongChoice,
+            ruleid:ruleID
+        }
+    );
+    node.parentNode.parentNode.parentNode.removeChild(node.parentNode.parentNode);
 };
 
 function buildRule (questionNumber,wrongChoice,ruleID,ruleText) {
@@ -282,7 +300,7 @@ function buildRule (questionNumber,wrongChoice,ruleID,ruleText) {
     ruleContainer.setAttribute('class', 'rule-container');
     ruleContainer.setAttribute('id', 'rule-' + ruleID + '-' + questionNumber + '-' +wrongChoice);
     // XXXX
-    ruleContainer.innerHTML = '<div class="rule-button"><input type="button" class="button-small" onclick="removeRule(' + questionNumber + ',' + wrongChoice + ',' + ruleID + ');" value="Del"/></div><div>' + ruleText + '</div>';
+    ruleContainer.innerHTML = '<div class="rule-button"><input type="button" class="button-small" onclick="removeRule(this,' + questionNumber + ',' + wrongChoice + ',' + ruleID + ');" value="Del"/></div><div>' + ruleText + '</div>';
     // Return
     return ruleContainer;
 };
