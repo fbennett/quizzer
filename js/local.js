@@ -66,3 +66,18 @@ function markdown (txt) {
     });
     return marked.parse(txt);
 }
+
+function confirmDelete (node,callbackName) {
+    var origValue = node.value;
+    var origStyle = node.parentNode.style;
+    var origEvent = '' + node.getAttribute('onclick');
+    node.value="Really?",
+    node.style.color = 'red';
+    node.parentNode.style['border-color'] = 'red';
+    node.setAttribute('onclick', callbackName + '(this)');
+    setTimeout(function() {
+        node.value = origValue;
+        node.style = origStyle;
+        node.setAttribute('onclick',origEvent);
+    },2000);
+}

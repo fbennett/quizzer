@@ -113,7 +113,7 @@ function buildMemberLists(rowsets) {
             var entry = document.createElement('div');
             if (i === 1) {
                 entry.setAttribute("class","non-member-entry");
-                entry.innerHTML = '<div class="non-member-del-button"><input type="button" value="Del" class="button-small" onclick="confirmNonMemberRemoval(this);"/></div>'
+                entry.innerHTML = '<div class="non-member-del-button"><input type="button" value="Del" class="button-small" onclick="confirmDelete(this,\'executeNonMemberRemoval\');"/></div>'
             }
             var checkBox = document.createElement('input');
             checkBox.setAttribute('type', 'checkbox');
@@ -126,14 +126,8 @@ function buildMemberLists(rowsets) {
     }
 }
 
-function confirmNonMemberRemoval (node) {
-    node.value="Really?",
-    node.style.color = 'red';
-    node.parentNode.style['border-color'] = 'red';
-    node.setAttribute('onclick', 'executeNonMemberRemoval(this)');
-}
-
 function executeNonMemberRemoval (node) {
+    console.log("WELL, I'm TRYING!");
     var adminID = getParameterByName('admin');
     var classID = getParameterByName('classid');
     var studentID = node.parentNode.nextSibling.value;
