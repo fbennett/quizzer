@@ -62,7 +62,7 @@
             var sql = 'INSERT INTO rules VALUES (NULL,?,?);';
             sys.db.run(sql,[ruleStringID,commenterID],function(err){
                 if (err) {return oops(response,err,'**quiz/getrule(3)')};
-                console.log("CREATING RULE: "+pos+" "+retObj.ruleID+" "+typeof retObj.ruleID+" "+this.lastID);
+                //console.log("CREATING RULE: "+pos+" "+retObj.ruleID+" "+typeof retObj.ruleID+" "+this.lastID);
                 if (pos === 0 && retObj.ruleID === true) {
                     retObj.ruleID = this.lastID;
                     attachRule(retObj.ruleID);
