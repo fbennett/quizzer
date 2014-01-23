@@ -1,19 +1,14 @@
-var languages = [
-    ['en','none'],
-    ['zh','Chinese'],
-    ['id','Indonesian'],
-    ['ja','Japanese'],
-    ['kh','Khmer'],
-    ['kr','Korean'],
-    ['la','Laotian'],
-    ['mn','Mongolian'],
-    ['my','Myanmar'],
-    ['pl','Polish'],
-    ['ru','Russian'],
-    ['th','Thai'],
-    ['uz','Uzbek'],
-    ['vn','Vietnamese']
-]
+var languages;
+function getLanguages () {
+    var adminID = getParameterByName('admin');
+    languages = apiRequest(
+        '/?admin='
+            + adminID
+            + '&page=students'
+            + '&cmd=getlanguages'
+    );
+    if (false === languages) return;
+};
 
 function getExternalLeagueTablesData () {
     var adminID = getParameterByName('admin');
@@ -133,7 +128,7 @@ function getLanguageOptions(langtag) {
         if (lang[0] === langtag) {
             selected=' selected="true"';
         }
-        options += '<option value="' + lang[0] + '"' + selected +'/>' + lang[1] + '</option>';
+        options += '<option value="' + lang.lang + '"' + selected +'/>' + lang.langName + '</option>';
     }
     return options;
 }

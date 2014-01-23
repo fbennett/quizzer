@@ -7,7 +7,7 @@
   <link rel="stylesheet" type="text/css" href="css/local.css"/>
   <link rel="stylesheet" type="text/css" href="css/admin-commenters.css"/>
 </head>
-<body onLoad="buildCommenterList()">
+<body onLoad="installLanguages();buildCommenterList()">
   <div class="grid">
     <div class="col-1-1">
       <h1>Quizzer Admin</h1>
@@ -38,21 +38,31 @@
         </span>
       </div>
       <hr/>
-      <table>
-        <thead>
-          <tr>
-            <td>Name</td>
-            <td>Mail day</td>
-            <td>Email</td>
-            <td style="display:none;">adminKey</td>
-            <td>Recent<br/>Comments</td>
-            <td></td>
-          </tr>
-        </thead>
-        <tbody id="commenter-list">
-        </tbody>
-      </table>
+      <div id="languages">
+        <span>One</span>
+        <span>Two</span>
+        <span>Three</span>
+        <span>Four</span>
+      </div>
+      <div id="commenter-list-container">
+        <table>
+          <thead>
+            <tr>
+              <td></td>
+              <td>Name</td>
+              <td>Mail day</td>
+              <td>Email</td>
+              <td style="display:none;">adminKey</td>
+              <td>Recent<br/>Comments</td>
+              <td>Languages</td>
+            </tr>
+          </thead>
+          <tbody id="commenter-list">
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
+</div>
 </body>
 </html>

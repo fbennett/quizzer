@@ -17,6 +17,25 @@ CREATE TABLE admin (
 CREATE UNIQUE INDEX admin_key_idx ON admin(adminKey);
 CREATE UNIQUE INDEX admin_name_idx ON admin(name);
 
+CREATE TABLE languages (
+       lang TEXT PRIMARY KEY,
+       langName TEXT
+);
+INSERT INTO languages VALUES ('en','English');
+INSERT INTO languages VALUES ('zh','Chinese');
+INSERT INTO languages VALUES ('id','Indonesian');
+INSERT INTO languages VALUES ('ja','Japanese');
+INSERT INTO languages VALUES ('kh','Khmer');
+INSERT INTO languages VALUES ('kr','Korean');
+INSERT INTO languages VALUES ('la','Laotian');
+INSERT INTO languages VALUES ('mn','Mongolian');
+INSERT INTO languages VALUES ('my','Myanmar');
+INSERT INTO languages VALUES ('pl','Polish');
+INSERT INTO languages VALUES ('ru','Russian');
+INSERT INTO languages VALUES ('th','Thai');
+INSERT INTO languages VALUES ('uz','Uzbek');
+INSERT INTO languages VALUES ('vn','Vietnamese');
+
 CREATE TABLE adminLanguages (
        adminLanguageID INTEGER PRIMARY KEY,
        adminID INTEGER,

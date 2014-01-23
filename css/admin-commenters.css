@@ -6,3 +6,31 @@ tr.inactive {
   color:#999999;  
   background:#f5f5f5;
 }
+
+div#commenter-list-container {
+    overflow:auto;
+}
+
+div#languages {
+    padding:1em;
+    text-align:right;
+    overflow:auto;
+    
+}
+
+div#languages span {
+    border:1px solid #000000;
+    border-radius: 1em;
+    padding:0.5em;
+    font-family:sans;
+    font-size:smaller;
+}
+
+div#languages span:hover {
+    background:#eeeeee;
+    cursor:pointer;
+}
+
+td.dashed-border {
+    border: 1px dashed black;
+}

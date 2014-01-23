@@ -71,7 +71,7 @@ function confirmDelete (node,callbackName) {
     var origValue = node.value;
     var origStyle = node.parentNode.style;
     var origEvent = '' + node.getAttribute('onclick');
-    node.value="Really?",
+    node.value="Delete?",
     node.style.color = 'red';
     node.parentNode.style['border-color'] = 'red';
     node.setAttribute('onclick', callbackName + '(this)');
@@ -81,3 +81,4 @@ function confirmDelete (node,callbackName) {
         node.setAttribute('onclick',origEvent);
     },2000);
 }
+

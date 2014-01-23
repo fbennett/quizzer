@@ -1,3 +1,52 @@
+function getLanguages () {
+    var adminID = getParameterByName('admin');
+    var languages = apiRequest(
+        '/?admin='
+            + adminID
+            + '&page=students'
+            + '&cmd=getlanguages'
+    );
+    if (false === languages) return [];
+    return languages;
+};
+function installLanguages () {
+    languages = getLanguages();
+    var languagesNode = document.getElementById('languages');
+    for (var i=0,ilen=languagesNode.childNodes.length;i<ilen;i+=1) {
+        languagesNode.removeChild(languagesNode.childNodes[0]);
+    }
+    for (var i=0,ilen=languages.length;i<ilen;i+=1) {
+        var language = languages[i];
+        var languageNode = document.createElement('span');
+        languageNode.draggable = 'true';
+        languageNode.setAttribute('ondragstart', 'dragLang(event)');
+        languageNode.id = language.lang;
+        languageNode.innerHTML = language.langName;
+        languagesNode.appendChild(languageNode);
+    }
+};
+function allowDrop(ev) {
+    ev.preventDefault();
+};
+function dragLang(ev) {
+    ev.dataTransfer.setData('Text',ev.target.id);
+};
+function dropLang(ev)
+{
+    ev.preventDefault();
+    var data=ev.dataTransfer.getData("Text");
+    ev.target.removeAttribute('class');
+    // Get the table cell where this goes
+    //ev.target.appendChild(document.getElementById(data));
+    alert("Drop: "+data);
+}
+function dragenterLang(ev) {
+    ev.target.setAttribute('class','dashed-border');
+}
+function dragleaveLang(ev) {
+    ev.target.removeAttribute('class');
+};
+
 function buildCommenterList (rows) {
     if (!rows) {
         // if rows is nil, call the server.
@@ -23,12 +72,14 @@ function buildCommenterList (rows) {
         if (row.complete == 0) {
             commenterTR.setAttribute('class','inactive');
         }
-        commenterTR.innerHTML = '<td>' + row.name + '</td>'
+        commenterTR.innerHTML = '<td><input class="button-small" type="button" value="Edit" onclick="addCommenter(this)"/></td>'
+            +'<td>' + row.name + '</td>'
             + '<td>' + getMailDaySelect(row.adminKey,row.interval) + '</td>'
             + '<td class="email">' + getEmail(row.email)  + '</td>'
             + '<td style="display:none;">' + row.adminKey + '</td>'
             + '<td>' + row.numberOfComments + '</td>'
-            + '<td><input class="button-small" type="button" value="Edit" onclick="addCommenter(this)"/></td>';
+            + '<td class="language-cell" ondragover="allowDrop(event)" ondrop="dropLang(event)" ondragenter="dragenterLang(event)" ondragleave="dragleaveLang(event)"><div></div></td>';
+        
         container.appendChild(commenterTR);
     }
 }
@@ -86,10 +137,10 @@ function addCommenter(node) {
     var commenterKey = document.getElementById('commenter-key');
     if (node) {
         var container = node.parentNode.parentNode;
-        var name = container.childNodes[0].textContent;
-        var dow = container.childNodes[1].childNodes[0].value;
-        var email = container.childNodes[2].textContent;
-        var key = container.childNodes[3].textContent;
+        var name = container.childNodes[1].textContent;
+        var dow = container.childNodes[2].childNodes[0].value;
+        var email = container.childNodes[3].textContent;
+        var key = container.childNodes[4].textContent;
         // Set on edit nodes
         commenterName.value = name;
         commenterMailDay.value = dow;
