@@ -1,4 +1,4 @@
--- 13
+-- 14
 
 CREATE TABLE version (
        schema TEXT PRIMARY KEY,
@@ -16,6 +16,12 @@ CREATE TABLE admin (
 );
 CREATE UNIQUE INDEX admin_key_idx ON admin(adminKey);
 CREATE UNIQUE INDEX admin_name_idx ON admin(name);
+
+CREATE TABLE adminLanguages (
+       adminLanguageID INTEGER PRIMARY KEY,
+       adminID INTEGER,
+       lang TEXT
+);
 
 CREATE TABLE students (
        studentID INTEGER PRIMARY KEY,
@@ -88,6 +94,16 @@ CREATE TABLE strings (
        stringID INTEGER PRIMARY KEY,
        string TEXT NOT NULL,
        UNIQUE (string)
+);
+
+CREATE TABLE quizAnswers (
+       quizAnswerID INTEGER PRIMARY KEY,
+       quizID INTEGER,
+       studentID INTEGER,
+       submissionDate DATE
+       UNIQUE(quizID,studentID),
+       FOREIGN KEY (quizID) REFERENCES quizzes(quizID),
+       FOREIGN KEY (studentID) REFERENCES students(studentID)
 );
 
 CREATE TABLE answers(
