@@ -23,7 +23,9 @@ CREATE TABLE languages (
 );
 INSERT INTO languages VALUES ('en','English');
 INSERT INTO languages VALUES ('zh','Chinese');
+INSERT INTO languages VALUES ('fr','French');
 INSERT INTO languages VALUES ('id','Indonesian');
+INSERT INTO languages VALUES ('it','Italian');
 INSERT INTO languages VALUES ('ja','Japanese');
 INSERT INTO languages VALUES ('kh','Khmer');
 INSERT INTO languages VALUES ('kr','Korean');
@@ -39,7 +41,10 @@ INSERT INTO languages VALUES ('vn','Vietnamese');
 CREATE TABLE adminLanguages (
        adminLanguageID INTEGER PRIMARY KEY,
        adminID INTEGER,
-       lang TEXT
+       lang TEXT,
+       UNIQUE(adminID,lang),
+       FOREIGN KEY (adminID) REFERENCES admin(adminID),
+       FOREIGN KEY (lang) REFERENCES languages(lang)
 );
 
 CREATE TABLE students (

@@ -10,7 +10,7 @@ function getLanguages () {
     return languages;
 };
 function installLanguages () {
-    languages = getLanguages();
+    var languages = getLanguages();
     var languagesNode = document.getElementById('languages');
     for (var i=0,ilen=languagesNode.childNodes.length;i<ilen;i+=1) {
         languagesNode.removeChild(languagesNode.childNodes[0]);
@@ -34,18 +34,51 @@ function dragLang(ev) {
     ev.dataTransfer.setData('Text',ev.target.id);
 };
 function dropLang(ev) {
+
     ev.preventDefault();
-    var data=ev.dataTransfer.getData("Text");
-    ev.target.setAttribute('style','border:none;');
-    var languageBubble = document.createElement('span');
-    languageBubble.setAttribute('onclick','confirmDelete(this,\'removeLanguage\')');
-    languageBubble.innerHTML = data;
-    ev.target.appendChild(languageBubble);
-    var space = document.createTextNode(' ');
-    ev.target.appendChild(space);
+    if (ev.target.tagName === 'TD') {
+        var data=ev.dataTransfer.getData("Text");
+        var adminID = getParameterByName('admin');
+        ev.target.setAttribute('style','border:none;');
+        var languageBubble = document.createElement('span');
+        languageBubble.setAttribute('onclick','confirmDelete(this,\'removeLanguage\')');
+        console.log("SETTING LANG ON BUBBLE: "+data);
+        languageBubble.setAttribute('value',data);
+        languageBubble.innerHTML = data.toUpperCase();
+        var space = document.createTextNode(' ');
+        ev.target.insertBefore(languageBubble,ev.target.childNodes[0]);
+        ev.target.insertBefore(space,ev.target.childNodes[0]);
+        var commenterKey = ev.target.previousSibling.previousSibling.textContent;
+        var rows = apiRequest(
+            '/?admin='
+                + adminID
+                + '&page=commenters'
+                + '&cmd=setcommenterlanguage'
+            ,{
+                lang:data,
+                commenterkey:commenterKey
+            }
+        );
+        if (false === rows) return;
+    }
 }
 function removeLanguage(node) {
+    var commenterKey = node.parentNode.previousSibling.previousSibling.textContent;
+    var adminID = getParameterByName('admin');
+    var lang = node.getAttribute('value');
+    console.log("===> "+adminID+" "+lang);
     node.parentNode.removeChild(node);
+    var rows = apiRequest(
+        '/?admin='
+            + adminID
+            + '&page=commenters'
+            + '&cmd=removecommenterlanguage'
+        ,{
+            lang:lang,
+            commenterkey:commenterKey
+        }
+    );
+    if (false === rows) return;
 };
 function dragenterLang(ev) {
     ev.preventDefault();
@@ -91,10 +124,22 @@ function buildCommenterList (rows) {
             + '<td class="email">' + getEmail(row.email)  + '</td>'
             + '<td style="display:none;">' + row.adminKey + '</td>'
             + '<td>' + row.numberOfComments + '</td>'
-            + '<td class="language-bubbles" ondragover="allowDrop(event)" ondrop="dropLang(event)" ondragenter="dragenterLang(event)" ondragleave="dragleaveLang(event)"><div></div></td>';
-        
+            + '<td class="language-bubbles" ondragover="allowDrop(event)" ondrop="dropLang(event)" ondragenter="dragenterLang(event)" ondragleave="dragleaveLang(event)">' + getSerializedLanguageNodes(row.languages) + '<div></div></td>';
         container.appendChild(commenterTR);
     }
+}
+
+function getSerializedLanguageNodes(langstr) {
+    var langs = [];
+    if (langstr) {
+        langs = langstr.split(',');
+    }
+    var ret = '';
+    for (var i=0,ilen=langs.length;i<ilen;i+=1) {
+        var lang = langs[i];
+        ret += '<span onclick="confirmDelete(this,\'removeLanguage\')" value="' + lang + '">' + lang.toUpperCase() + '</span>';
+    }
+    return ret;
 }
 
 function getEmail (email) {

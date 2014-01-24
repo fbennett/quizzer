@@ -12,8 +12,10 @@ div#commenter-list-container {
 }
 
 div#languages {
+    font-size:smaller;
     padding:1em;
     text-align:right;
+    line-height: 2.8em;
 }
 
 div#languages span {
@@ -21,7 +23,6 @@ div#languages span {
     border-radius: 1em;
     padding:0.5em;
     font-family:sans;
-    font-size:smaller;
 }
 
 div#languages span:hover {
