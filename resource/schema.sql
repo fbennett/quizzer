@@ -175,6 +175,15 @@ CREATE TABLE ruleTranslations (
        FOREIGN KEY (ruleID) REFERENCES rules(ruleID)
 );
 
+CREATE TABLE ruleTranslationEdits (
+       ruleTranslationEditID INTEGER PRIMARY KEY,
+       ruleTranslationID INTEGER NOT NULL,
+       studentID INTEGER,
+       editDate DATE,
+       FOREIGN KEY (ruleTranslationID) REFERENCES ruleTranslations(ruleTranslationID),
+       FOREIGN KEY (studentID) REFERENCES students(studentID)
+);
+
 CREATE TABLE rulesToChoices (
        ruleToChoiceID INTEGER PRIMARY KEY,
        choiceID INTEGER,
