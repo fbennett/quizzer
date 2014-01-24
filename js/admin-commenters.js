@@ -23,6 +23,8 @@ function installLanguages () {
         languageNode.id = language.lang;
         languageNode.innerHTML = language.langName;
         languagesNode.appendChild(languageNode);
+        var space = document.createTextNode(' ');
+        languagesNode.appendChild(space);
     }
 };
 function allowDrop(ev) {
@@ -31,20 +33,31 @@ function allowDrop(ev) {
 function dragLang(ev) {
     ev.dataTransfer.setData('Text',ev.target.id);
 };
-function dropLang(ev)
-{
+function dropLang(ev) {
     ev.preventDefault();
     var data=ev.dataTransfer.getData("Text");
-    ev.target.removeAttribute('class');
-    // Get the table cell where this goes
-    //ev.target.appendChild(document.getElementById(data));
-    alert("Drop: "+data);
+    ev.target.setAttribute('style','border:none;');
+    var languageBubble = document.createElement('span');
+    languageBubble.setAttribute('onclick','confirmDelete(this,\'removeLanguage\')');
+    languageBubble.innerHTML = data;
+    ev.target.appendChild(languageBubble);
+    var space = document.createTextNode(' ');
+    ev.target.appendChild(space);
 }
+function removeLanguage(node) {
+    node.parentNode.removeChild(node);
+};
 function dragenterLang(ev) {
-    ev.target.setAttribute('class','dashed-border');
-}
+    ev.preventDefault();
+    if (ev.target.tagName === 'TD') {
+        ev.target.setAttribute('style','border:1px dashed black;');
+    }
+};
 function dragleaveLang(ev) {
-    ev.target.removeAttribute('class');
+    ev.preventDefault();
+    if (ev.target.tagName === 'TD') {
+        ev.target.setAttribute('style','border:none;');
+    }
 };
 
 function buildCommenterList (rows) {
@@ -78,7 +91,7 @@ function buildCommenterList (rows) {
             + '<td class="email">' + getEmail(row.email)  + '</td>'
             + '<td style="display:none;">' + row.adminKey + '</td>'
             + '<td>' + row.numberOfComments + '</td>'
-            + '<td class="language-cell" ondragover="allowDrop(event)" ondrop="dropLang(event)" ondragenter="dragenterLang(event)" ondragleave="dragleaveLang(event)"><div></div></td>';
+            + '<td class="language-bubbles" ondragover="allowDrop(event)" ondrop="dropLang(event)" ondragenter="dragenterLang(event)" ondragleave="dragleaveLang(event)"><div></div></td>';
         
         container.appendChild(commenterTR);
     }

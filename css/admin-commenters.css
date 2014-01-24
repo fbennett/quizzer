@@ -14,8 +14,6 @@ div#commenter-list-container {
 div#languages {
     padding:1em;
     text-align:right;
-    overflow:auto;
-    
 }
 
 div#languages span {
@@ -31,6 +29,15 @@ div#languages span:hover {
     cursor:pointer;
 }
 
-td.dashed-border {
-    border: 1px dashed black;
+td.language-bubbles span {
+    border: 1px solid black;
+    font-family: sans;
+    padding: 0.5em;
+    border-radius: 1em;
+    font-size: smaller;
+}
+
+td.language-bubbles span:hover {
+    cursor:pointer;
+    background:#eeeeee;
 }

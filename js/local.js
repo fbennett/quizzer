@@ -68,15 +68,24 @@ function markdown (txt) {
 }
 
 function confirmDelete (node,callbackName) {
-    var origValue = node.value;
-    var origStyle = node.parentNode.style;
+    var origValue,origEvent;
+    if (node.value) {
+        origValue = node.value;
+        node.value="Delete?";
+    } else {
+        origValue = node.innerHTML;
+        node.innerHTML ="Delete?";
+    }
     var origEvent = '' + node.getAttribute('onclick');
-    node.value="Delete?",
+    var origStyle = node.parentNode.style;
     node.style.color = 'red';
-    node.parentNode.style['border-color'] = 'red';
     node.setAttribute('onclick', callbackName + '(this)');
     setTimeout(function() {
-        node.value = origValue;
+        if (node.value) {
+            node.value = origValue;
+        } else {
+            node.innerHTML = origValue;
+        }
         node.style = origStyle;
         node.setAttribute('onclick',origEvent);
     },2000);
