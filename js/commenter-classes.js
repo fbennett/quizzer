@@ -68,42 +68,11 @@ function setButtonMode (mode,langName) {
     var ruleLangButtons = document.getElementsByClassName('rule-lang-buttons');
     var returnToMainDisplayButton = document.getElementById('return-to-main-display-button');
     var mainDisplay = document.getElementById('main-display');
-    var rulesForLang = document.getElementById('rules-for-lang');
     var rulesDisplay = document.getElementById('rules-display');
     var mainDisplayTitle = document.getElementById('main-display-title');
     var rulesDisplayTitle = document.getElementById('rules-display-title');
-    var ruleLanguageName = document.getElementById('rule-language');
     if (mode) {
-        // API call for list of rules (admin user + current commenter)
-        var commenterKey = getParameterByName('commenter');
-        var rows = apiRequest(
-            '/?commenter='
-                + commenterKey
-                + '&page=top'
-                + '&cmd=readrules'
-            , {
-                lang:mode
-            }
-        );
-        if (false === rows) return;
-        for (var i=0,ilen=rulesForLang.childNodes.length;i<ilen;i+=1) {
-            rulesForLang.removeChild(rulesForLang.childNodes[0]);
-        }
-        for (var i=0,ilen=rows.length;i<ilen;i+=1) {
-            var row = rows[i];
-            var tr = document.createElement('tr');
-            tr.setAttribute('id','rule-' + row.ruleID);
-            var needsGloss = ' needs-gloss';
-            if (row.hasGloss) {
-                needsGloss = '';
-            }
-            tr.innerHTML = '<td class="left' + needsGloss + '"><div onclick="openRule(this)">' + markdown(row.ruleText) + '</div></td><td class="right"><input type="button" class="button" value="Save" onclick="saveRule(this)" style="display:none;"/><input type="button" class="button" value="Edit" onclick="editRule(this)" style="display:none;"/><input type="button" class="button" value="Del" onclick="confirmDelete(this,\'deleteRule\')" style="display:none;"/></td>';
-            rulesForLang.appendChild(tr);
-        }
-        
-        ruleLanguageName.innerHTML = langName;
-        pageData.lang = mode;
-        pageData.langName = langName;
+        buildRulesList(mode,langName);
         for (var i=0,ilen=ruleLangButtons.length;i<ilen;i+=1) {
             ruleLangButtons[i].style.display = 'none';
         }
@@ -124,12 +93,58 @@ function setButtonMode (mode,langName) {
     }
 }
 
+function buildRulesList (mode,langName) {
+    var ruleLanguageName = document.getElementById('rule-language');
+    ruleLanguageName.innerHTML = langName;
+    pageData.lang = mode;
+    pageData.langName = langName;
+    // API call for list of rules (admin user + current commenter)
+    var commenterKey = getParameterByName('commenter');
+    var rulesForLang = document.getElementById('rules-for-lang');
+    var rows = apiRequest(
+        '/?commenter='
+            + commenterKey
+            + '&page=top'
+            + '&cmd=readrules'
+        , {
+            lang:mode
+        }
+    );
+    if (false === rows) return;
+    for (var i=0,ilen=rulesForLang.childNodes.length;i<ilen;i+=1) {
+        rulesForLang.removeChild(rulesForLang.childNodes[0]);
+    }
+    for (var i=0,ilen=rows.length;i<ilen;i+=1) {
+        var row = rows[i];
+        var tr = document.createElement('tr');
+        tr.setAttribute('id','rule-' + row.ruleID);
+        var needsGloss = ' needs-gloss';
+        if (row.hasGloss) {
+            needsGloss = '';
+        }
+        tr.innerHTML = '<td class="left' + needsGloss + '" onclick="openRule(this)"><div>' + markdown(row.ruleText) + '</div></td><td class="right"><input type="button" class="button" value="Save" onclick="saveRule(this)" style="display:none;"/><input type="button" class="button" value="Edit" onclick="editRule(this)" style="display:none;"/><input type="button" class="button" value="Del" onclick="confirmDelete(this,\'deleteRule\')" style="display:none;"/></td>';
+        rulesForLang.appendChild(tr);
+    }
+};
+
 function deleteRule (node) {
-    alert("Delete!");
+    // API call
+    var row = apiRequest(
+        '/?commenter='
+            + commenterKey
+            + '&page=top'
+            + '&cmd=deleteonerule'
+        ,{
+            ruleid:ruleID,
+            lang:pageData.lang
+        }
+    );
+    if (false === row) return;
+    alert("do!")
 };
 
 function openRule (node) {
-    var rownode = node.parentNode.parentNode;
+    var rownode = node.parentNode;
     var ruleID = rownode.id.split('-').slice(-1)[0];
     var saveButton = rownode.childNodes[1].childNodes[0];
     saveButton.style.display = 'inline';
@@ -186,9 +201,9 @@ function saveRule (node) {
     if (false === row) return;
     if (ruleText) {
         var ruleTextNode = document.createElement('div');
-        ruleTextNode.setAttribute('onclick','closeRule(this);');
         ruleTextNode.innerHTML = markdown(row.ruleText);
         rulenode.parentNode.replaceChild(ruleTextNode,rulenode);
+        ruleTextNode.parentNode.setAttribute('onclick','closeRule(this);');
     }
     orignode.innerHTML = markdown(row.stringOrig);
     var renderedNode = document.createElement('div');
@@ -234,14 +249,14 @@ function editRule (node) {
 };
 
 function closeRule (node) {
-    var rownode = node.parentNode.parentNode;
+    var rownode = node.parentNode;
     var saveButton = rownode.childNodes[1].childNodes[0];
     var editButton = rownode.childNodes[1].childNodes[1];
     var deleteButton = rownode.childNodes[1].childNodes[2];
-    var contentrownode = rownode.nextSibling;
-    contentrownode.parentNode.removeChild(contentrownode);
-    node.setAttribute('onclick', 'openRule(this);');
     saveButton.style.display = 'none';
     editButton.style.display = 'none';
     deleteButton.style.display = 'none';
+    var contentrownode = rownode.nextSibling;
+    contentrownode.parentNode.removeChild(contentrownode);
+    node.setAttribute('onclick', 'openRule(this);');
 };
