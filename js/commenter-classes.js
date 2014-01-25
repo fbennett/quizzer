@@ -81,6 +81,9 @@ function setButtonMode (mode,langName) {
                 + commenterKey
                 + '&page=top'
                 + '&cmd=readrules'
+            , {
+                lang:mode
+            }
         );
         if (false === rows) return;
         for (var i=0,ilen=rulesForLang.childNodes.length;i<ilen;i+=1) {
@@ -90,7 +93,11 @@ function setButtonMode (mode,langName) {
             var row = rows[i];
             var tr = document.createElement('tr');
             tr.setAttribute('id','rule-' + row.ruleID);
-            tr.innerHTML = '<td class="left"><div onclick="openRule(this)">' + markdown(row.ruleText) + '</div></td><td class="right"><input type="button" class="button" value="Save" onclick="saveRule(this)" style="display:none;"/><input type="button" class="button" value="Edit" onclick="editRule(this)" style="display:none;"/></td>';
+            var needsGloss = ' needs-gloss';
+            if (row.hasGloss) {
+                needsGloss = '';
+            }
+            tr.innerHTML = '<td class="left' + needsGloss + '"><div onclick="openRule(this)">' + markdown(row.ruleText) + '</div></td><td class="right"><input type="button" class="button" value="Save" onclick="saveRule(this)" style="display:none;"/><input type="button" class="button" value="Edit" onclick="editRule(this)" style="display:none;"/><input type="button" class="button" value="Del" onclick="confirmDelete(this,\'deleteRule\')" style="display:none;"/></td>';
             rulesForLang.appendChild(tr);
         }
         
@@ -116,6 +123,10 @@ function setButtonMode (mode,langName) {
         rulesDisplayTitle.style.display = 'none';
     }
 }
+
+function deleteRule (node) {
+    alert("Delete!");
+};
 
 function openRule (node) {
     var rownode = node.parentNode.parentNode;
@@ -157,6 +168,7 @@ function saveRule (node) {
     var ruleID = rownode.id.split('-').slice(-1)[0];
     var saveButton = rownode.childNodes[1].childNodes[0];
     var editButton = rownode.childNodes[1].childNodes[1];
+    var deleteButton = rownode.childNodes[1].childNodes[2];
     // API call
     var commenterKey = getParameterByName('commenter');
     var row = apiRequest(
@@ -184,6 +196,7 @@ function saveRule (node) {
     textnode.parentNode.replaceChild(renderedNode,textnode);
     saveButton.style.display = 'none';
     editButton.style.display = 'inline';
+    deleteButton.style.display = 'inline';
 };
 
 function editRule (node) {
@@ -192,6 +205,7 @@ function editRule (node) {
     var ruleID = rownode.id.split('-').slice(-1)[0];
     var saveButton = rownode.childNodes[1].childNodes[0];
     var editButton = rownode.childNodes[1].childNodes[1];
+    var deleteButton = rownode.childNodes[1].childNodes[2];
     // API call
     var commenterKey = getParameterByName('commenter');
     var row = apiRequest(
@@ -216,15 +230,18 @@ function editRule (node) {
     renderednode.parentNode.replaceChild(textnode,renderednode);
     saveButton.style.display = 'inline';
     editButton.style.display = 'none';
+    deleteButton.style.display = 'none';
 };
 
 function closeRule (node) {
     var rownode = node.parentNode.parentNode;
     var saveButton = rownode.childNodes[1].childNodes[0];
     var editButton = rownode.childNodes[1].childNodes[1];
+    var deleteButton = rownode.childNodes[1].childNodes[2];
     var contentrownode = rownode.nextSibling;
     contentrownode.parentNode.removeChild(contentrownode);
     node.setAttribute('onclick', 'openRule(this);');
     saveButton.style.display = 'none';
     editButton.style.display = 'none';
+    deleteButton.style.display = 'none';
 };

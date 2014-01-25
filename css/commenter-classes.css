@@ -40,3 +40,8 @@ td.right {
     text-align: right !important;
     border:none !important;
 }
+
+td.needs-gloss {
+    border-width: 3px !important;
+    border-color: #ffbbbb !important;
+}
