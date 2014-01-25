@@ -72,6 +72,8 @@ function setButtonMode (mode,langName) {
     var mainDisplayTitle = document.getElementById('main-display-title');
     var rulesDisplayTitle = document.getElementById('rules-display-title');
     if (mode) {
+        pageData.lang = mode;
+        pageData.langName = langName;
         buildRulesList(mode,langName);
         for (var i=0,ilen=ruleLangButtons.length;i<ilen;i+=1) {
             ruleLangButtons[i].style.display = 'none';
@@ -93,11 +95,11 @@ function setButtonMode (mode,langName) {
     }
 }
 
-function buildRulesList (mode,langName) {
+function buildRulesList () {
+    var mode = pageData.lang;
+    var langName = pageData.langName;
     var ruleLanguageName = document.getElementById('rule-language');
     ruleLanguageName.innerHTML = langName;
-    pageData.lang = mode;
-    pageData.langName = langName;
     // API call for list of rules (admin user + current commenter)
     var commenterKey = getParameterByName('commenter');
     var rulesForLang = document.getElementById('rules-for-lang');
@@ -129,6 +131,9 @@ function buildRulesList (mode,langName) {
 
 function deleteRule (node) {
     // API call
+    var rownode = node.parentNode.parentNode;
+    var ruleID = rownode.id.split('-').slice(-1)[0];
+    var commenterKey = getParameterByName('commenter');
     var row = apiRequest(
         '/?commenter='
             + commenterKey
@@ -140,7 +145,9 @@ function deleteRule (node) {
         }
     );
     if (false === row) return;
-    alert("do!")
+    var nextnode = rownode.nextSibling;
+    nextnode.parentNode.removeChild(nextnode);
+    rownode.parentNode.removeChild(rownode);
 };
 
 function openRule (node) {
@@ -204,6 +211,7 @@ function saveRule (node) {
         ruleTextNode.innerHTML = markdown(row.ruleText);
         rulenode.parentNode.replaceChild(ruleTextNode,rulenode);
         ruleTextNode.parentNode.setAttribute('onclick','closeRule(this);');
+        deleteButton.style.display = 'inline';
     }
     orignode.innerHTML = markdown(row.stringOrig);
     var renderedNode = document.createElement('div');
@@ -211,7 +219,6 @@ function saveRule (node) {
     textnode.parentNode.replaceChild(renderedNode,textnode);
     saveButton.style.display = 'none';
     editButton.style.display = 'inline';
-    deleteButton.style.display = 'inline';
 };
 
 function editRule (node) {
