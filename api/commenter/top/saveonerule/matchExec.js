@@ -13,8 +13,7 @@
         if (ruleText) {
             ruleText = ruleText.replace(/^\s+/,'').replace(/\s+$/,'');
         }
-        var sql = 'INSERT OR IGNORE INTO ruleTranslations VALUES (NULL,?,?,?);'
-        console.log("USING: "+ruleID+" "+lang);
+        var sql = 'INSERT OR REPLACE INTO ruleTranslations VALUES (NULL,?,?,?);'
         sys.db.run(sql,[ruleID,ruleText,lang],function(err){
             if (err) {return oops(response,err,'**classes/saveonerule(1)')};
             returnText();

@@ -142,8 +142,8 @@ function openRule (node) {
 
 function saveRule (node) {
     var rownode = node.parentNode.parentNode;
+    var orignode = rownode.nextSibling.childNodes[0].childNodes[0];
     var textnode = rownode.nextSibling.childNodes[1].childNodes[0];
-    console.log(rownode.nextSibling.childNodes[1].childNodes[0]);
     var ruleText = textnode.value;
     var ruleID = rownode.id.split('-').slice(-1)[0];
     var saveButton = rownode.childNodes[1].childNodes[0];
@@ -162,10 +162,47 @@ function saveRule (node) {
         }
     );
     if (false === row) return;
-    console.log(JSON.stringify(row));
+    orignode.innerHTML = markdown(row.stringOrig);
     var renderedNode = document.createElement('div');
     renderedNode.innerHTML = markdown(row.stringTrans);
     textnode.parentNode.replaceChild(renderedNode,textnode);
     saveButton.style.display = 'none';
     editButton.style.display = 'inline';
+};
+
+function editRule (node) {
+    var rownode = node.parentNode.parentNode;
+    var renderednode = rownode.nextSibling.childNodes[1].childNodes[0];
+    var ruleID = rownode.id.split('-').slice(-1)[0];
+    var saveButton = rownode.childNodes[1].childNodes[0];
+    var editButton = rownode.childNodes[1].childNodes[1];
+    // API call
+    var commenterKey = getParameterByName('commenter');
+    var row = apiRequest(
+        '/?commenter='
+            + commenterKey
+            + '&page=top'
+            + '&cmd=readonerule'
+        ,{
+            ruleid:ruleID,
+            lang:pageData.lang
+        }
+    );
+    if (false === row) return;
+    var textnode = document.createElement('textarea');
+    textnode.innerHTML = row.stringTrans;
+    renderednode.parentNode.replaceChild(textnode,renderednode);
+    saveButton.style.display = 'inline';
+    editButton.style.display = 'none';
+};
+
+function closeRule (node) {
+    var rownode = node.parentNode.parentNode;
+    var saveButton = rownode.childNodes[1].childNodes[0];
+    var editButton = rownode.childNodes[1].childNodes[1];
+    var contentrownode = rownode.nextSibling;
+    contentrownode.parentNode.removeChild(contentrownode);
+    node.setAttribute('onclick', 'openRule(this);');
+    saveButton.style.display = 'none';
+    editButton.style.display = 'none';
 };
