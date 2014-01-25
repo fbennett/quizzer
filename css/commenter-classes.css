@@ -18,6 +18,7 @@ table#rules-for-lang td.left:hover {
 td.show-box {
     background: #eeeeee;
     vertical-align: top;
+    border-radius: 0 !important;
 }
 
 td.left textarea {
@@ -28,6 +29,7 @@ td.left textarea {
 
 td.edit-box {
     vertical-align: top;
+    border-radius: 0 !important;
 }
 
 td.edit-box textarea {
@@ -37,11 +39,15 @@ td.edit-box textarea {
 }
 
 td.right {
-    text-align: right !important;
+    text-align: left !important;
     border:none !important;
 }
 
 td.needs-gloss {
     border-width: 3px !important;
     border-color: #ffbbbb !important;
+}
+
+input.float-right {
+    float:right;
 }

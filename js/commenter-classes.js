@@ -124,7 +124,7 @@ function buildRulesList () {
         if (row.hasGloss) {
             needsGloss = '';
         }
-        tr.innerHTML = '<td class="left' + needsGloss + '" onclick="openRule(this)"><div>' + markdown(row.ruleText) + '</div></td><td class="right"><input type="button" class="button" value="Save" onclick="saveRule(this)" style="display:none;"/><input type="button" class="button" value="Edit" onclick="editRule(this)" style="display:none;"/><input type="button" class="button" value="Del" onclick="confirmDelete(this,\'deleteRule\')" style="display:none;"/></td>';
+        tr.innerHTML = '<td class="left' + needsGloss + '" onclick="openRule(this)"><div>' + markdown(row.ruleText) + '</div></td><td class="right"><input type="button" class="button float-right" value="Save" onclick="saveRule(this)" style="display:none;"/><input type="button" class="button float-right" value="Edit" onclick="editRule(this)" style="display:none;"/><input type="button" class="button no-float" value="Del" onclick="confirmDelete(this,\'deleteRule\')" style="display:none;"/></td>';
         rulesForLang.appendChild(tr);
     }
 };
@@ -154,6 +154,7 @@ function openRule (node) {
     var rownode = node.parentNode;
     var ruleID = rownode.id.split('-').slice(-1)[0];
     var saveButton = rownode.childNodes[1].childNodes[0];
+    var deleteButton = rownode.childNodes[1].childNodes[2];
     saveButton.style.display = 'inline';
     // API call
     var commenterKey = getParameterByName('commenter');
@@ -173,11 +174,12 @@ function openRule (node) {
         var textarea = document.createElement('textarea');
         textarea.innerHTML = row.ruleSource;
         renderedrule.parentNode.replaceChild(textarea,renderedrule);
+        deleteButton.style.display = 'inline';
     }
     var tr = document.createElement('tr');
     tr.innerHTML = '<td class="show-box">' + markdown(row.stringOrig) + '</td><td class="edit-box"><textarea>' + row.stringTrans + '</textarea></td>'
     rownode.parentNode.insertBefore(tr,rownode.nextSibling);
-    node.setAttribute('onclick','closeRule(this);');
+    node.setAttribute('onclick','void(0);');
 };
 
 function saveRule (node) {
@@ -211,7 +213,6 @@ function saveRule (node) {
         ruleTextNode.innerHTML = markdown(row.ruleText);
         rulenode.parentNode.replaceChild(ruleTextNode,rulenode);
         ruleTextNode.parentNode.setAttribute('onclick','closeRule(this);');
-        deleteButton.style.display = 'inline';
     }
     orignode.innerHTML = markdown(row.stringOrig);
     var renderedNode = document.createElement('div');
@@ -219,6 +220,8 @@ function saveRule (node) {
     textnode.parentNode.replaceChild(renderedNode,textnode);
     saveButton.style.display = 'none';
     editButton.style.display = 'inline';
+    deleteButton.style.display = 'none';
+    node.parentNode.previousSibling.setAttribute('onclick','closeRule(this);');
 };
 
 function editRule (node) {
@@ -246,13 +249,14 @@ function editRule (node) {
         var textarea = document.createElement('textarea');
         textarea.innerHTML = row.ruleSource;
         renderedrule.parentNode.replaceChild(textarea,renderedrule);
+        deleteButton.style.display = 'inline';
     }
     var textnode = document.createElement('textarea');
     textnode.innerHTML = row.stringTrans;
     renderednode.parentNode.replaceChild(textnode,renderednode);
     saveButton.style.display = 'inline';
     editButton.style.display = 'none';
-    deleteButton.style.display = 'none';
+    node.parentNode.previousSibling.setAttribute('onclick','void(0);');
 };
 
 function closeRule (node) {
