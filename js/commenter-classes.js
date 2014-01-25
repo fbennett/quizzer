@@ -88,12 +88,14 @@ function setButtonMode (mode,langName) {
         for (var i=0,ilen=rows.length;i<ilen;i+=1) {
             var row = rows[i];
             var tr = document.createElement('tr');
-            tr.innerHTML = '<td class="left"><div id="rule-' + row.ruleID + '" onclick="openRule(this)">' + row.ruleText + '</div></td><td></td>';
+            tr.setAttribute('id','rule-' + row.ruleID);
+            tr.innerHTML = '<td class="left"><div onclick="openRule(this)">' + row.ruleText + '</div></td><td class="right"><input type="button" class="button" value="Save" onclick="saveRule(this)" style="display:none;"/><input type="button" class="button" value="Edit" onclick="editRule(this)" style="display:none;"/></td>';
             rulesForLang.appendChild(tr);
         }
         
         ruleLanguageName.innerHTML = langName;
-        pageData.lang = row.langName;
+        pageData.lang = mode;
+        pageData.langName = langName;
         for (var i=0,ilen=ruleLangButtons.length;i<ilen;i+=1) {
             ruleLangButtons[i].style.display = 'none';
         }
@@ -116,7 +118,9 @@ function setButtonMode (mode,langName) {
 
 function openRule (node) {
     var rownode = node.parentNode.parentNode;
-    var ruleID = node.id.split('-').slice(-1)[0];
+    var ruleID = rownode.id.split('-').slice(-1)[0];
+    var saveButton = rownode.childNodes[1].childNodes[0];
+    saveButton.style.display = 'inline';
     // API call
     var commenterKey = getParameterByName('commenter');
     var row = apiRequest(
@@ -131,6 +135,37 @@ function openRule (node) {
     );
     if (false === row) return;
     var tr = document.createElement('tr');
-    tr.innerHTML = '<td><div class="show-box">' + row.stringOrig + '</div></td><td><textarea class="edit-box">' + row.stringTrans + '</textarea></td>'
-    rownode.parentNode.insertBefore(tr,rownode.followingSibling);
+    tr.innerHTML = '<td class="show-box">' + markdown(row.stringOrig) + '</td><td class="edit-box"><textarea>' + row.stringTrans + '</textarea></td>'
+    rownode.parentNode.insertBefore(tr,rownode.nextSibling);
+    node.setAttribute('onclick','closeRule(this);');
+};
+
+function saveRule (node) {
+    var rownode = node.parentNode.parentNode;
+    var textnode = rownode.nextSibling.childNodes[1].childNodes[0];
+    console.log(rownode.nextSibling.childNodes[1].childNodes[0]);
+    var ruleText = textnode.value;
+    var ruleID = rownode.id.split('-').slice(-1)[0];
+    var saveButton = rownode.childNodes[1].childNodes[0];
+    var editButton = rownode.childNodes[1].childNodes[1];
+    // API call
+    var commenterKey = getParameterByName('commenter');
+    var row = apiRequest(
+        '/?commenter='
+            + commenterKey
+            + '&page=top'
+            + '&cmd=saveonerule'
+        ,{
+            ruleid:ruleID,
+            lang:pageData.lang,
+            ruletext:ruleText
+        }
+    );
+    if (false === row) return;
+    console.log(JSON.stringify(row));
+    var renderedNode = document.createElement('div');
+    renderedNode.innerHTML = markdown(row.stringTrans);
+    textnode.parentNode.replaceChild(renderedNode,textnode);
+    saveButton.style.display = 'none';
+    editButton.style.display = 'inline';
 };

@@ -12,9 +12,20 @@ table#rules-for-lang td {
 
 table#rules-for-lang td.left:hover {
     background: #eeeeee;
+    cursor:pointer;
 }
 
-textarea.edit-box {
+td.show-box {
+    background: #eeeeee;
+}
+
+td.edit-box textarea {
     width: 100%;
     height: 10em;
+    resize:none;
+}
+
+td.right {
+    text-align: right !important;
+    border:none !important;
 }
