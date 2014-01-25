@@ -4,6 +4,7 @@ function buildClassList (rows) {
     if (!rows) {
         // if rows is nil, call the server.
         var commenterID = getParameterByName('commenter');
+        pageData.commenterKey = commenterID;
         var rows = apiRequest(
             '/?commenter='
                 + commenterID
@@ -89,7 +90,7 @@ function setButtonMode (mode,langName) {
             var row = rows[i];
             var tr = document.createElement('tr');
             tr.setAttribute('id','rule-' + row.ruleID);
-            tr.innerHTML = '<td class="left"><div onclick="openRule(this)">' + row.ruleText + '</div></td><td class="right"><input type="button" class="button" value="Save" onclick="saveRule(this)" style="display:none;"/><input type="button" class="button" value="Edit" onclick="editRule(this)" style="display:none;"/></td>';
+            tr.innerHTML = '<td class="left"><div onclick="openRule(this)">' + markdown(row.ruleText) + '</div></td><td class="right"><input type="button" class="button" value="Save" onclick="saveRule(this)" style="display:none;"/><input type="button" class="button" value="Edit" onclick="editRule(this)" style="display:none;"/></td>';
             rulesForLang.appendChild(tr);
         }
         
@@ -134,6 +135,12 @@ function openRule (node) {
         }
     );
     if (false === row) return;
+    if (row.ruleSource) {
+        var renderedrule = rownode.childNodes[0].childNodes[0];
+        var textarea = document.createElement('textarea');
+        textarea.innerHTML = row.ruleSource;
+        renderedrule.parentNode.replaceChild(textarea,renderedrule);
+    }
     var tr = document.createElement('tr');
     tr.innerHTML = '<td class="show-box">' + markdown(row.stringOrig) + '</td><td class="edit-box"><textarea>' + row.stringTrans + '</textarea></td>'
     rownode.parentNode.insertBefore(tr,rownode.nextSibling);
@@ -144,7 +151,9 @@ function saveRule (node) {
     var rownode = node.parentNode.parentNode;
     var orignode = rownode.nextSibling.childNodes[0].childNodes[0];
     var textnode = rownode.nextSibling.childNodes[1].childNodes[0];
-    var ruleText = textnode.value;
+    var rulenode = rownode.childNodes[0].childNodes[0];
+    ruleText = rulenode.tagName === 'TEXTAREA' ? rulenode.value : null;
+    var glossText = textnode.value;
     var ruleID = rownode.id.split('-').slice(-1)[0];
     var saveButton = rownode.childNodes[1].childNodes[0];
     var editButton = rownode.childNodes[1].childNodes[1];
@@ -158,10 +167,17 @@ function saveRule (node) {
         ,{
             ruleid:ruleID,
             lang:pageData.lang,
+            glosstext:glossText,
             ruletext:ruleText
         }
     );
     if (false === row) return;
+    if (ruleText) {
+        var ruleTextNode = document.createElement('div');
+        ruleTextNode.setAttribute('onclick','closeRule(this);');
+        ruleTextNode.innerHTML = markdown(row.ruleText);
+        rulenode.parentNode.replaceChild(ruleTextNode,rulenode);
+    }
     orignode.innerHTML = markdown(row.stringOrig);
     var renderedNode = document.createElement('div');
     renderedNode.innerHTML = markdown(row.stringTrans);
@@ -189,6 +205,12 @@ function editRule (node) {
         }
     );
     if (false === row) return;
+    if (row.ruleSource) {
+        var renderedrule = rownode.childNodes[0].childNodes[0];
+        var textarea = document.createElement('textarea');
+        textarea.innerHTML = row.ruleSource;
+        renderedrule.parentNode.replaceChild(textarea,renderedrule);
+    }
     var textnode = document.createElement('textarea');
     textnode.innerHTML = row.stringTrans;
     renderednode.parentNode.replaceChild(textnode,renderednode);
