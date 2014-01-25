@@ -142,7 +142,8 @@ function buildRuleSelect (node) {
         var rule = quizMistakes.selections[i];
         var option = document.createElement('option');
         option.setAttribute('value',rule.ruleid);
-        option.innerHTML = rule.ruletext;
+        option.innerHTML = markdown(rule.ruletext);
+        option.innerHTML = option.textContent;
         node.appendChild(option);
     }
 };
@@ -306,7 +307,7 @@ function buildRule (questionNumber,wrongChoice,ruleID,ruleText) {
     ruleContainer.setAttribute('class', 'rule-container');
     ruleContainer.setAttribute('id', 'rule-' + ruleID + '-' + questionNumber + '-' +wrongChoice);
     // XXXX
-    ruleContainer.innerHTML = '<div class="rule-button"><input type="button" id="removerule-' + questionNumber + '-' + wrongChoice + '-' + ruleID + '" class="button-small" onclick="confirmDelete(this,\'removeRule\')" value="Del"/></div><div>' + ruleText + '</div>';
+    ruleContainer.innerHTML = '<div class="rule-button"><input type="button" id="removerule-' + questionNumber + '-' + wrongChoice + '-' + ruleID + '" class="button-small" onclick="confirmDelete(this,\'removeRule\')" value="Del"/></div><div>' + markdown(ruleText) + '</div>';
     // Return
     return ruleContainer;
 };
@@ -320,7 +321,8 @@ function refreshDropdownList (ruleData,questionNumber,wrongChoice) {
         var selection = ruleData.selections[i];
         var option = document.createElement('option');
         option.setAttribute('value',selection.ruleID);
-        option.innerHTML = selection.ruleText
+        option.innerHTML = markdown(selection.ruleText);
+        option.innerHTML = option.textContent;
         dropdownList.appendChild(option);
     }
     
