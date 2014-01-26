@@ -47,7 +47,7 @@
 for:</p>
 
 <ul>
-<li>Students facing novel stylistic demands (such as in law school)</li>
+<li>Students facing novel stylistic demands</li>
 <li>Second language learners</li>
 <li>Any teaching environment where staff resources are in short supply</li>
 </ul><p>In contrast to many commercial offerings in the online education
@@ -61,6 +61,7 @@ encourage the reader:</p>
 <ul>
 <li>Students do not need to be issued IDs and passwords. It just works.</li>
 <li>The entire system can be installed with a single command.</li>
+<li>The design fosters spontaneous intra-class support and tutoring.</li>
 </ul><p>Quizzer makes intensive use of multiple-choice quizzes, <em>not</em> as a
 test of knowledge or skill level, but as a lightweight means of
 encouraging students to engage positively with flaws in their
@@ -68,14 +69,14 @@ writing. In our Academic Writing program in the Nagoya University
 Faculty of Law, Quizzer supports the following workflow:</p>
 
 <ol>
-<li>Students submit a 400-word essay once each week on an arbitrary
+<li>Students submit a short (250 to 400-word) essay once each week on an arbitrary
 topic.</li>
 <li>The instructor selects one poorly-written sentence from each
 essay, and composes a multiple-choice question consisting of the
 student's own sentence, two alternatives that also contain errors,
 and a corrected version. <em>The essays themselves are not assessed.</em>
 </li>
-<li>After constructing one question from each submitted essay, students
+<li>After one question is built from each submitted essay, students
 are sent personalized links to the resulting quiz.</li>
 <li>Students submit their responses, which are recorded on the Quizzer
 server. Students receive feedback immediately feedback on their
@@ -94,19 +95,14 @@ cheating, and marked with a barcode reader for quick assessment.
 (Tip: a scanning wand is both more convenient and cheaper for this
 particular purpose than a laser scanner).</p>
 
-<p>As an additional feature suited to our own environment, the native
-languages of students choosing each wrong answer are shown in the
-commenter view. This allows satellite commenters (alumni with
-strong English writing skills, in our case) to provide guidance
-in the native language of the students concerned.</p>
+<p>Using a small Markdown syntax extension, commenters can add one-line guidance notes ("rules") to their posts. Rules are made instantly available to the posting commenter in a pulldown menu, and enter a queue for promotion to system-wide use. Promoted rules can be glossed by students who perform well against them, for the benefit of their classmates from the same language domain. While student quiz responses and attached comments are typically purged at the end of each term, rules and their multilingual glosses persist, providing an evolving base of guidance notes tailored to the (preferences and the instructor and) the conventions of the target community.</p>
 
 <p>The initial inspiration for Quizzer was a small <a href="http://chetan0389.blogspot.jp/2013/06/quiz-using-htmlcss-jquery-xml-javascript.html">code
 sample</a>
-posted by Chetan Jain. The code has been refactored and extended
-considerably for this project, but I gratefully acknowledge the
+posted by Chetan Jain. His code has been refactored and extended
+considerably for this project, but I gratefully acknowledge his code as the
 starting point for this frolic. Hats off also to the developers of
-<code>node.js</code>, and LaTeX and, well, the developers of everything else that I used for this project. Quizzer was built
-on short notice to fill a critical need, and it has been a real
+<code>node.js</code>, and LaTeX and, well, the developers of everything else that I used for this project. Quizzer was built on short notice to fill a critical need, and it has been a real
 pleasure to see how quickly the whole thing could be brought together.</p>
 
 <h2>
