@@ -2,6 +2,7 @@ div#commenters-list {
     font-size:smaller;
     padding:1em;
     line-height: 2.8em;
+    z-index:200;
 }
 
 div#commenters-list span {
@@ -9,6 +10,8 @@ div#commenters-list span {
     border-radius: 1em;
     padding:0.5em;
     font-family:sans;
+    background:white;
+    z-index:210;
 }
 
 table#rules-list-admin td {
@@ -33,4 +36,19 @@ table#rules-list-commenters td {
 table#rules-list-commenters td:hover {
     background: #eeeeee;
     cursor:pointer;
+}
+
+div#commenters-list-phantom {
+    font-size:smaller;
+    padding:1em;
+    line-height: 2.8em;
+    visibility:hidden;
+}
+
+div#commenters-list-phantom span {
+    border:1px solid #000000;
+    border-radius: 1em;
+    padding:0.5em;
+    font-family:sans;
+    visibility:hidden;
 }

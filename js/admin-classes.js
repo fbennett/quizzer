@@ -135,14 +135,20 @@ function editRules() {
     );
     if (false === rows) return;
     var commentersList = document.getElementById('commenters-list');
+    var commentersListPhantom = document.getElementById('commenters-list-phantom');
     var commenters = [];
+    var commenters_phantom = [];
     for (var i=0,ilen=rows.length;i<ilen;i+=1) {
         var row = rows[i];
         commenters.push('<span class="commenter" id="commenter-' + row.adminID + '" ondragover="allowDemoteDrop(event)" ondrop="dropDemoteRule(event)" ondragleave="dragleaveDemoteRule(event)">' + row.name + '</span>');
+        commenters_phantom.push('<span>' + row.name + '</span>');
     }
     commentersList.innerHTML = commenters.join(' ');
+    commentersListPhantom.innerHTML = commenters_phantom.join(' ');
     pageData.commenters = document.getElementsByClassName('commenter');;
     buildRulesLists();
+    var width = commentersList.offsetWidth;
+    commentersList.setAttribute('style','position:fixed;top:' + commentersList.offsetTop + 'px;left:' + commentersList.offsetLeft + 'px;width:' + width + 'px');
 };
 
 function buildRulesLists() {
@@ -177,6 +183,7 @@ function buildRulesLists() {
         tr.innerHTML = '<td draggable="true" ondragstart="dragMergeRule(event)" ondragend="dragendMergeRule(event);" id="' + row.ruleID + '" title="' + row.name + '" onclick="promoteRule(this)">' + markdown(row.string) + '</td>';
         rulesListCommenters.appendChild(tr);
     }
+    
 };
 
 function promoteRule(node) {
@@ -235,29 +242,20 @@ function setButtonMode(rulesMode) {
 };
 
 function allowDemoteDrop(ev) {
-    console.log("top of allowDemoteDrop()");
     if (ev.dataTransfer.getData("ruleID").slice(0,7) !== 'demote:') {
         return;
     }
     ev.preventDefault();
-    console.log("before dragendDemoteRule()");
     for (var i=0,ilen=pageData.commenters.length;i<ilen;i+=1) {
         if (pageData.commenters[i].hasAttribute('style')) {
             pageData.commenters[i].removeAttribute('style');
         }
     }
-    //dragendDemoteRule();
-    console.log("after dragendDemoteRule()");
     ev.target.setAttribute('style','border:1px dashed black;border-radius:0;background:#00ff00;');
 };
 
 function dragDemoteRule(ev) {
-    console.log("TRY TO DRAG");
-    try {
-        ev.dataTransfer.setData('ruleID','demote:'+ev.target.id);
-    } catch (e) {
-        console.log("OOOPS: "+e);
-    }
+    ev.dataTransfer.setData('ruleID','demote:'+ev.target.id);
 };
 
 function dragendDemoteRule(ev) {
@@ -308,10 +306,7 @@ function allowMergeDrop(ev) {
     }
     ev.preventDefault();
     dragendMergeRule();
-    var targ = ev.target;
-    while (targ.tagName !== 'TD') {
-        targ = targ.parentNode;
-    }
+    var targ = getParent(ev.target,'td');
     targ.setAttribute('style','border:1px dashed black;border-radius:0;background:#00ff00;');
 };
 
@@ -325,34 +320,31 @@ function dragendMergeRule(ev) {
 
 
 function dragMergeRule(ev) {
+    window.scroll(0,findPos(document.getElementById("commenters-list")));
     ev.dataTransfer.setData('ruleID','merge:'+ev.target.id);
 };
 
 function dropMergeRule(ev) {
     ev.preventDefault();
-    var commenterID = ev.target.id.split('-').slice(-1)[0];
-    var commenterName = ev.target.textContent;
+    var targ = getParent(ev.target,'td');
+    var senpaiRuleID = targ.id;
     var okToDemote = confirm("Merge this rule with target?");
     if (okToDemote) {
         // API call
-        var ruleID = ev.dataTransfer.getData("ruleID").slice(6);
+        var kohaiRuleID = ev.dataTransfer.getData("ruleID").slice(6);
         var adminID = getParameterByName('admin');
-        var rows = apiRequest(
+        var result = apiRequest(
             '/?admin='
                 + adminID
                 + '&page=classes'
-                + '&cmd=demoteonerule'
+                + '&cmd=mergetworules'
             ,{
-                ruleid:ruleID,
-                commenterid:commenterID
+                kohairuleid:kohaiRuleID,
+                senpairuleid:senpaiRuleID
             }
         );
-        if (false === rows) return;
+        if (false === result) return;
         buildRulesLists();
-    }
-    var targ = ev.target;
-    while (targ.tagName !== 'TD') {
-        targ = targ.parentNode;
     }
     targ.removeAttribute('style');
 };
@@ -363,3 +355,27 @@ function dragleaveMergeRule(ev) {
         ev.target.removeAttribute('style');
     }
 };
+
+/* for scrolling
+ * Ahnsirk Dasarp
+ * http://stackoverflow.com/questions/5007530/how-do-i-scroll-to-an-element-using-javascript
+ */
+
+//Finds y value of given object
+function findPos(obj) {
+    var curtop = 0;
+    if (obj.offsetParent) {
+        do {
+            curtop += obj.offsetTop;
+        } while (obj = obj.offsetParent);
+    return [curtop];
+    }
+}
+    
+function getParent (node,tagname) {
+    var targ = node;
+    while (targ.tagName !== tagname.toUpperCase()) {
+        targ = targ.parentNode;
+    }
+    return targ;
+}
