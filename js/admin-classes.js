@@ -147,8 +147,7 @@ function editRules() {
     commentersListPhantom.innerHTML = commenters_phantom.join(' ');
     pageData.commenters = document.getElementsByClassName('commenter');;
     buildRulesLists();
-    var width = commentersList.offsetWidth;
-    commentersList.setAttribute('style','position:fixed;top:' + commentersList.offsetTop + 'px;left:' + commentersList.offsetLeft + 'px;width:' + width + 'px');
+    setCommentersBlockPosition();
 };
 
 function buildRulesLists() {
@@ -320,7 +319,6 @@ function dragendMergeRule(ev) {
 
 
 function dragMergeRule(ev) {
-    window.scroll(0,findPos(document.getElementById("commenters-list")));
     ev.dataTransfer.setData('ruleID','merge:'+ev.target.id);
 };
 
@@ -379,3 +377,14 @@ function getParent (node,tagname) {
     }
     return targ;
 }
+
+window.addEventListener('resize', setCommentersBlockPosition);
+
+function setCommentersBlockPosition (event){
+    var phantom = document.getElementById('commenters-list-phantom');
+    var width = phantom.offsetWidth;
+    var top = phantom.offsetTop;
+    var left = phantom.offsetLeft;
+    var commenters = document.getElementById('commenters-list');
+    commenters.setAttribute('style','position:fixed;top:' + top + 'px;left:' + left + 'px;width:' + width + 'px');
+};
