@@ -1,0 +1,36 @@
+div#commenters-list {
+    font-size:smaller;
+    padding:1em;
+    line-height: 2.8em;
+}
+
+div#commenters-list span {
+    border:1px solid #000000;
+    border-radius: 1em;
+    padding:0.5em;
+    font-family:sans;
+}
+
+table#rules-list-admin td {
+    text-align: left;
+    border:2px solid #bbbbbb;
+    border-radius:1em;
+    padding: 0.5em;
+}
+
+table#rules-list-admin td:hover {
+    background: #eeeeee;
+    cursor:pointer;
+}
+
+table#rules-list-commenters td {
+    text-align: left;
+    border:2px solid #bbbbbb;
+    border-radius:1em;
+    padding: 0.5em;
+}
+
+table#rules-list-commenters td:hover {
+    background: #eeeeee;
+    cursor:pointer;
+}

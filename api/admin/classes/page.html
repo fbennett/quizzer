@@ -1,6 +1,8 @@
+<!DOCTYPE html>
 <html>
 <head>
   <title>Quizzer Admin - classes</title>
+  <script type="text/javascript" src="js/marked.js"></script>
   <script type="text/javascript" src="js/local.js"></script>  
   <script type="text/javascript" src="js/admin-classes.js"></script>  
   <link rel="stylesheet" type="text/css" href="css/simple-grid.css"/>
@@ -32,9 +34,20 @@
         <table id="class-list">
         </table>
       </div>
-      <div id="rules-display" style="display:none;">
-        <table id="rules-for-lang">
-        </table>
+    </div>
+    <div id="rules-display" style="display:none;">
+        <div class="col-1-2">
+          <h3>Admin</h3>
+          <table id="rules-list-admin">
+          </table>
+        </div>
+        <div class="col-1-2">
+          <div id="commenters-list">
+          </div>
+          <hr/>
+          <table id="rules-list-commenters">
+          </table>
+        </div>
       </div>
     </div>
   </div>
