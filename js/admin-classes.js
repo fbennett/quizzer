@@ -167,14 +167,14 @@ function buildRulesLists() {
     for (var i=0,ilen=rows.admin.length;i<ilen;i+=1) {
         var row = rows.admin[i];
         var tr = document.createElement('tr');
-        tr.innerHTML = '<td draggable="true" ondragstart="dragDemoteRule(event);" ondragover="allowMergeDrop(event);" ondrop="dropMergeRule(event);" ondragleave="dragleaveMergeRule(event);" id="' + row.ruleID + '">' + markdown(row.string) + '</td>';
+        tr.innerHTML = '<td draggable="true" ondragstart="dragDemoteRule(event);" ondragend="dragendDemoteRule(event);" ondragover="allowMergeDrop(event);" ondrop="dropMergeRule(event);" ondragleave="dragleaveMergeRule(event);" id="' + row.ruleID + '">' + markdown(row.string) + '</td>';
         rulesListAdmin.appendChild(tr);
         pageData.adminrules.push(tr.childNodes[0]);
     }
     for (var i=0,ilen=rows.commenters.length;i<ilen;i+=1) {
         var row = rows.commenters[i];
         var tr = document.createElement('tr');
-        tr.innerHTML = '<td draggable="true" ondragstart="dragMergeRule(event)" id="' + row.ruleID + '" title="' + row.name + '" onclick="promoteRule(this)">' + markdown(row.string) + '</td>';
+        tr.innerHTML = '<td draggable="true" ondragstart="dragMergeRule(event)" ondragend="dragendMergeRule(event);" id="' + row.ruleID + '" title="' + row.name + '" onclick="promoteRule(this)">' + markdown(row.string) + '</td>';
         rulesListCommenters.appendChild(tr);
     }
 };
@@ -235,21 +235,37 @@ function setButtonMode(rulesMode) {
 };
 
 function allowDemoteDrop(ev) {
+    console.log("top of allowDemoteDrop()");
     if (ev.dataTransfer.getData("ruleID").slice(0,7) !== 'demote:') {
         return;
     }
     ev.preventDefault();
-    console.log("LEN="+pageData.commenters.length);
+    console.log("before dragendDemoteRule()");
     for (var i=0,ilen=pageData.commenters.length;i<ilen;i+=1) {
         if (pageData.commenters[i].hasAttribute('style')) {
             pageData.commenters[i].removeAttribute('style');
         }
     }
+    //dragendDemoteRule();
+    console.log("after dragendDemoteRule()");
     ev.target.setAttribute('style','border:1px dashed black;border-radius:0;background:#00ff00;');
 };
 
 function dragDemoteRule(ev) {
-    ev.dataTransfer.setData('ruleID','demote:'+ev.target.id);
+    console.log("TRY TO DRAG");
+    try {
+        ev.dataTransfer.setData('ruleID','demote:'+ev.target.id);
+    } catch (e) {
+        console.log("OOOPS: "+e);
+    }
+};
+
+function dragendDemoteRule(ev) {
+    for (var i=0,ilen=pageData.commenters.length;i<ilen;i+=1) {
+        if (pageData.commenters[i].hasAttribute('style')) {
+            pageData.commenters[i].removeAttribute('style');
+        }
+    }
 };
 
 function dropDemoteRule(ev) {
@@ -291,17 +307,22 @@ function allowMergeDrop(ev) {
         return;
     }
     ev.preventDefault();
-    for (var i=0,ilen=pageData.adminrules.length;i<ilen;i+=1) {
-        if (pageData.adminrules[i].hasAttribute('style')) {
-            pageData.adminrules[i].removeAttribute('style');
-        }
-    }
+    dragendMergeRule();
     var targ = ev.target;
     while (targ.tagName !== 'TD') {
         targ = targ.parentNode;
     }
     targ.setAttribute('style','border:1px dashed black;border-radius:0;background:#00ff00;');
 };
+
+function dragendMergeRule(ev) {
+    for (var i=0,ilen=pageData.adminrules.length;i<ilen;i+=1) {
+        if (pageData.adminrules[i].hasAttribute('style')) {
+            pageData.adminrules[i].removeAttribute('style');
+        }
+    }
+};
+
 
 function dragMergeRule(ev) {
     ev.dataTransfer.setData('ruleID','merge:'+ev.target.id);
