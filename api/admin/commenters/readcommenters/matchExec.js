@@ -13,7 +13,7 @@
             + 'WHERE role=2 GROUP BY admin.adminID ORDER BY complete DESC,numberOfComments DESC,name'
         sys.db.all(sql,function(err,rows){
             if (err||!rows) {return oops(response,err,'commenters/readcommenters(1)')};
-            console.log(JSON.stringify(rows,null,2));
+            //console.log(JSON.stringify(rows,null,2));
             response.writeHead(200, {'Content-Type': 'application/json'});
             response.end(JSON.stringify(rows));
         });
