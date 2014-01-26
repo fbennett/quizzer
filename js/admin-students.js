@@ -125,7 +125,7 @@ function getLanguageOptions(langtag) {
     for (var i=0,ilen=languages.length;i<ilen;i+=1) {
         var lang = languages[i];
         var selected = '';
-        if (lang[0] === langtag) {
+        if (lang.lang === langtag) {
             selected=' selected="true"';
         }
         options += '<option value="' + lang.lang + '"' + selected +'/>' + lang.langName + '</option>';
