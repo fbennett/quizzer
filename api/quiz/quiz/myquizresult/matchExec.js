@@ -9,7 +9,10 @@
         var studentLang;
         var items = [];
 
+        getStudentLanguage();
+
         function getStudentLanguage () {
+            console.log("(1)");
             var sql = 'SELECT lang FROM students WHERE studentID=?';
             sys.db.get(sql,[studentID],function(err,row){
                 if (err) {return oops(response,err,'*quiz/myquizresult(0)')};
@@ -19,6 +22,7 @@
         }
 
         function setEntryPlaceholders () {
+            console.log("(2)");
             var sql = 'SELECT questionNumber '
                 + 'FROM answers '
                 + 'NATURAL JOIN questions '
@@ -41,6 +45,7 @@
         }
 
         function getMistakes (pos,limit) {
+            console.log("(3)");
             var sql = 'SELECT rubric.string AS rubric,right.string AS right,wrong.string AS wrong,wrong.choice AS wrongChoice '
                 + 'FROM quizzes '
                 + 'NATURAL JOIN questions '
@@ -78,10 +83,11 @@
         };
 
         function getGoodAnswerStudents(pos,limit) {
+            console.log("(4)");
             var sql = 'SELECT name '
-                + 'FROM answers '
-                + 'NATURAL JOIN questions '
-                + 'JOIN quizzes USING(quizID) '
+                + 'FROM quizzes '
+                + 'JOIN questions USING(quizID) '
+                + 'JOIN answers USING(questionID) '
                 + 'JOIN students USING(studentID) '
                 + 'WHERE quizzes.classID=? AND quizzes.quizNumber=? AND questions.questionNumber=? AND questions.correct=answers.choice'
             var questionNumber = items[pos].questionNumber;
@@ -103,10 +109,11 @@
 
 
         function getRules(pos,limit) {
+            console.log("(5)");
             var sql = 'SELECT r.string AS ruleText,'
-                + 'CASE WHEN rtO.string IS NOT NULL THEN rtO.string ELSE rtE.string END AS ruleGloss '
+                + 'CASE WHEN rtO.string IS NOT NULL THEN rtO.string ELSE CASE WHEN rtE.string IS NOT NULL THEN rtE.string ELSE \'\' END END AS ruleGloss '
                 + 'FROM quizzes '
-                + 'NATURAL JOIN questions USING(quizID) '
+                + 'JOIN questions USING(quizID) '
                 + 'JOIN choices USING(questionID) '
                 + 'JOIN answers USING(questionID) '
                 + 'JOIN students USING(studentID) '
@@ -142,6 +149,7 @@
         };
 
         function getComments(pos,limit) {
+            console.log("(6)");
             var sql = 'SELECT admin.name AS commenter,s.string AS comment '
                 + 'FROM quizzes '
                 + 'NATURAL JOIN questions '
@@ -163,6 +171,7 @@
                 if (pos === items.length) {
                     response.writeHead(200, {'Content-Type': 'application/json'});
                     response.end(JSON.stringify(items));
+                    console.log(JSON.stringify(items,null,2))
                 } else {
                     getComments(pos,limit);
                 }
