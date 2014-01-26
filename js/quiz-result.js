@@ -42,6 +42,7 @@ function runResult () {
             rightAnswer.innerHTML = markdown(quizErrors[i].right);
             answerPair.appendChild(rubric);
             answerPair.appendChild(rightAnswer);
+
             resultList.appendChild(answerPair);
             if (quizErrors[i].goodAnswerStudents.length) {
                 var lst = quizErrors[i].goodAnswerStudents;
@@ -57,7 +58,20 @@ function runResult () {
                 studentsPair.appendChild(studentsList);
                 answerPair.appendChild(studentsPair);
             }
+
             answerPair.appendChild(wrongAnswer);
+
+            for (var j=0,jlen=quizErrors[i].rules.length;j<jlen;j+=1) {
+                var rule = quizErrors[i].rules[j];
+                var ruleContainer = document.createElement('div');
+                ruleContainer.setAttribute('class','rule-container');
+                ruleContainer.innerHTML = '<div class="rule-text">' + markdown(rule.ruleText) + '</div>'
+                if (rule.ruleGloss) {
+                    ruleContainer.innerHTML += '<div class="rule-gloss">' + markdown(rule.ruleGloss) + '</div>'
+                }
+                answerPair.appendChild(ruleContainer);
+            }
+
             for (var j=0,jlen=quizErrors[i].comments.length;j<jlen;j+=1) {
                 var commentObj = quizErrors[i].comments[j];
                 var commentDiv = buildComment(commentObj.commenter,commentObj.comment);

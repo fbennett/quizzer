@@ -11,3 +11,21 @@ div.students-container {
     border: 1px solid #aaaaaa;
     margin: 0 0 0 1em;
 }
+
+div.rule-container {
+    font-size:larger;
+    position:relative;
+    border: 0.5em solid #30c001;
+    border-radius: 1em;
+    margin: 6px 0 6px 1em;
+    padding: 0.5em 1em 0.5em 1em;
+}
+
+div.rule-text {
+    font-weight: bold;
+    margin: 0.1em 0 0.5em 0;
+}
+
+div.rule-gloss {
+    margin-left:1em;
+}
