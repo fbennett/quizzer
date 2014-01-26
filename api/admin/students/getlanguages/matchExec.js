@@ -9,7 +9,7 @@
             for (var i=0,ilen=rows.length;i<ilen;i+=1) {
                 var row = rows[i];
                 if (row.lang === 'en') {
-                    rows = rows.slice(i).concat(rows.slice(0,i).concat(rows.slice(i+1)));
+                    rows = rows.slice(i,i+1).concat(rows.slice(0,i).concat(rows.slice(i+1)));
                     break;
                 }
             }
