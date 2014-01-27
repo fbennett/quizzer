@@ -14,8 +14,8 @@ div#commenter-list-container {
 div#languages {
     font-size:smaller;
     padding:1em;
-    text-align:right;
     line-height: 2.8em;
+    text-align:left;
 }
 
 div#languages span {

@@ -22,12 +22,13 @@ CREATE TABLE languages (
        langName TEXT
 );
 INSERT INTO languages VALUES ('en','English');
-INSERT INTO languages VALUES ('zh','Chinese');
+INSERT INTO languages VALUES ('zh-CN','Chinese (cn)');
+INSERT INTO languages VALUES ('zh-TW','Chinese (tw)');
 INSERT INTO languages VALUES ('fr','French');
 INSERT INTO languages VALUES ('id','Indonesian');
 INSERT INTO languages VALUES ('it','Italian');
 INSERT INTO languages VALUES ('ja','Japanese');
-INSERT INTO languages VALUES ('kh','Khmer');
+INSERT INTO languages VALUES ('km','Khmer');
 INSERT INTO languages VALUES ('kr','Korean');
 INSERT INTO languages VALUES ('la','Laotian');
 INSERT INTO languages VALUES ('mn','Mongolian');
@@ -36,6 +37,9 @@ INSERT INTO languages VALUES ('pl','Polish');
 INSERT INTO languages VALUES ('ru','Russian');
 INSERT INTO languages VALUES ('th','Thai');
 INSERT INTO languages VALUES ('uz','Uzbek');
+INSERT INTO languages VALUES ('bn','Bengali');
+INSERT INTO languages VALUES ('tr','Turkish');
+
 INSERT INTO languages VALUES ('vn','Vietnamese');
 
 CREATE TABLE adminLanguages (
