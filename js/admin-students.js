@@ -116,6 +116,7 @@ function editStudent(node) {
         + '<select id="bubble-language">'
         + options
         + '</select> '
+        + '<input type="button" value="Cancel" onclick="saveEditStudent(this.parentNode,true)"/>'
         + '<input type="button" value="Save" onclick="saveEditStudent(this.parentNode)"/>'
     node.parentNode.replaceChild(editDiv,node);
 }
@@ -166,14 +167,17 @@ function saveAddStudent(node) {
     externalLeagueTablesButton.style.display = 'inline';
 }
 
-function saveEditStudent(node){
+function saveEditStudent(node,cancel){
     var name = document.getElementById('bubble-name').value;
     var email = document.getElementById('bubble-email').value;
     var id = node.id;
     var privacy = document.getElementById('bubble-privacy').checked;
     var lang = document.getElementById('bubble-language').value;
 
-    var result = saveStudent(name,email,privacy,lang,id);
+    var result = 'done';
+    if (!cancel) {
+        result = saveStudent(name,email,privacy,lang,id);
+    }
 
     if (result === 'done') {
         var newNode = castStudentNode([name,email,id,privacy,lang]);

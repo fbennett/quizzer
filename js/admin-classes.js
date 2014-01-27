@@ -147,7 +147,7 @@ function editRules() {
     commentersListPhantom.innerHTML = commenters_phantom.join(' ');
     pageData.commenters = document.getElementsByClassName('commenter');;
     buildRulesLists();
-    setCommentersBlockPosition();
+    //setCommentersBlockPosition();
 };
 
 function buildRulesLists() {
@@ -362,11 +362,13 @@ function dragleaveMergeRule(ev) {
 //Finds y value of given object
 function findPos(obj) {
     var curtop = 0;
+    var curleft = 0;
     if (obj.offsetParent) {
         do {
             curtop += obj.offsetTop;
+            curleft += obj.offsetLeft;
         } while (obj = obj.offsetParent);
-    return [curtop];
+        return [curleft,curtop];
     }
 }
     
@@ -378,13 +380,49 @@ function getParent (node,tagname) {
     return targ;
 }
 
-window.addEventListener('resize', setCommentersBlockPosition);
+//window.addEventListener('resize', setCommentersBlockPosition);
 
 function setCommentersBlockPosition (event){
     var phantom = document.getElementById('commenters-list-phantom');
     var width = phantom.offsetWidth;
-    var top = phantom.offsetTop;
-    var left = phantom.offsetLeft;
+    var xy = findPos(phantom);
+    var top = xy[1];
+    var left = xy[0];
     var commenters = document.getElementById('commenters-list');
-    commenters.setAttribute('style','position:fixed;top:' + top + 'px;left:' + left + 'px;width:' + width + 'px');
+    commenters.setAttribute('style','position:fixed;top:' + 0 + 'px;left:' + left + 'px;width:' + width + 'px');
 };
+
+/* StackOverflow to the rescue http://www.softcomplex.com/docs/get_window_size_and_scrollbar_position.html */
+
+function f_filterResults(n_win, n_docel, n_body) {
+	var n_result = n_win ? n_win : 0;
+	if (n_docel && (!n_result || (n_result > n_docel)))
+		n_result = n_docel;
+	return n_body && (!n_result || (n_result > n_body)) ? n_body : n_result;
+}
+
+function f_scrollTop() {
+	return f_filterResults (
+		window.pageYOffset ? window.pageYOffset : 0,
+		document.documentElement ? document.documentElement.scrollTop : 0,
+		document.body ? document.body.scrollTop : 0
+	);
+}
+
+function trackScroll (ev) {
+    var phantom = document.getElementById('commenters-list-phantom');
+    var commenters = document.getElementById('commenters-list');
+    var xy = findPos(phantom);
+    var top = xy[1];
+    var vOffset = f_scrollTop();
+    console.log("vOffset="+vOffset+", top="+top);
+    if (vOffset < top) {
+        if (commenters.hasAttribute('style')) {
+            commenters.removeAttribute('style');
+        }
+    } else {
+        if (!commenters.hasAttribute('style')) {
+            setCommentersBlockPosition();
+        }
+    }
+}

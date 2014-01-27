@@ -9,7 +9,7 @@
   <link rel="stylesheet" type="text/css" href="css/local.css"/>
   <link rel="stylesheet" type="text/css" href="css/admin-classes.css"/>
 </head>
-<body onLoad="buildClassList()">
+<body onLoad="buildClassList()" onScroll="trackScroll(event)">
   <div class="grid">
     <div class="col-1-1">
       <h1>Quizzer Admin</h1>
@@ -38,15 +38,17 @@
     <div id="rules-display" style="display:none;">
         <div class="col-1-2">
           <h3>Admin</h3>
+          <div id="commenters-list-container">
+            <div id="commenters-list-phantom" style="visiblity:hidden;">
+            </div>
+            <div id="commenters-list">
+            </div>
+          </div>
           <table id="rules-list-admin">
           </table>
         </div>
         <div class="col-1-2">
-          <div id="commenters-list-phantom" style="visiblity:hidden;">
-          </div>
-          <div id="commenters-list">
-          </div>
-          <hr/>
+          <h3>Commenters</h3>
           <table id="rules-list-commenters">
           </table>
         </div>
