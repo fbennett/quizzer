@@ -7,7 +7,7 @@
   <link rel="stylesheet" type="text/css" href="css/local.css"/>
   <link rel="stylesheet" type="text/css" href="css/admin-students.css"/>
 </head>
-<body onLoad="getLanguages();buildStudentList();getExternalLeagueTablesData();">
+<body onLoad="getLanguages();buildStudentList();">
   <div class="grid">
     <div class="col-1-1">
       <h1>Quizzer Admin - students</h1>
@@ -17,7 +17,6 @@
       <div class="button-bold">
         <input class="button" id="add-student-button" type="button" value="Add Student" onclick="addStudent()"/>
         <input class="button" id="save-student-button" type="button" value="Save Student" onclick="saveAddStudent()" style="display:none;"/>
-        <input class="button" id="external-league-tables-button" type="button" value="External League Tables" onclick="showExternalLeagueTables()"/>
         <input class="button" id="main-display-button" type="button" value="Return to Main Display" onclick="showStudents()" style="display:none;"/>
         <span id="student-boxes" style="display:none;">
           Name:

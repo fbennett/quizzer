@@ -10,64 +10,13 @@ function getLanguages () {
     if (false === languages) return;
 };
 
-function getExternalLeagueTablesData () {
-    var adminID = getParameterByName('admin');
-    var lst = apiRequest(
-        '/?admin='
-            + adminID
-            + '&page=students'
-            + '&cmd=getexternalleaguetables');
-    if (false === lst || lst.length === 0) {
-        var externalLeagueTablesButton = document.getElementById('external-league-tables-button');
-        externalLeagueTablesButton.style.display = 'none';
-        return false;
-    };
-    return lst;
-};
-
 function showStudents () {
     var studentList = document.getElementById('student-list');
-    var externalLeagueTables = document.getElementById('external-league-tables');
-    externalLeagueTables.style.display = 'none';
     studentList.style.display = 'block';
-    var externalLeagueTablesButton = document.getElementById('external-league-tables-button');
     var mainDisplayButton = document.getElementById('main-display-button');
-    externalLeagueTablesButton.style.display = 'inline';
     mainDisplayButton.style.display = 'none';
     var addButton = document.getElementById('add-student-button');
     addButton.style.display = 'inline';
-};
-
-function showExternalLeagueTables () {
-    var lst = getExternalLeagueTablesData();
-    if (!lst) return;
-    // Zero out the list
-    var externalLeagueTablesList = document.getElementById('external-league-tables-list');
-    for (var i=0,ilen=externalLeagueTablesList.childNodes.length;i<ilen;i+=1) {
-        externalLeagueTablesList.removeChild(externalLeagueTablesList.childNodes[0]);
-    }
-    console.log("RESULT: "+JSON.stringify(lst,null,2));
-    for (var i=0,ilen=lst.length;i<ilen;i+=1) {
-        var correctPercentage = lst[i].correctPercentage;
-        if (!correctPercentage) {
-            correctPercentage = 0;
-        }
-        var rowTR = document.createElement('tr');
-        rowTR.innerHTML = '<td>' + lst[i].name + '</td>'
-            + '<td>' + lst[i].totalAnswers + '</td>'
-            + '<td>' + correctPercentage.toFixed(2) + '</td>'
-        externalLeagueTablesList.appendChild(rowTR);
-    }
-    var studentList = document.getElementById('student-list');
-    var externalLeagueTables = document.getElementById('external-league-tables');
-    studentList.style.display = 'none';
-    externalLeagueTables.style.display = 'block';
-    var mainDisplayButton = document.getElementById('main-display-button');
-    var externalLeagueTablesButton = document.getElementById('external-league-tables-button');
-    mainDisplayButton.style.display = 'inline';
-    externalLeagueTablesButton.style.display = 'none';
-    var addButton = document.getElementById('add-student-button');
-    addButton.style.display = 'none';
 };
 
 function addStudent(node) {
@@ -81,8 +30,6 @@ function addStudent(node) {
         addButton.style.display = 'none';
         saveButton.style.display = 'inline';
         studentBoxes.style.display = 'inline';
-        var externalLeagueTablesButton = document.getElementById('external-league-tables-button');
-        externalLeagueTablesButton.style.display = 'none';
     }
 }
 
@@ -163,8 +110,6 @@ function saveAddStudent(node) {
         saveButton.style.display = 'none';
         studentBoxes.style.display = 'none';
     }
-    var externalLeagueTablesButton = document.getElementById('external-league-tables-button');
-    externalLeagueTablesButton.style.display = 'inline';
 }
 
 function saveEditStudent(node,cancel){
