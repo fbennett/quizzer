@@ -4,29 +4,18 @@
   <script type="text/javascript" src="js/local.js"></script>
   <script type="text/javascript" src="js/commenter-classes.js"></script>  
   <link rel="stylesheet" type="text/css" href="css/simple-grid.css"/>
-  <script type="text/javascript" src="js/marked.js"></script>
   <link rel="stylesheet" type="text/css" href="css/local.css"/>
   <link rel="stylesheet" type="text/css" href="css/commenter-classes.css"/>
 </head>
-<body onLoad="setRuleButtons();buildClassList();">
+<body onLoad="buildClassList();">
   <div class="grid">
     <div class="col-1-1">
       <h1>Quizzer Comments</h1>
       <h2>@@COMMENTER@@</h2>
-        <h3 id="main-display-title">Class List</h3>
-        <h3 style="display:none;" id="rules-display-title"><span id="rule-language"></span></h3>
-        <div id="return-to-main-display-button" style="display:none;">
-          <input class="button" type="button" value="Return to main display" onclick="setButtonMode();"/>
-        </div>
-        <div id="rule-lang-buttons">
-        </div>
+        <h3>Class List</h3>
         <hr/>
         <div id="main-display">
           <table id="class-list">
-          </table>
-        </div>
-        <div id="rules-display" style="display:none;">
-          <table id="rules-for-lang">
           </table>
         </div>
     </div>
