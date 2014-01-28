@@ -138,6 +138,7 @@ function buildRuleSelect (node) {
     for (var i=1,ilen=node.childNodes.length;i<ilen;i+=1) {
         node.removeChild(node.childNodes[1]);
     }
+    console.log("SELECTIONS: "+quizMistakes.selections);
     for (var i=0,ilen=quizMistakes.selections.length;i<ilen;i+=1) {
         var rule = quizMistakes.selections[i];
         var option = document.createElement('option');

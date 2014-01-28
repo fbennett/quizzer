@@ -59,8 +59,11 @@
         };
         function createRule(ruleStringID,pos) {
             //console.log("createRule()");
-            var sql = 'INSERT INTO rules VALUES (NULL,?,?);';
-            sys.db.run(sql,[ruleStringID,commenterID],function(err){
+            var sql = 'INSERT INTO rules (ruleGroupID,ruleStringID,adminID) '
+                + 'SELECT ruleGroupID,?,? '
+                + 'FROM classes '
+                + 'WHERE classID=?;'
+            sys.db.run(sql,[ruleStringID,commenterID,classID],function(err){
                 if (err) {return oops(response,err,'**quiz/getrule(3)')};
                 //console.log("CREATING RULE: "+pos+" "+retObj.ruleID+" "+typeof retObj.ruleID+" "+this.lastID);
                 if (pos === 0 && retObj.ruleID === true) {
