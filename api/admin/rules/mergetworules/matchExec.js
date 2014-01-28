@@ -6,7 +6,7 @@
         var kohaiRuleID = params.kohairuleid;
         var senpaiRuleID = params.senpairuleid;
 
-        console.log("========> senpaiRuleID: "+senpaiRuleID);
+        //console.log("========> senpaiRuleID: "+senpaiRuleID);
 
         checkKohaiInRulesToChoices();
 
@@ -14,7 +14,7 @@
         // OR delete if senpai entry already exists.
         var rcData = {senpai:{},kohai:{}};
         function checkKohaiInRulesToChoices() {
-            console.log("(1)");
+            //console.log("(1)");
             var sql = 'SELECT choiceID FROM rulesToChoices WHERE ruleID=?';
             sys.db.all(sql,[kohaiRuleID],function(err,rows){
                 if (err) {return oops(response,err,'classes/mergetworules(1)')};
@@ -28,7 +28,7 @@
             });
         };
         function checkSenpaiInRulesToChoices() {
-            console.log("(2)");
+            //console.log("(2)");
             var sql = 'SELECT ruleToChoiceID FROM rulesToChoices WHERE ruleID=?';
             sys.db.all(sql,[senpaiRuleID],function(err,rows){
                 if (err) {return oops(response,err,'classes/mergetworules(2)')};
@@ -42,7 +42,7 @@
             });
         };
         function addSenpaiInRulesToChoices() {
-            console.log("(3)");
+            //console.log("(3)");
             var sqlparams = [];
             var sqlstr = [];
             for (var key in rcData.kohai) {
@@ -59,7 +59,7 @@
             });
         };
         function deleteKohaiInRulesToChoices() {
-            console.log("(4)");
+            //console.log("(4)");
             var sql = 'DELETE FROM rulesToChoices WHERE ruleID=?;';
             sys.db.run(sql,[kohaiRuleID],function(err){
                 if (err) {return oops(response,err,'classes/mergetworules(4)')};
@@ -72,15 +72,15 @@
         // already exists.
         var rtData = {senpai:{},kohai:{}};
         function checkKohaiRuleTranslations() {
-            console.log("(5)");
+            //console.log("(5)");
             var sql = 'SELECT lang,ruleTranslationID FROM ruleTranslations WHERE ruleID=?;';
             sys.db.all(sql,[kohaiRuleID],function(err,rows){
                 if (err) {return oops(response,err,'classes/mergetworules(5)')};
-                console.log("CHECKING FOR KOHAI: "+kohaiRuleID);
+                //console.log("CHECKING FOR KOHAI: "+kohaiRuleID);
                 if (rows && rows.length) {
                     for (var i=0,ilen=rows.length;i<ilen;i+=1) {
                         var row = rows[i];
-                        console.log("  "+row.lang+" "+row.ruleTranslationID);
+                        //console.log("  "+row.lang+" "+row.ruleTranslationID);
                         rtData.kohai[row.lang] = row.ruleTranslationID;
                     }
                 }
@@ -88,15 +88,15 @@
             });
         };
         function checkSenpaiRuleTranslations() {
-            console.log("(6)");
+            //console.log("(6)");
             var sql = 'SELECT lang,ruleTranslationID FROM ruleTranslations WHERE ruleID=?;';
             sys.db.all(sql,[senpaiRuleID],function(err,rows){
                 if (err) {return oops(response,err,'classes/mergetworules(6)')};
-                console.log("CHECKING FOR SENPAI: "+senpaiRuleID);
+                //console.log("CHECKING FOR SENPAI: "+senpaiRuleID);
                 if (rows && rows.length) {
                     for (var i=0,ilen=rows.length;i<ilen;i+=1) {
                         var row = rows[i];
-                        console.log("  "+row.lang+" "+row.ruleTranslationID);
+                        //console.log("  "+row.lang+" "+row.ruleTranslationID);
                         rtData.senpai[row.lang] = row.ruleTranslationID;
                     }
                 }
@@ -104,7 +104,7 @@
             });
         };
         function moveKohaiRuleTranslations() {
-            console.log("(7)");
+            //console.log("(7)");
             var sqlparams = [];
             var sqlstr = [];
             for (var key in rtData.kohai) {
@@ -118,8 +118,8 @@
                 + 'FROM ruleTranslations '
                 + 'WHERE ruleID=? AND lang IN (' + sqlstr.join(',') + ')';
             sqlparams = [senpaiRuleID,kohaiRuleID].concat(sqlparams);
-            console.log("SQL: "+sql);
-            console.log("PARAMS: "+sqlparams);
+            //console.log("SQL: "+sql);
+            //console.log("PARAMS: "+sqlparams);
             sys.db.run(sql,sqlparams,function(err){
                 if (err) {return oops(response,err,'classes/mergetworules(7)')};
                 moveKohaiRuleTranslationEdits();
@@ -129,7 +129,7 @@
         // Point all kohai entries in ruleTranlsationEdits to point
         // at new senpai entries.
         function moveKohaiRuleTranslationEdits() {
-            console.log("(8)");
+            //console.log("(8)");
             var sqlparams_senpai = [];
             var sqlparams_kohai = [];
             var sqlstr = [];
@@ -163,8 +163,8 @@
                 +   'JOIN ruleTranslationEdits USING(ruleTranslationID) '
                 +   'WHERE rt.ruleTranslationID IN (' + sqlstr.join(',') + ') '
                 + ') AS kohai USING(ruleID,lang)'
-            console.log("SQL: "+sql);
-            console.log("PARAMS: "+sqlparams)
+            //console.log("SQL: "+sql);
+            //console.log("PARAMS: "+sqlparams)
             sys.db.run(sql,sqlparams,function(err){
                 if (err) {return oops(response,err,'classes/mergetworules(8)')};
                 // There should now be no key violation when the ruleTranslations are deleted
@@ -172,7 +172,7 @@
             });
         };
         function deleteKohaiRuleTranslations() {
-            console.log("(9)");
+            //console.log("(9)");
             var sqlparams = [];
             var sqlstr = [];
             for (var key in rtData.kohai) {
@@ -191,7 +191,7 @@
         // Check ruleStringID of rule before wiping it out
         var kohaiRuleStringID = {};
         function checkKohaiRule() {
-            console.log("(10)");
+            //console.log("(10)");
             var sql = 'SELECT ruleStringID FROM rules WHERE ruleID=?';
             sys.db.get(sql,[kohaiRuleID],function(err,row){
                 if (err||!row) {return oops(response,err,'classes/mergetworules(10)')};
@@ -202,7 +202,7 @@
         //
         // Delete kohai rule entry.
         function deleteKohaiRule() {
-            console.log("(11)");
+            //console.log("(11)");
             var sql = 'DELETE FROM rules WHERE ruleID=?';
             sys.db.run(sql,[kohaiRuleID],function(err){
                 if (err) {return oops(response,err,'classes/mergetworules(11)')};
@@ -212,7 +212,7 @@
         //
         // Delete kohai ruleStrings entry IF it is no longer used.
         function checkKohaiRuleString() {
-            console.log("(12)");
+            //console.log("(12)");
             var sql = 'SELECT COUNT(*) AS count FROM ruleStrings WHERE ruleStringID=?';
             sys.db.get(sql,[kohaiRuleStringID.id],function(err,row){
                 if (err||!row) {return oops(response,err,'classes/mergetworules(12)')};
@@ -225,7 +225,7 @@
             });
         };
         function deleteKohaiRuleString() {
-            console.log("(13)");
+            //console.log("(13)");
             var sql = 'DELETE FROM ruleStrings WHERE ruleStringID=?';
             sys.db.run(sql,[kohaiRuleStringID.id],function(err){
                 if (err) {return oops(response,err,'classes/mergetworules(12)')};

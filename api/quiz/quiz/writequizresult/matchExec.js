@@ -7,7 +7,7 @@
         var studentKey = params.studentkey;
         var quizNumber = params.quizno;
         var quizResult = params.quizres;
-        console.log("RESULT: "+JSON.stringify(quizResult,null,2));
+        //console.log("RESULT: "+JSON.stringify(quizResult,null,2));
         var pathName = params.pathname;
         var sys = this.sys;
         // var hostname 
