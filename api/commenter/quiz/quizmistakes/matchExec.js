@@ -19,10 +19,11 @@
         var mistakeCount = 0;
         var data = {commenter:commenter,commenterID:commenterID,mistakes:[],selections:[]};
         var sql = 'SELECT ruleID,string AS ruleText '
-            + 'FROM rules '
+            + 'FROM classes '
+            + 'JOIN rules USING(ruleGroupID) '
             + 'JOIN ruleStrings USING(ruleStringID) '
-            + 'WHERE adminID IN (1,?);';
-        sys.db.all(sql,[commenterID],function(err,rows){
+            + 'WHERE classID=? AND adminID IN (1,?);';
+        sys.db.all(sql,[classID,commenterID],function(err,rows){
             if (err||!rows) {return oops(response,err,'**quiz/quizmistakes(0)')};
             for (var i=0,ilen=rows.length;i<ilen;i+=1) {
                 var row = rows[i];

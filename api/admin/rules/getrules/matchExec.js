@@ -3,8 +3,14 @@
     cogClass.prototype.exec = function (params, request, response) {
         var oops = this.utils.apiError;
         var sys = this.sys;
-        var sql = 'SELECT ruleID,string,adminID,name FROM rules JOIN ruleStrings USING(ruleStringID) JOIN admin USING(adminID);';
-        sys.db.all(sql,function(err,rows){
+        var ruleGroupID = params.groupid;
+        console.log("ruleGroupID="+ruleGroupID);
+        var sql = 'SELECT ruleID,string,adminID,name '
+            + 'FROM rules '
+            + 'JOIN ruleStrings USING(ruleStringID) '
+            + 'JOIN admin USING(adminID) '
+            + 'WHERE ruleGroupID=?;';
+        sys.db.all(sql,[ruleGroupID],function(err,rows){
             if (err||!rows) {return oops(response,err,'classes/getrules(1)')};
             var ret = {admin:[],commenters:[]};
             for (var i=0,ilen=rows.length;i<ilen;i+=1) {

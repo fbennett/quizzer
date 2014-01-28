@@ -3,30 +3,23 @@
     cogClass.prototype.exec = function (params, request, response) {
         var oops = this.utils.apiError;
         if (params.classid) {
-            var name = params.name;
             var db = this.sys.db;
-            db.run('INSERT OR REPLACE INTO classes VALUES (?,?)',[params.classid,params.name],function(err){
-                if (err) {return oops(response,err,'classes/addclass')};
+            db.run('INSERT OR REPLACE INTO classes VALUES (?,?,?)',[params.classid,params.groupid,params.name],function(err){
+                if (err) {return oops(response,err,'classes/addclass(1)')};
                 sendClasses();
             })
         } else {
-            var name = params.name;
             var db = this.sys.db;
-            db.run('INSERT INTO classes VALUES (NULL,?)',[params.name],function(err){
-                if (err) {return oops(response,err,'classes/addclass')};
+            db.run('INSERT INTO classes VALUES (NULL,?,?)',[params.groupid,params.name],function(err){
+                if (err) {return oops(response,err,'classes/addclass(2)')};
                 sendClasses();
             });
         }
         function sendClasses () {
-            db.all('SELECT classID,name FROM classes',function(err,rows){
-                if (err||!rows) {return oops(response,err,'classes/addclass')};
-                var retRows = [];
-                for (var i=0,ilen=rows.length;i<ilen;i+=1) {
-                    var row = rows[i];
-                    retRows.push([row.name,row.classID]);
-                }
+            db.all('SELECT classID,classes.name,ruleGroupID,ruleGroups.name AS ruleGroupName FROM classes JOIN ruleGroups USING(ruleGroupID) ORDER BY classes.name;',function(err,rows){
+                if (err||!rows) {return oops(response,err,'classes/addclass(3)')};
                 response.writeHead(200, {'Content-Type': 'application/json'});
-                response.end(JSON.stringify(retRows));
+                response.end(JSON.stringify(rows));
             });
         }
     }

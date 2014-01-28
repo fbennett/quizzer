@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html>
 <head>
   <title>Quizzer Admin - classes</title>
@@ -9,12 +8,11 @@
   <link rel="stylesheet" type="text/css" href="css/local.css"/>
   <link rel="stylesheet" type="text/css" href="css/admin-classes.css"/>
 </head>
-<body onLoad="buildClassList()" onScroll="trackScroll(event)">
+<body onLoad="buildRuleGroupsList();buildClassList()">
   <div class="grid">
     <div class="col-1-1">
       <h1>Quizzer Admin</h1>
       <h2 id="main-display-title">Class List</h2>
-      <h2 id="rules-display-title" style="display:none;">Rules</h2>
       <div>
         <input class="button" type="button" value="Back" onclick="window.location = fixPath('/?admin=' + getParameterByName('admin') + '&page=top')"/>
       </div>
@@ -25,34 +23,21 @@
           Name:
           <input id="class-name" type="text" size="30"/>
           <input id="class-id" type="text" size="20" style="display:none;"/>
+          <select id="class-rule-group">
+          </select>
         </span>
-        <input class="button" id="edit-rules-button" type="button" value="Edit Rules" onclick="editRules();"/>
-        <input id="return-to-main-display-button" style="display:none;" value="Return to main display" onclick="setButtonMode();" class="button" type="button"/>
       </div>
       <hr/>
-      <div id="main-display">
-        <table id="class-list">
-        </table>
-      </div>
-    </div>
-    <div id="rules-display" style="display:none;">
-        <div class="col-1-2">
-          <h3>Admin</h3>
-          <div id="commenters-list-container">
-            <div id="commenters-list-phantom" style="visiblity:hidden;">
-            </div>
-            <div id="commenters-list">
-            </div>
-          </div>
-          <table id="rules-list-admin">
-          </table>
-        </div>
-        <div class="col-1-2">
-          <h3>Commenters</h3>
-          <table id="rules-list-commenters">
-          </table>
-        </div>
-      </div>
+      <table>
+        <thead>
+          <tr>
+            <td>Class</td>
+            <td>Rule Group</td>
+          </tr>
+        </thead>
+        <tbody id="class-list">
+        </tbody>
+      </table>
     </div>
   </div>
 </body>

@@ -1,11 +1,11 @@
 div.button-wrapper {
-    display:inline-block;
+    font-size:300%;
+    line-height: 3em;
 }
 
-input.button {
-    font-size:300%;
+div.button-wrapper input {
+    font-size:100%;
     border:5px solid #bbbbbb;
     border-radius:1em;
     padding:0.5em;
 }
-

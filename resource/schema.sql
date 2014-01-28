@@ -39,7 +39,6 @@ INSERT INTO languages VALUES ('th','Thai');
 INSERT INTO languages VALUES ('uz','Uzbek');
 INSERT INTO languages VALUES ('bn','Bengali');
 INSERT INTO languages VALUES ('tr','Turkish');
-
 INSERT INTO languages VALUES ('vn','Vietnamese');
 
 CREATE TABLE adminLanguages (
@@ -61,7 +60,9 @@ CREATE TABLE students (
 
 CREATE TABLE classes (
        classID INTEGER PRIMARY KEY,
-       name TEXT
+       ruleGroupID INTEGER,
+       name TEXT,
+       FOREIGN KEY (ruleGroupID) REFERENCES ruleGroups(ruleGroupID)
 );
 
 CREATE TABLE memberships (
@@ -154,12 +155,20 @@ CREATE TABLE comments (
        FOREIGN KEY (stringID) REFERENCES strings(stringID)
 );
 
+CREATE TABLE ruleGroups (
+       ruleGroupID INTEGER PRIMARY KEY,
+       name TEXT NOT NULL,
+       UNIQUE(name)
+);
+
 CREATE TABLE rules (
        ruleID INTEGER PRIMARY KEY,
+       ruleGroupID INTEGER,
        ruleStringID INTEGER,
        adminID INTEGER,
-       FOREIGN KEY (adminID) REFERENCES admin(adminID),
-       FOREIGN KEY (ruleStringID) REFERENCES ruleStrings(ruleStringID)
+       FOREIGN KEY (ruleGroupID) REFERENCES ruleGroups(ruleGroupID),
+       FOREIGN KEY (ruleStringID) REFERENCES ruleStrings(ruleStringID),
+       FOREIGN KEY (adminID) REFERENCES admin(adminID)
 );
 
 CREATE TABLE ruleStrings (

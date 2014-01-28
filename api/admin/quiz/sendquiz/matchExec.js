@@ -128,7 +128,7 @@
                 //console.log(msg);
                 sys.mailer.send({
                     text:    msg, 
-                    from:    "Academic Writing team <" + email_account + ">", 
+                    from:    "Instructor <" + email_account + ">", 
                     to:      email,
                      subject: className + ': Quiz ' + quizNumber
                 }, function(err, message) { console.log(err || message); });

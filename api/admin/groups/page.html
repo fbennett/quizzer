@@ -1,0 +1,34 @@
+<html>
+<head>
+  <title>Quizzer Admin - groups</title>
+  <script type="text/javascript" src="js/marked.js"></script>
+  <script type="text/javascript" src="js/local.js"></script>  
+  <script type="text/javascript" src="js/admin-groups.js"></script>  
+  <link rel="stylesheet" type="text/css" href="css/simple-grid.css"/>
+  <link rel="stylesheet" type="text/css" href="css/local.css"/>
+  <link rel="stylesheet" type="text/css" href="css/admin-groups.css"/>
+</head>
+<body onLoad="buildGroupList()">
+  <div class="grid">
+    <div class="col-1-1">
+      <h1>Quizzer Admin</h1>
+      <h2 id="main-display-title">Rule Groups</h2>
+      <div>
+        <input class="button" type="button" value="Back" onclick="window.location = fixPath('/?admin=' + getParameterByName('admin') + '&page=top')"/>
+      </div>
+      <div class="button-bold">
+        <input class="button" id="add-group-button" type="button" value="Add Group" onclick="addGroup()"/>
+        <input class="button" id="save-group-button" type="button" value="Save Group" onclick="saveGroup()" style="display:none;"/>
+        <span id="group-boxes" style="display:none;">
+          Name:
+          <input id="group-name" type="text" size="30"/>
+          <input id="group-id" type="text" size="20" style="display:none;"/>
+        </span>
+      </div>
+      <hr/>
+      <table id="group-list">
+      </table>
+    </div>
+  </div>
+</body>
+</html>
