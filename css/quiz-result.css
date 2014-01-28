@@ -29,3 +29,112 @@ div.rule-text {
 div.rule-gloss {
     margin-left:1em;
 }
+
+
+
+table#rules-for-lang {
+    table-layout: fixed;
+    width: 100%;
+}
+
+table#rules-for-lang td {
+    border:2px solid #bbbbbb;
+    border-radius:1em;
+    padding: 0.5em;
+    text-align: left;
+}
+
+table#rules-for-lang td.left:hover {
+    background: #eeeeee;
+    cursor:pointer;
+}
+
+td.show-box {
+    background: #eeeeee;
+    vertical-align: top;
+    border-radius: 0 !important;
+}
+
+td.left textarea {
+    width: 100%;
+    height: 5em;
+    resize:none;
+}
+
+td.edit-box {
+    vertical-align: top;
+    border-radius: 0 !important;
+}
+
+td.edit-box textarea {
+    width: 100%;
+    height: 10em;
+    resize:none;
+}
+
+td.right {
+    text-align: left !important;
+    border:none !important;
+}
+
+td.needs-gloss {
+    border-width: 3px !important;
+    border-color: #ffbbbb !important;
+}
+
+input.float-right {
+    float:right;
+}
+table#rules-for-lang {
+    table-layout: fixed;
+    width: 100%;
+}
+
+table#rules-for-lang td {
+    border:2px solid #bbbbbb;
+    border-radius:1em;
+    padding: 0.5em;
+    text-align: left;
+}
+
+table#rules-for-lang td.left:hover {
+    background: #eeeeee;
+    cursor:pointer;
+}
+
+td.show-box {
+    background: #eeeeee;
+    vertical-align: top;
+    border-radius: 0 !important;
+}
+
+td.left textarea {
+    width: 100%;
+    height: 5em;
+    resize:none;
+}
+
+td.edit-box {
+    vertical-align: top;
+    border-radius: 0 !important;
+}
+
+td.edit-box textarea {
+    width: 100%;
+    height: 10em;
+    resize:none;
+}
+
+td.right {
+    text-align: left !important;
+    border:none !important;
+}
+
+td.needs-gloss {
+    border-width: 3px !important;
+    border-color: #ffbbbb !important;
+}
+
+input.float-right {
+    float:right;
+}
