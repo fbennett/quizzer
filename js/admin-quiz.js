@@ -407,6 +407,7 @@ function addQuestion () {
     // Add a question node and populate using openQuestion()
     var questions = document.getElementById('quiz-questions');
     questions.appendChild(openQuestion());
+    questions.lastChild.firstChild.firstChild.focus();
     var button = document.getElementById('add-question-button');
     button.disabled = true;
 }
@@ -456,58 +457,41 @@ function openQuestion (questionNumber) {
     }
     var rubric = document.createElement('div');
     rubric.setAttribute("class", "rubric");
-    var rubricBox = document.createElement('textarea');
-    rubricBox.setAttribute('style', 'vertical-align: top;');
-    rubricBox.setAttribute('placeholder', 'Enter rubric here');
-    rubricBox.value = qobj.rubric;
-    rubricBox.setAttribute('cols', '70');
-    rubricBox.setAttribute('rows', '3');
-    rubric.appendChild(rubricBox);
-    var button = document.createElement('input');
-    button.setAttribute('type', 'button');
-    button.setAttribute('value', 'Standard');
-    button.setAttribute('onclick', 'standardRubric(' + questionNumber + ')')
-    button.setAttribute('class', 'button');
-    rubric.appendChild(button);
+    rubric.innerHTML = '<textarea tabindex="1" style="vertical-align:top;" placeholder="Enter rubric here" cols="70" rows="3">'
+        + qobj.rubric
+        + '</textarea>'
+        + '<input type="button" value="Standard" onclick="standardRubric(' + questionNumber + ');" class="button"/>'
     node.appendChild(rubric);
 
     for (var i=0,ilen=qobj.questions.length;i<ilen;i+=1) {
-        var choice_wrapper = document.createElement('div');
-        choice_wrapper.setAttribute('class', 'choice');
-        var checkbox = document.createElement('input');
+        var cw = document.createElement('div');
+        cw.setAttribute('class', 'choice');
+        var checked = ''
         if (qobj.correct === i) {
-            checkbox.setAttribute('checked', true);
+            checked = 'checked="true" '
         }
-        checkbox.setAttribute('name', 'question-' + questionNumber);
-        checkbox.setAttribute('type', 'radio');
-        checkbox.setAttribute('class', 'selection');
-        choice_wrapper.appendChild(checkbox)
-        var selectionText = document.createElement('textarea');
-        selectionText.setAttribute('cols', '60');
-        selectionText.setAttribute('rows', '3');
-        selectionText.setAttribute('class', 'selection-text');
-        selectionText.setAttribute('placeholder', 'Enter choice here');
-        selectionText.value = qobj.questions[i];
-        choice_wrapper.appendChild(selectionText)
-        var cloneButton = document.createElement('input');
-        cloneButton.setAttribute('type', 'button');
+        var buttonAttrs = ''
         if (i === 0) {
-            cloneButton.setAttribute('value', 'Copy to all');
-            cloneButton.setAttribute('onclick', 'copyToAll(' + questionNumber + ');');
-            cloneButton.setAttribute('class', 'button');
+            buttonAttrs = 'value="Copy to all" onclick="copyToAll(' + questionNumber + ')" class="button"'
         } else {
-            cloneButton.setAttribute('value', 'Ditto');
-            cloneButton.setAttribute('onclick', 'dittoPrevious(' + questionNumber + ',' + i + ');');
-            cloneButton.setAttribute('class', 'button');
+            buttonAttrs = 'value="Ditto" onclick="dittoPrevious(' + questionNumber + ',' + i + ')" class="button"'
         }
-        choice_wrapper.appendChild(cloneButton);
-        node.appendChild(choice_wrapper);
+        cw.innerHTML = '<input type="radio" class="selection" ' 
+            + checked
+            + 'name="question-' + questionNumber + '" '
+            + '/>'
+            + '<textarea tabindex="' + (i+2) + '" cols="60" rows="3" class="selection-text" placeholder="Enter choice here">'
+            + qobj.questions[i]
+            + '</textarea>'
+            + '<input type="button" ' + buttonAttrs+ '/>';
+        node.appendChild(cw);
     }
     var button = document.createElement('input');
     button.setAttribute('type', 'button');
     button.setAttribute('value', 'Save Question');
     button.setAttribute('onclick', 'closeQuestion("' + questionNumber + '")');
     button.setAttribute('class', 'button');
+    button.setAttribute('tabindex', '6');
     node.appendChild(button);
     return node;
 }
