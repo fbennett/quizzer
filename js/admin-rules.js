@@ -8,7 +8,7 @@ function editRules() {
     var rows = apiRequest(
         '/?admin='
             + adminID
-            + '&page=classes'
+            + '&page=rules'
             + '&cmd=getcommenters'
     );
     if (false === rows) return;
