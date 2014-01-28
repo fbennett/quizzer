@@ -50,9 +50,8 @@
                 +     'ach.stringID AS wrongID,'
                 +     'que.stringID AS rubricID,'
                 +     'ans.studentID,'
-                +     "com.choiceID AS comment,"
+                +     "CASE WHEN com.choiceID IS NOT NULL THEN com.choiceID ELSE rtc.choiceID END AS comment,"
                 +     "stu.lang "
-
                 +     'FROM quizzes AS qui '
                 +     'JOIN questions AS que USING(quizID) '
                 +     'JOIN answers AS ans ON ans.questionID=que.questionID '
@@ -60,6 +59,7 @@
                 +     'JOIN choices AS qch ON qch.questionID=que.questionID AND qch.choice=que.correct '
                 +     'JOIN choices AS ach ON ach.questionID=que.questionID AND ach.choice=ans.choice '
                 +     "LEFT JOIN comments AS com ON com.choiceID=ach.choiceID "
+                +     "LEFT JOIN rulesToChoices AS rtc ON rtc.choiceID=ach.choiceID "
                 +     "WHERE NOT ans.choice=que.correct AND qui.classID=? AND qui.quizNumber=? "
                 +     "GROUP BY qui.quizNumber,que.questionNumber,ans.choice,ans.studentID"
                 + ") as res ON res.questionID=qq.questionID "
