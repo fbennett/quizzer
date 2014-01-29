@@ -99,8 +99,8 @@
             }
         };
         function makeQuestionNumber () {
-            var sql = 'SELECT MAX(questionNumber) AS questionMax FROM quizzes JOIN questions USING(questionID) WHERE quizID=?'
-            sys.db.get(sql,[qObj.quizID],function(err,rows){
+            var sql = 'SELECT MAX(questionNumber) AS questionMax FROM quizzes JOIN questions USING(quizID) WHERE quizID=?'
+            sys.db.get(sql,[qObj.quizID],function(err,row){
                 if (err) {return oops(response,err,'quiz/writeonequestion(5)')};
                 if (row && row.questionMax) {
                     qObj.questionNumber = (row.questionMax + 1);
@@ -120,7 +120,7 @@
             sys.db.run(sql,[quizID,questionNumber,correct,rubricID],function (err) {
                 if (err) {return oops(response,err,'quiz/writeonequestion(6)')};
                 qObj.questionID = this.lastID;
-                checkChoices(0,4);
+                writeChoices(0,4);
             });
         };
         function checkQuestion () {
