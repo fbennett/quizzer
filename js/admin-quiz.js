@@ -407,7 +407,7 @@ function writeChoice(questionNumber, choice) {
 function addQuestion () {
     // Add a question node and populate using openQuestion()
     var questions = document.getElementById('quiz-questions');
-    questions.appendChild(openQuestion());
+    questions.insertBefore(openQuestion(),questions.firstChild);
     questions.lastChild.firstChild.firstChild.focus();
     var button = document.getElementById('add-question-button');
     button.disabled = true;
@@ -490,7 +490,11 @@ function openQuestion (questionNumber) {
     var button = document.createElement('input');
     button.setAttribute('type', 'button');
     button.setAttribute('value', 'Save Question');
-    button.setAttribute('onclick', 'closeQuestion("' + questionNumber + '")');
+    if (questionNumber) {
+        button.setAttribute('onclick', 'closeQuestion("' + questionNumber + '")');
+    } else {
+        button.setAttribute('onclick', 'closeQuestion("' + questionNumber + '",true)');
+    }
     button.setAttribute('class', 'button');
     button.setAttribute('tabindex', '6');
     node.appendChild(button);
@@ -525,7 +529,7 @@ function dittoPrevious (questionNumber, choice) {
     }
 }
 
-function closeQuestion (questionNumber) {
+function closeQuestion (questionNumber, moveToBottom) {
 
     var adminID = getParameterByName('admin');
     var classID = getParameterByName('classid');
@@ -559,7 +563,6 @@ function closeQuestion (questionNumber) {
         correct: correct
     }
     // Sends object to server for saving
-    console.log("XX SENDING: classID="+classID+", quizNumber="+quizNumber+", questonNumber=" + questionNumber +", data="+JSON.stringify(obj));
     var questionNumber = apiRequest(
         '/?admin=' 
             + adminID 
@@ -572,10 +575,14 @@ function closeQuestion (questionNumber) {
             data:obj
         });
     if (false === questionNumber) return;
-    console.log("RECEIVED AS: "+questionNumber);
     node.setAttribute('id', 'quiz-question-' + questionNumber);
     for (var i=0,ilen=node.childNodes.length;i<ilen;i+=1) {
         node.removeChild(node.childNodes[0])
+    }
+    var container = node.parentNode;
+    if (moveToBottom) {
+        container.removeChild(node);
+        container.appendChild(node);
     }
     displayQuestion(obj, questionNumber);
     setButtonState('send-quiz');
