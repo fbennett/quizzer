@@ -323,6 +323,7 @@ function buildQuestionList (quizobj) {
             });
         if (false === quizobj) return;
     }
+    console.log("RETURN: "+JSON.stringify(quizobj,null,2));
     qzi.pending = quizobj.pending;
     var questionsLst = displayQuestions(quizobj.questions);
     var button = document.getElementById('add-question-button');
@@ -558,6 +559,7 @@ function closeQuestion (questionNumber) {
         correct: correct
     }
     // Sends object to server for saving
+    console.log("XX SENDING: classID="+classID+", quizNumber="+quizNumber+", questonNumber=" + questionNumber +", data="+JSON.stringify(obj));
     var questionNumber = apiRequest(
         '/?admin=' 
             + adminID 
@@ -570,6 +572,7 @@ function closeQuestion (questionNumber) {
             data:obj
         });
     if (false === questionNumber) return;
+    console.log("RECEIVED AS: "+questionNumber);
     node.setAttribute('id', 'quiz-question-' + questionNumber);
     for (var i=0,ilen=node.childNodes.length;i<ilen;i+=1) {
         node.removeChild(node.childNodes[0])
@@ -578,36 +581,21 @@ function closeQuestion (questionNumber) {
     setButtonState('send-quiz');
 }
 
-function displayQuestions (quizobj) {
+function displayQuestions (qlst) {
     var questions = document.getElementById('quiz-questions');
     // Purge children
     for (var i=0,ilen=questions.childNodes.length;i<ilen;i+=1) {
         questions.removeChild(questions.childNodes[0]);
     }
-    // Sort return
-    var lst = [];
-    for (var key in quizobj) {
-        lst.push(key);
-    }
-    lst.sort(function(a,b){
-        var a = parseInt(a, 10);
-        var b = parseInt(b, 10);
-        if (a>b) {
-            return 1;
-        } else if (a<b) {
-            return -1;
-        } else {
-            return 0;
-        }
-    });
-    setButtonState('send-quiz',lst);
-    // Display objects in lst
-    for (var i=0,ilen=lst.length;i<ilen;i+=1) {
-        displayQuestion(quizobj[lst[i]], lst[i]);
+    setButtonState('send-quiz',qlst);
+    // Display objects in list
+    for (var i=0,ilen=qlst.length;i<ilen;i+=1) {
+        var question = qlst[i];
+        displayQuestion(question,question.questionNumber);
         var node = document.createElement('li');
-        node.setAttribute('id', 'quiz-question-' + lst[i]);
+        node.setAttribute('id', 'quiz-question-' + question.questionNumber);
     }
-    return lst;
+    return qlst;
 }
 
 function displayQuestion (qobj, questionNumber) {

@@ -59,11 +59,9 @@
             +       ')'
             +     ')'
             +   ');';
-        console.log("SQL: "+sql);
         // Get students for processing
         sys.db.all(sql,[classID,quizNumber,classID,quizNumber],function(err,rows){
             if (err||!rows) {return oops(response,err,'quiz/sendquiz(1)')};
-            console.log("(1) "+rows);
             var datalst = [];
             studentCount += rows.length;
             for (var i=0,ilen=rows.length;i<ilen;i+=1) {
@@ -79,7 +77,6 @@
         });
 
         function updateStudentKey (classID,studentID,email,name,className) {
-            console.log("(2)");
             var studentKey = sys.getRandomKey(8,36);
             sys.db.run('UPDATE memberships SET studentKey=? WHERE classID=? AND studentID=?',[studentKey,classID,studentID],function(err){
                 if (err) {return oops(response,err,'quiz/sendquiz(2)')};
@@ -90,7 +87,6 @@
         };
 
         function sendMail (quizNumber,studentID,studentKey,name,email,className) {
-            console.log("(3)");
             var link = template_link
                 .replace(/@@STUDENT_ID@@/g,studentID)
                 .replace(/@@STUDENT_KEY@@/g,studentKey)
@@ -103,7 +99,6 @@
                 + 'WHERE classID=? AND NOT quizNumber=? AND sent=1 GROUP BY quizNumber'
             sys.db.all(sql,[classID,quizNumber],function(err,rows){
                 if (err) {return oops(response,err,'quiz/sendquiz(3)')};
-                console.log("(4)");
                 var middle = '';
                 var msg;
                 if (!rows || !rows.length) {
@@ -141,7 +136,6 @@
             sys.db.run('UPDATE memberships SET last_mail_date=DATE("now") WHERE classID=? AND studentID=?',[classID,studentID],function(err){
                 if (err) {return oops(response,err,'quiz/sendquiz(4)')};
                 studentCount += -1;
-                console.log("Student count is now: "+studentCount);
                 if (!studentCount) {
                     updateSentFlag(classID,quizNumber);
                 }
@@ -151,7 +145,7 @@
         function updateSentFlag (classID,quizNumber) {
             sys.db.run('UPDATE quizzes SET sent=1 WHERE classID=? AND quizNumber=?',[classID,quizNumber],function(err){
                 if (err) {return oops(response,err,'quiz/sendquiz(5)')};
-                console.log("Updated SENT flag at last!");
+                console.log("Updated SENT flag");
             });
         };
 

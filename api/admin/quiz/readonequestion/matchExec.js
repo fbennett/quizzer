@@ -10,8 +10,8 @@
 
         var sql = 'SELECT questionID,string AS rubric,correct '
             + 'FROM quizzes '
-            + 'NATURAL JOIN questions '
-            + 'NATURAL JOIN strings '
+            + 'JOIN questions USING(quizID) '
+            + 'JOIN strings USING(stringID) '
             + 'WHERE classID=? AND quizNumber=? AND questionNumber=?';
         sys.db.get(sql,[classID,quizNumber,questionNumber],function(err,row){
             if (err||!row) {return oops(response,err,'quiz/readonequestion(1)')};
