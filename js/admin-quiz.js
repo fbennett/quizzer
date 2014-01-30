@@ -742,7 +742,7 @@ function setButtonState (state,lst) {
     case 'mark-exam':
         sendQuiz.style.display = 'none';
         quizDone.style.display = 'none';
-        downloadExam.style.display = 'none';
+        downloadExam.style.display = 'inline';
         markExam.style.display = 'inline';
         disableEditing();
         break;
