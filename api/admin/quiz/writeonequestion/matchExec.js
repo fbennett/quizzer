@@ -152,13 +152,10 @@
             // To writeChoices
             var sql = "SELECT choice,choiceID FROM choices WHERE questionID=? ORDER BY choice;";
             var questionID = qObj.questionID;
-            console.log("SEARCHING FOR questionID="+qObj.questionID);
             sys.db.all(sql,[questionID],function(err,rows){
                 if (err) {return oops(response,err,'quiz/writeonequestion(9)')}
-                console.log("ROWS LENGTH: "+rows);
                 for (var i=0,ilen=rows.length;i<ilen;i+=1) {
                     var row = rows[i];
-                    console.log("  SETTING "+row.choice+" to choiceID "+row.choiceID);
                     qObj.choiceIdList[row.choice] = row.choiceID;
                 }
                 writeChoices(0,4);
@@ -172,7 +169,6 @@
             var questionID = qObj.questionID;
             var choice = pos;
             var stringID = qObj.haveStringId[pos];
-            console.log("LOOK: choiceID="+choiceID+" questionID="+questionID+" choice="+choice+" stringID="+stringID);
             sys.db.run(sql,[choiceID,questionID,choice,stringID],function(err){
                 if (err) {return oops(response,err,'quiz/writeonequestion(10)')};
                 pos += 1;
