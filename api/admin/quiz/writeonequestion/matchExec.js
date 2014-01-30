@@ -153,8 +153,9 @@
             var sql = "SELECT choice,choiceID FROM choices WHERE questionID=? ORDER BY choice;";
             var questionID = qObj.questionID;
             console.log("SEARCHING FOR questionID="+qObj.questionID);
-            sys.db.get(sql,[questionID],function(err,rows){
+            sys.db.all(sql,[questionID],function(err,rows){
                 if (err) {return oops(response,err,'quiz/writeonequestion(9)')}
+                console.log("ROWS LENGTH: "+rows);
                 for (var i=0,ilen=rows.length;i<ilen;i+=1) {
                     var row = rows[i];
                     console.log("  SETTING "+row.choice+" to choiceID "+row.choiceID);
