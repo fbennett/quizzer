@@ -169,6 +169,7 @@
             var questionID = qObj.questionID;
             var choice = pos;
             var stringID = qObj.haveStringId[pos];
+            console.log("LOOK: choiceID="+choiceID+" questionID="+questionID+" choice="+choice+" stringID="+stringID);
             sys.db.run(sql,[choiceID,questionID,choice,stringID],function(err){
                 if (err) {return oops(response,err,'quiz/writeonequestion(10)')};
                 pos += 1;
