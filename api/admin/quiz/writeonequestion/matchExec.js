@@ -150,14 +150,15 @@
         };
         function checkChoices() {
             // To writeChoices
-            var sql = "SELECT choiceID FROM choices WHERE questionID=? ORDER BY choice;";
+            var sql = "SELECT choice,choiceID FROM choices WHERE questionID=? ORDER BY choice;";
             var questionID = qObj.questionID;
             console.log("SEARCHING FOR questionID="+qObj.questionID);
             sys.db.get(sql,[questionID],function(err,rows){
                 if (err) {return oops(response,err,'quiz/writeonequestion(9)')}
                 for (var i=0,ilen=rows.length;i<ilen;i+=1) {
                     var row = rows[i];
-                    qObj.choiceIdList[i] = row.choiceID;
+                    console.log("  SETTING "+row.choice+" to choiceID "+row.choiceID);
+                    qObj.choiceIdList[row.choice] = row.choiceID;
                 }
                 writeChoices(0,4);
             });
