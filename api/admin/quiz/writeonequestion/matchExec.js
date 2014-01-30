@@ -123,7 +123,7 @@
             sys.db.run(sql,[quizID,questionNumber,correct,rubricID],function (err) {
                 if (err) {return oops(response,err,'quiz/writeonequestion(6)')};
                 qObj.questionID = this.lastID;
-                writeChoices(0,4);
+                checkChoices();
             });
         };
         function checkQuestion () {
@@ -152,6 +152,7 @@
             // To writeChoices
             var sql = "SELECT choiceID FROM choices WHERE questionID=? ORDER BY choice;";
             var questionID = qObj.questionID;
+            console.log("SEARCHING FOR questionID="+qObj.questionID);
             sys.db.get(sql,[questionID],function(err,rows){
                 if (err) {return oops(response,err,'quiz/writeonequestion(9)')}
                 for (var i=0,ilen=rows.length;i<ilen;i+=1) {
