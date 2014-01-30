@@ -106,7 +106,7 @@
             console.log("convertStringsToLatex()")
             for (var i=0,ilen=quizObject.questions.length;i<ilen;i+=1) {
                 var question = quizObject.questions[i];
-                question.rubric = sys.markdown(question.rubric);
+                question.rubric = sys.markdown(question.rubric,true);
                 stringsToConvert.push({
                     obj:question,
                     key:'rubric'
@@ -289,13 +289,27 @@
             });
         };
 
+        function pandocLatexTableFix(str) {
+            str = str.replace(/\\{newline\\}/g,'\\newline ','g');
+            lst = str.split(/(ctable)(.*?{)(.*)(})/);
+            for (var i=3,ilen=lst.length;i<ilen;i+=5) {
+                var colspec = lst[i];
+                for (var j=colspec.length-1;j>-1;j+=-1) {
+                    colspec = colspec.slice(0,j) + 'p{2cm}' + colspec.slice(j+1);
+                }
+                
+                lst[i] = colspec;
+            }
+            return lst.join('');
+        };
+
         function pandocIterator (data, callback) {
             sys.pandoc.convert('html',data.obj[data.key],['latex'],function(result, err){
                 console.log("Run pandoc");
                 if (err) {
                     throw "Error in pandocIterator(): " + err;
                 }
-                data.obj[data.key] = result.latex;
+                data.obj[data.key] = pandocLatexTableFix(result.latex);
                 callback();
                 stringsCount += -1;
                 if (!stringsCount) {

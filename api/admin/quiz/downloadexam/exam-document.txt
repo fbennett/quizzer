@@ -4,6 +4,9 @@
 \usepackage{marginnote}
 \usepackage{graphicx}
 \usepackage{tikz}
+\usepackage{ctable}
+\usepackage{float}
+\usepackage{hyphenat}
 
 \newcommand*\mycirc[1]{\tikz[baseline=(char.base)]{{\small
   \node[shape=circle,draw,inner sep=1.5pt] (char) {#1};}}}

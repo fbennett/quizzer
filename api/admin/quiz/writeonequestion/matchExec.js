@@ -21,9 +21,12 @@
         var qObj = {
             haveStringId:{},
             needStringId:{},
-            needStringIdList:[]
+            needStringIdList:[],
+            choiceIdList:[null,null,null,null]
         };
         beginTransaction();
+
+        
 
         function beginTransaction () {
             sys.db.run('BEGIN TRANSACTION',function(err){
@@ -142,18 +145,32 @@
             var questionID = qObj.questionID;
             sys.db.run(sql,[stringID,correct,questionID],function(err){
                 if (err) {return oops(response,err,'quiz/writeonequestion(8)')};
+                checkChoices();
+            });
+        };
+        function checkChoices() {
+            // To writeChoices
+            var sql = "SELECT choiceID FROM choices WHERE questionID=? ORDER BY choice;";
+            var questionID = qObj.questionID;
+            sys.db.get(sql,[questionID],function(err,rows){
+                if (err) {return oops(response,err,'quiz/writeonequestion(9)')}
+                for (var i=0,ilen=rows.length;i<ilen;i+=1) {
+                    var row = rows[i];
+                    qObj.choiceIdList[i] = row.choiceID;
+                }
                 writeChoices(0,4);
             });
         };
 
         // Insert or replace is good enough for choices
         function writeChoices(pos,limit) {
-            var sql = 'INSERT OR REPLACE INTO choices VALUES (NULL,?,?,?)';
+            var sql = 'INSERT OR REPLACE INTO choices VALUES (?,?,?,?)';
+            var choiceID = qObj.choiceIdList[pos];
             var questionID = qObj.questionID;
             var choice = pos;
             var stringID = qObj.haveStringId[pos];
-            sys.db.run(sql,[questionID,choice,stringID],function(err){
-                if (err) {return oops(response,err,'quiz/writeonequestion(9)')};
+            sys.db.run(sql,[choiceID,questionID,choice,stringID],function(err){
+                if (err) {return oops(response,err,'quiz/writeonequestion(10)')};
                 pos += 1;
                 if (pos == limit) {
                     endTransaction();
