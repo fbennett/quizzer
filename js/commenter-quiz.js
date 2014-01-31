@@ -149,7 +149,8 @@ function buildRuleSelect (node) {
     }
     selections.sort(function(a,b){if(a.str>b.str){return 1}else if(a.str>b.str){return -1}else{return 0}});
     for (var i=0,ilen=selections.length;i<ilen;i+=1) {
-        node.appendChild(option);
+        var selection = selections[i];
+        node.appendChild(selection.node);
     }
 };
 
