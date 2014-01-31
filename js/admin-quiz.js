@@ -30,25 +30,28 @@ function markExam () {
 };
 
 function keystrokeHandler(event) {
-    var adminID = getParameterByName('admin');
-    var classID = getParameterByName('classid');
-    var quizNumber = getParameterByName('quizno');
-    var inputNode = document.getElementById('string-input');
-    var inputVal = '';
     if (event.key === 'Enter') {
-        // alert(inputNode.value);
-        // Capture entry
-        var ans = {};
+        var inputVal = '';
+        var inputNode = document.getElementById('string-input');
         var inputVal = inputNode.value;
+        if (inputVal.length === 10) {
+            set Answer(inputVal);
+        } else {
+            alert("Input overlap, try again.");
+        }
         inputNode.value = '';
-        inputVal = inputVal.replace(/^0*/,'');
-        var studentOffset = parseInt(inputVal.slice(0,1),10);
-        var questionOffset = parseInt(inputVal.slice(1,2),10);
-        ans.studentID = inputVal.slice(2,2+studentOffset);
-        ans.questionNumber = inputVal.slice(2+studentOffset,2+studentOffset+questionOffset);
-        ans.choice = inputVal.slice(2+studentOffset+questionOffset,2+studentOffset+questionOffset+1);
-        checkAlreadyDone(ans);
     }
+};
+
+function setAnswer(inputVal) {
+    var ans = {};
+    inputVal = inputVal.replace(/^0*/,'');
+    var studentOffset = parseInt(inputVal.slice(0,1),10);
+    var questionOffset = parseInt(inputVal.slice(1,2),10);
+    ans.studentID = inputVal.slice(2,2+studentOffset);
+    ans.questionNumber = inputVal.slice(2+studentOffset,2+studentOffset+questionOffset);
+    ans.choice = inputVal.slice(2+studentOffset+questionOffset,2+studentOffset+questionOffset+1);
+    checkAlreadyDone(ans);
 };
 
 function checkAlreadyDone(ans) {
