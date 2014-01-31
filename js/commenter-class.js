@@ -207,7 +207,7 @@ function openRule (node) {
 
 function saveRule (node) {
     var rownode = node.parentNode.parentNode;
-    var orignode = rownode.nextSibling.childNodes[0].childNodes[0];
+    var orignode = rownode.nextSibling.childNodes[0];
     var textnode = rownode.nextSibling.childNodes[1].childNodes[0];
     var rulenode = rownode.childNodes[0].childNodes[0];
     ruleText = rulenode.tagName === 'TEXTAREA' ? rulenode.value : null;
