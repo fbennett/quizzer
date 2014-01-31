@@ -223,6 +223,10 @@ function showAnswers () {
         tResult.appendChild(rightWrong);
         tRow.appendChild(tLabel);
         tRow.appendChild(tResult);
+        console.log('XX1 '+i);
+        console.log('XX2 '+myQuestionNumbers[i]);
+        console.log('XX3 '+questionCol[myQuestionNumbers[i]]);
+        console.log('XX4 '+column[questionCol[myQuestionNumbers[i]]]);
         var container = column[questionCol[myQuestionNumbers[i]]];
         container.appendChild(tRow);
     }
