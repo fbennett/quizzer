@@ -87,7 +87,7 @@ function promoteRule(node) {
 };
 
 function allowDemoteDrop(ev) {
-    if (ev.dataTransfer.getData("ruleID").slice(0,7) !== 'demote:') {
+    if (!ev.dataTransfer || ev.dataTransfer.getData("ruleID").slice(0,7) !== 'demote:') {
         return;
     }
     ev.preventDefault();
