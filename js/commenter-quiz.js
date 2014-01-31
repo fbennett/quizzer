@@ -138,13 +138,17 @@ function buildRuleSelect (node) {
     for (var i=1,ilen=node.childNodes.length;i<ilen;i+=1) {
         node.removeChild(node.childNodes[1]);
     }
-    console.log("SELECTIONS: "+quizMistakes.selections);
+    var selections = [];
     for (var i=0,ilen=quizMistakes.selections.length;i<ilen;i+=1) {
         var rule = quizMistakes.selections[i];
         var option = document.createElement('option');
         option.setAttribute('value',rule.ruleid);
         option.innerHTML = markdown(rule.ruletext);
         option.innerHTML = option.textContent;
+        selections.push({node:option,str:option.textContent});
+    }
+    selections.sort(function(a,b){if(a.str>b.str){return 1}else if(a.str>b.str){return -1}else{return 0}});
+    for (var i=0,ilen=selections.length;i<ilen;i+=1) {
         node.appendChild(option);
     }
 };
