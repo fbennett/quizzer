@@ -146,7 +146,7 @@ function dragleaveDemoteRule(ev) {
 
 
 function allowMergeDrop(ev) {
-    if (ev.dataTransfer.getData("ruleID").slice(0,6) !== 'merge:') {
+    if (!ev.dataTransfer || ev.dataTransfer.getData("ruleID").slice(0,6) !== 'merge:') {
         return;
     }
     ev.preventDefault();
