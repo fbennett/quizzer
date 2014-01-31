@@ -132,6 +132,7 @@ function addRuleToMistake (node) {
         pairNode.appendChild(ruleNode);
     }
     // Then reset the value on the select
+    node.selectedIndex = 0;
 };
 
 function buildRuleSelect (node) {
