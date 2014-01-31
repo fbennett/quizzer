@@ -87,10 +87,10 @@ function promoteRule(node) {
 };
 
 function allowDemoteDrop(ev) {
+    ev.preventDefault();
     if (!ev.dataTransfer || ev.dataTransfer.getData("ruleID").slice(0,7) !== 'demote:') {
         return;
     }
-    ev.preventDefault();
     for (var i=0,ilen=pageData.commenters.length;i<ilen;i+=1) {
         if (pageData.commenters[i].hasAttribute('style')) {
             pageData.commenters[i].removeAttribute('style');
@@ -146,10 +146,10 @@ function dragleaveDemoteRule(ev) {
 
 
 function allowMergeDrop(ev) {
+    ev.preventDefault();
     if (!ev.dataTransfer || ev.dataTransfer.getData("ruleID").slice(0,6) !== 'merge:') {
         return;
     }
-    ev.preventDefault();
     dragendMergeRule();
     var targ = getParent(ev.target,'td');
     targ.setAttribute('style','border:1px dashed black;border-radius:0;background:#00ff00;');
