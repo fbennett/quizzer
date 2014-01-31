@@ -133,6 +133,7 @@ function addRuleToMistake (node) {
     }
     // Then reset the value on the select
     node.selectedIndex = 0;
+    node.blur();
 };
 
 function buildRuleSelect (node) {
