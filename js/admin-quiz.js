@@ -89,7 +89,7 @@ function checkAlreadyAnswered(ans) {
 };
 
 function recordAnswer (ans) {
-    console.log("recordAnswer()");
+    console.log("recordAnswer(): "+ans.choice);
     qzi.clientResult[ans.questionNumber] = ans.choice;
     showAnswers();
     checkExamComplete(ans);
