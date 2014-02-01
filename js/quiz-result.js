@@ -233,6 +233,8 @@ function openRule (node) {
     tr.innerHTML = '<td class="show-box">' + markdown(row.stringOrig) + '</td><td class="edit-box"><textarea>' + row.stringTrans + '</textarea></td>'
     rownode.parentNode.insertBefore(tr,rownode.nextSibling);
     node.setAttribute('onclick','void(0);');
+    setChildHeight(rownode.nextSibling.childNodes[1].childNodes[0]);
+    setChildHeight(rownode.nextSibling.childNodes[0].childNodes[0]);
 };
 
 function saveRule (node) {
@@ -271,7 +273,7 @@ function saveRule (node) {
         rulenode.parentNode.replaceChild(ruleTextNode,rulenode);
         ruleTextNode.parentNode.setAttribute('onclick','closeRule(this);');
     }
-    orignode.innerHTML = markdown(row.stringOrig);
+    orignode.innerHTML = '<div class="show-box-child">' + markdown(row.stringOrig) + '</div>';
     var renderedNode = document.createElement('div');
     renderedNode.innerHTML = markdown(row.stringTrans);
     textnode.parentNode.replaceChild(renderedNode,textnode);
@@ -329,4 +331,11 @@ function closeRule (node) {
     var contentrownode = rownode.nextSibling;
     contentrownode.parentNode.removeChild(contentrownode);
     node.setAttribute('onclick', 'openRule(this);');
+    setChildHeight(rownode.nextSibling.childNodes[1].childNodes[0]);
+    setChildHeight(rownode.nextSibling.childNodes[0].childNodes[0]);
+};
+
+function setChildHeight (textarea) {
+    var height = textarea.parentNode.offsetHeight;
+    textarea.style.height = height;
 };
