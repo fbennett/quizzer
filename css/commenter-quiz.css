@@ -19,7 +19,7 @@ div#quiz-mistakes {
 div.rule-container {
     font-size:larger;
     position:relative;
-    border: 0.8em solid #30c001;
+    border: 0.4em solid #30c001;
     border-radius: 1em;
     margin: 6px 0 6px 1em;
     padding: 0.5em 1em 0.5em 1em;
