@@ -333,8 +333,6 @@ function closeRule (node) {
     var contentrownode = rownode.nextSibling;
     contentrownode.parentNode.removeChild(contentrownode);
     node.setAttribute('onclick', 'openRule(this);');
-    setChildHeight(rownode.nextSibling.childNodes[1].childNodes[0]);
-    setChildHeight(rownode.nextSibling.childNodes[0].childNodes[0]);
 };
 
 function setChildHeight (textarea) {
