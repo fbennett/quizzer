@@ -35,7 +35,7 @@ function keystrokeHandler(event) {
         var inputNode = document.getElementById('string-input');
         var inputVal = inputNode.value;
         if (inputVal.length === 10) {
-            set Answer(inputVal);
+            setAnswer(inputVal);
         } else {
             alert("Input overlap, try again.");
         }
