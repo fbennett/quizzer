@@ -336,6 +336,8 @@ function closeRule (node) {
 };
 
 function setChildHeight (textarea) {
+    console.log("Trying!");
     var height = textarea.parentNode.offsetHeight;
+    console.log("  height="+height);
     textarea.style.height = height;
 };
