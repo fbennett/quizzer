@@ -16,9 +16,8 @@ table#rules-for-lang td.left:hover {
 }
 
 td.show-box {
-    background: #eeeeee;
     vertical-align: top;
-    border-radius: 0 !important;
+    border: none !important;
 }
 
 td.left textarea {
@@ -53,5 +52,10 @@ input.float-right {
 }
 
 div.show-box-child {
+    background: #eeeeee;
     margin: 0 0 0 1em;
+    border: 2px solid #bbbbbb;
+    border-radius: 0 !important;
+    padding: 0.5em;
+    text-align: left;
 }
