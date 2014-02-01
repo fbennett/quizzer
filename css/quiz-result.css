@@ -50,9 +50,9 @@ table#rules-for-lang td.left:hover {
 }
 
 td.show-box {
-    background: #eeeeee;
     vertical-align: top;
-    border-radius: 0 !important;
+    border: none !important;
+    padding: 0 !important;
 }
 
 td.left textarea {
