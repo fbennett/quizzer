@@ -230,11 +230,11 @@ function openRule (node) {
         deleteButton.style.display = 'inline';
     }
     var tr = document.createElement('tr');
-    tr.innerHTML = '<td class="show-box">' + markdown(row.stringOrig) + '</td><td class="edit-box"><textarea>' + row.stringTrans + '</textarea></td>'
+    tr.innerHTML = '<td class="show-box"><div class="show-box-child">' + markdown(row.stringOrig) + '</div></td><td class="edit-box"><textarea>' + row.stringTrans + '</textarea></td>'
     rownode.parentNode.insertBefore(tr,rownode.nextSibling);
     node.setAttribute('onclick','void(0);');
-    setChildHeight(rownode.nextSibling.childNodes[1].childNodes[0]);
-    setChildHeight(rownode.nextSibling.childNodes[0].childNodes[0]);
+    setChildHeight(tr.childNodes[1].childNodes[0]);
+    setChildHeight(tr.childNodes[0].childNodes[0]);
 };
 
 function saveRule (node) {
