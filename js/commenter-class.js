@@ -174,7 +174,7 @@ function deleteRule (node) {
 };
 
 
-function setTexareaHeight (textarea) {
+function setTextareaHeight (textarea) {
     var height = textarea.parentNode.offsetHeight;
     textarea.style.height = height;
 }
