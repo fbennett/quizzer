@@ -9,6 +9,7 @@
             + 'FROM rules '
             + 'JOIN ruleStrings USING(ruleStringID) '
             + 'JOIN admin USING(adminID) '
+            + 'ORDER BY string '
             + 'WHERE ruleGroupID=?;';
         sys.db.all(sql,[ruleGroupID],function(err,rows){
             if (err||!rows) {return oops(response,err,'classes/getrules(1)')};
