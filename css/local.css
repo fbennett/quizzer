@@ -108,7 +108,7 @@ div.comment-container blockquote blockquote blockquote, div.rule-gloss blockquot
     background: white;
 }
 
-div.comment-container blockquote p {
+div.comment-container blockquote p, div.rule-gloss blockquote p {
     line-height: 1.8em;
     padding: 0.5em 1em 0.5em 1em;
     margin: 0;
