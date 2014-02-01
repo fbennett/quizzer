@@ -147,7 +147,8 @@ function dragleaveDemoteRule(ev) {
 
 function allowMergeDrop(ev) {
     ev.preventDefault();
-    if (!ev.dataTransfer || ev.dataTransfer.getData("ruleID").slice(0,6) !== 'merge:') {
+    if (!ev.dataTransfer 
+        || ev.dataTransfer.getData("ruleID").slice(0,6) !== 'merge:') {
         return;
     }
     dragendMergeRule();
@@ -172,6 +173,9 @@ function dropMergeRule(ev) {
     ev.preventDefault();
     var targ = getParent(ev.target,'td');
     var senpaiRuleID = targ.id;
+    if (targ.id === ev.dataTransfer.getData("ruleID").slice(6)) {
+        return;
+    }
     var okToDemote = confirm("Merge this rule with target?");
     if (okToDemote) {
         // API call
