@@ -18,11 +18,12 @@ table#rules-for-lang td.left:hover {
 td.show-box {
     vertical-align: top;
     border: none !important;
+    padding: 0 !important;
 }
 
 td.left textarea {
     width: 100%;
-    height: 5em;
+    height: 6em;
     resize:none;
 }
 

@@ -173,6 +173,13 @@ function deleteRule (node) {
     rownode.parentNode.removeChild(rownode);
 };
 
+
+function setTexareaHeight (textarea) {
+    var height = textarea.parentNode.offsetHeight;
+    textarea.style.height = height;
+}
+
+
 function openRule (node) {
     var rownode = node.parentNode;
     var ruleID = rownode.id.split('-').slice(-1)[0];
@@ -203,6 +210,7 @@ function openRule (node) {
     tr.innerHTML = '<td class="show-box"><div class="show-box-child">' + markdown(row.stringOrig) + '</div></td><td class="edit-box"><textarea>' + row.stringTrans + '</textarea></td>'
     rownode.parentNode.insertBefore(tr,rownode.nextSibling);
     node.setAttribute('onclick','void(0);');
+    setTextareaHeight(tr.childNodes[1].childNodes[0]);
 };
 
 function saveRule (node) {
