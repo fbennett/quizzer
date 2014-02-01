@@ -318,6 +318,8 @@ function editRule (node) {
     saveButton.style.display = 'inline';
     editButton.style.display = 'none';
     node.parentNode.previousSibling.setAttribute('onclick','void(0);');
+    setChildHeight(rownode.nextSibling.childNodes[1].childNodes[0]);
+    setChildHeight(rownode.nextSibling.childNodes[0].childNodes[0]);
 };
 
 function closeRule (node) {
