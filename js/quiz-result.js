@@ -341,6 +341,6 @@ function setChildHeight (textarea) {
     console.log("Trying!");
     var height = textarea.parentNode.offsetHeight;
     console.log("  Setting! height="+height+" type="+typeof height);
-    textarea.style.height = height;
+    textarea.style.height = height + 'px';
     console.log("  Set! height="+textarea.style.height + 'px');
 };
