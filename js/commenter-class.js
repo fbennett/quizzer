@@ -245,7 +245,7 @@ function saveRule (node) {
         rulenode.parentNode.replaceChild(ruleTextNode,rulenode);
         ruleTextNode.parentNode.setAttribute('onclick','closeRule(this);');
     }
-    orignode.innerHTML = markdown(row.stringOrig);
+    orignode.innerHTML = '<div class="show-box-child">' + markdown(row.stringOrig) + '</div>';
     var renderedNode = document.createElement('div');
     renderedNode.innerHTML = markdown(row.stringTrans);
     textnode.parentNode.replaceChild(renderedNode,textnode);
