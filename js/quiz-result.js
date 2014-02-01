@@ -233,10 +233,8 @@ function openRule (node) {
     tr.innerHTML = '<td class="show-box"><div class="show-box-child">' + markdown(row.stringOrig) + '</div></td><td class="edit-box"><textarea>' + row.stringTrans + '</textarea></td>'
     rownode.parentNode.insertBefore(tr,rownode.nextSibling);
     node.setAttribute('onclick','void(0);');
-    setTimeout(function () {
-        setChildHeight(tr.childNodes[1].childNodes[0]);
-        setChildHeight(tr.childNodes[0].childNodes[0]);
-    }, 100);
+    setChildHeight(tr.childNodes[1].childNodes[0]);
+    setChildHeight(tr.childNodes[0].childNodes[0]);
 };
 
 function saveRule (node) {
@@ -338,9 +336,6 @@ function closeRule (node) {
 };
 
 function setChildHeight (textarea) {
-    console.log("Trying!");
     var height = textarea.parentNode.offsetHeight;
-    console.log("  Setting! height="+height+" type="+typeof height);
-    textarea.style.height = height + 'px';
-    console.log("  Set! height="+textarea.style.height + 'px');
+    textarea.style.height = height;
 };
