@@ -51,3 +51,7 @@ td.needs-gloss {
 input.float-right {
     float:right;
 }
+
+div.show-box-child {
+    margin 0 0 0 1em;
+}
