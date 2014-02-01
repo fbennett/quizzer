@@ -148,7 +148,7 @@ function dragleaveDemoteRule(ev) {
 function allowMergeDrop(ev) {
     ev.preventDefault();
     if (!ev.dataTransfer 
-        || ev.dataTransfer.getData("ruleID").slice(0,6) !== 'merge:') {
+        || ev.dataTransfer.getData("ruleID").slice(0,7) !== 'mergex:') {
         return;
     }
     dragendMergeRule();
@@ -166,20 +166,20 @@ function dragendMergeRule(ev) {
 
 
 function dragMergeRule(ev) {
-    ev.dataTransfer.setData('ruleID','merge:'+ev.target.id);
+    ev.dataTransfer.setData('ruleID','mergex:'+ev.target.id);
 };
 
 function dropMergeRule(ev) {
     ev.preventDefault();
     var targ = getParent(ev.target,'td');
     var senpaiRuleID = targ.id;
-    if (targ.id === ev.dataTransfer.getData("ruleID").slice(6)) {
+    if (targ.id === ev.dataTransfer.getData("ruleID").slice(7)) {
         return;
     }
     var okToDemote = confirm("Merge this rule with target?");
     if (okToDemote) {
         // API call
-        var kohaiRuleID = ev.dataTransfer.getData("ruleID").slice(6);
+        var kohaiRuleID = ev.dataTransfer.getData("ruleID").slice(7);
         var adminID = getParameterByName('admin');
         var result = apiRequest(
             '/?admin='
