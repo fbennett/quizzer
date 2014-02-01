@@ -30,7 +30,12 @@ div.rule-gloss {
     margin-left:1em;
 }
 
-
+div.rule-gloss table td {
+    border:2px solid #bbbbbb;
+    border-radius:1em;
+    padding: 0.5em;
+    text-align: left;
+}
 
 table#rules-for-lang {
     table-layout: fixed;
