@@ -141,7 +141,13 @@
                     } else if (a.performance<b.performance) {
                         return 1
                     } else {
-                        return 0
+                        if (a.transGloss && !b.transGloss) {
+                            return 1;
+                        } else if (!a.transGloss && b.transGloss) {
+                            return -1;
+                        } else {
+                            return 0
+                        }
                     }
                 });
                 console.log("OK "+JSON.stringify(rulesReturn,null,2));

@@ -211,52 +211,21 @@ function buildRulesList () {
         var tr = document.createElement('tr');
         tr.setAttribute('id','rule-' + row.ruleID);
         var needsGloss = ' needs-gloss';
-        if (row.hasGloss) {
+        var disabledClass = '';
+        if (row.performance === 1) {
+            disabledClass = ' disabled-rule';
+        } else if (row.transGloss) {
             needsGloss = '';
         }
         var onClick = ' onclick="openRule(this)"';
-        var disabledClass = '';
-        if (row.performance === 1) {
-            onClick = ' onclick="openRuleReadOnly(this)"';
-            disabledClass = ' disabled-rule';
-        }
         tr.innerHTML = '<td class="left' + needsGloss + disabledClass + '"' + onClick + '><div>' + markdown(row.ruleText) + '</div></td><td class="right"><input type="button" class="button float-right" value="Save" onclick="saveRule(this)" style="display:none;"/><input type="button" class="button float-right" value="Edit" onclick="editRule(this)" style="display:none;"/><input type="button" class="button no-float" value="Del" onclick="confirmDelete(this,\'deleteRule\')" style="display:none;"/></td>';
         rulesForLang.appendChild(tr);
     }
 };
 
-function openRuleReadOnly(node) {
-    var rownode = node.parentNode;
-    var ruleID = rownode.id.split('-').slice(-1)[0];
-    // API call
-    var commenterKey = getParameterByName('commenter');
-    var row = apiRequest(
-        '/?cmd=readonerule&classid=' 
-            + classID
-            + '&studentid=' 
-            + studentID 
-            + '&studentkey=' 
-            + studentKey 
-            + '&quizno=' 
-            + quizNumber
-        ,{
-            ruleid:ruleID,
-            lang:pageData.lang
-        }
-    );
-    if (false === row) return;
-    var tr = document.createElement('tr');
-    tr.innerHTML = '<td class="show-box"><div class="show-box-child">' + markdown(row.stringOrig) + '</div></td><td class="edit-box"><div>' + markdown(row.stringTrans) + '</div></td>'
-    rownode.parentNode.insertBefore(tr,rownode.nextSibling);
-    node.setAttribute('onclick','closeRuleReadOnly(this);');
-}
-
 function openRule (node) {
     var rownode = node.parentNode;
     var ruleID = rownode.id.split('-').slice(-1)[0];
-    var saveButton = rownode.childNodes[1].childNodes[0];
-    var deleteButton = rownode.childNodes[1].childNodes[2];
-    saveButton.style.display = 'inline';
     // API call
     var commenterKey = getParameterByName('commenter');
     var row = apiRequest(
@@ -274,17 +243,32 @@ function openRule (node) {
         }
     );
     if (false === row) return;
-    if (row.ruleSource) {
-        var renderedrule = rownode.childNodes[0].childNodes[0];
-        var textarea = document.createElement('textarea');
-        textarea.innerHTML = row.ruleSource;
-        renderedrule.parentNode.replaceChild(textarea,renderedrule);
-        deleteButton.style.display = 'inline';
+
+    var cls = node.getAttribute("class");
+    var readOnly = false;
+    if (cls.indexOf('disabled-rule') > -1) {
+        // do nothing in this case
+        readOnly = true;
+    } else if (row.stringTrans) {
+        var editButton = rownode.childNodes[1].childNodes[1];
+        editButton.style.display = 'inline';
+    } else {
+        var saveButton = rownode.childNodes[1].childNodes[0];
+        saveButton.style.display = 'inline';
     }
+
     var tr = document.createElement('tr');
-    tr.innerHTML = '<td class="show-box"><div class="show-box-child">' + markdown(row.stringOrig) + '</div></td><td class="edit-box"><textarea>' + row.stringTrans + '</textarea></td>'
+    if (row.stringTrans || readOnly) {
+        tr.innerHTML = '<td class="show-box"><div class="show-box-child">' + markdown(row.stringOrig) + '</div></td><td class="edit-box"><div>' + markdown(row.stringTrans) + '</div></td>'
+    } else {
+        tr.innerHTML = '<td class="show-box"><div class="show-box-child">' + markdown(row.stringOrig) + '</div></td><td class="edit-box"><textarea>' + row.stringTrans + '</textarea></td>'
+    }
     rownode.parentNode.insertBefore(tr,rownode.nextSibling);
-    node.setAttribute('onclick','void(0);');
+    if (row.stringTrans || readOnly) {
+        node.setAttribute('onclick','closeRule(this);');
+    } else {
+        node.setAttribute('onclick','void(0);');
+    }
     setChildHeight(rownode.nextSibling.childNodes[1].childNodes[0]);
     setChildHeight(rownode.nextSibling.childNodes[0].childNodes[0]);
 };
@@ -385,19 +369,6 @@ function closeRule (node) {
     var contentrownode = rownode.nextSibling;
     contentrownode.parentNode.removeChild(contentrownode);
     node.setAttribute('onclick', 'openRule(this);');
-};
-
-function closeRuleReadOnly (node) {
-    var rownode = node.parentNode;
-    var saveButton = rownode.childNodes[1].childNodes[0];
-    var editButton = rownode.childNodes[1].childNodes[1];
-    var deleteButton = rownode.childNodes[1].childNodes[2];
-    saveButton.style.display = 'none';
-    editButton.style.display = 'none';
-    deleteButton.style.display = 'none';
-    var contentrownode = rownode.nextSibling;
-    contentrownode.parentNode.removeChild(contentrownode);
-    node.setAttribute('onclick', 'openRuleReadOnly(this);');
 };
 
 function setChildHeight (textarea) {
