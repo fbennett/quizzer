@@ -54,22 +54,24 @@
                 +     'JOIN choices USING(questionID) '
                 +     'JOIN strings ON strings.stringID=choices.stringID '
                 +     'WHERE choices.choice=questions.correct'
-                + ') AS right USING(questionID) '
+                + ') AS right ON right.questionID=answers.questionID '
                 + 'JOIN ('
                 +     'SELECT questionID,string,answers.choice '
                 +     'FROM questions '
                 +     'JOIN answers USING(questionID) '
                 +     'JOIN choices USING(questionID,choice) '
-                +     'JOIN strings ON strings.stringID=choices.stringID'
-                + ') AS wrong USING (questionID) '
+                +     'JOIN strings ON strings.stringID=choices.stringID '
+                +     'WHERE choices.choice=answers.choice AND answers.studentID=? '
+                + ') AS wrong ON wrong.questionID=answers.questionID '
                 + 'WHERE quizzes.classID=? AND quizzes.quizNumber=? AND questions.questionNumber=? AND answers.studentID=?'
             var questionNumber = items[pos].questionNumber;
-            sys.db.get(sql,[classID,quizNumber,questionNumber,studentID],function(err,row) {
+            sys.db.get(sql,[studentID,classID,quizNumber,questionNumber,studentID],function(err,row) {
                 if (err||!row) {return oops(response,err,'*quiz/myquizresult(2)')}
                 items[pos].rubric = row.rubric;
                 items[pos].right = row.right;
                 items[pos].wrong = row.wrong;
                 items[pos].wrongChoice = row.wrongChoice;
+                console.log("CHOICE: "+row.wrongChoice);
                 pos += 1;
                 if (pos === items.length) {
                     getGoodAnswerStudents(0,limit);
@@ -110,9 +112,9 @@
                 + 'FROM quizzes '
                 + 'JOIN questions USING(quizID) '
                 + 'JOIN choices USING(questionID) '
-                + 'JOIN answers USING(questionID) '
+                + 'JOIN answers ON answers.questionID=choices.questionID AND answers.choice=choices.choice '
                 + 'JOIN students USING(studentID) '
-                + 'JOIN rulesToChoices USING(choiceID) '
+                + 'JOIN rulesToChoices ON rulesToChoices.choiceID=choices.choiceID '
                 + 'JOIN rules USING(ruleID) '
                 + 'JOIN ruleStrings AS r USING(ruleStringID) '
                 + 'LEFT JOIN ('
@@ -125,9 +127,9 @@
                 +   'FROM ruleTranslations '
                 +   'WHERE lang=?'
                 + ') AS rtO USING(ruleID) '
-                + 'WHERE quizzes.classID=? AND quizNumber=? AND questionNumber=?';
+                + 'WHERE quizzes.classID=? AND quizNumber=? AND questionNumber=? and answers.studentID=?';
             var questionNumber = items[pos].questionNumber;
-            sys.db.all(sql,[studentLang,classID,quizNumber,questionNumber],function(err,rows){
+            sys.db.all(sql,[studentLang,classID,quizNumber,questionNumber,studentID],function(err,rows){
                 if (err||!rows) {return oops(response,err,'*quiz/myquizresult(4)')};
                 items[pos].rules = [];
                 for (var i=0,ilen=rows.length;i<ilen;i+=1) {

@@ -6,7 +6,9 @@
         var classID = params.classid;
         var studentID = params.studentid;
         var studentKey = params.studentkey;
-        var sql = 'SELECT students.lang,languages.langName FROM students JOIN languages ON languages.lang=students.lang WHERE students.studentID=?';
+        var sql = 'SELECT students.lang,languages.langName FROM students '
+            + 'JOIN languages ON languages.lang=students.lang '
+            + 'WHERE students.studentID=?';
         sys.db.all(sql,[studentID],function(err,rows){
             if (err) {return oops(response,err,'**classes/readrulelangs(1)')};
             if (rows && rows.length) {
