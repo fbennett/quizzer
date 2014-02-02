@@ -17,7 +17,6 @@
             + 'ORDER BY hasGloss,ruleText;';
         sys.db.all(sql,[lang,classID,commenterID],function(err,rows){
             if (err||!rows) {return oops(response,err,'**classes/readrules(1)')};
-            console.log(JSON.stringify(rows,null,2));
             response.writeHead(200, {'Content-Type': 'application/json'});
             response.end(JSON.stringify(rows));
         });

@@ -43,7 +43,6 @@
                 if (rows && rows.length) {
                     for (var i=0,ilen=rows.length;i<ilen;i+=1) {
                         var row = rows[i];
-                        console.log("XX ruleID: "+row.ruleID);
                         rulesData.push(row);
                     }
                     getRuleResults(0,rulesData.length);
@@ -94,7 +93,7 @@
                 +     'JOIN questions AS q USING(quizID) '
                 +     'JOIN choices USING(questionID) '
                 +     'JOIN answers AS ans ON ans.questionID=q.questionID AND ans.choice=choices.choice '
-                +     'JOIN quizAnswers as qa ON qa.quizID=q.quizID AND qa.studentID=ans.studentID '
+                +     'LEFT JOIN quizAnswers as qa ON qa.quizID=q.quizID AND qa.studentID=ans.studentID '
                 +     'JOIN rulesToChoices AS rtc ON rtc.choiceID=choices.choiceID '
                 +     'LEFT JOIN ('
                 +       'SELECT answerID '
@@ -108,14 +107,8 @@
                 + ') AS counts ON counts.ruleID=rtc.ruleID '
                 + 'WHERE classes.classID=? AND rules.ruleID=? AND counts.performance>0;'
             var ruleID = rulesData[pos].ruleID;
-            console.log("SQL "+sql);
             sys.db.get(sql,[lang,studentID,classID,ruleID,classID,ruleID],function(err,row){
                 if (err) {return oops(response,err,'**quiz/readrules(2)')};
-                if (row) {
-                    console.log("ROW "+row+" classID="+row.classID+" studentID="+studentID+" ruleID="+row.ruleID+" numberAttempted="+row.numberAttempted+" numberFailed="+row.numberFailed);
-                } else {
-                    console.log("NO RETURN");
-                }
                 if (row) {
                     data = rulesData[pos];
                     data.ruleText = row.ruleText;
@@ -150,7 +143,6 @@
                         }
                     }
                 });
-                console.log("OK "+JSON.stringify(rulesReturn,null,2));
                 response.writeHead(200, {'Content-Type': 'application/json'});
                 response.end(JSON.stringify(rulesReturn));
             });

@@ -33,7 +33,6 @@
             sys.db.get('SELECT stringID FROM strings WHERE string=?',[comment],function(err,row){
                 var commentTextID = row.stringID;
                 if (err|!row) {return oops(response,err,'**quiz/writeonecomment(3)')};
-                console.log("SAVE: classID="+classID+", quizNumber="+quizNumber+", questionNumber="+questionNumber+", wrongChoice="+wrongChoice+", commenterID="+commenterID);
                 getCommentIDandWrongChoiceID(classID,quizNumber,questionNumber,wrongChoice,commenterID,commentTextID);
             });
         }
@@ -62,7 +61,6 @@
             })
         }
         function saveComment(commentID,wrongChoiceID,commenterID,commentTextID){
-            console.log("INSERT AS: commentID="+commentID+", wrongChoiceID="+wrongChoiceID+", commenterID="+commenterID+", commentTextID="+commentTextID);
             var sql = 'INSERT OR REPLACE INTO comments VALUES (?,?,?,?)'
             sys.db.run(sql,[commentID,wrongChoiceID,commenterID,commentTextID],function(err){
                 if (err) {return oops(response,err,'**quiz/writeonecomment(5)')};

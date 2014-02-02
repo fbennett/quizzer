@@ -7,7 +7,6 @@
         var commenterKey = params.commenterkey;
         var commenterID = sys.admin[commenterKey].id;
         var lang = params.lang;
-        console.log("== "+commenterID+" "+lang);
         var sql = 'INSERT OR IGNORE INTO adminLanguages VALUES (NULL,?,?)'
         sys.db.run(sql,[commenterID,lang],function(err){
             if (err) {return oops(response,err,'commenters/setcommenterlanguage(1)')}

@@ -24,7 +24,6 @@
         } else {
             sys.db.run('INSERT OR IGNORE INTO admin VALUES (NULL,?,?,2,?,?)',[name,adminKey,interval,email],function(err){
                 if (err) {return oops(response,err,'commenters/addcommenter(3)')};
-                console.log("LAST ID: "+this.lastID+", adminKey="+adminKey);
                 sys.admin[adminKey] = {name:name,role:2,id:this.lastID,sched:null};
                 sys.scheduler.scheduleMail(sys,this.lastID,name,email,adminKey,interval);
                 response.writeHead(200, {'Content-Type': 'application/json'});

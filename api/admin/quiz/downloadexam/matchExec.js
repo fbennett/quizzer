@@ -81,7 +81,6 @@
                 + ') AS four USING(questionID) '
                 + 'WHERE quizzes.classID=? AND quizzes.quizNumber=? '
                 + 'ORDER BY q.questionNumber';
-            console.log("SQL: "+sql+" "+classID+" "+quizNumber);
             sys.db.all(sql,[classID,quizNumber],function(err,rows){
                 if (err||!rows) {return oops(response,err,'quiz/downloadexam(1)')}
                 for (var i=0,ilen=rows.length;i<ilen;i+=1) {
@@ -103,7 +102,6 @@
         };
 
         function convertStringsToLatex () {
-            console.log("convertStringsToLatex()")
             for (var i=0,ilen=quizObject.questions.length;i<ilen;i+=1) {
                 var question = quizObject.questions[i];
                 question.rubric = sys.markdown(question.rubric,true);
@@ -121,14 +119,12 @@
             }
             // Now latex-ify the string content of the object
             stringsCount += stringsToConvert.length;
-            console.log("Gonna try: "+stringsToConvert);
             sys.async.eachLimit(stringsToConvert, 1, pandocIterator, function(err){
                 if (err) { console.log("ERROR: "+err) }
             });
         }
         
         function getStudents () {
-            console.log("RUN: getStudents()");
             // Get a list of students enroled in the class
             
             var sql = 'SELECT students.studentID,students.name '
@@ -159,7 +155,6 @@
         function buildLatexData() {
             console.log("RUN: buildLaTeX()");
             //   Randomize the questions
-            console.log("Generating LaTeX documents");
             // Okay, so the exams need to be cast as a big fat object,
             // so that the async pandoc converter can replace
             // the strings properly
@@ -239,7 +234,6 @@
         };
 
         function zipFiles () {
-            console.log("zipFiles()");
             require('node-zip');
             var zip = new JSZip();
             sys.fs.readdir(latexDir,function(err,files){
@@ -280,7 +274,6 @@
                 //console.log(data.toString());
             });
             ltx.stderr.on('close', function (code) {
-                console.log("Rendered exam PDF: "+data);
                 callback();
                 documentCount += -1;
                 if (!documentCount) {
@@ -305,7 +298,6 @@
 
         function pandocIterator (data, callback) {
             sys.pandoc.convert('html',data.obj[data.key],['latex'],function(result, err){
-                console.log("Run pandoc");
                 if (err) {
                     throw "Error in pandocIterator(): " + err;
                 }

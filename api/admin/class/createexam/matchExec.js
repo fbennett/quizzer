@@ -38,17 +38,14 @@
         }
 
         function getQuestions(quizQuestionIDs) {
-            console.log("RUN: getQuestions()");
             var sqlparams = [];
             for (i=0,ilen=quizQuestionIDs.length;i<ilen;i+=1) {
                 sqlparams.push(quizQuestionIDs[i]);
             }
-            console.log("  getting these questions: "+sqlparams);
             var sql = 'SELECT correct,stringID,questionID FROM questions WHERE questionID IN (' + sqlparams + ')';
             sys.db.all(sql,function(err,rows){
                 if (err||!rows) {return oops(response,err,'class/createexam(1)')};
                 choicesCount += (rows.length * 4);
-                console.log("choicesCount set to: "+choicesCount);
                 for (i=0,ilen=rows.length;i<ilen;i+=1) {
                     var row = rows[i];
                     var qobj = {
@@ -65,7 +62,6 @@
                 sys.db.get(sql,[questionID,pos],function(err,row){
                     if (err) {return oops(response,err,'class/createexam(2)')};
                     if (pos < limit) {
-                        console.log("choicesCount decremented to: "+choicesCount);
                         qobj.choices[pos] = row.stringID;
                         getChoicesRepeater(qobj,questionID,pos+1,limit);
                         choicesCount += -1;
@@ -78,7 +74,6 @@
         }
 
         function saveExam() {
-            console.log("RUN: saveExam()");
             // Create a fresh quiz, with sent=-1
             var quizNumber = quizNumberMax + 1;
             sys.db.run('INSERT INTO quizzes VALUES (NULL,?,?,?,?,?)',[data.classID,quizNumber,0,data.examTitle,data.examDate],function(err){
@@ -91,7 +86,6 @@
 
         function saveQuestionsRepeater(quizID,quizNumber,pos,limit) {
             if (pos < limit) {
-                console.log("RUN: saveQuestionsRepeater("+pos+")");
                 // Recast the questions on the fresh quiz
                 var questionNumber = (pos + 1);
                 var correct = data.questions[pos].correct;
@@ -110,7 +104,6 @@
             }
         }
         function saveChoicesRepeater(questionID,qindex,pos,limit){
-            console.log("saveChoicesRepeater: "+questionID+" "+qindex+" "+pos+" "+limit);
             if (pos < limit) {
                 var stringID = data.questions[qindex].choices[pos];
                 var sql = 'INSERT INTO choices VALUES (NULL,?,?,?)';
@@ -118,7 +111,6 @@
                     if (err) {return oops(response,err,'class/createexam(5)')};
                     saveChoicesRepeater(questionID,qindex,pos+1,limit);
                     choicesCount += -1;
-                    console.log("choicesCount is: "+choicesCount);
                     if (!choicesCount) {
                         // Done! What now?
                         response.writeHead(200, {'Content-Type': 'application/json'});

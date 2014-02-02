@@ -4,7 +4,6 @@
         var oops = this.utils.apiError;
         var sys = this.sys;
         var ruleGroupID = params.groupid;
-        console.log("ruleGroupID="+ruleGroupID);
         var sql = 'SELECT ruleID,string,adminID,name '
             + 'FROM rules '
             + 'JOIN ruleStrings USING(ruleStringID) '

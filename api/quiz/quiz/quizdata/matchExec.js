@@ -43,9 +43,7 @@
                         number: obj.number
                     });
                     questionsCount += -1;
-                    console.log("   decrementX: "+questionsCount);
                     if (!questionsCount) {
-                        console.log("RESPONDING!");
                         response.writeHead(200, {'Content-Type': 'application/json'});
                         response.end(JSON.stringify(quizData));
                     }

@@ -9,7 +9,6 @@
         var lang = params.lang;
         var privacy = params.privacy ? 1 : 0;
         var adminID = sys.admin[params.admin].id;
-        console.log("Got param: "+params.privacy);
         if (studentID) {
             var db = this.sys.db;
             db.run('INSERT OR REPLACE INTO students VALUES (?,?,?,?,?)',[studentID,name,email,privacy,lang],function(err){

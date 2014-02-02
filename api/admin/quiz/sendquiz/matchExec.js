@@ -145,7 +145,7 @@
         function updateSentFlag (classID,quizNumber) {
             sys.db.run('UPDATE quizzes SET sent=1 WHERE classID=? AND quizNumber=?',[classID,quizNumber],function(err){
                 if (err) {return oops(response,err,'quiz/sendquiz(5)')};
-                console.log("Updated SENT flag");
+                //console.log("Updated SENT flag");
             });
         };
 

@@ -71,7 +71,6 @@
                 items[pos].right = row.right;
                 items[pos].wrong = row.wrong;
                 items[pos].wrongChoice = row.wrongChoice;
-                console.log("CHOICE: "+row.wrongChoice);
                 pos += 1;
                 if (pos === items.length) {
                     getGoodAnswerStudents(0,limit);
