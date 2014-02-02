@@ -8,30 +8,43 @@
     <script type="text/javascript" src="js/quiz-result.js"></script>
   </head>  
   <body onload="setRuleButtons();runResult()">
-  <div class="grid">
-    <div class="col-1-1">
-      <p><b>@@STUDENT_NAME@@,</b></p>
-      <p>
-        Here is your result for <i>@@QUIZ_LABEL@@</i> in <i>@@CLASS@@</i>.
-      </p>
-      <p>
-        Be sure to check this page when revising, as the comments may be updated from time to time.
-      </p>
-      <div id="return-to-main-display-button" style="display:none;">
-        <input class="button" type="button" value="Return to main display" onclick="setButtonMode();"/>
+    <div class="grid">
+      <div class="col-1-1">
+        <h1>@@STUDENT_NAME@@</h1>
+        <div class="main-display">
+          <p>
+            Here is your result for <i>@@QUIZ_LABEL@@</i> in <i>@@CLASS@@</i>.
+          </p>
+          <p>
+            Be sure to check this page when revising, as the comments may be updated from time to time.
+          </p>
+        </div>
+        <div class="rules-display" style="display:none;">
+          <h2>Glosses in: <span class="student-language">English</span></h2>
+          <p>
+            Rules that you have mastered are listed below. By clicking
+            on a rule, you can open it to provide or improve upon its
+            explanation in <span class="student-language"></span>. Your
+            contribution will assist other (and future) students who
+            share your language -- you will receive class credit for
+            your work.
+          </p>
+        </div>
+        <div id="return-to-main-display-button" style="display:none;">
+          <input class="button" type="button" value="Return to main display" onclick="setButtonMode();"/>
+        </div>
+        <div id="rule-lang-buttons">
+        </div>
+        <hr/>
+        <div class="main-display">
+          <div id="result-list">
+          </div>
+        </div>
+        <div class="rules-display" style="display:none;">
+          <table id="rules-for-lang">
+          </table>
+        </div>
       </div>
-      <div id="rule-lang-buttons">
-      </div>
-      <hr/>
     </div>
-    <div id="main-display">
-      <div id="result-list">
-      </div>
-    </div>
-    <div id="rules-display" style="display:none;">
-      <table id="rules-for-lang">
-      </table>
-    </div>
-  </div>
   </body>  
 </html>  

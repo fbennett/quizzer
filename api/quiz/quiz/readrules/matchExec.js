@@ -28,12 +28,15 @@
         });
 
         function getRuleIds () {
-        var sql = 'SELECT DISTINCT rulesToChoices.ruleID '
+        var sql = 'SELECT DISTINCT rulesToChoices.ruleID,'
+                + 'ruleStrings.string AS ruleText '
                 + 'FROM classes '
                 + 'JOIN quizzes USING(classID) '
                 + 'JOIN questions USING(quizID) '
                 + 'JOIN choices USING(questionID) '
                 + 'JOIN rulesToChoices USING(choiceID) '
+                + 'JOIN rules USING(ruleID) '
+                + 'JOIN ruleStrings USING(ruleStringID) '
                 + 'WHERE classes.classID=?'
             sys.db.all(sql,[classID],function(err,rows){
                 if (err||!rows) {return oops(response,err,'**quiz/readrules(1)')}
@@ -57,8 +60,7 @@
                 + 'classes.classID,'
                 + 'ans.studentID,'
                 + 'rules.ruleID,'
-                + 'counts.numberAttempted,'
-                + 'counts.numberFailed '
+                + 'counts.performance '
                 + 'FROM classes '
                 + 'JOIN quizzes USING(classID) '
                 + 'JOIN questions AS q USING(quizID) '
@@ -79,8 +81,11 @@
                 + ') AS rtO ON rtO.ruleID=rules.ruleID '
                 + 'LEFT JOIN ('
                 +   'SELECT attempts.ruleID,'
-                +   'COUNT(attempts.attempt) AS numberAttempted,'
-                +   'COUNT(attempts.failure) AS numberFailed '
+                +   'CASE '
+                +     'WHEN COUNT(attempts.attempt)=5 AND COUNT(attempts.failure)=0 THEN 2 '
+                +     'WHEN COUNT(attempts.attempt)=5 THEN 1 '
+                +     'ELSE 0 '
+                +   'END AS performance '
                 +   'FROM ('
                 +     'SELECT rtc.ruleID,'
                 +     'ans.answerID AS attempt,'
@@ -101,7 +106,7 @@
                 +     'LIMIT 5'
                 +   ') AS attempts'
                 + ') AS counts ON counts.ruleID=rtc.ruleID '
-                + 'WHERE classes.classID=? AND rules.ruleID=? AND counts.numberAttempted=5 AND counts.numberFailed=0;'
+                + 'WHERE classes.classID=? AND rules.ruleID=? AND counts.performance>0;'
             var ruleID = rulesData[pos].ruleID;
             console.log("SQL "+sql);
             sys.db.get(sql,[lang,studentID,classID,ruleID,classID,ruleID],function(err,row){
@@ -111,11 +116,12 @@
                 } else {
                     console.log("NO RETURN");
                 }
-                if (row && row.ruleText) {
+                if (row) {
                     data = rulesData[pos];
                     data.ruleText = row.ruleText;
                     data.origGloss = row.origGloss;
                     data.transGloss = row.transGloss;
+                    data.performance = row.performance;
                     rulesReturn.push(data);
                 }
                 pos += 1;
@@ -129,7 +135,16 @@
         function endTransaction () {
             sys.db.run('END TRANSACTION',function(err){
                 if (err) {return oops(response,err,'**quiz/readrules(3)')};
-                console.log("OK "+JSON.stringify(rulesReturn));
+                rulesReturn.sort(function(a,b){
+                    if (a.performance>b.performance) {
+                        return -1
+                    } else if (a.performance<b.performance) {
+                        return 1
+                    } else {
+                        return 0
+                    }
+                });
+                console.log("OK "+JSON.stringify(rulesReturn,null,2));
                 response.writeHead(200, {'Content-Type': 'application/json'});
                 response.end(JSON.stringify(rulesReturn));
             });

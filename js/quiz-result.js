@@ -117,6 +117,9 @@ function setRuleButtons () {
     for (var i=0,ilen=ruleLangButtons.childNodes.length;i<ilen;i+=1) {
         ruleLangButtons.removeChild(ruleLangButtons.childNodes[0]);
     }
+
+    // Only show buttons if the student has open rules.
+
     for (var i=0,ilen=rows.length;i<ilen;i+=1) {
         var row = rows[i];
         var button = document.createElement('input');
@@ -131,33 +134,50 @@ function setRuleButtons () {
 function setButtonMode (mode,langName) {
     var ruleLangButtons = document.getElementsByClassName('rule-lang-buttons');
     var returnToMainDisplayButton = document.getElementById('return-to-main-display-button');
-    var mainDisplay = document.getElementById('main-display');
-    var rulesDisplay = document.getElementById('rules-display');
+    var mainDisplay = document.getElementsByClassName('main-display');
+    var rulesDisplay = document.getElementsByClassName('rules-display');
+    var studentLanguage = document.getElementsByClassName('student-language');
     //var mainDisplayTitle = document.getElementById('main-display-title');
     //var rulesDisplayTitle = document.getElementById('rules-display-title');
     if (mode) {
         pageData.lang = mode;
         pageData.langName = langName;
         buildRulesList(mode,langName);
-        for (var i=0,ilen=ruleLangButtons.length;i<ilen;i+=1) {
-            ruleLangButtons[i].style.display = 'none';
-        }
+
+        setNodesDisplay(ruleLangButtons,false);
+        setNodesDisplay(mainDisplay,false);
+        setNodesDisplay(rulesDisplay,true);
+        setNodesInnerHtml(studentLanguage,langName);
         returnToMainDisplayButton.style.display = 'inline';
-        mainDisplay.style.display = 'none';
-        //mainDisplayTitle.style.display = 'none';
-        rulesDisplay.style.display = 'table';
-        //rulesDisplayTitle.style.display = 'block';
     } else {
-        for (var i=0,ilen=ruleLangButtons.length;i<ilen;i+=1) {
-            ruleLangButtons[i].style.display = 'inline';
-        }
+        setNodesDisplay(ruleLangButtons,true);
+        setNodesDisplay(mainDisplay,true);
+        setNodesDisplay(rulesDisplay,false);
         returnToMainDisplayButton.style.display = 'none';
-        mainDisplay.style.display = 'block';
-        //mainDisplayTitle.style.display = 'block';
-        rulesDisplay.style.display = 'none';
-        //rulesDisplayTitle.style.display = 'none';
     }
 }
+
+function setNodesDisplay (nodes,displayMode) {
+    for (var i=0,ilen=nodes.length;i<ilen;i+=1) {
+        var node = nodes[i];
+        if (!displayMode) {
+            node.style.display = 'none';
+        } else if (node.tagName === 'TABLE') {
+            node.style.display = 'table';
+        } else if (node.tagName === 'DIV') {
+            console.log("  TURNING ON DIV");
+            node.style.display = 'block';
+        } else {
+            node.style.display = 'inline';
+        }
+    }
+};
+
+function setNodesInnerHtml (nodes,innerHTML) {
+    for (var i=0,ilen=nodes.length;i<ilen;i+=1) {
+        nodes[i].innerHTML = innerHTML;
+    }
+};
 
 function buildRulesList () {
     var mode = pageData.lang;
@@ -194,7 +214,13 @@ function buildRulesList () {
         if (row.hasGloss) {
             needsGloss = '';
         }
-        tr.innerHTML = '<td class="left' + needsGloss + '" onclick="openRule(this)"><div>' + markdown(row.ruleText) + '</div></td><td class="right"><input type="button" class="button float-right" value="Save" onclick="saveRule(this)" style="display:none;"/><input type="button" class="button float-right" value="Edit" onclick="editRule(this)" style="display:none;"/><input type="button" class="button no-float" value="Del" onclick="confirmDelete(this,\'deleteRule\')" style="display:none;"/></td>';
+        var onClick = ' onclick="openRule(this)"';
+        var disabledClass = '';
+        if (row.performance === 1) {
+            onClick = '';
+            disabledClass = ' disabled-rule';
+        }
+        tr.innerHTML = '<td class="left' + needsGloss + disabledClass + '"' + onClick + '><div>' + markdown(row.ruleText) + '</div></td><td class="right"><input type="button" class="button float-right" value="Save" onclick="saveRule(this)" style="display:none;"/><input type="button" class="button float-right" value="Edit" onclick="editRule(this)" style="display:none;"/><input type="button" class="button no-float" value="Del" onclick="confirmDelete(this,\'deleteRule\')" style="display:none;"/></td>';
         rulesForLang.appendChild(tr);
     }
 };
