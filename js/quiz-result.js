@@ -217,13 +217,39 @@ function buildRulesList () {
         var onClick = ' onclick="openRule(this)"';
         var disabledClass = '';
         if (row.performance === 1) {
-            onClick = '';
+            onClick = ' onclick="openRuleReadOnly(this)"';
             disabledClass = ' disabled-rule';
         }
         tr.innerHTML = '<td class="left' + needsGloss + disabledClass + '"' + onClick + '><div>' + markdown(row.ruleText) + '</div></td><td class="right"><input type="button" class="button float-right" value="Save" onclick="saveRule(this)" style="display:none;"/><input type="button" class="button float-right" value="Edit" onclick="editRule(this)" style="display:none;"/><input type="button" class="button no-float" value="Del" onclick="confirmDelete(this,\'deleteRule\')" style="display:none;"/></td>';
         rulesForLang.appendChild(tr);
     }
 };
+
+function openRuleReadOnly(node) {
+    var rownode = node.parentNode;
+    var ruleID = rownode.id.split('-').slice(-1)[0];
+    // API call
+    var commenterKey = getParameterByName('commenter');
+    var row = apiRequest(
+        '/?cmd=readonerule&classid=' 
+            + classID
+            + '&studentid=' 
+            + studentID 
+            + '&studentkey=' 
+            + studentKey 
+            + '&quizno=' 
+            + quizNumber
+        ,{
+            ruleid:ruleID,
+            lang:pageData.lang
+        }
+    );
+    if (false === row) return;
+    var tr = document.createElement('tr');
+    tr.innerHTML = '<td class="show-box"><div class="show-box-child">' + markdown(row.stringOrig) + '</div></td><td class="edit-box"><div>' + markdown(row.stringTrans) + '</div></td>'
+    rownode.parentNode.insertBefore(tr,rownode.nextSibling);
+    node.setAttribute('onclick','closeRuleReadOnly(this);');
+}
 
 function openRule (node) {
     var rownode = node.parentNode;
@@ -359,6 +385,19 @@ function closeRule (node) {
     var contentrownode = rownode.nextSibling;
     contentrownode.parentNode.removeChild(contentrownode);
     node.setAttribute('onclick', 'openRule(this);');
+};
+
+function closeRuleReadOnly (node) {
+    var rownode = node.parentNode;
+    var saveButton = rownode.childNodes[1].childNodes[0];
+    var editButton = rownode.childNodes[1].childNodes[1];
+    var deleteButton = rownode.childNodes[1].childNodes[2];
+    saveButton.style.display = 'none';
+    editButton.style.display = 'none';
+    deleteButton.style.display = 'none';
+    var contentrownode = rownode.nextSibling;
+    contentrownode.parentNode.removeChild(contentrownode);
+    node.setAttribute('onclick', 'openRuleReadOnly(this);');
 };
 
 function setChildHeight (textarea) {

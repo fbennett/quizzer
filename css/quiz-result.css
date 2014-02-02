@@ -88,6 +88,11 @@ td.needs-gloss {
     border-color: #ffbbbb !important;
 }
 
+td.needs-gloss.disabled-rule {
+    border-width: 3px !important;
+    border-color: #ff0000 !important;
+}
+
 input.float-right {
     float:right;
 }
