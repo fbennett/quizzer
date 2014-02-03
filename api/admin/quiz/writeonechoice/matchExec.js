@@ -14,8 +14,8 @@
             + 'WHERE classID=? AND quizNumber=? AND questionNumber=?';
         sys.db.run(sql,[correct,classID,quizNumber,questionNumber],function(err){
             if (err) {return oops(response,err,'quiz/writeonechoice')};
-            response.writeHead(200, {'Content-Type': 'text/plain'});
-            response.end('done');
+            response.writeHead(200, {'Content-Type': 'application/json'});
+            response.end(JSON.stringify(['success']));
         });
     }
     exports.cogClass = cogClass;

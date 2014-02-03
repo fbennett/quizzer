@@ -330,7 +330,6 @@ function buildQuestionList (quizobj) {
             });
         if (false === quizobj) return;
     }
-    console.log("RETURN: "+JSON.stringify(quizobj,null,2));
     qzi.pending = quizobj.pending;
     var questionsLst = displayQuestions(quizobj.questions);
     var button = document.getElementById('add-question-button');
@@ -392,7 +391,7 @@ function sendQuiz() {
     setButtonState('quiz-done');
 }
 
-function writeChoice(questionNumber, choice) {
+function writeChoice(node,questionNumber, choice) {
     var adminID = getParameterByName('admin');
     var classID = getParameterByName('classid');
     var quizNumber = getParameterByName('quizno');
@@ -409,6 +408,8 @@ function writeChoice(questionNumber, choice) {
             choice:choice
         }
     );
+    console.log("Try to blur");
+    node.blur();
 }
 
 function addQuestion () {
@@ -640,7 +641,7 @@ function displayQuestion (qobj, questionNumber) {
         checkbox.setAttribute('type', 'radio');
         checkbox.setAttribute('name', 'question-' + questionNumber);
         checkbox.setAttribute('class', 'selection');
-        checkbox.setAttribute('onclick', 'writeChoice(' + questionNumber + ', ' + i + ')');
+        checkbox.setAttribute('onclick', 'writeChoice(this,' + questionNumber + ',' + i + ');');
         if (qobj.correct == i) {
             checkbox.checked = true;
         }
