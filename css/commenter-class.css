@@ -52,11 +52,12 @@ input.float-right {
     float:right;
 }
 
-div.show-box-child {
+pre.show-box-child {
     background: #eeeeee;
     margin: 0 0 0 1em;
     border: 2px solid #bbbbbb;
     border-radius: 0 !important;
     padding: 0.5em;
     text-align: left;
+    white-space: pre-wrap;
 }

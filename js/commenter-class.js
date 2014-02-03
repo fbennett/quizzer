@@ -207,7 +207,7 @@ function openRule (node) {
         deleteButton.style.display = 'inline';
     }
     var tr = document.createElement('tr');
-    tr.innerHTML = '<td class="show-box"><div class="show-box-child">' + markdown(row.stringOrig) + '</div></td><td class="edit-box"><textarea>' + row.stringTrans + '</textarea></td>'
+    tr.innerHTML = '<td class="show-box"><pre class="show-box-child">' + row.stringOrig + '</pre></td><td class="edit-box"><textarea>' + row.stringTrans + '</textarea></td>'
     rownode.parentNode.insertBefore(tr,rownode.nextSibling);
     node.setAttribute('onclick','void(0);');
     setChildHeight(rownode.nextSibling.childNodes[1].childNodes[0]);
