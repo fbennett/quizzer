@@ -1,7 +1,8 @@
 {
   "name":"quizzer",
-  "version":"1.2.1",
-  "description":"Quizzer is a webserver for collaborative writing lab support. Based on a 'fail early, fail often' approach to written language, the tool is particularly suited to second-language learners. The workflow (essay - error - quiz - exam) treats mistakes as an opportunity for learning, and emphasizes rapid pattern-practice iterations based on students' own writing samples. This approach makes more efficient use of staff time than the traditional essay-and-appraisal approach. So that's the pitch -- give it a try.",
+  "version":"1.2.9",
+  "engines": { "node": "0.8.x" },
+  "description":"Quizzer is a webserver for collaborative writing lab support. Based on a _fail early, fail often? approach to written language, the tool is particularly suited to second-language learners. The workflow (essay - error - quiz - exam) treats mistakes as an opportunity for learning, and emphasizes rapid pattern-practice iterations based on student writing samples. This approach makes more efficient use of staff time than the traditional essay-and-appraisal approach. So that's the pitch -- give it a try.",
   "keywords":[
     "english",
     "grammar",
@@ -20,9 +21,7 @@
   "bugs": {
     "url":"https://github.com/fbennett/quizzer/issues"
   },
-  "license": {
-    "license":"AGPL-3.0"
-  },
+  "license": "AGPL-3.0",
   "author":{
     "name" : "Frank Bennett",
     "email" : "bennett@law.nagoya-u.ac.jp",
