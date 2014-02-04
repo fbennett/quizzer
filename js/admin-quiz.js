@@ -594,6 +594,7 @@ function closeQuestion (questionNumber, moveToBottom) {
     }
     displayQuestion(obj, questionNumber);
     setButtonState('send-quiz');
+    MathJax.Hub.Queue(["Typeset",MathJax.Hub,"quiz-question-" + questionNumber]);
 }
 
 function displayQuestions (qlst) {
@@ -658,6 +659,7 @@ function displayQuestion (qobj, questionNumber) {
     button.setAttribute('class', 'button editing-button');
     button.setAttribute('onclick', 'openQuestion("' + questionNumber + '")');
     node.appendChild(button);
+    MathJax.Hub.Queue(["Typeset",MathJax.Hub,"quiz-question-" + questionNumber]);
 }
 
 function setDisplayMode (mode) {

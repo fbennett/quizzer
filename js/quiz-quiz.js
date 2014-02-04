@@ -83,6 +83,7 @@ function displaychild() {
         options.appendChild(radioBtn);
         checkradiobtn();
     }
+    MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
 }  
 
 function FunNextNode() {
