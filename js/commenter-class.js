@@ -283,6 +283,10 @@ function editRule (node) {
         renderedrule.parentNode.replaceChild(textarea,renderedrule);
         deleteButton.style.display = 'inline';
     }
+    var td = document.createElement('td');
+    td.setAttribute('class', 'show-box');
+    td.innerHTML = '<pre class="show-box-child">' + row.stringOrig + '</pre></td>'
+    rownode.nextSibling.replaceChild(td,rownode.nextSibling.firstChild);
     var textnode = document.createElement('textarea');
     textnode.innerHTML = row.stringTrans;
     renderednode.parentNode.replaceChild(textnode,renderednode);

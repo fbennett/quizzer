@@ -16,6 +16,7 @@
         if (glossText) {
             glossText = glossText.replace(/^\s+/,'').replace(/\s+$/,'');
         }
+        // XXX This will cause database creep. Should obtain ID first!
         var sql = 'INSERT OR REPLACE INTO ruleTranslations VALUES (NULL,?,?,?);'
         sys.db.run(sql,[ruleID,glossText,lang],function(err){
             if (err) {return oops(response,err,'**classes/saveonerule(1)')};

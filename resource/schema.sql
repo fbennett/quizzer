@@ -1,4 +1,4 @@
--- 14
+-- 15
 
 CREATE TABLE version (
        schema TEXT PRIMARY KEY,
@@ -178,12 +178,12 @@ CREATE TABLE ruleStrings (
 );
 CREATE UNIQUE INDEX rulestrings_idx ON ruleStrings(string);
 
+-- Remove unique constraint
 CREATE TABLE ruleTranslations (
        ruleTranslationID INTEGER PRIMARY KEY,
        ruleID NOT NULL,
        string TEXT,
        lang TEXT NOT NULL
-       UNIQUE (string),
        UNIQUE (ruleID,lang),
        FOREIGN KEY (ruleID) REFERENCES rules(ruleID)
 );

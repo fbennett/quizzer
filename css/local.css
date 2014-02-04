@@ -88,7 +88,7 @@ div.comment-container {
     vertical-align: top:
 }
 
-div.comment-container blockquote, div.rule-gloss blockquote {
+div.comment-container blockquote, div.rule-gloss blockquote, div.show-box-child blockquote, td.edit-box div blockquote {
     background: #ffdfdf;
     padding: 0;
     margin: 0 2em;
@@ -96,19 +96,19 @@ div.comment-container blockquote, div.rule-gloss blockquote {
     border: 1px solid #999999;
 }
 
-div.comment-container blockquote blockquote, div.rule-gloss blockquote blockquote {
+div.comment-container blockquote blockquote, div.rule-gloss blockquote blockquote, div.show-box-child blockquote blockquote, td.edit-box div blockquote blockquote {
     padding: 0;
     margin: 0;
     background: #e3ffe6;
 }
 
-div.comment-container blockquote blockquote blockquote, div.rule-gloss blockquote blockquote blockquote {
+div.comment-container blockquote blockquote blockquote, div.rule-gloss blockquote blockquote blockquote, div.show-box-child blockquote blockquote blockquote, td.edit-box div blockquote blockquote blockquote {
     padding: 0;
     margin: 0;
     background: white;
 }
 
-div.comment-container blockquote p, div.rule-gloss blockquote p {
+div.comment-container blockquote p, div.rule-gloss blockquote p, div.show-box-child blockquote p, td.edit-box div blockquote p {
     line-height: 1.8em;
     padding: 0.5em 1em 0.5em 1em;
     margin: 0;
