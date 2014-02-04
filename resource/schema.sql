@@ -129,7 +129,7 @@ CREATE TABLE quizAnswers (
        quizAnswerID INTEGER PRIMARY KEY,
        quizID INTEGER,
        studentID INTEGER,
-       submissionDate DATE
+       submissionDate DATE,
        UNIQUE(quizID,studentID),
        FOREIGN KEY (quizID) REFERENCES quizzes(quizID),
        FOREIGN KEY (studentID) REFERENCES students(studentID)
@@ -178,12 +178,11 @@ CREATE TABLE ruleStrings (
 );
 CREATE UNIQUE INDEX rulestrings_idx ON ruleStrings(string);
 
--- Remove unique constraint
 CREATE TABLE ruleTranslations (
        ruleTranslationID INTEGER PRIMARY KEY,
        ruleID NOT NULL,
        string TEXT,
-       lang TEXT NOT NULL
+       lang TEXT NOT NULL,
        UNIQUE (ruleID,lang),
        FOREIGN KEY (ruleID) REFERENCES rules(ruleID)
 );
