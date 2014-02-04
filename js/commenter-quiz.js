@@ -278,7 +278,7 @@ function saveComment (id) {
         node.parentNode.removeChild(node);
         setButtonMode('comment',questionNumber,wrongChoice)
     }
-    writeComment(questionNumber,wrongChoice,comment);
+    writeComment(questionNumber,wrongChoice,comment,id);
 }
 
 
@@ -377,7 +377,7 @@ function setButtonMode (mode,questionNumber,wrongChoice) {
     }
 };
 
-function writeComment (questionNumber,wrongChoice,comment) {
+function writeComment (questionNumber,wrongChoice,comment,id) {
     var commenterKey = getParameterByName('commenter');
     var classID = getParameterByName('classid');
     var quizNumber = getParameterByName('quizno');
@@ -398,4 +398,5 @@ function writeComment (questionNumber,wrongChoice,comment) {
             comment: comment
         }
     );
+    MathJax.Hub.Queue(["Typeset",MathJax.Hub,id]);
 }
