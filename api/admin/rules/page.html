@@ -1,39 +1,47 @@
+<!DOCTYPE html>  
 <html>
-<head>
-  <title>Quizzer Admin - classes</title>
-  <script type="text/javascript" src="js/marked.js"></script>
-  <script type="text/javascript" src="js/local.js"></script>  
-  <script type="text/javascript" src="js/admin-rules.js"></script>  
-  <link rel="stylesheet" type="text/css" href="css/simple-grid.css"/>
-  <link rel="stylesheet" type="text/css" href="css/local.css"/>
-  <link rel="stylesheet" type="text/css" href="css/admin-rules.css"/>
-</head>
-<body onLoad="editRules();buildRulesLists()" onScroll="trackScroll(event)">
-  <div class="grid">
-    <div class="col-1-1">
-      <h1>Quizzer Admin</h1>
-      <h2 id="rules-display-title">Rules</h2>
-      <div>
-        <input class="button" type="button" value="Back" onclick="window.location = fixPath('/?admin=' + getParameterByName('admin') + '&page=groups')"/>
-      </div>
-      <hr/>
-      <div class="col-1-2">
-        <h3>Admin</h3>
-        <div id="commenters-list-container">
-          <div id="commenters-list-phantom" style="visiblity:hidden;">
-          </div>
-          <div id="commenters-list">
-          </div>
+  <head>
+    <meta charset="UTF-8"> 
+    <title>Quizzer Admin - rules</title>
+    <script type="text/javascript"
+            src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+    </script>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({MMLorHTML: {prefer: {Firefox: "HTML"}}});
+    </script>
+    <script type="text/javascript" src="js/marked.js"></script>
+    <script type="text/javascript" src="js/local.js"></script>  
+    <script type="text/javascript" src="js/admin-rules.js"></script>  
+    <link rel="stylesheet" type="text/css" href="css/simple-grid.css"/>
+    <link rel="stylesheet" type="text/css" href="css/local.css"/>
+    <link rel="stylesheet" type="text/css" href="css/admin-rules.css"/>
+  </head>
+  <body onLoad="editRules();buildRulesLists()" onScroll="trackScroll(event)">
+    <div class="grid">
+      <div class="col-1-1">
+        <h1>Quizzer Admin</h1>
+        <h2 id="rules-display-title">Rules</h2>
+        <div>
+          <input class="button" type="button" value="Back" onclick="window.location = fixPath('/?admin=' + getParameterByName('admin') + '&page=groups')"/>
         </div>
-        <table id="rules-list-admin">
-        </table>
-      </div>
-      <div class="col-1-2">
-        <h3>Commenters</h3>
-        <table id="rules-list-commenters">
-        </table>
+        <hr/>
+        <div class="col-1-2">
+          <h3>Admin</h3>
+          <div id="commenters-list-container">
+            <div id="commenters-list-phantom" style="visiblity:hidden;">
+            </div>
+            <div id="commenters-list">
+            </div>
+          </div>
+          <table id="rules-list-admin">
+          </table>
+        </div>
+        <div class="col-1-2">
+          <h3>Commenters</h3>
+          <table id="rules-list-commenters">
+          </table>
+        </div>
       </div>
     </div>
-  </div>
-</body>
+  </body>
 </html>
