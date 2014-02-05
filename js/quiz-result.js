@@ -62,6 +62,12 @@ function runResult () {
 
             answerPair.appendChild(wrongAnswer);
 
+            for (var j=0,jlen=quizErrors[i].comments.length;j<jlen;j+=1) {
+                var commentObj = quizErrors[i].comments[j];
+                var commentDiv = buildComment(commentObj.commenter,commentObj.comment);
+                answerPair.appendChild(commentDiv);
+            }
+
             for (var j=0,jlen=quizErrors[i].rules.length;j<jlen;j+=1) {
                 var rule = quizErrors[i].rules[j];
                 var ruleContainer = document.createElement('div');
@@ -71,12 +77,6 @@ function runResult () {
                     ruleContainer.innerHTML += '<div class="rule-gloss">' + markdown(rule.ruleGloss) + '</div>'
                 }
                 answerPair.appendChild(ruleContainer);
-            }
-
-            for (var j=0,jlen=quizErrors[i].comments.length;j<jlen;j+=1) {
-                var commentObj = quizErrors[i].comments[j];
-                var commentDiv = buildComment(commentObj.commenter,commentObj.comment);
-                answerPair.appendChild(commentDiv);
             }
         }
     }
