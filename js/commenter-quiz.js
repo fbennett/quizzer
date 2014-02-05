@@ -158,11 +158,18 @@ function buildRuleSelect (node) {
 
 function copyDown(node,id) {
     var targetNode = document.getElementById(id);
-    if (targetNode.childNodes[0].textContent) {
+    var currentText = targetNode.childNodes[0].value;
+    if (currentText && currentText.replace(/\s+/,'')) {
         return;
     }
-    var wrongText = node.nextSibling.textContent;
-    targetNode.childNodes[0].innerHTML = '> ' + wrongText;
+    var sourceNode = node.parentNode.previousSibling.childNodes[2];
+    sourceNode = sourceNode.cloneNode(true);
+    var bubbles = sourceNode.getElementsByClassName('language-bubble');
+    if (bubbles.length) {
+        sourceNode.removeChild(bubbles[0]);
+    }
+    var wrongText = sourceNode.textContent.replace(/^\s+/,'').replace(/\s+$/,'');
+    targetNode.childNodes[0].value = '> ' + wrongText;
 }
 
 function buildComment (questionNumber,wrongChoice,commenter,commenterID,comment) {
