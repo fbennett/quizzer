@@ -165,8 +165,10 @@ function copyDown(node,id) {
     var sourceNode = node.parentNode.previousSibling.childNodes[2];
     sourceNode = sourceNode.cloneNode(true);
     var bubbles = sourceNode.getElementsByClassName('language-bubble');
-    if (bubbles.length) {
-        sourceNode.removeChild(bubbles[0]);
+    if (bubbles && bubbles.length) {
+        for (var i=0,ilen=bubbles.length;i<ilen;i+=1) {
+            sourceNode.removeChild(bubbles[0]);
+        }
     }
     var wrongText = sourceNode.textContent.replace(/^\s+/,'').replace(/\s+$/,'');
     targetNode.childNodes[0].value = '> ' + wrongText;
