@@ -14,7 +14,7 @@
             +   'FROM answers'
             + ') AS total ON total.studentID=students.studentID '
             + 'LEFT JOIN ('
-            +   'SELECT answers.questionID,answers.studentID '
+            +   'SELECT answers.questionID,answers.answerID '
             +   'FROM questions '
             +   'JOIN answers USING(questionID) '
             +   'WHERE choice=correct'
