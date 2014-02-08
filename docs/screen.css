@@ -9,3 +9,28 @@ pre {
     background: #f6f6f6;
     padding: 0.5em;
 }
+
+.title, .subtitle {
+    text-align: center;
+}
+
+div#contents {
+    display:table;
+    padding:1em;
+    border:1px solid black;
+    float:right;
+    margin-left:1em;
+}
+
+p.topic-title {
+    font-weight: bold;
+}
+
+a {
+    text-decoration: none;
+    color: #111111;
+}
+
+a:hover {
+    background: #f6f6f6;
+}

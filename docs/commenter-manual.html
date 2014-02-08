@@ -5,7 +5,6 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="Docutils 0.9: http://docutils.sourceforge.net/" />
 <title>Quizzer</title>
-<meta name="author" content="Frank Bennett" />
 <style type="text/css">
 
 div#quizzer {
@@ -20,30 +19,70 @@ pre {
     padding: 0.5em;
 }
 
+.title, .subtitle {
+    text-align: center;
+}
+
+div#contents {
+    display:table;
+    padding:1em;
+    border:1px solid black;
+    float:right;
+    margin-left:1em;
+}
+
+p.topic-title {
+    font-weight: bold;
+}
+
+a {
+    text-decoration: none;
+    color: #111111;
+}
+
+a:hover {
+    background: #f6f6f6;
+}
+
 </style>
 </head>
 <body>
 <div class="document" id="quizzer">
 <h1 class="title">Quizzer</h1>
 <h2 class="subtitle" id="manual-for-commenters">Manual for Commenters</h2>
-<table class="docinfo" frame="void" rules="none">
-<col class="docinfo-name" />
-<col class="docinfo-content" />
-<tbody valign="top">
-<tr><th class="docinfo-name">Author:</th>
-<td>Frank Bennett</td></tr>
-</tbody>
-</table>
+
+<div class="contents topic" id="contents">
+<p class="topic-title first">Contents</p>
+<ul class="simple">
+<li><a class="reference internal" href="#comments-in-the-quizzer-cycle" id="id2">Comments in the Quizzer cycle</a></li>
+<li><a class="reference internal" href="#access" id="id3">Access</a></li>
+<li><a class="reference internal" href="#comment-syntax" id="id4">Comment syntax</a><ul>
+<li><a class="reference internal" href="#setting-examples" id="id5">Setting examples</a></li>
+<li><a class="reference internal" href="#numbered-markers" id="id6">Numbered markers</a></li>
+<li><a class="reference internal" href="#numbered-spans" id="id7">Numbered spans</a></li>
+<li><a class="reference internal" href="#setting-patterns" id="id8">Setting patterns</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#rules" id="id9">Rules</a><ul>
+<li><a class="reference internal" href="#glosses" id="id10">Glosses</a></li>
+</ul>
+</li>
+</ul>
+</div>
 <div class="section" id="comments-in-the-quizzer-cycle">
-<h1>Comments in the Quizzer cycle</h1>
+<h1><a class="toc-backref" href="#id2">Comments in the Quizzer cycle</a></h1>
 <p>Comments are shown to students who make specific mistakes in a quiz.
 A quiz helps a student to engage actively with grammatical patterns,
 and the examination to follow provides an added motivation for study.
 Comments are a primary reference for students striving to improve
 their sense of grammar and style.</p>
+<p>Comments are provided to multiple students, most of whom were not the
+author of the text on which the question content was based. To avoid
+confusion, it is best to refer to the author of a mistake in the third
+person in comments, as &quot;the author&quot; or &quot;the writer&quot;.</p>
 </div>
 <div class="section" id="access">
-<h1>Access</h1>
+<h1><a class="toc-backref" href="#id3">Access</a></h1>
 <p>Each commenter has a unique personal link to their editing page. Commenters
 receive a reminder mail once each week, on the day of the week set in the
 administrator's <strong>Commenters</strong> configuration page. As a security measure,
@@ -55,15 +94,15 @@ mistakes in each). By navigating downward to a course, then to a quiz,
 the commenter can reach the lists of quiz mistakes.</p>
 </div>
 <div class="section" id="comment-syntax">
-<h1>Comment syntax</h1>
+<h1><a class="toc-backref" href="#id4">Comment syntax</a></h1>
 <p>Comments use the <em>Markdown</em> syntax, a simple plain text markup format
 commonly used for blog comments and online bulletin boards. A few
 extensions have been added to the basic syntax, for commenting on
 grammatical issues (an explanation of basic <em>Markdown</em> is available
 <a class="reference external" href="http://daringfireball.net/projects/markdown/syntax">here</a> -- the 'inline HTML' section describes the forms for
 <em>italics</em> and <strong>boldface</strong>).</p>
-<div class="section" id="examples">
-<h2>Examples</h2>
+<div class="section" id="setting-examples">
+<h2><a class="toc-backref" href="#id5">Setting examples</a></h2>
 <p>Use the <strong>e.g.</strong> button to add the text of the mistaken answer at the top of an empty comment.
 (this button has no effect when there is already text in the comment box):</p>
 <pre class="literal-block">
@@ -71,7 +110,7 @@ grammatical issues (an explanation of basic <em>Markdown</em> is available
 </pre>
 </div>
 <div class="section" id="numbered-markers">
-<h2>Numbered markers</h2>
+<h2><a class="toc-backref" href="#id6">Numbered markers</a></h2>
 <p>Numbered markers can be added to an example by enclosing a single letter or number in double
 paretheses:</p>
 <pre class="literal-block">
@@ -80,7 +119,7 @@ paretheses:</p>
 <p>These will be converted to their circled equivalents when the comment is saved.</p>
 </div>
 <div class="section" id="numbered-spans">
-<h2>Numbered spans</h2>
+<h2><a class="toc-backref" href="#id7">Numbered spans</a></h2>
 <p>A span of text can be marked for commenting by moving the closing double parentheses to
 the end of the span:</p>
 <pre class="literal-block">
@@ -88,8 +127,8 @@ There is only ((1 one regulations)).
 </pre>
 <p>A numbered marker will be inserted, and highlighted together with the span of text.</p>
 </div>
-<div class="section" id="pattern-examples">
-<h2>Pattern examples</h2>
+<div class="section" id="setting-patterns">
+<h2><a class="toc-backref" href="#id8">Setting patterns</a></h2>
 <p>The single greater-than symbol inserted by the <strong>e.g.</strong> button will render as an
 indented block highlighted in red. This represents a &quot;bad&quot; example.</p>
 <p>To show a &quot;good&quot; example, use to two greater-than symbols:</p>
@@ -99,8 +138,8 @@ indented block highlighted in red. This represents a &quot;bad&quot; example.</p
 <p>The indented block will be highlighted in green.</p>
 </div>
 </div>
-<div class="section" id="rules-and-glosses">
-<h1>Rules and Glosses</h1>
+<div class="section" id="rules">
+<h1><a class="toc-backref" href="#id9">Rules</a></h1>
 <p>To add a rule flagging a common issue that is not yet covered by the pulldown list
 of rules (see below), use three greater-than symbols in a comment:</p>
 <pre class="literal-block">
@@ -114,7 +153,7 @@ and added as a separate &quot;rule&quot; comment. Otherwise, it will appear in t
 as an indented box with white background. In either case, the rule is immediately
 made available in the pulldown list for subsequent comments.</p>
 <div class="section" id="glosses">
-<h2>Glosses</h2>
+<h2><a class="toc-backref" href="#id10">Glosses</a></h2>
 <p>To add an explanation or examples to a rule, visit the top-level commenter editing
 page and click on the <strong>Gloss</strong> button for a given language. Clicking on a rule
 will open it for editing. After saving, the explanatory text will be shown to

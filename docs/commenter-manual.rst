@@ -5,7 +5,8 @@ Quizzer
 Manual for Commenters
 ---------------------
 
-:author: Frank Bennett
+
+.. contents::
 
 #############################
 Comments in the Quizzer cycle
@@ -50,9 +51,9 @@ grammatical issues (an explanation of basic *Markdown* is available
 
 __ http://daringfireball.net/projects/markdown/syntax
 
-^^^^^^^^
-Examples
-^^^^^^^^
+^^^^^^^^^^^^^^^^
+Setting examples
+^^^^^^^^^^^^^^^^
 
 Use the **e.g.** button to add the text of the mistaken answer at the top of an empty comment.
 (this button has no effect when there is already text in the comment box)::
@@ -82,7 +83,7 @@ the end of the span::
 A numbered marker will be inserted, and highlighted together with the span of text.
 
 ^^^^^^^^^^^^^^^^
-Pattern examples
+Setting patterns
 ^^^^^^^^^^^^^^^^
 
 The single greater-than symbol inserted by the **e.g.** button will render as an
@@ -94,9 +95,9 @@ To show a "good" example, use to two greater-than symbols::
 
 The indented block will be highlighted in green.
 
-#################
-Rules and Glosses
-#################
+#####
+Rules
+#####
 
 To add a rule flagging a common issue that is not yet covered by the pulldown list
 of rules (see below), use three greater-than symbols in a comment::
