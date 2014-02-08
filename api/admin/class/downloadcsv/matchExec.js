@@ -78,23 +78,17 @@
                         retObj.sheet[0].push(row.examName);
                         retObj.examIDs.push(row.quizID);
                     }
-                    getExamResults(0,retObj.examIDs.length);
+                    getStudentResults(0,retObj.examIDs.length);
                 } else {
                     endTransaction();
                 }
             });
         };
 
-        function getExamResults(pos,limit) {
-            var quizID = retObj.examIDs[pos];
-            getStudentResults(quizID);
-            pos += 1;
-            if (pos < limit) {
-                getExamResults(pos,limit);
+        function getStudentResults(pos,limit) {
+            if (pos === limit) {
+                endTransaction();
             }
-        };
-        function getStudentResults(quizID) {
-
             // This is a little tricky, since the number and alignment of students
             // must match the list kicked out in the getStudents() function above.
 
@@ -116,6 +110,7 @@
                 + ') AS counts ON counts.studentID=memberships.studentID '
                 + 'WHERE memberships.classID=? AND (privacy IS NULL OR privacy=0) '
                 + 'ORDER BY memberships.studentID;'
+            var quizID = retObj.examIDs[pos];
             sys.db.all(sql,[quizID,classID],function(err,rows){
                 if (err) {return oops(response,err,'class/downloadcsv(4)')};
                 if (rows) {
@@ -124,10 +119,8 @@
                         var row = rows[i];
                         retObj.sheet[i+1][colpos] = row.numberCorrect;
                     }
-                    endTransaction();
-                } else {
-                    endTransaction();
                 }
+                getStudentResults(pos+1,limit);
             });
         }
 
