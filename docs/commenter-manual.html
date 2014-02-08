@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Docutils 0.9: http://docutils.sourceforge.net/" />
+<title>Quizzer</title>
+<meta name="author" content="Frank Bennett" />
+<style type="text/css">
+
+div#quizzer {
+    margin: 0 auto;
+    max-width: 960px;
+}
+
+pre {
+    margin-left: 2em;
+    font-size: larger;
+    background: #f6f6f6;
+    padding: 0.5em;
+}
+
+</style>
+</head>
+<body>
+<div class="document" id="quizzer">
+<h1 class="title">Quizzer</h1>
+<h2 class="subtitle" id="manual-for-commenters">Manual for Commenters</h2>
+<table class="docinfo" frame="void" rules="none">
+<col class="docinfo-name" />
+<col class="docinfo-content" />
+<tbody valign="top">
+<tr><th class="docinfo-name">Author:</th>
+<td>Frank Bennett</td></tr>
+</tbody>
+</table>
+<div class="section" id="comments-in-the-quizzer-cycle">
+<h1>Comments in the Quizzer cycle</h1>
+<p>Comments are shown to students who make specific mistakes in a quiz.
+A quiz helps a student to engage actively with grammatical patterns,
+and the examination to follow provides an added motivation for study.
+Comments are a primary reference for students striving to improve
+their sense of grammar and style.</p>
+</div>
+<div class="section" id="access">
+<h1>Access</h1>
+<p>Each commenter has a unique personal link to their editing page. Commenters
+receive a reminder mail once each week, on the day of the week set in the
+administrator's <strong>Commenters</strong> configuration page. As a security measure,
+the link changes each time the reminder mail is sent.</p>
+<p>The top-level commenter editing page shows one or more <strong>Gloss</strong>
+buttons for editing style and grammar rules, and a list of courses
+(with a parenthetical indication of the number of uncommented quiz
+mistakes in each). By navigating downward to a course, then to a quiz,
+the commenter can reach the lists of quiz mistakes.</p>
+</div>
+<div class="section" id="comment-syntax">
+<h1>Comment syntax</h1>
+<p>Comments use the <em>Markdown</em> syntax, a simple plain text markup format
+commonly used for blog comments and online bulletin boards. A few
+extensions have been added to the basic syntax, for commenting on
+grammatical issues (an explanation of basic <em>Markdown</em> is available
+<a class="reference external" href="http://daringfireball.net/projects/markdown/syntax">here</a> -- the 'inline HTML' section describes the forms for
+<em>italics</em> and <strong>boldface</strong>).</p>
+<div class="section" id="examples">
+<h2>Examples</h2>
+<p>Use the <strong>e.g.</strong> button to add the text of the mistaken answer at the top of an empty comment.
+(this button has no effect when there is already text in the comment box):</p>
+<pre class="literal-block">
+&gt; There is only one regulations.
+</pre>
+</div>
+<div class="section" id="numbered-markers">
+<h2>Numbered markers</h2>
+<p>Numbered markers can be added to an example by enclosing a single letter or number in double
+paretheses:</p>
+<pre class="literal-block">
+((a))
+</pre>
+<p>These will be converted to their circled equivalents when the comment is saved.</p>
+</div>
+<div class="section" id="numbered-spans">
+<h2>Numbered spans</h2>
+<p>A span of text can be marked for commenting by moving the closing double parentheses to
+the end of the span:</p>
+<pre class="literal-block">
+There is only ((1 one regulations)).
+</pre>
+<p>A numbered marker will be inserted, and highlighted together with the span of text.</p>
+</div>
+<div class="section" id="pattern-examples">
+<h2>Pattern examples</h2>
+<p>The single greater-than symbol inserted by the <strong>e.g.</strong> button will render as an
+indented block highlighted in red. This represents a &quot;bad&quot; example.</p>
+<p>To show a &quot;good&quot; example, use to two greater-than symbols:</p>
+<pre class="literal-block">
+&gt;&gt; There is only one regulation.
+</pre>
+<p>The indented block will be highlighted in green.</p>
+</div>
+</div>
+<div class="section" id="rules-and-glosses">
+<h1>Rules and Glosses</h1>
+<p>To add a rule flagging a common issue that is not yet covered by the pulldown list
+of rules (see below), use three greater-than symbols in a comment:</p>
+<pre class="literal-block">
+&gt;&gt;&gt; Verbs: avoid using passive verb forms
+</pre>
+<p>It is best practice to begin a rule with a catch-word to permit rapid searching in
+the pulldown list. The rule text can be edited later, so it is not necessary to fret too
+much over the exact phrasing.</p>
+<p>If a rule is set at the very top of a comment, it will be removed from the comment
+and added as a separate &quot;rule&quot; comment. Otherwise, it will appear in the comment
+as an indented box with white background. In either case, the rule is immediately
+made available in the pulldown list for subsequent comments.</p>
+<div class="section" id="glosses">
+<h2>Glosses</h2>
+<p>To add an explanation or examples to a rule, visit the top-level commenter editing
+page and click on the <strong>Gloss</strong> button for a given language. Clicking on a rule
+will open it for editing. After saving, the explanatory text will be shown to
+students who are fluent in the target language.</p>
+<p>The headline text itself can be edited only for rules owned by the current commenter.
+The headline text of shared rules cannot be edited: the rule must first be delegated
+to an individual commenter by the administrator.</p>
+</div>
+</div>
+</div>
+</body>
+</html>

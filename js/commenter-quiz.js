@@ -75,7 +75,7 @@ function showMistakes () {
             + '" value="e.g." '
             + 'onclick="copyDown(this,\'comment-' + commenterInfo.commenterID + '-' + mistake.questionNumber + '-' + mistake.wrongChoice + '\')"'
             +'/>'
-            + '<select class="rule-dropdown" onclick="" id="rule-' + mistake.questionNumber + '-' + mistake.wrongChoice + '" onfocus="buildRuleSelect(this);" onchange="addRuleToMistake(this)"><option value="none">Tag with a rule</option></select>'
+            + '<select class="rule-dropdown" onclick="" id="rule-' + mistake.questionNumber + '-' + mistake.wrongChoice + '" onfocus="buildRuleSelect(this);" onchange="addRuleToMistake(this)"><option value="none">Tag with a rule</option></select> <a target="_blank" href="commenter-manual.html">[help]</a>'
             + '<div style="display:none;">' + mistake.wrong + '</div>'
             + '</div>';
         var questionNumber = mistake.questionNumber;

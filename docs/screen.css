@@ -1,0 +1,11 @@
+div#quizzer {
+    margin: 0 auto;
+    max-width: 960px;
+}
+
+pre {
+    margin-left: 2em;
+    font-size: larger;
+    background: #f6f6f6;
+    padding: 0.5em;
+}
