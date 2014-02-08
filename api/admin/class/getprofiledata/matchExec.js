@@ -10,7 +10,7 @@
             + 'FROM memberships '
             + 'JOIN students USING(studentID) '
             + 'JOIN ('
-            +   'SELECT questionID,studentID '
+            +   'SELECT questionID,answerID,studentID '
             +   'FROM answers'
             + ') AS total ON total.studentID=students.studentID '
             + 'LEFT JOIN ('
