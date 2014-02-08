@@ -1,0 +1,9 @@
+@@NAME@@,
+
+A fresh quiz is ready! Click on the link below to take the quiz:
+
+    http://@@HOSTNAME@@@@PORT@@@@STUB@@?studentid=@@STUDENT_ID@@&studentkey=@@STUDENT_KEY@@&classid=@@CLASS_ID@@&quizno=@@QUIZ_NUMBER@@
+@@PAST_QUIZZES@@
+Sincerely yours,
+
+Quizzer
