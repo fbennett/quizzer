@@ -61,6 +61,11 @@
             });
         }
         function getChoices (pos,limit) {
+            if (pos === limit) {
+                response.writeHead(200, {'Content-Type': 'application/json'});
+                response.end(JSON.stringify(quizobj));
+                return;
+            }
             var sql = 'SELECT questionNumber,one.string AS one,two.string AS two,three.string AS three,four.string AS four '
                 + 'FROM questions '
                 + 'JOIN ('
@@ -97,14 +102,7 @@
                     row.three,
                     row.four
                 ];
-                //quizobj.questions[pos].correct = row.correct;
-                pos += 1;
-                if (pos === limit) {
-                    response.writeHead(200, {'Content-Type': 'application/json'});
-                    response.end(JSON.stringify(quizobj));
-                } else {
-                    getChoices(pos,limit);
-                }
+                getChoices(pos+1,limit);
             });
         };
     }

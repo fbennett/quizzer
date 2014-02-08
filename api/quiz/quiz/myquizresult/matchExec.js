@@ -43,6 +43,10 @@
         }
 
         function getMistakes (pos,limit) {
+            if (pos === limit) {
+                getGoodAnswerStudents(0,limit);
+                return;
+            }
             var sql = 'SELECT rubric.string AS rubric,right.string AS right,wrong.string AS wrong,wrong.choice AS wrongChoice '
                 + 'FROM quizzes '
                 + 'NATURAL JOIN questions '
@@ -71,16 +75,15 @@
                 items[pos].right = row.right;
                 items[pos].wrong = row.wrong;
                 items[pos].wrongChoice = row.wrongChoice;
-                pos += 1;
-                if (pos === items.length) {
-                    getGoodAnswerStudents(0,limit);
-                } else {
-                    getMistakes(pos,limit);
-                }
+                getMistakes(pos+1,limit);
             });
         };
 
         function getGoodAnswerStudents(pos,limit) {
+            if (pos === limit) {
+                getRules(0,limit);
+                return;
+            }
             var sql = 'SELECT name '
                 + 'FROM quizzes '
                 + 'JOIN questions USING(quizID) '
@@ -95,17 +98,16 @@
                     var row = rows[i];
                     items[pos].goodAnswerStudents.push(row.name);
                 }
-                pos += 1;
-                if (pos === items.length) {
-                    getRules(0,limit);
-                } else {
-                    getGoodAnswerStudents(pos,limit);
-                }
+                getGoodAnswerStudents(pos+1,limit);
             });
         };
 
 
         function getRules(pos,limit) {
+            if (pos === limit) {
+                getComments(0,limit);
+                return;
+            }
             var sql = 'SELECT r.string AS ruleText,'
                 + 'CASE WHEN rtO.string IS NOT NULL THEN rtO.string ELSE CASE WHEN rtE.string IS NOT NULL THEN rtE.string ELSE \'\' END END AS ruleGloss '
                 + 'FROM quizzes '
@@ -135,16 +137,16 @@
                     var row = rows[i];
                     items[pos].rules.push({ruleText:row.ruleText,ruleGloss:row.ruleGloss});
                 }
-                pos += 1;
-                if (pos === items.length) {
-                    getComments(0,limit);
-                } else {
-                    getRules(pos,limit);
-                }
+                getRules(pos+1,limit);
             });
         };
 
         function getComments(pos,limit) {
+            if (pos === limit) {
+                response.writeHead(200, {'Content-Type': 'application/json'});
+                response.end(JSON.stringify(items));
+                return;
+            }
             var sql = 'SELECT admin.name AS commenter,s.string AS comment '
                 + 'FROM quizzes '
                 + 'NATURAL JOIN questions '
@@ -162,13 +164,7 @@
                     var row = rows[i];
                     items[pos].comments.push({commenter:row.commenter,comment:row.comment});
                 }
-                pos += 1;
-                if (pos === items.length) {
-                    response.writeHead(200, {'Content-Type': 'application/json'});
-                    response.end(JSON.stringify(items));
-                } else {
-                    getComments(pos,limit);
-                }
+                getComments(pos+1,limit);
             });
         };
     }

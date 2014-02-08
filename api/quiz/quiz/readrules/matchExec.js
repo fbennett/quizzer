@@ -53,6 +53,10 @@
         }
 
         function getRuleResults(pos,limit) {
+            if (pos === limit) {
+                endTransaction();
+                return;
+            }
             var sql = 'SELECT ruleStrings.string AS ruleText,'
                 + 'CASE WHEN rtE.string IS NOT NULL THEN rtE.string ELSE \'\' END AS origGloss,'
                 + 'CASE WHEN rtO.string IS NOT NULL THEN rtO.string ELSE \'\' END AS transGloss,'
@@ -117,12 +121,7 @@
                     data.performance = row.performance;
                     rulesReturn.push(data);
                 }
-                pos += 1;
-                if (pos < limit) {
-                    getRuleResults(pos,limit);
-                } else {
-                    endTransaction();
-                }
+                getRuleResults(pos+1,limit);
             });
         };
         function endTransaction () {

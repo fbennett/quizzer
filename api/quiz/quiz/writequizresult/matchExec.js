@@ -29,6 +29,10 @@
         checkAnswers(0,data.length);
 
         function checkAnswers(pos,limit) {
+            if (pos === limit) {
+                saveAnswers(0,limit);
+                return;
+            }
             var sql = 'SELECT answerID '
                 + 'FROM quizzes '
                 + 'NATURAL JOIN questions '
@@ -42,15 +46,14 @@
                 }
                 data[pos].answerID = answerID;
                 data[pos].studentID = studentID;
-                pos += 1;
-                if (pos === limit) {
-                    saveAnswers(0,limit);
-                } else {
-                    checkAnswers(pos,limit);
-                }
+                checkAnswers(pos+1,limit);
             });
         };
         function saveAnswers(pos,limit) {
+            if (pos === limit) {
+                setSubmissionTimestamp();
+                return;
+            }
             var sql = 'INSERT OR REPLACE INTO answers (answerID,questionID,studentID,choice) '
                 + 'SELECT ?,questionID,?,? '
                 + 'FROM quizzes '
@@ -59,12 +62,7 @@
             var o = data[pos];
             sys.db.run(sql,[o.answerID,o.studentID,o.choice,classID,quizNumber,o.questionNumber],function(err){
                 if (err) {return oops(response,err,'*quiz/writequizresult')};
-                pos += 1;
-                if (pos === limit) {
-                    setSubmissionTimestamp();
-                } else {
-                    saveAnswers(pos,limit);
-                }
+                saveAnswers(pos+1,limit);
             });
         };
         function setSubmissionTimestamp() {

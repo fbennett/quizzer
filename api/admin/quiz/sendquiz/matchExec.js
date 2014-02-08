@@ -88,6 +88,10 @@
         };
         
         function updateStudentKeys (pos,limit) {
+            if (pos === limit) {
+                getQuizLinks(0,limit);
+                return;
+            }
             var student = mailData.students[pos];
             var studentID = student.studentID;
             var studentKey = sys.getRandomKey(8,36);
@@ -96,16 +100,17 @@
                 // Good, so this does that. Flag as sent, and send the mail message.
                 sys.membershipKeys[classID][studentID] = studentKey;
                 mailData.students[pos].studentKey = studentKey;
-                pos += 1;
-                if (pos < limit) {
-                    updateStudentKey(pos,limit);
-                } else {
-                    getQuizLinks(0,limit);
-                }
+                updateStudentKeys(pos+1,limit);
             });
         };
 
         function getQuizLinks(pos,limit) {
+            if (pos === limit) {
+                response.writeHead(500, {'Content-Type': 'application/json'});
+                response.end(JSON.stringify(['success']));
+                sendMail(0,limit);
+                return;
+            }
             // Get quizzes that have been answered by a given student
             // and quizzes that have not been.
             var sql = 'SELECT quizNumber,'
@@ -130,18 +135,15 @@
                         mailData.students[pos].unanswered.push(row.quizNumber);
                     }
                 }
-                pos += 1;
-                if (pos < limit) {
-                    getQuizLinks(pos,limit);
-                } else {
-                    response.writeHead(500, {'Content-Type': 'application/json'});
-                    response.end(JSON.stringify(['success']));
-                    sendMail(0,limit);
-                }
+                getQuizLinks(pos+1,limit);
             });
         };
 
         function sendMail (pos,limit) {
+            if (pos === limit) {
+                refreshDateStamps(0,limit);
+                return;
+            }
             var student = mailData.students[pos];
             var mailText = templateMail
                 .replace(/@@NAME@@/,student.name)
@@ -204,25 +206,19 @@
                 subject: mailData.className + ': Quiz ' + quizNumber
             }, function(err, message) {
                 if (err) {console.log(err)};
-                pos += 1;
-                if (pos < limit) {
-                    sendMail(pos,limit);
-                } else {
-                    refreshDateStamps(0,limit);
-                }
+                sendMail(pos+1,limit);
             });
         };
 
         function refreshDateStamps (pos,limit) {
+            if (pos === limit) {
+                updateSentFlag();
+                return;
+            }
             var studentID = mailData.students[pos].studentID;
             sys.db.run('UPDATE memberships SET last_mail_date=DATE("now") WHERE classID=? AND studentID=?',[classID,studentID],function(err){
                 if (err) {return oops(response,err,'quiz/sendquiz(6)')};
-                pos += 1;
-                if (pos < limit) {
-                    refreshDateStamps(pos,limit);
-                } else {
-                    updateSentFlag();
-                }
+                refreshDateStamps(pos+1,limit);
             });
         }
 

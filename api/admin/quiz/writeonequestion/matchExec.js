@@ -58,6 +58,10 @@
 
         // Check for existence of strings, create if necessary, save IDs
         function checkStrings (pos,limit) {
+            if (pos === limit) {
+                createStrings(0,qObj.needStringIdList.length);
+                return;
+            }
             var sql = 'SELECT stringID FROM strings WHERE string=?;'
             var string = strings[pos];
             sys.db.get(sql,[string],function(err,row){
@@ -68,28 +72,22 @@
                     qObj.needStringId[pos] = strings[pos];
                     qObj.needStringIdList.push(pos);
                 }
-                pos += 1;
-                if (pos == limit) {
-                    createStrings(0,qObj.needStringIdList.length);
-                } else {
-                    checkStrings(pos,limit);
-                }
+                checkStrings(pos+1,limit);
             });
         };
         function createStrings (pos,limit) {
-            if (pos < limit) {
-                var sql = 'INSERT INTO strings VALUES (NULL,?)';
-                var key = qObj.needStringIdList[pos];
-                var string = qObj.needStringId[key];
-                sys.db.run(sql,[string],function(err){
-                    if (err) {return oops(response,err,'quiz/writeonequestion(4)')};
-                    qObj.haveStringId[key] = this.lastID;
-                    pos += 1;
-                    createStrings(pos,limit);
-                });
-            } else {
-                checkQuestionNumber();                
+            if (pos === limit) {
+                checkQuestionNumber();
+                return;
             }
+            var sql = 'INSERT INTO strings VALUES (NULL,?)';
+            var key = qObj.needStringIdList[pos];
+            var string = qObj.needStringId[key];
+            sys.db.run(sql,[string],function(err){
+                if (err) {return oops(response,err,'quiz/writeonequestion(4)')};
+                qObj.haveStringId[key] = this.lastID;
+                createStrings(pos+1,limit);
+            });
         };
 
         // Check for existence of question, create if necessary, save ID
@@ -164,6 +162,10 @@
 
         // Insert or replace is good enough for choices
         function writeChoices(pos,limit) {
+            if (pos === limit) {
+                endTransaction();
+                return;
+            }
             var sql = 'INSERT OR REPLACE INTO choices VALUES (?,?,?,?)';
             var choiceID = qObj.choiceIdList[pos];
             var questionID = qObj.questionID;
@@ -171,12 +173,7 @@
             var stringID = qObj.haveStringId[pos];
             sys.db.run(sql,[choiceID,questionID,choice,stringID],function(err){
                 if (err) {return oops(response,err,'quiz/writeonequestion(10)')};
-                pos += 1;
-                if (pos == limit) {
-                    endTransaction();
-                } else {
-                    writeChoices(pos,limit);
-                }
+                writeChoices(pos+1,limit);
             });
         };
         function endTransaction () {
