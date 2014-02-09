@@ -127,7 +127,6 @@ function buildMemberLists(rowsets) {
 }
 
 function executeNonMemberRemoval (node) {
-    console.log("WELL, I'm TRYING!");
     var adminID = getParameterByName('admin');
     var classID = getParameterByName('classid');
     var studentID = node.parentNode.nextSibling.value;
@@ -274,7 +273,7 @@ function showProfile () {
 function generateProfileChart() {
     var adminID = getParameterByName('admin');
     var classID = getParameterByName('classid');
-    var students = apiRequest(
+    var graphData = apiRequest(
         '/?admin='
             + adminID
             + '&page=class'
@@ -283,37 +282,52 @@ function generateProfileChart() {
             classid:classID
         }
     );
-    if (false === students) return;
+    if (false === graphData) return;
 
-    var quintiles = {0:[],1:[],2:[],3:[],4:[],5:[],6:[],7:[],8:[],9:[]};
-    for (var i=0,ilen=students.length;i<ilen;i+=1) {
-        var student = students[i];
-        var quintpos = parseInt((student.percentageCorrect/10) % 10,10);
-        quintiles[quintpos].push(student);
-    }
-    var numbers = [{x:0,y:0}];
-    for (var i=0,ilen=10;i<ilen;i+=1) {
-        var obj = {x:0,y:0};
-        obj.x = (10*i)+5;
-        if (quintiles[i].length && false) {
-            total = 0;
-            for (var j=0,jlen=quintiles[i].length;j<jlen;j+=1) {
-                total += quintiles[i][j].percentageCorrect;
-            }
-            obj.x = (total/quintiles[i].length);
+
+
+    var numbers = [];
+    for (var pos=0,len=2;pos<len;pos+=1) {
+        var students = graphData[pos];
+
+        var quintiles = {0:[],1:[],2:[],3:[],4:[],5:[],6:[],7:[],8:[],9:[]};
+        for (var i=0,ilen=students.length;i<ilen;i+=1) {
+            var student = students[i];
+            var quintpos = parseInt((student.percentageCorrect/20) % 5,10);
+            quintiles[quintpos].push(student);
         }
-        obj.y = quintiles[i].length;
-        numbers.push(obj);
+        
+        numbers[pos] = [{x:0,y:0}];
+        for (var i=0,ilen=5;i<ilen;i+=1) {
+            var obj = {x:0,y:0};
+            obj.x = (20*i)+10;
+            if (quintiles[i].length && false) {
+                total = 0;
+                for (var j=0,jlen=quintiles[i].length;j<jlen;j+=1) {
+                    total += quintiles[i][j].percentageCorrect;
+                }
+                obj.x = (total/quintiles[i].length);
+            }
+            obj.y = quintiles[i].length;
+            numbers[pos].push(obj);
+        }
+        numbers[pos].push({x:100,y:0});
     }
-    numbers.push({x:100,y:0});
     var data = {
         xScale: 'linear',
         yScale: 'linear',
-        type: 'line',
+        type: 'line-dotted',
         main: [
             {
                 className: '.pizza',
-                data: numbers
+                data: numbers[1]
+            }
+        ],
+        comp: [
+            {
+                className: '.pizza',
+                type: 'line-dotted',
+                data: numbers[0]
             }
         ]
     }
