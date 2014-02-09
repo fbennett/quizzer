@@ -55,7 +55,7 @@
             var sql = 'SELECT * FROM ' + randomTableName + ';'
 
             sys.db.all(sql,function(err,rows){
-                if (err||!rows) {return oops(response,err,'class/getprofiledata(1)')};
+                if (err||!rows||!rows.length) {return oops(response,err,'class/getprofiledata(1)')};
                 console.log("XX "+~~(rows.length/2));
                 midRowID = rows[~~(rows.length/2)].rowIndex;
                 //console.log("MID ROW ID: "+midRowID);
