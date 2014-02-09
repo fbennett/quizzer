@@ -6,17 +6,31 @@
         var getRandomKey = this.sys.getRandomKey;
         var classID = params.classid;
         var getClassMemberships = this.utils.getClassMemberships;
-        var stmt = sys.db.prepare('INSERT INTO memberships VALUES(NULL,?,?,?,NULL);');
-        for (var i=0,ilen=params.addmembers.length;i<ilen;i+=1) {
-            var addmemberID = params.addmembers[i];
-            var addmemberKey = getRandomKey(8,36);
-            stmt.bind(classID,addmemberID,addmemberKey);
-            stmt.run();
-            stmt.reset();
-        }
-        stmt.finalize(function(){
-            getClassMemberships(params,request,response);
+
+        sys.db.run('BEGIN TRANSACTION',function(err){
+            if (err){return oops(response,err,'class/addmembers(1)')};
+            addMembers(0,params.addmembers.length);
         });
+
+        function addMembers(pos,limit) {
+            if (pos === limit) {
+                endTransaction();
+            }
+            var sql = 'INSERT INTO memberships VALUES(NULL,?,?,?,NULL);';
+            var addmemberID = params.addmembers[pos];
+            var addmemberKey = getRandomKey(8,36);
+            sys.db.run(sql,[classID,addmemberID,addmemberKey],function(err){
+                if (err){return oops(response,err,'class/addmembers(2)')};
+                addMembers(pos+1,limit);
+            });
+        };
+        
+        function endTransaction() {
+            sys.db.run('END TRANSACTION',function(err){
+                if (err){return oops(response,err,'class/addmembers(3)')};
+                getClassMemberships(params,request,response);
+            });
+        };
     }
     exports.cogClass = cogClass;
 })();
