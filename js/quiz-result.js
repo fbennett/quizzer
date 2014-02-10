@@ -133,26 +133,38 @@ function setRuleButtons () {
 
 function setButtonMode (mode,langName) {
     var ruleLangButtons = document.getElementsByClassName('rule-lang-buttons');
+    var profileButtons = document.getElementsByClassName('profile-buttons');
     var returnToMainDisplayButton = document.getElementById('return-to-main-display-button');
     var mainDisplay = document.getElementsByClassName('main-display');
+    var profileDisplay = document.getElementsByClassName('profile-display');
     var rulesDisplay = document.getElementsByClassName('rules-display');
     var studentLanguage = document.getElementsByClassName('student-language');
     //var mainDisplayTitle = document.getElementById('main-display-title');
     //var rulesDisplayTitle = document.getElementById('rules-display-title');
-    if (mode) {
+    if (mode === 'profile-display') {
+        setNodesDisplay(ruleLangButtons,false);
+        setNodesDisplay(mainDisplay,false);
+        setNodesDisplay(rulesDisplay,false);
+        setNodesDisplay(profileDisplay,true);
+        setNodesDisplay(profileButtons,false);
+        returnToMainDisplayButton.style.display = 'inline';
+    } else if (mode) {
         pageData.lang = mode;
         pageData.langName = langName;
         buildRulesList(mode,langName);
 
         setNodesDisplay(ruleLangButtons,false);
+        setNodesDisplay(profileButtons,false);
         setNodesDisplay(mainDisplay,false);
         setNodesDisplay(rulesDisplay,true);
         setNodesInnerHtml(studentLanguage,langName);
         returnToMainDisplayButton.style.display = 'inline';
     } else {
         setNodesDisplay(ruleLangButtons,true);
+        setNodesDisplay(profileButtons,true);
         setNodesDisplay(mainDisplay,true);
         setNodesDisplay(rulesDisplay,false);
+        setNodesDisplay(profileDisplay,false);
         returnToMainDisplayButton.style.display = 'none';
     }
 }
@@ -165,7 +177,6 @@ function setNodesDisplay (nodes,displayMode) {
         } else if (node.tagName === 'TABLE') {
             node.style.display = 'table';
         } else if (node.tagName === 'DIV') {
-            console.log("  TURNING ON DIV");
             node.style.display = 'block';
         } else {
             node.style.display = 'inline';
@@ -375,3 +386,41 @@ function setChildHeight (textarea) {
     var height = textarea.parentNode.offsetHeight;
     textarea.style.height = height;
 };
+
+
+/* Profile */
+
+
+function showProfile () {
+    generateProfileChart();
+    setButtonMode('profile-display');
+}
+
+function generateProfileChart() {
+    var classID = getParameterByName('classid');
+    var studentID = getParameterByName('studentid');
+    var studentKey = getParameterByName('studentkey');
+    var graphData = apiRequest(
+        '/?cmd=getprofiledata&classid='
+            + classID
+            + '&studentid=' 
+            + studentID 
+            + '&studentkey=' 
+            + studentKey 
+            + '&page=quiz'
+    );
+    if (false === graphData) return;
+
+    var data = {
+        xScale: 'ordinal',
+        yScale: 'linear',
+        main: [
+            {
+                className: '.pizza',
+                data: graphData
+            }
+        ]
+    }
+    var myChart = new xChart('bar', data, '#profile-chart');
+}
+

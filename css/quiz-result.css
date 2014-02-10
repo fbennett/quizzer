@@ -97,6 +97,10 @@ input.float-right {
     float:right;
 }
 
+div.float-left {
+    float:left;
+}
+
 div.show-box-child {
     background: #eeeeee;
     margin: 0 0 0 1em;
@@ -105,3 +109,9 @@ div.show-box-child {
     padding: 0.5em;
     text-align: left;
 }
+
+div#profile-chart {
+    height:500px;
+    width:800px;
+}
+

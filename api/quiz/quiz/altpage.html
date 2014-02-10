@@ -3,6 +3,7 @@
   <head>  
     <meta charset="UTF-8"> 
     <title>Quiz Result: @@QUIZ_LABEL@@</title>
+    <link rel="stylesheet" type="text/css" href="css/xcharts.min.css"/>
     <link rel="stylesheet" type="text/css" href="css/simple-grid.css"/>
     <link rel="stylesheet" type="text/css" href="css/local.css"/>
     <link rel="stylesheet" type="text/css" href="css/quiz-result.css"/>
@@ -12,6 +13,8 @@
     <script type="text/x-mathjax-config">
       MathJax.Hub.Config({MMLorHTML: {prefer: {Firefox: "HTML"}}});
     </script>
+  <script type="text/javascript" src="js/d3.min.js"></script>
+  <script type="text/javascript" src="js/xcharts.min.js"></script>
     <script type="text/javascript" src="js/local.js"></script>
     <script type="text/javascript" src="js/marked.js"></script>
     <script type="text/javascript" src="js/quiz-result.js"></script>
@@ -42,6 +45,9 @@
         <div id="return-to-main-display-button" style="display:none;">
           <input class="button" type="button" value="Return to main display" onclick="setButtonMode();"/>
         </div>
+        <div class="profile-buttons float-left">
+          <input class="button" id="class-profile-button" type="button" value="Progress Profile" onclick="showProfile();"/>
+        </div>
         <div id="rule-lang-buttons">
         </div>
         <hr/>
@@ -53,6 +59,8 @@
           <table id="rules-for-lang">
           </table>
         </div>
+      </div>
+      <div class="col-1-1 profile-display" style="display:none;" id="profile-chart" style="height:300px;">
       </div>
     </div>
   </body>  
