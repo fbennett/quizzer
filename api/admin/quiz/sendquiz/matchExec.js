@@ -205,7 +205,9 @@
                 to:      student.email,
                 subject: mailData.className + ': Quiz ' + quizNumber
             }, function(err, message) {
-                if (err) {console.log(err)};
+                if (err) {
+                    console.log(err);
+                };
                 sendMail(pos+1,limit);
             });
         };
