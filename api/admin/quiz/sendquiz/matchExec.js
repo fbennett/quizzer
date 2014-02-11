@@ -199,7 +199,7 @@
             } else {
                 mailText = mailText.replace(/@@PAST_QUIZZES@@/g,'');
             }
-            sys.mailer.send({
+            sys.mailer.sendMail({
                 text:    mailText, 
                 from:    "Instructor <" + email_account + ">", 
                 to:      student.email,
