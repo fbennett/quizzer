@@ -45,7 +45,7 @@
                 +   'JOIN students ON students.studentID=answers.studentID '
                 +   'LEFT JOIN quizAnswers ON quizAnswers.quizID=quizzes.quizID AND quizAnswers.studentID=answers.studentID '
                 +   'WHERE quizzes.classID=' + classID + ' AND answers.studentID=' + studentID + ' AND quizzes.examName IS NULL '
-                +   'ORDER BY quizAnswers.submissionDate,quizzes.quizNumber,questions.questionNumber,answers.studentID'
+                +   'ORDER BY quizAnswers.submissionDate DESC,quizzes.quizNumber ASC,questions.questionNumber ASC,answers.studentID ASC;'
             sys.db.exec(sql,function(err){
                 if (err){return oops(response,err,'class/getprofiledata(2)')};
                 getMidRowID();
