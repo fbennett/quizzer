@@ -1,9 +1,11 @@
 {
-  "name":"quizzer",
-  "version":"1.2.26",
-  "engines": { "node": "0.8.x", "node": "0.10.x" },
-  "description":"Quizzer is a webserver for collaborative writing lab support. Based on a _fail early, fail often? approach to written language, the tool is particularly suited to second-language learners. The workflow (essay - error - quiz - exam) treats mistakes as an opportunity for learning, and emphasizes rapid pattern-practice iterations based on student writing samples. This approach makes more efficient use of staff time than the traditional essay-and-appraisal approach. So that's the pitch -- give it a try.",
-  "keywords":[
+  "name": "quizzer",
+  "version": "1.2.27",
+  "engines": {
+    "node": "0.10.x"
+  },
+  "description": "Quizzer is a webserver for collaborative writing lab support. Based on a _fail early, fail often? approach to written language, the tool is particularly suited to second-language learners. The workflow (essay - error - quiz - exam) treats mistakes as an opportunity for learning, and emphasizes rapid pattern-practice iterations based on student writing samples. This approach makes more efficient use of staff time than the traditional essay-and-appraisal approach. So that's the pitch -- give it a try.",
+  "keywords": [
     "english",
     "grammar",
     "writing",
@@ -17,17 +19,17 @@
     "education",
     "edtech"
   ],
-  "homepage":"http://fbennett.github.io/quizzer/",
+  "homepage": "http://fbennett.github.io/quizzer/",
   "bugs": {
-    "url":"https://github.com/fbennett/quizzer/issues"
+    "url": "https://github.com/fbennett/quizzer/issues"
   },
   "license": "AGPL-3.0",
-  "author":{
-    "name" : "Frank Bennett",
-    "email" : "bennett@law.nagoya-u.ac.jp",
-    "url" : "http://citationstylist.org/"
+  "author": {
+    "name": "Frank Bennett",
+    "email": "bennett@law.nagoya-u.ac.jp",
+    "url": "http://citationstylist.org/"
   },
-  "files":[
+  "files": [
     "api/",
     "css/",
     "js/",
@@ -38,20 +40,20 @@
     "resource/"
   ],
   "main": "quizzer.js",
-  "repository" :{ 
-    "type" : "git",
-    "url" : "http://github.com/fbennett/quizzer.git"
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/fbennett/quizzer.git"
   },
-  "dependencies":{
-    "argparse":">=0.1.15",
-    "async":">=0.2.9",
-    "csv":">=0.3.6",
-    "nodemailer":">=0.6.0",
-    "marked":">=0.2.10",
-    "multiparty":">=3.1.1",
-    "node-schedule":">=0.1.13",
-    "node-zip":">=1.0.1",
-    "pandoc":">=0.2.0",
-    "sqlite3":">=2.1.19"
+  "dependencies": {
+    "argparse": ">=0.1.15",
+    "async": ">=0.2.9",
+    "csv": ">=0.3.6",
+    "nodemailer": ">=0.6.0",
+    "marked": ">=0.2.10",
+    "multiparty": ">=3.1.1",
+    "node-schedule": ">=0.1.13",
+    "node-zip": ">=1.0.1",
+    "pandoc": ">=0.2.0",
+    "sqlite3": ">=2.1.19"
   }
 }
