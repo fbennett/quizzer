@@ -160,6 +160,7 @@ CREATE TABLE ruleGroups (
        name TEXT NOT NULL,
        UNIQUE(name)
 );
+INSERT INTO ruleGroups VALUES (NULL,'English Composition');
 
 CREATE TABLE rules (
        ruleID INTEGER PRIMARY KEY,
