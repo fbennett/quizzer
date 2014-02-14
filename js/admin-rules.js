@@ -54,7 +54,7 @@ function buildRulesLists() {
     for (var i=0,ilen=rows.admin.length;i<ilen;i+=1) {
         var row = rows.admin[i];
         var tr = document.createElement('tr');
-        tr.innerHTML = '<td draggable="true" ondragstart="dragDemoteRule(event);" ondragend="dragendDemoteRule(event);" ondragover="allowMergeDrop(event);" ondrop="dropMergeRule(event);" ondragleave="dragleaveMergeRule(event);" id="' + row.ruleID + '">' + markdown(row.string) + '</td>';
+        tr.innerHTML = '<td draggable="true" ondragstart="dragDemoteRule(event);" ondragend="dragendDemoteRule(event);" ondragover="allowMergeDrop(event);" ondrop="dropMergeRule(event);" ondragleave="dragleaveMergeRule(event);" id="' + row.ruleID + '" onclick="showGloss(this);">' + markdown(row.string) + '</td>';
         rulesListAdmin.appendChild(tr);
         pageData.adminrules.push(tr.childNodes[0]);
     }
@@ -66,6 +66,33 @@ function buildRulesLists() {
     }
     
 };
+
+function showGloss(node) {
+    // alert("ID: "+node.id);
+    var adminID = getParameterByName('admin');
+    var ruleID =  node.id;
+    var row = apiRequest(
+        '/?admin='
+            + adminID
+            + '&page=rules'
+            + '&cmd=getonerule'
+        ,{
+            ruleid:ruleID
+        }
+    );
+    if (false === row) return;
+
+    node.setAttribute('onclick', 'hideGloss(this);');
+    var glossNode = document.createElement('tr');
+    glossNode.innerHTML = '<td>' + markdown(row.origText) + '</td>';
+    node.parentNode.parentNode.insertBefore(glossNode,node.parentNode.nextSibling);
+};
+
+function hideGloss(node) {
+    node.setAttribute('onclick', 'showGloss(this);');
+    node.parentNode.parentNode.removeChild(node.parentNode.nextSibling);
+};
+
 
 function promoteRule(node) {
     var okToPromote = confirm("Promote this rule for general use?");
