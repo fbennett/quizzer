@@ -45,7 +45,7 @@
                 +   'JOIN students ON students.studentID=answers.studentID '
                 +   'LEFT JOIN quizAnswers ON quizAnswers.quizID=quizzes.quizID AND quizAnswers.studentID=answers.studentID '
                 +   'WHERE quizzes.classID=' + classID + ' AND answers.studentID=' + studentID + ' AND quizzes.examName IS NULL '
-                +   'ORDER BY quizAnswers.submissionDate DESC,quizzes.quizNumber ASC,questions.questionNumber ASC,answers.studentID ASC;'
+                +   'ORDER BY quizAnswers.submissionDate ASC,quizzes.quizNumber ASC,questions.questionNumber ASC,answers.studentID ASC;'
             sys.db.exec(sql,function(err){
                 if (err){return oops(response,err,'class/getprofiledata(2)')};
                 getMidRowID();
@@ -89,7 +89,7 @@
                 +   'JOIN answers USING(questionID) '
                 +   'WHERE choice=correct'
                 + ') AS correct ON correct.answerID=total.answerID '
-                + 'WHERE privacy=0 AND memberships.classID=? AND total.answerID IN ('
+                + 'WHERE memberships.classID=? AND total.answerID IN ('
                 +   'SELECT answerID FROM ' + randomTableName + ' WHERE rowIndex ' + compStr + ' ? '
                 + ') '
                 + 'GROUP BY students.studentID '
