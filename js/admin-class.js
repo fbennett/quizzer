@@ -320,14 +320,14 @@ function generateProfileChart() {
         main: [
             {
                 className: '.pizza',
-                data: numbers[1]
+                data: numbers[0]
             }
         ],
         comp: [
             {
                 className: '.pizza',
                 type: 'line-dotted',
-                data: numbers[0]
+                data: numbers[1]
             }
         ]
     }
