@@ -118,10 +118,10 @@
 
         function sendResponse () {
             var data = [{x:'Early',y:0},{x:'Recent',y:0}];
-            if (!graphData[0].length) {
+            if (graphData[0].length) {
                 data[0].y = ~~graphData[0][0].percentageCorrect
             }
-            if (!graphData[1].length) {
+            if (graphData[1].length) {
                 data[1].y = ~~graphData[1][0].percentageCorrect
             }
             response.writeHead(200, {'Content-Type': 'application/json'});
