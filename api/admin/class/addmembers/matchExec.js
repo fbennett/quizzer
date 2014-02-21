@@ -15,6 +15,7 @@
         function addMembers(pos,limit) {
             if (pos === limit) {
                 endTransaction();
+                return;
             }
             var sql = 'INSERT INTO memberships VALUES(NULL,?,?,?,NULL);';
             var addmemberID = params.addmembers[pos];

@@ -88,6 +88,7 @@
         function getStudentResults(pos,limit) {
             if (pos === limit) {
                 endTransaction();
+                return;
             }
             // This is a little tricky, since the number and alignment of students
             // must match the list kicked out in the getStudents() function above.
