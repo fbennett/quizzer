@@ -119,7 +119,7 @@ function buildCommenterList (rows) {
             commenterTR.setAttribute('class','inactive');
         }
         commenterTR.innerHTML = '<td><input class="button-small" type="button" value="Edit" onclick="addCommenter(this)"/></td>'
-            +'<td>' + row.name + '</td>'
+            +'<td><a href="' + row.url + '">' + row.name + '</a></td>'
             + '<td>' + getMailDaySelect(row.adminKey,row.interval) + '</td>'
             + '<td class="email">' + getEmail(row.email)  + '</td>'
             + '<td style="display:none;">' + row.adminKey + '</td>'
