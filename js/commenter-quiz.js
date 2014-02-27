@@ -94,6 +94,7 @@ function showMistakes () {
         }
         container.appendChild(mistakeDiv);
     }
+    MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
 }
 
 function addRuleToMistake (node) {
