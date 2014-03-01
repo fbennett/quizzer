@@ -42,7 +42,6 @@ function dropLang(ev) {
         ev.target.setAttribute('style','border:none;');
         var languageBubble = document.createElement('span');
         languageBubble.setAttribute('onclick','confirmDelete(this,\'removeLanguage\')');
-        console.log("SETTING LANG ON BUBBLE: "+data);
         languageBubble.setAttribute('value',data);
         languageBubble.innerHTML = data.toUpperCase();
         var space = document.createTextNode(' ');
@@ -66,7 +65,6 @@ function removeLanguage(node) {
     var commenterKey = node.parentNode.previousSibling.previousSibling.textContent;
     var adminID = getParameterByName('admin');
     var lang = node.getAttribute('value');
-    console.log("===> "+adminID+" "+lang);
     node.parentNode.removeChild(node);
     var rows = apiRequest(
         '/?admin='
@@ -113,7 +111,6 @@ function buildCommenterList (rows) {
     // Rebuild container content
     for (var i=0,ilen=rows.length;i<ilen;i+=1) {
         var row = rows[i];
-        console.log(">> "+row.complete+" "+row.name);
         var commenterTR = document.createElement('tr');
         if (row.complete == 0) {
             commenterTR.setAttribute('class','inactive');
@@ -123,6 +120,7 @@ function buildCommenterList (rows) {
             + '<td>' + getMailDaySelect(row.adminKey,row.interval) + '</td>'
             + '<td class="email">' + getEmail(row.email)  + '</td>'
             + '<td style="display:none;">' + row.adminKey + '</td>'
+            + '<td><input class="mail-tick" type="checkbox" value="' + row.adminKey + '"/></td>'
             + '<td>' + row.numberOfComments + '</td>'
             + '<td class="language-bubbles" ondragover="allowDrop(event)" ondrop="dropLang(event)" ondragenter="dragenterLang(event)" ondragleave="dragleaveLang(event)">' + getSerializedLanguageNodes(row.languages) + '<div></div></td>';
         container.appendChild(commenterTR);
@@ -273,5 +271,39 @@ function saveCommenter() {
         saveButton.style.display = 'none';
         commenterBoxes.style.display = 'none';
     }
-}
+};
 
+function sendCommenterMail (ev) {
+    var keys = [];
+    var msgNode = document.getElementById('mail-message');
+    var msg = msgNode.value;
+    var subjNode = document.getElementById('mail-subject');
+    var subj = subjNode.value;
+    var keyNodes = document.getElementsByClassName('mail-tick');
+    for (var i=0,ilen=keyNodes.length;i<ilen;i+=1) {
+        if (keyNodes[i].checked) {
+            keys.push(keyNodes[i].value);
+        }
+    }
+    if (!msg || !subj || !keys.length) {
+        return;
+    }
+    var adminID = getParameterByName('admin');
+    var apires = apiRequest(
+        '/?admin='
+            + adminID 
+            + '&page=commenters'
+            + '&cmd=sendcommentermail'
+        , {
+            msg:msg,
+            keys:keys,
+            subj:subj
+        });
+    if (false === apires) return;
+    // clear content if successful
+    msgNode.value = '';
+    subjNode.value = '';
+    for (var i=0,ilen=keyNodes.length;i<ilen;i+=1) {
+        keyNodes[i].checked = false;
+    }
+};

@@ -53,6 +53,7 @@
               <td>Mail day</td>
               <td>Email</td>
               <td style="display:none;">adminKey</td>
+              <td>Mail<br/>tick</td>
               <td>Recent<br/>Comments</td>
               <td>Languages</td>
             </tr>
@@ -60,6 +61,18 @@
           <tbody id="commenter-list">
           </tbody>
         </table>
+      </div>
+      <div>
+        <h2>Mail selected commenters</h2>
+        <div>
+          <input type="text" id="mail-subject" size="60"/>
+        </div>
+        <div>
+          <textarea id="mail-message" rows="10" cols="60" style="overflow:auto;"></textarea>
+        </div>
+        <div>
+          <input onclick="sendCommenterMail(event);" class="button" type="button" value="Send"/>
+        </div>
       </div>
     </div>
   </div>
