@@ -39,7 +39,7 @@
                 + "res.correct,res.correctID,cc.string AS correctText,"
                 + "res.wrong,res.wrongID,ww.string AS wrongText,"
                 + "COUNT(res.studentID) AS count,"
-                + "COUNT(res.comment) AS commentCount,"
+                + "CASE WHEN COUNT(res.comment)>0 THEN 1 ELSE 0 END AS commentCount,"
                 + "group_concat(distinct res.lang) AS langs "
                 + "FROM quizzes AS qz "
                 + 'JOIN questions AS qq USING(quizID) '
