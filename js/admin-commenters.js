@@ -62,7 +62,7 @@ function dropLang(ev) {
     }
 }
 function removeLanguage(node) {
-    var commenterKey = node.parentNode.previousSibling.previousSibling.textContent;
+    var commenterKey = node.parentNode.previousSibling.previousSibling.previousSibling.textContent;
     var adminID = getParameterByName('admin');
     var lang = node.getAttribute('value');
     node.parentNode.removeChild(node);
