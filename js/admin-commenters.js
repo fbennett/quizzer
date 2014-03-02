@@ -47,7 +47,7 @@ function dropLang(ev) {
         var space = document.createTextNode(' ');
         ev.target.insertBefore(languageBubble,ev.target.childNodes[0]);
         ev.target.insertBefore(space,ev.target.childNodes[0]);
-        var commenterKey = ev.target.previousSibling.previousSibling.textContent;
+        var commenterKey = ev.target.previousSibling.previousSibling.previousSibling.textContent;
         var rows = apiRequest(
             '/?admin='
                 + adminID
