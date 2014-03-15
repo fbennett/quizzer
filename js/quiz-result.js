@@ -80,6 +80,7 @@ function runResult () {
             }
         }
     }
+    MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
 }
 
 
