@@ -297,7 +297,7 @@
         };
 
         function pandocIterator (data, callback) {
-            sys.pandoc.convert('html',data.obj[data.key],['latex'],function(result, err){
+            sys.pandoc.convert('html+tex_match_dollars',data.obj[data.key],['latex'],function(result, err){
                 if (err) {
                     throw "Error in pandocIterator(): " + err;
                 }
