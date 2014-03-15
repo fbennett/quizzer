@@ -110,7 +110,7 @@
                     key:'rubric'
                 });
                 for (var k=0,klen=question.choices.length;k<klen;k+=1) {
-                    question.choices[k] = sys.markdown(question.choices[k]);
+                    question.choices[k] = sys.markdown(question.choices[k],true);
                     stringsToConvert.push({
                         obj:question.choices,
                         key:k
