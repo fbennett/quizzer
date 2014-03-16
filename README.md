@@ -63,12 +63,36 @@ Install quizzer from the `npm` repository:
     npm install quizzer
 
 In addition to the dependencies pulled in by `npm`, Quizzer needs to
-have access to the external programs `pandoc` and `pdflatex`. Both
-should be available as package installs on your operating system (the
-latter as part of the `texlive` package).
+have access to the external programs `pandoc` and `pdflatex`. While
+`pdflatex` should be available as package installs on your operating
+system (probably as part of the `texlive` package), `pandoc` is a
+different matter.
 
-Run the server by saving the following code to a file (such as `quizServer.js`,
-say):
+Quizzer uses a simple JavaScript module to convert `markdown` text to
+HTML, supplemented by `MathJax` for mathematical formulae. When generating
+examination papers, the `markdown` + `MathJax` markup must be converted to
+`LaTeX`, and `pandoc` is used for that purpose. For things to work correctly,
+mathematical formulae must be left intact during the conversion. An extension
+to `pandoc` (`tex_math_dollars`) exists for this exact purpose, but unfortunately
+it is available only in `pandoc` version 1.10 and above.
+
+Depending on your system, installing `pandoc` 1.10+ may be something
+of a chore at this point in time. In our own environment, getting it
+in place on an aging virtual server running CentOS 6 required a
+scratch build of both the Glasgow Haskell Compiler and the Haskell Platform.
+Everything worked swimmingly after that was done, but the compile process
+took several hours, and needed to be nudged forward repeatedly.
+
+If `pandoc` 1.10 is not an option, and you don't need maths rendering, you
+can use an earlier pandoc by editing the following file:
+
+   ./api/admin/quiz/downloadexam/matchExec.js
+
+Just change `html+tex_math_dollars` to simply `html`, and you should be good.
+
+Apart from this transitional speed bump, installation is simple. Run
+the server by saving the following code to a file (such as
+`quizServer.js`, say):
 
     var qz = require('quizzer');
     qz.run();
