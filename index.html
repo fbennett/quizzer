@@ -190,13 +190,36 @@ files are there if you need them, or if you are curious about the LaTeX behind t
 </code></pre>
 
 <p>In addition to the dependencies pulled in by <code>npm</code>, Quizzer needs to
-have access to the external programs <code>pandoc</code> and <code>pdflatex</code>. Both
-should be available as package installs on your operating system (the
-latter as part of the <code>texlive</code> package (on some systems, it
-may be necessary to obtain and install the <code>makebarcode</code> LaTeX package separately).</p>
+have access to the external programs <code>pandoc</code> and <code>pdflatex</code>. While
+<code>pdflatex</code> should be available as package installs on your operating
+system (probably as part of the <code>texlive</code> package), <code>pandoc</code> is a
+different matter.</p>
 
-<p>Run the server by saving the following code to a file (such as <code>quizServer.js</code>,
-say):</p>
+<p>Quizzer uses a simple JavaScript module to convert <code>markdown</code> text to
+HTML, supplemented by <code>MathJax</code> for mathematical formulae. When generating
+examination papers, the <code>markdown</code> + <code>MathJax</code> markup must be converted to
+<code>LaTeX</code>, and <code>pandoc</code> is used for that purpose. For things to work correctly,
+mathematical formulae must be left intact during the conversion. An extension
+to <code>pandoc</code> (<code>tex_math_dollars</code>) exists for this exact purpose, but unfortunately
+it is available only in <code>pandoc</code> version 1.10 and above.</p>
+
+<p>Depending on your system, installing <code>pandoc</code> 1.10+ may be something
+of a chore at this point in time. In our own environment, getting it
+in place on an aging virtual server running CentOS 6 required a
+scratch build of both the Glasgow Haskell Compiler and the Haskell Platform.
+Everything worked swimmingly after that was done, but the compile process
+took several hours, and needed to be nudged forward repeatedly.</p>
+
+<p>If <code>pandoc</code> 1.10 is not an option, and you don't need maths rendering, you
+can use an earlier pandoc by editing the following file:</p>
+
+<p>./api/admin/quiz/downloadexam/matchExec.js</p>
+
+<p>Just change <code>html+tex_math_dollars</code> to simply <code>html</code>, and you should be good.</p>
+
+<p>Apart from this transitional speed bump, installation is simple. Run
+the server by saving the following code to a file (such as
+<code>quizServer.js</code>, say):</p>
 
 <pre><code>var qz = require('quizzer');
 qz.run();
