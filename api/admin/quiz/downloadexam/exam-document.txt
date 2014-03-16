@@ -7,6 +7,7 @@
 \usepackage{ctable}
 \usepackage{float}
 \usepackage{hyphenat}
+\usepackage{amsmath}
 
 \newcommand*\mycirc[1]{\tikz[baseline=(char.base)]{{\small
   \node[shape=circle,draw,inner sep=1.5pt] (char) {#1};}}}
