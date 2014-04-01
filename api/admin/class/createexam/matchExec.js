@@ -19,7 +19,7 @@
         function getQuizzes () {
             var sql = 'SELECT quizNumber,questionID,sent,examName '
                 + 'FROM quizzes '
-                + 'NATURAL JOIN questions '
+                + 'LEFT NATURAL JOIN questions '
                 + 'WHERE classID=? '
                 + 'ORDER BY quizNumber;'
             sys.db.all(sql,[data.classID],function(err,rows){
@@ -28,7 +28,7 @@
                 for (var i=0,ilen=rows.length;i<ilen;i+=1) {
                     var row = rows[i];
                     quizNumberMax = row.quizNumber;
-                    if (row.sent !== 1 || row.examName) continue;
+                    if (row.sent !== 1 || row.examName || !row.questionID) continue;
                     quizQuestionIDs.push(row.questionID);
                 }
                 sys.randomize(quizQuestionIDs);
