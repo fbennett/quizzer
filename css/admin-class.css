@@ -1,3 +1,7 @@
+span.external-member {
+    color: #eeeeee;
+}
+
 div#profile-chart {
     height:500px;
     width:800px;
