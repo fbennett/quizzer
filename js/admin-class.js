@@ -119,7 +119,11 @@ function buildMemberLists(rowsets) {
             checkBox.setAttribute('type', 'checkbox');
             checkBox.setAttribute('value', rowsets[i][j].studentid);
             entry.appendChild(checkBox);
-            var entryText = document.createTextNode(rowsets[i][j].name);
+            var entryText = document.createElement('span');
+            entryText.innerHTML = rowsets[i][j].name;
+            if (rowsets[i][j].privacy > 0) {
+                entryText.classList.add('external-member');
+            }
             entry.appendChild(entryText);
             listContainers[i].appendChild(entry);
         }
