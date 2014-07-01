@@ -18,7 +18,7 @@ function installLanguages () {
     for (var i=0,ilen=languages.length;i<ilen;i+=1) {
         var language = languages[i];
         var languageNode = document.createElement('span');
-        languageNode.draggable = 'true';
+        languageNode.setAttribute("draggable",'true');
         languageNode.setAttribute('ondragstart', 'dragLang(event)');
         languageNode.id = language.lang;
         languageNode.innerHTML = language.langName;
@@ -29,12 +29,16 @@ function installLanguages () {
 };
 function allowDrop(ev) {
     ev.preventDefault();
+    if (!ev.dataTransfer || ev.dataTransfer.getData("ruleID").slice(0,7) !== 'demote:') {
+        return;
+    }
+    return true;
 };
 function dragLang(ev) {
+    dump("MLZ: dragLang()"+ev.target.id+"\n");
     ev.dataTransfer.setData('Text',ev.target.id);
 };
 function dropLang(ev) {
-
     ev.preventDefault();
     if (ev.target.tagName === 'TD') {
         var data=ev.dataTransfer.getData("Text");

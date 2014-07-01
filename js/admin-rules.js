@@ -142,10 +142,10 @@ function dropDemoteRule(ev) {
     ev.preventDefault();
     var commenterID = ev.target.id.split('-').slice(-1)[0];
     var commenterName = ev.target.textContent;
+    var ruleID = ev.dataTransfer.getData("ruleID").slice(7);
     var okToDemote = confirm("Demote this rule for use only by " + commenterName + "?");
     if (okToDemote) {
         // API call
-        var ruleID = ev.dataTransfer.getData("ruleID").slice(7);
         var adminID = getParameterByName('admin');
         var rows = apiRequest(
             '/?admin='
@@ -200,13 +200,13 @@ function dropMergeRule(ev) {
     ev.preventDefault();
     var targ = getParent(ev.target,'td');
     var senpaiRuleID = targ.id;
-    if (targ.id === ev.dataTransfer.getData("ruleID").slice(7)) {
+    var kohaiRuleID = ev.dataTransfer.getData("ruleID").slice(7);
+    if (targ.id === kohaiRuleID) {
         return;
     }
     var okToDemote = confirm("Merge this rule with target?");
     if (okToDemote) {
         // API call
-        var kohaiRuleID = ev.dataTransfer.getData("ruleID").slice(7);
         var adminID = getParameterByName('admin');
         var result = apiRequest(
             '/?admin='
