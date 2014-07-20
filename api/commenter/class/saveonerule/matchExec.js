@@ -43,7 +43,7 @@
 
         function checkRuleText() {
             var sql = 'SELECT ruleStringID FROM ruleStrings WHERE string=?;'
-            sys.db.get(sql,[ruleID],function(err,row){
+            sys.db.get(sql,[ruleText],function(err,row){
                 if (err) {return oops(response,err,'**classes/saveonerule(3)')};
                 if (row && row.ruleStringID) {
                     updateRule(row.ruleStringID);
