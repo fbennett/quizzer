@@ -143,7 +143,7 @@
             }
             for (var key in rtData.kohai) {
                 if (rtData.senpai[key]) {
-                    sqlparams_kopai.push(rtData.kohai[key]);
+                    sqlparams_kohai.push(rtData.kohai[key]);
                     sqlstr.push('?');
                 }
             }
