@@ -42,8 +42,8 @@ function editStudent(node) {
     var editDiv = document.createElement('div');
     var name = node.textContent;
     var emailAndLang = node.getAttribute('alt');
-    var email = emailAndLang.replace(/^(?:[a-z]*:)/,'');
-    var langtag = emailAndLang.replace(/^([a-z]*):.*/,'$1');
+    var email = emailAndLang.replace(/^(?:[a-z]{2}(?:-[A-Z]{2})*:)/,'');
+    var langtag = emailAndLang.replace(/^([a-z]{2}(?:-[A-Z]{2})*):.*/,'$1');
     var id = node.getAttribute('id');
     var status = false;
     if (node.className && node.className.match(/private/)) {
