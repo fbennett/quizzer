@@ -124,7 +124,31 @@ function buildClassList (rows) {
             + '<td>' + rows[i].ruleGroupName + '</td>'
             + '<td style="display:none;">' + rows[i].ruleGroupID + '</td>'
             + '<td><input class="button-small" type="button" value="Edit" onclick="addClass(this.parentNode.parentNode);"></td>'
+            + '<td><input id="deleteOK-' + rows[i].classID + '" type="checkbox"></td>'
+            + '<td><input type="button" value="Del" class="button-small" onclick="maybeDeleteClass(this,' + rows[i].classID + ');"/></td>';
         container.appendChild(tr);
     }
+}
+
+function maybeDeleteClass(node,classID) {
+    var deleteOK = document.getElementById('deleteOK-'+classID).checked;
+    if (!deleteOK) return;
+    confirmDelete(node,'deleteClass');
+}
+
+function deleteClass(node) {
+    var parent = node.parentNode.parentNode;
+    var classID = parent.childNodes[1].textContent;
+    var adminID = getParameterByName('admin');
+    var obj = apiRequest(
+        '/?admin='
+            + adminID
+            + '&page=classes'
+            + '&cmd=deleteoneclass'
+        , {
+            classid:classID
+        });
+    if (false === obj) return;
+    parent.parentNode.removeChild(parent);
 }
 
