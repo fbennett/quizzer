@@ -3,6 +3,8 @@
     cogClass.prototype.exec = function (params, request, response) {
         var oops = this.utils.apiError;
         var sys = this.sys;
+        var ruleGroupID = params.groupid;
+
         var sql = 'SELECT * FROM languages ORDER BY langName;'
         sys.db.all(sql,function(err,rows){
             if (err||!rows) {return oops(response,err,'students/getlanguages(1)')};
@@ -13,12 +15,17 @@
                     break;
                 }
             }
-            getRuleCount(rows);
+            if (ruleGroupID) {
+                getRuleCount(rows);
+            } else {
+                finish(rows);
+            }
         });
 
         function getRuleCount(languages) {
-            var sql = "SELECT COUNT(*) count FROM ruleTranslations WHERE lang='en';";
-            sys.db.get(sql,function(err,row){
+            console.log("WOWZA: "+ruleGroupID);
+            var sql = "SELECT COUNT(*) count FROM ruleTranslations JOIN rules USING(ruleID) WHERE lang='en' AND rules.ruleGroupID=?;";
+            sys.db.get(sql,[ruleGroupID],function(err,row){
                 if (err) {return oops(response,err,'students/getlanguages(2)')};
                 // Check rule/translation correspondence for each language
                 checkCompleteness(0,languages,row.count);
@@ -32,8 +39,8 @@
             }
             var language = languages[pos];
             var lang = language.lang;
-            var sql = "SELECT COUNT(*) count FROM ruleTranslations WHERE lang=?;";
-            sys.db.get(sql,[lang],function(err,row){
+            var sql = "SELECT COUNT(*) count FROM ruleTranslations JOIN rules USING(ruleID) WHERE lang=? AND rules.ruleGroupID=?;";
+            sys.db.get(sql,[lang,ruleGroupID],function(err,row){
                 if (err) {return oops(response,err,'students/getlanguages(3)')};
                 var translationCount = row.count;
                 // If all rules are null set completeness to 0
