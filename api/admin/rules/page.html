@@ -16,7 +16,8 @@
     <link rel="stylesheet" type="text/css" href="css/local.css"/>
     <link rel="stylesheet" type="text/css" href="css/admin-rules.css"/>
   </head>
-  <body onLoad="editRules();buildRulesLists()" onScroll="trackScroll(event)">
+  <body onLoad="installLanguages(true);editRules();buildRulesLists()" onScroll="trackScroll(event)">
+    <iframe id="download-frame" style="display:none"></iframe>
     <div class="grid">
       <div class="col-1-1">
         <h1>Quizzer Admin</h1>
@@ -25,6 +26,12 @@
           <input class="button" type="button" value="Back" onclick="window.location = fixPath('/?admin=' + getParameterByName('admin') + '&page=groups')"/>
         </div>
         <hr/>
+        <div id="languages">
+          <span>One</span>
+          <span>Two</span>
+          <span>Three</span>
+          <span>Four</span>
+        </div>
         <div class="col-1-2">
           <h3>Admin</h3>
           <div id="commenters-list-container">

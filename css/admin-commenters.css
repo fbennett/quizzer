@@ -11,25 +11,6 @@ div#commenter-list-container {
     overflow:auto;
 }
 
-div#languages {
-    font-size:smaller;
-    padding:1em;
-    line-height: 2.8em;
-    text-align:left;
-}
-
-div#languages span {
-    border:1px solid #000000;
-    border-radius: 1em;
-    padding:0.5em;
-    font-family:sans;
-}
-
-div#languages span:hover {
-    background:#eeeeee;
-    cursor:pointer;
-}
-
 td.language-bubbles span {
     border: 1px solid black;
     font-family: sans;

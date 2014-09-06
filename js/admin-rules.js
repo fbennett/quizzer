@@ -292,7 +292,7 @@ function trackScroll (ev) {
     var xy = findPos(phantom);
     var top = xy[1];
     var vOffset = f_scrollTop();
-    console.log("vOffset="+vOffset+", top="+top);
+    //console.log("vOffset="+vOffset+", top="+top);
     if (vOffset < top) {
         if (commenters.hasAttribute('style')) {
             commenters.removeAttribute('style');
@@ -341,3 +341,21 @@ function setButtonMode(rulesMode) {
     }
 };
 
+/* Ruleset composition and download */
+
+function downloadRules (lang,langName) {
+    // API call from hidden node
+    var adminID = getParameterByName('admin');
+    var ruleGroupID = getParameterByName('groupid');
+    var downloadFrame = document.getElementById('download-frame');
+    downloadFrame.src = fixPath('?admin='
+                                + adminID
+                                + '&page=rules'
+                                + '&cmd=gettranslations'
+                                + '&groupid='
+                                + ruleGroupID
+                                + '&lang='
+                                + lang
+                                + '&langname='
+                                + langName);
+}

@@ -91,3 +91,49 @@ function confirmDelete (node,callbackName) {
     },2000);
 }
 
+function getLanguages () {
+    var adminID = getParameterByName('admin');
+    var languages = apiRequest(
+        '/?admin='
+            + adminID
+            + '&page=students'
+            + '&cmd=getlanguages'
+    );
+    if (false === languages) return [];
+    return languages;
+};
+
+function installLanguages (clickable) {
+    var languages = getLanguages();
+    var languagesNode = document.getElementById('languages');
+    for (var i=0,ilen=languagesNode.childNodes.length;i<ilen;i+=1) {
+        languagesNode.removeChild(languagesNode.childNodes[0]);
+    }
+    for (var i=0,ilen=languages.length;i<ilen;i+=1) {
+        var language = languages[i];
+        var languageNode = document.createElement('span');
+        if (!clickable) {
+            languageNode.setAttribute("draggable",'true');
+            languageNode.setAttribute('ondragstart', 'dragLang(event)');
+        } else {
+            // Check each language for completeness
+            //   complete: green background + clickable
+            //   partial: yellow background + clickable
+            //   empty: no background, not clickable
+            console.log("XXX? "+language.completeness);
+            if (language.completeness) {
+                languageNode.setAttribute("onclick", "downloadRules('" + language.lang + "','" + language.langName + "')");
+                if (language.completeness === 2) {
+                    languageNode.classList.add("complete");
+                } else if (language.completeness === 1) {
+                    languageNode.classList.add("partial");
+                }
+            }
+        }
+        languageNode.id = language.lang;
+        languageNode.innerHTML = language.langName;
+        languagesNode.appendChild(languageNode);
+        var space = document.createTextNode(' ');
+        languagesNode.appendChild(space);
+    }
+};

@@ -1,3 +1,11 @@
+.complete {
+    background: #55bb55;
+}
+
+.partial {
+    background: yellow;
+}
+
 div#commenters-list-container {
     position:relative;
 }

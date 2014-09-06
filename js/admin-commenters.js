@@ -1,32 +1,3 @@
-function getLanguages () {
-    var adminID = getParameterByName('admin');
-    var languages = apiRequest(
-        '/?admin='
-            + adminID
-            + '&page=students'
-            + '&cmd=getlanguages'
-    );
-    if (false === languages) return [];
-    return languages;
-};
-function installLanguages () {
-    var languages = getLanguages();
-    var languagesNode = document.getElementById('languages');
-    for (var i=0,ilen=languagesNode.childNodes.length;i<ilen;i+=1) {
-        languagesNode.removeChild(languagesNode.childNodes[0]);
-    }
-    for (var i=0,ilen=languages.length;i<ilen;i+=1) {
-        var language = languages[i];
-        var languageNode = document.createElement('span');
-        languageNode.setAttribute("draggable",'true');
-        languageNode.setAttribute('ondragstart', 'dragLang(event)');
-        languageNode.id = language.lang;
-        languageNode.innerHTML = language.langName;
-        languagesNode.appendChild(languageNode);
-        var space = document.createTextNode(' ');
-        languagesNode.appendChild(space);
-    }
-};
 function allowDrop(ev) {
     ev.preventDefault();
     if (!ev.dataTransfer || ev.dataTransfer.getData("ruleID").slice(0,7) !== 'demote:') {

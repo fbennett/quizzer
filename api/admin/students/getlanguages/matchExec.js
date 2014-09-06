@@ -13,9 +13,48 @@
                     break;
                 }
             }
-            response.writeHead(200, {'Content-Type': 'application/json'});
-            response.end(JSON.stringify(rows));
+            getRuleCount(rows);
         });
+
+        function getRuleCount(languages) {
+            var sql = "SELECT COUNT(*) count FROM ruleTranslations WHERE lang='en';";
+            sys.db.get(sql,function(err,row){
+                if (err) {return oops(response,err,'students/getlanguages(2)')};
+                // Check rule/translation correspondence for each language
+                checkCompleteness(0,languages,row.count);
+            });
+        };
+        
+        function checkCompleteness(pos,languages,ruleCount) {
+            if (pos === languages.length) {
+                finish(languages);
+                return;
+            }
+            var language = languages[pos];
+            var lang = language.lang;
+            var sql = "SELECT COUNT(*) count FROM ruleTranslations WHERE lang=?;";
+            sys.db.get(sql,[lang],function(err,row){
+                if (err) {return oops(response,err,'students/getlanguages(3)')};
+                var translationCount = row.count;
+                // If all rules are null set completeness to 0
+                // If some rules are null set completeness to 1
+                // If no rules are null set completeness to 2
+                if (!translationCount) {
+                    language.completeness = 0;
+                } else if (translationCount < ruleCount) {
+                    language.completeness = 1;
+                } else {
+                    language.completeness = 2;
+                }
+                checkCompleteness(pos+1,languages,ruleCount);
+            });
+        }
+
+        function finish (languages) {
+            response.writeHead(200, {'Content-Type': 'application/json'});
+            response.end(JSON.stringify(languages));
+        };
+
     }
     exports.cogClass = cogClass;
 })();
