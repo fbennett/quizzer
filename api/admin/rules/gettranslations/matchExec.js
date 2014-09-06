@@ -67,13 +67,28 @@
             }
             // Convert to HTML
             var html = sys.markdown(txt,true,true);
+            // Some RTF formatting templates
+            var rtfHeader = "{\\rtf1\\ansi\n";
+            var rtfColorTable = "{\\colortbl;\\red0\\green0\\blue0;\\red255\\green0\\blue0;\\red100\\green160\\blue100;\\red0\\green0\\blue255;}";
+            var rtfBoxedIncorrect = "\\li720\\ri720\\box\\brdrdot\\brdrw10\\brsp20\\brdrcf2";
+            var rtfBoxedCorrect = "\\li720\\ri720\\box\\brdrdb\\brdrw10\\brsp20\\brdrcf3";
+            var rtfBoxedRule = "\\li720\\ri720\\box\\brdrs\\brdrw10\\brsp20\\brdrcf1";
+            var rtfTrailer = "\\par}"
+
             // And now convert it to RTF
             sys.pandoc.convert('html',html,['rtf'],function(result, err){
                 if (err) {
                     // should probably respond before throwing
                     throw "Error in pandoc conversion: " + err;
                 }
-                // And ship it for downloading ... ?
+                // Fix up formatting ...
+                var rtf = result.rtf;
+                rtf = rtf.replace(/\\li720/g,rtfBoxedIncorrect);
+                rtf = rtf.replace(/\\li1440/g,rtfBoxedCorrect);
+                rtf = rtf.replace(/\\li2160/g,rtfBoxedRule);
+                // Header and footer
+                rtf = rtfHeader + rtfColorTable + rtf + rtfTrailer;
+                // And ship it for downloading
                 response.writeHead(200, {
                     'Content-Type': 'application/rtf',
                     'Content-Disposition': 'attachment; filename="QuizzerGuide_' + lang + '.rtf"',
@@ -81,7 +96,7 @@
                     'Expires': '-1',
                     'Pragma': 'no-cache'
                 });
-                response.end("{\\rtf1\\ansi\\deff3\\adeflang1025\n" + result.rtf + "\n\\par}");
+                response.end(rtf);
             });
         }
     }
