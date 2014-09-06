@@ -23,7 +23,6 @@
         });
 
         function getRuleCount(languages) {
-            console.log("WOWZA: "+ruleGroupID);
             var sql = "SELECT COUNT(*) count FROM ruleTranslations JOIN rules USING(ruleID) WHERE lang='en' AND rules.ruleGroupID=?;";
             sys.db.get(sql,[ruleGroupID],function(err,row){
                 if (err) {return oops(response,err,'students/getlanguages(2)')};
