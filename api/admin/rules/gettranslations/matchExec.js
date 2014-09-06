@@ -29,7 +29,7 @@
             var entrynum = 0;
             for (var i=0,ilen=rows.length;i<ilen;i++) {
                 var row = rows[i];
-                var m = row.heading.match(/^(?:\*\*)?(.*?)(?:\*\*)?:\s*(.*)/);
+                var m = row.heading.match(/^(?:\*\*)?([^*]+)(?:\*\*)?:\s*(.*)/);
                 if (m) {
                     if (m[1] !== category) {
                         catnum += 1;
