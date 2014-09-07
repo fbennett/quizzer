@@ -57,15 +57,17 @@ pre.show-box-child {
     margin: 0 0 0 1em;
     border: 2px solid #bbbbbb;
     border-radius: 0 !important;
+    padding: 0.5em;
     text-align: left;
     white-space: pre-wrap;
 }
 
 div.show-box-child {
     background: #eeeeee;
-    margin: 0 0 0 1em;
+    margin: 0 0 0 0;
     border: 2px solid #bbbbbb;
     border-radius: 0 !important;
+    padding: 0.5em;
     text-align: left;
 }
 
