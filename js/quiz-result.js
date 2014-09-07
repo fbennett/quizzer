@@ -256,33 +256,19 @@ function openRule (node) {
     );
     if (false === row) return;
 
-    var cls = node.getAttribute("class");
-    var readOnly = false;
-    if (cls.indexOf('disabled-rule') > -1) {
-        // do nothing in this case
-        readOnly = true;
-    } else if (row.stringTrans) {
-        var editButton = rownode.childNodes[1].childNodes[1];
-        editButton.style.display = 'inline';
-    } else {
-        var saveButton = rownode.childNodes[1].childNodes[0];
-        saveButton.style.display = 'inline';
-    }
+    var saveButton = rownode.childNodes[1].childNodes[0];
+    saveButton.style.display = 'inline';
 
     var tr = document.createElement('tr');
-    if (row.stringTrans || readOnly) {
-        tr.innerHTML = '<td class="show-box"><div class="show-box-child">' + markdown(row.stringOrig) + '</div></td><td class="edit-box"><div>' + markdown(row.stringTrans) + '</div></td>'
-    } else {
-        tr.innerHTML = '<td class="show-box"><div class="show-box-child">' + markdown(row.stringOrig) + '</div></td><td class="edit-box"><textarea>' + row.stringTrans + '</textarea></td>'
-    }
+    setEditableSourceView(tr,row);
     rownode.parentNode.insertBefore(tr,rownode.nextSibling);
-    if (row.stringTrans || readOnly) {
-        node.setAttribute('onclick','closeRule(this);');
-    } else {
-        node.setAttribute('onclick','void(0);');
-    }
+    node.setAttribute('onclick','closeRule(this);');
     setChildHeight(rownode.nextSibling.childNodes[1].childNodes[0]);
     setChildHeight(rownode.nextSibling.childNodes[0].childNodes[0]);
+};
+
+function setEditableSourceView(tr,row) {
+    tr.innerHTML = '<td class="show-box"><pre class="show-box-child">' + row.stringOrig + '</pre></td><td class="edit-box"><textarea>' + row.stringTrans + '</textarea></td>'
 };
 
 function saveRule (node) {
@@ -360,9 +346,7 @@ function editRule (node) {
         renderedrule.parentNode.replaceChild(textarea,renderedrule);
         deleteButton.style.display = 'inline';
     }
-    var textnode = document.createElement('textarea');
-    textnode.innerHTML = row.stringTrans;
-    renderednode.parentNode.replaceChild(textnode,renderednode);
+    setEditableSourceView(rownode.nextSibling,row)
     saveButton.style.display = 'inline';
     editButton.style.display = 'none';
     node.parentNode.previousSibling.setAttribute('onclick','void(0);');
@@ -385,7 +369,7 @@ function closeRule (node) {
 
 function setChildHeight (textarea) {
     var height = textarea.parentNode.offsetHeight;
-    textarea.style.height = height;
+    textarea.style.height = height + 'px';
 };
 
 
