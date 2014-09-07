@@ -9,3 +9,7 @@ div.button-wrapper input {
     border-radius:1em;
     padding:0.5em;
 }
+
+div.button-wrapper input:hover {
+    cursor:pointer;
+}
