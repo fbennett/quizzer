@@ -54,7 +54,7 @@ function buildRulesLists() {
     for (var i=0,ilen=rows.admin.length;i<ilen;i+=1) {
         var row = rows.admin[i];
         var tr = document.createElement('tr');
-        tr.innerHTML = '<td draggable="true" ondragstart="dragDemoteRule(event);" ondragend="dragendDemoteRule(event);" ondragover="allowMergeDrop(event);" ondrop="dropMergeRule(event);" ondragleave="dragleaveMergeRule(event);" id="' + row.ruleID + '" onclick="showGloss(this);">' + markdown(row.string) + '</td>';
+        tr.innerHTML = '<td class="label" draggable="true" ondragstart="dragDemoteRule(event);" ondragend="dragendDemoteRule(event);" ondragover="allowMergeDrop(event);" ondrop="dropMergeRule(event);" ondragleave="dragleaveMergeRule(event);" id="' + row.ruleID + '" onclick="showGloss(this);">' + markdown(row.string) + '</td>';
         rulesListAdmin.appendChild(tr);
         pageData.adminrules.push(tr.childNodes[0]);
     }
@@ -84,7 +84,7 @@ function showGloss(node) {
 
     node.setAttribute('onclick', 'hideGloss(this);');
     var glossNode = document.createElement('tr');
-    glossNode.innerHTML = '<td>' + markdown(row.origText) + '</td>';
+    glossNode.innerHTML = '<td class="gloss">' + markdown(row.origText) + '</td>';
     node.parentNode.parentNode.insertBefore(glossNode,node.parentNode.nextSibling);
 };
 

@@ -1,3 +1,7 @@
+td.gloss {
+    background: #feffb0;
+}
+
 .complete {
     background: #55bb55;
 }
@@ -38,7 +42,7 @@ table#rules-list-admin td {
     padding: 0.5em;
 }
 
-table#rules-list-admin td:hover {
+table#rules-list-admin td.label:hover {
     background: #eeeeee;
     cursor:pointer;
 }
