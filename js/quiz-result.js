@@ -262,7 +262,8 @@ function openRule (node) {
     var tr = document.createElement('tr');
     setEditableSourceView(tr,row);
     rownode.parentNode.insertBefore(tr,rownode.nextSibling);
-    node.setAttribute('onclick','closeRule(this);');
+    node.setAttribute('onclick','void(0);');
+    //node.setAttribute('onclick','closeRule(this);');
     setChildHeight(rownode.nextSibling.childNodes[1].childNodes[0]);
     setChildHeight(rownode.nextSibling.childNodes[0].childNodes[0]);
 };
