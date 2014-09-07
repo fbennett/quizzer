@@ -4,6 +4,7 @@
         var oops = this.utils.apiError;
         var sys = this.sys;
         var commenterID = this.sys.validCommenter(params).id;
+        var studentID = null;
         var glossText = params.glosstext;
         var ruleText = params.ruletext;
         var ruleID = params.ruleid;
@@ -93,7 +94,7 @@
             var sql = 'INSERT INTO ruleTranslations VALUES (NULL,?,?,?);'
             sys.db.run(sql,[ruleID,glossText,lang],function(err){
                 if (err) {return oops(response,err,'**classes/saveonerule(7)')};
-                endTransaction();
+                logEdit(this.lastID);
             });
         };
 
@@ -101,13 +102,28 @@
             var sql = 'UPDATE ruleTranslations SET string=? WHERE ruleTranslationID=?;';
             sys.db.run(sql,[glossText,ruleTranslationID],function(err){
                 if (err) {return oops(response,err,'**classes/saveonerule(8)')};
+                logEdit(ruleTranslationID);
+            });
+        };
+
+        function logEdit(ruleTranslationID) {
+            var sql,id;
+            if (studentID) {
+                id = studentID;
+                sql = 'INSERT INTO ruleTranslationEdits VALUES (NULL,?,?,NULL,DATE("now"));'
+            } else if (commenterID) {
+                id = commenterID;
+                sql = 'INSERT INTO ruleTranslationEdits VALUES (NULL,?,NULL,?,DATE("now"));'
+            }
+            sys.db.run(sql,[ruleTranslationID,id],function(err){
+                if (err) {return oops(response,err,'**classes/saveonerule(9)')};
                 endTransaction();
             });
         };
 
         function endTransaction() {
             sys.db.run('END TRANSACTION',function(err){
-                if (err) {return oops(response,err,'**classes/saveonerule(9)')};
+                if (err) {return oops(response,err,'**classes/saveonerule(10)')};
                 returnText();
             });
         };

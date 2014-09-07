@@ -1,4 +1,4 @@
--- 15
+-- 16
 
 CREATE TABLE version (
        schema TEXT PRIMARY KEY,
@@ -192,6 +192,7 @@ CREATE TABLE ruleTranslationEdits (
        ruleTranslationEditID INTEGER PRIMARY KEY,
        ruleTranslationID INTEGER NOT NULL,
        studentID INTEGER,
+       adminID INTEGER,
        editDate DATE,
        FOREIGN KEY (ruleTranslationID) REFERENCES ruleTranslations(ruleTranslationID),
        FOREIGN KEY (studentID) REFERENCES students(studentID)
