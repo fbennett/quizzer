@@ -1,14 +1,6 @@
 Some ideas
 
-* Set foreign key constraints in database schema.
+* Fix hide behaviour in student gloss view. Currently
+  will hide immediately on show. Should probably block,
+  as it does after Save and Edit.
 
-* Implement barcode marking of printed exams.
-
-* Allow setting of external toggle on "student" records, and
-  suppress in Stragglers and exam paper runs.
-
-* Provide CSV download of exam results.
-
-* Allow scheduled notifications to external class members
-  and commenters, resetting access keys at each notice
-  interval.
