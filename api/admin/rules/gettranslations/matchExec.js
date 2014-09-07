@@ -88,8 +88,8 @@
                 rtf = rtf.replace(/\\li720/g,rtfBoxedIncorrect);
                 rtf = rtf.replace(/\\li1440/g,rtfBoxedCorrect);
                 rtf = rtf.replace(/\\li2160/g,rtfBoxedRule);
-                rtf = rtf.replace(/\\li1080/g,rtfBoxedIncorrect);
-                rtf = rtf.replace(/\\li1800/g,rtfBoxedCorrect);
+                rtf = rtf.replace(/\\li1080/g,rtfBoxedIncorrectList);
+                rtf = rtf.replace(/\\li1800/g,rtfBoxedCorrectList);
                 // Header and footer
                 rtf = rtfHeader + rtfColorTable + rtf + rtfTrailer;
                 // And ship it for downloading
