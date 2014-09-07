@@ -71,7 +71,9 @@
             var rtfHeader = "{\\rtf1\\ansi\n";
             var rtfColorTable = "{\\colortbl;\\red0\\green0\\blue0;\\red255\\green0\\blue0;\\red100\\green160\\blue100;\\red0\\green0\\blue255;}";
             var rtfBoxedIncorrect = "\\li720\\ri720\\box\\brdrdot\\brdrw10\\brsp20\\brdrcf2";
+            var rtfBoxedIncorrectList = "\\li1080\\ri720\\box\\brdrdot\\brdrw10\\brsp20\\brdrcf2";
             var rtfBoxedCorrect = "\\li720\\ri720\\box\\brdrdb\\brdrw10\\brsp20\\brdrcf3";
+            var rtfBoxedCorrectList = "\\li1080\\ri720\\box\\brdrdb\\brdrw10\\brsp20\\brdrcf3";
             var rtfBoxedRule = "\\li720\\ri720\\box\\brdrs\\brdrw10\\brsp20\\brdrcf1";
             var rtfTrailer = "\\par}"
 
