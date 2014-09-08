@@ -154,14 +154,21 @@
                 + "  AND Co.stringID IS NULL);";
             sys.db.run(sql,function(err){
                 if (err) {return oops(response,err,'classes/deleteoneclass [purgeStrings]')};
-                endTransaction();
+                vacuumGarbage();
             });
             
         }
 
+        function vacuumGarbage() {
+            sys.db.run('VACUUM',function(err){
+                if (err) {return oops(response,err,'classes/deleteoneclass(2)')};
+                endTransaction();
+            });
+        };
+
         function endTransaction() {
             sys.db.run('END TRANSACTION',function(err){
-                if (err) {return oops(response,err,'classes/deleteoneclass(2)')};
+                if (err) {return oops(response,err,'classes/deleteoneclass(3)')};
                 response.writeHead(200, {'Content-Type': 'application/json'});
                 response.end('["success"]');
             });
