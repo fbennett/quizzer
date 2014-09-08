@@ -1,4 +1,4 @@
--- 16
+-- 17
 
 CREATE TABLE version (
        schema TEXT PRIMARY KEY,
@@ -40,6 +40,8 @@ INSERT INTO languages VALUES ('uz','Uzbek');
 INSERT INTO languages VALUES ('bn','Bengali');
 INSERT INTO languages VALUES ('tr','Turkish');
 INSERT INTO languages VALUES ('vn','Vietnamese');
+INSERT INTO languages VALUES ('de','German');
+INSERT INTO languages VALUES ('pt-BR','Portuguese (br)');
 
 CREATE TABLE adminLanguages (
        adminLanguageID INTEGER PRIMARY KEY,
