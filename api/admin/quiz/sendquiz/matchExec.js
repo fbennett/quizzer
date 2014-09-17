@@ -53,7 +53,7 @@
 
         function getStudents(){
             mailData.students = [];
-            var sql = 'SELECT memberships.studentID,students.name,email,classes.name AS className '
+            var sql = 'SELECT memberships.studentID,studentKey,students.name,email,last_key_date,classes.name AS className '
                 + 'FROM memberships '
                 + 'JOIN students USING(studentID) '
                 + 'JOIN classes ON classes.classID=memberships.classID '
@@ -94,7 +94,25 @@
             }
             var student = mailData.students[pos];
             var studentID = student.studentID;
-            var studentKey = sys.getRandomKey(8,36);
+            var studentKey;
+            // Set default key value
+            if (student.studentKey) {
+                studentKey = student.studentKey;
+            } else {
+                studentKey = sys.getRandomKey(8,36);
+            }
+            // Update key if more than two weeks have passed since last bump
+            var lastKeyDate;
+            if (student.last_key_date) {
+                lastKeyDate = new Date(student.last_key_date);
+            } else {
+                lastKeyDate = new Date("1970-01-01");
+            }
+            var nowDate = new Date();
+            if (((nowDate - lastKeyDate)/1000/60/60/24) > 14) {
+                studentKey = sys.getRandomKey(8,36);
+                student.last_key_date = sys.getDateString(nowDate);
+            }
             sys.db.run('UPDATE memberships SET studentKey=? WHERE classID=? AND studentID=?',[studentKey,classID,studentID],function(err){
                 if (err) {return oops(response,err,'quiz/sendquiz(4)')};
                 // Good, so this does that. Flag as sent, and send the mail message.
@@ -199,6 +217,7 @@
             } else {
                 mailText = mailText.replace(/@@PAST_QUIZZES@@/g,'');
             }
+            // console.log(mailText);
             sys.mailer.sendMail({
                 text:    mailText, 
                 from:    "Instructor <" + email_account + ">", 
@@ -210,6 +229,7 @@
                 };
                 sendMail(pos+1,limit);
             });
+            //sendMail(pos+1,limit);
         };
 
         function refreshDateStamps (pos,limit) {
@@ -218,7 +238,9 @@
                 return;
             }
             var studentID = mailData.students[pos].studentID;
-            sys.db.run('UPDATE memberships SET last_mail_date=DATE("now") WHERE classID=? AND studentID=?',[classID,studentID],function(err){
+            // Set last_key_date by hand, so that key bumps can be throttled to every two weeks.
+            var lastKeyDate = mailData.students[pos].last_key_date;
+            sys.db.run('UPDATE memberships SET last_mail_date=DATE("now"),last_key_date=? WHERE classID=? AND studentID=?',[lastKeyDate,classID,studentID],function(err){
                 if (err) {return oops(response,err,'quiz/sendquiz(6)')};
                 refreshDateStamps(pos+1,limit);
             });

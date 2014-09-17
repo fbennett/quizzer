@@ -1,4 +1,4 @@
--- 17
+-- 19
 
 CREATE TABLE version (
        schema TEXT PRIMARY KEY,
@@ -73,6 +73,7 @@ CREATE TABLE memberships (
        studentID INTEGER,
        studentKey TEXT NOT NULL,
        last_mail_date DATE,
+       last_key_date DATE,
        UNIQUE (studentID,classID),
        FOREIGN KEY (studentID) REFERENCES students(studentID),
        FOREIGN KEY (classID) REFERENCES classes(classID)       
