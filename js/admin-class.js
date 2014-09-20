@@ -289,33 +289,106 @@ function generateProfileChart() {
     if (false === graphData) return;
 
 
-
+    // Okay, let's get it straight this time.
+    //
+    // We will return values as percentages of the class in each of the five quintiles.
+    //
+    // Split it into two halves, early and late.
+    var midPoint = ~~(graphData.length/2);
+    var slicePos = [[0,midPoint],[midPoint,graphData.length]];
+    var responderTotal = [0,0];
+    var cohortNormalizationFactor = [1,1];
+    var quintileDataSets = [];
+    var respondingIDs = {};
     var numbers = [];
-    for (var pos=0,len=2;pos<len;pos+=1) {
-        var students = graphData[pos];
-
-        var quintiles = {0:[],1:[],2:[],3:[],4:[],5:[],6:[],7:[],8:[],9:[]};
-        for (var i=0,ilen=students.length;i<ilen;i+=1) {
-            var student = students[i];
-            var quintpos = parseInt((student.percentageCorrect/20) % 5,10);
-            quintiles[quintpos].push(student);
-        }
-        
-        numbers[pos] = [{x:0,y:0}];
-        for (var i=0,ilen=5;i<ilen;i+=1) {
-            var obj = {x:0,y:0};
-            obj.x = (20*i)+10;
-            if (quintiles[i].length && false) {
-                total = 0;
-                for (var j=0,jlen=quintiles[i].length;j<jlen;j+=1) {
-                    total += quintiles[i][j].percentageCorrect;
-                }
-                obj.x = (total/quintiles[i].length);
+    for (var i=0,ilen=2;i<ilen;i++) {
+        //
+        // For each half ...
+        var rawdata = graphData.slice(slicePos[i][0],slicePos[i][1]);
+        // Get total questions answered and total correct for each student
+        var dataByStudent = {};
+        var maxAnswers = 0;
+        var studentID;
+        for (var j=0,jlen=rawdata.length;j<jlen;j+=1) {
+            studentID = rawdata[j].studentID;
+            var correct = rawdata[j].correct;
+            if (!dataByStudent[studentID]) {
+                dataByStudent[studentID] = {
+                    answers:0,
+                    correct:0
+                };
+                responderTotal[i] += 1;
+                respondingIDs[studentID] = true;
             }
-            obj.y = quintiles[i].length;
-            numbers[pos].push(obj);
+            dataByStudent[studentID].answers += 1;
+            if (correct) {
+                dataByStudent[studentID].correct += 1;
+            }
+            // Watch for the max
+            if (dataByStudent[studentID].answers > maxAnswers) {
+                maxAnswers = dataByStudent[studentID].answers;
+            }
         }
-        numbers[pos].push({x:100,y:0});
+        for (var studentID in dataByStudent) {
+            var studentData = dataByStudent[studentID];
+            // Get the overall percentage of correct answers for each student.
+            studentData.percentage = (studentData.correct*100/studentData.answers);
+            // Calculate a weight for each student by total questions answered (highest responder = 1.0)
+            studentData.weight = (studentData.answers/maxAnswers);
+        }
+        // Divide into quintile groups
+        var quintileData = {0:[],1:[],2:[],3:[],4:[]};
+        for (studentID in dataByStudent) {
+            var student = dataByStudent[studentID];
+            if (student.percentage === 100) {
+                // Otherwise 100% correct snaps to zero
+                student.percentage = 99;
+            }
+            var quintpos = parseInt((student.percentage/20) % 5,10);
+            quintileData[quintpos].push(student);
+        }
+        quintileDataSets.push(quintileData);
+    }
+    // Get total number of responders
+    studentCount = 0;
+    for (var id in respondingIDs) {
+        studentCount += 1;
+    }
+    // Set cohort normalization factor
+    var curvename;
+    var normfactor = 0;
+    if (responderTotal[0] > responderTotal[1]) {
+        cohortNormalizationFactor[1] = responderTotal[0]/responderTotal[1];
+        curvename = 'unshaded';
+        normfactor = cohortNormalizationFactor[1];
+    } else if (responderTotal[0] < responderTotal[1]) {
+        cohortNormalizationFactor[0] = responderTotal[1]/responderTotal[0];
+        curvename = 'shaded';
+        normfactor = cohortNormalizationFactor[0];
+    }
+    for (var i=0,ilen=2;i<ilen;i++) {
+        var quintileData = quintileDataSets[i];
+        // Take a *weighted* total of the students in each quintile, to avoid distortions from low-frequency responders.
+        numbers[i] = [{x:0,y:0}];
+        for (var j=0,jlen=5;j<jlen;j++) {
+            var quintData = quintileData[j];
+            var quint = {
+                x:((20*j)+10),
+                y:0
+            };
+            for (var k=0,klen=quintData.length;k<klen;k++) {
+                // Unweighted return
+                //quint.y += 1;
+                // Weighted by response rate within cohort
+                //quint.y += quintData[k].weight;
+                // Normalized, unweighted
+                quint.y += cohortNormalizationFactor[i];
+                // Normalized, weighted
+                //quint.y += (quintData[k].weight * cohortNormalizationFactor[i]);
+            }
+            numbers[i].push(quint);
+        }
+        numbers[i].push({x:100,y:0});
     }
     var data = {
         xScale: 'linear',
@@ -337,6 +410,18 @@ function generateProfileChart() {
     }
     var opts = {};
     var myChart = new xChart('line', data, '#profile-chart', opts);
+    var curveName = document.getElementById('curvename');
+    curveName.innerHTML = curvename;
+    var firstHalfRate = document.getElementById('first-half-rate');
+    firstHalfRate.innerHTML = parseInt(responderTotal[0]*100/studentCount,10);
+    var secondHalfRate = document.getElementById('second-half-rate');
+    secondHalfRate.innerHTML = parseInt(responderTotal[1]*100/studentCount,10);
+    if (normfactor) {
+        var useNormFactor = document.getElementById('use-normfactor');
+        useNormFactor.style.display = 'inline';
+        var normFactor = document.getElementById('normfactor');
+        normFactor.innerHTML = parseInt(((normfactor-1)*100),10);
+    }
 }
 
 function buttonMode (mode) {

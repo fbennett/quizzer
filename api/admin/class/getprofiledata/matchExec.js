@@ -10,109 +10,40 @@
         
         // Split results into two cohorts of equal length, and graph each separately
 
-        var graphData = [[],[]];
-        var midRowID = null;
+        var graphData = [];
 
         beginTransaction();
 
         function beginTransaction () {
             sys.db.run('BEGIN TRANSACTION',function(err){
                 if (err) {return oops(response,err,'class/getprofiledata(1)')};
-                makeTable();
+                getData();
             });
         };
 
-        function makeTable () {
-            // Use a temporary table with numbered rows
-            var sql = 'CREATE TEMPORARY TABLE ' + randomTableName + ' ('
-                +   'rowIndex INTEGER PRIMARY KEY AUTOINCREMENT,'
-                +   'answerID,'
-                +   'quizNumber'
-                + ');'
-            sys.db.run(sql,function(err){
-                if (err) {return oops(response,err,'class/getprofiledata(2)')};
-                populateTable();
-            });
-        };
-
-        function populateTable() {
-            var sql = 'INSERT INTO ' + randomTableName + ' (answerID,quizNumber) '
-                + 'SELECT answerID,quizzes.quizNumber '
-                +   'FROM quizzes '
-                +   'JOIN questions USING(quizID) '
-                +   'JOIN answers ON answers.questionID=questions.questionID '
-                +   'JOIN students ON students.studentID=answers.studentID '
-                +   'LEFT JOIN quizAnswers ON quizAnswers.quizID=quizzes.quizID AND quizAnswers.studentID=answers.studentID '
-                +   'WHERE quizzes.classID=' + classID + ' AND privacy=0 AND quizzes.examName IS NULL '
-                +   'ORDER BY quizAnswers.submissionDate DESC,quizzes.quizNumber DESC,questions.questionNumber DESC,answers.studentID DESC'
-            sys.db.exec(sql,function(err){
-                if (err){return oops(response,err,'class/getprofiledata(2)')};
-                getMidRowID();
-            });
-        }
-
-        function getMidRowID () {
-            var sql = 'SELECT * FROM ' + randomTableName + ';'
-
-            sys.db.all(sql,function(err,rows){
-                if (err||!rows||!rows.length) {return oops(response,err,'class/getprofiledata(1)')};
-                console.log("XX "+~~(rows.length/2));
-                midRowID = rows[~~(rows.length/2)].rowIndex;
-                //console.log("MID ROW ID: "+midRowID);
-                evaluateData(0,2);
-            });
-        };
-
-        function evaluateData (pos,limit) {
-            if (pos === limit) {
-                destroyTable();
-                return;
-            }
-            if (pos === 0) {
-                compStr = '<'
-            } else {
-                compStr = '>'
-            }
-            var sql = 'SELECT students.studentID,qa.submissionDate,quizzes.quizNumber,'
-                + 'CAST(COUNT(correct.questionID) AS REAL)*100/CAST(COUNT(total.questionID) AS REAL) AS percentageCorrect '
-                + 'FROM memberships '
-                + 'JOIN students ON students.studentID=memberships.studentID '
-                + 'JOIN quizzes ON quizzes.classID=memberships.classID '
-                + 'JOIN questions USING(quizID) '
-                + 'JOIN ('
-                +   'SELECT questionID,answerID,studentID '
-                +   'FROM answers'
-                + ') AS total ON total.studentID=students.studentID AND total.questionID=questions.questionID '
-                + 'LEFT JOIN quizAnswers AS qa ON qa.quizID=quizzes.quizID AND qa.studentID=memberships.studentID '
-                + 'LEFT JOIN ('
-                +   'SELECT answers.questionID,answers.answerID '
-                +   'FROM questions '
-                +   'JOIN answers USING(questionID) '
-                +   'WHERE choice=correct'
-                + ') AS correct ON correct.answerID=total.answerID '
-                + 'WHERE privacy=0 AND memberships.classID=? AND total.answerID IN ('
-                +   'SELECT answerID FROM ' + randomTableName + ' WHERE rowIndex ' + compStr + ' ? '
-                + ') '
-                + 'GROUP BY students.studentID '
-                + 'ORDER BY percentageCorrect DESC;'
-            sys.db.all(sql,[classID,midRowID],function(err,rows){
-                if (err||!rows) {return oops(response,err,'class/getprofiledata(2)')};
-                graphData[pos] = rows;
-                evaluateData(pos+1,limit);
-            });
-        };
-
-        function destroyTable () {
-            var sql = 'DROP TABLE ' + randomTableName;
-            sys.db.run(sql,function(err){
-                if (err) {return oops(response,err,'class/getprofiledata(4)')};
+        // Get a list of unique answerIDs, sorted by submission date, quiz number, then question number.
+        function getData() {
+            // QZ.quizNumber,Q.questionNumber,answerID
+            var sql = 'SELECT A.studentID,'
+                + 'CASE WHEN Q.correct=A.choice THEN 1 ELSE 0 END AS correct '
+                + 'FROM quizzes QZ '
+                + 'JOIN questions Q USING(quizID) '
+                + 'JOIN answers A USING(questionID) '
+                + 'JOIN students S USING(studentID) '
+                + 'JOIN quizAnswers QA USING(quizID,studentID) '
+                + 'WHERE classID=? AND privacy=0 AND QZ.examName IS NULL '
+                + 'ORDER BY QA.submissionDate ASC,QZ.quizNumber ASC,Q.questionNumber ASC,A.studentID '
+            sys.db.all(sql,[classID],function(err,rows){
+                if (err||!rows) {return oops(response,err,'class/getprofiledata(1)')};
+                graphData = rows;
                 endTransaction();
             });
+
         };
 
         function endTransaction() {
             sys.db.run('END TRANSACTION',function(err){
-                if (err) {return oops(response,err,'class/getprofiledata(5)')};
+                if (err) {return oops(response,err,'class/getprofiledata(2)')};
                 sendResponse();
             });
         };
