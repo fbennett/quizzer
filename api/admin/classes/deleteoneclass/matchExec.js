@@ -154,31 +154,25 @@
                 + "  AND Co.stringID IS NULL);";
             sys.db.run(sql,function(err){
                 if (err) {return oops(response,err,'classes/deleteoneclass [purgeStrings]')};
-                vacuumGarbage();
+                endTransaction();
             });
             
         }
 
-        function vacuumGarbage() {
-            sys.db.run('VACUUM',function(err){
-                if (err) {return oops(response,err,'classes/deleteoneclass(2)')};
-                endTransaction();
-            });
-        };
-
         function endTransaction() {
             sys.db.run('END TRANSACTION',function(err){
                 if (err) {return oops(response,err,'classes/deleteoneclass(3)')};
+                vacuumGarbage();
+            });
+        };
+
+        function vacuumGarbage() {
+            sys.db.run('VACUUM',function(err){
+                if (err) {return oops(response,err,'classes/deleteoneclass(2)')};
                 response.writeHead(200, {'Content-Type': 'application/json'});
                 response.end('["success"]');
             });
         };
-
-
-
-
-
-
 
     }
     exports.cogClass = cogClass;
