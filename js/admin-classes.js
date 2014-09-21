@@ -123,9 +123,9 @@ function buildClassList (rows) {
             + '<td style="display:none;">' + rows[i].classID + '</td>'
             + '<td>' + rows[i].ruleGroupName + '</td>'
             + '<td style="display:none;">' + rows[i].ruleGroupID + '</td>'
-            + '<td><input class="button-small" type="button" value="Edit" onclick="addClass(this.parentNode.parentNode);"></td>'
+            + '<td><input class="button-small i18n" name="value-edit" type="button" value="Edit" onclick="addClass(this.parentNode.parentNode);"></td>'
             + '<td><input id="deleteOK-' + rows[i].classID + '" type="checkbox"></td>'
-            + '<td><input type="button" value="Del" class="button-small" onclick="maybeDeleteClass(this,' + rows[i].classID + ');"/></td>';
+            + '<td><input type="button" name="value-delete" value="Del" class="button-small i18n" onclick="maybeDeleteClass(this,' + rows[i].classID + ');"/></td>';
         container.appendChild(tr);
     }
 }

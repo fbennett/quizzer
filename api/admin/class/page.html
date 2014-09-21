@@ -11,48 +11,49 @@
   <link rel="stylesheet" type="text/css" href="css/local.css"/>
   <link rel="stylesheet" type="text/css" href="css/admin-class.css"/>
 </head>
-<body onLoad="buildQuizList();buildMemberLists();setUploadURL();">
+<body onLoad="buildQuizList();buildMemberLists();setUploadURL();i18n();">
+  <input style="display:none" class="i18n" name="value-delete-query" value="Delete?">
   <iframe id="download-frame" style="display:none"></iframe>
   <div class="grid grid-pad">
     <div class="col-1-1">
-      <h1>Quizzer Admin</h1>
+      <h1 class="i18n" name="content-quizzer-admin">Quizzer Admin</h1>
       <h2>@@CLASS@@</h2>
       <div>
-        <input class="button" type="button" value="Back" onclick="window.location = fixPath('/?admin=' + getParameterByName('admin') + '&page=classes')"/>
+        <input class="button i18n" name="value-back" type="button" value="Back" onclick="window.location = fixPath('/?admin=' + getParameterByName('admin') + '&page=classes')"/>
       </div>
       <div class="button-bold">
-        <input class="button" id="exam-setup" type="button" value="Exam" onclick="setupExam();"/>
-        <input class="button" id="exam-create" type="button" value="Create Exam" onclick="createExam();" style="display:none;"/>
+        <input class="button i18n" name="value-exam" id="exam-setup" type="button" value="Exam" onclick="setupExam();"/>
+        <input class="button i18n" name="value-create-exam" id="exam-create" type="button" value="Create Exam" onclick="createExam();" style="display:none;"/>
         <span id="exam-boxes" style="display:none;">
-          Title:
-          <input id="exam-title" type="text" size="25"/>
-          Number of questions:
-          <input id="exam-number-of-questions" type="text" size="3"/>
-          Date:
-          <input id="exam-date" type="text" size="20"/>
+          <span class="i18n" name="content-title">Title:</span><!-- nospace
+          --><input id="exam-title" type="text" size="25"/>
+          <span class="i18n" name="content-number-of-questions">Number of questions:</span><!-- nospace
+          --><input id="exam-number-of-questions" type="text" size="3"/>
+          <span class="i18n" name="content-date">Date:</span><!-- nospace
+          --><input id="exam-date" type="text" size="20"/>
         </span>
-        <input class="button" id="non-submitters-button" type="button" value="Stragglers" onclick="showStragglers();"/>
-        <input class="button" id="class-profile-button" type="button" value="Class Profile" onclick="showProfile();"/>
-        <input class="button" id="main-display-button" type="button" value="Return to Main Display" onclick="restoreMain();" style="display:none;"/>
+        <input class="button i18n" name="value-stragglers" id="non-submitters-button" type="button" value="Stragglers" onclick="showStragglers();"/>
+        <input class="button i18n" name="value-class-profile" id="class-profile-button" type="button" value="Class Profile" onclick="showProfile();"/>
+        <input class="button i18n" name="value-return-to-main" id="main-display-button" type="button" value="Return to Main Display" onclick="restoreMain();" style="display:none;"/>
       </div>
       <hr/>
     </div>
     <div class="col-1-3 main-display">
-      <h3>Quizzes</h3>
+      <h3 class="i18n" name="content-quizzes">Quizzes</h3>
       <div id="quiz-list">
       </div>
     </div>
     <div class="col-1-3 main-display">
-      <h3>Members</h3>
+      <h3 class="i18n" name="content-members">Members</h3>
       <div style="margin-bottom:0.5em;">
-        <input type="button" value="Download CSV" onclick="downloadClassList();"/>
+        <input type="button" class="i18n" name="value-download-csv" value="Download CSV" onclick="downloadClassList();"/>
       </div>
-      <input class="button" type="button" value="Remove selected students ->" onclick="removeMembers()"/>
+      <input class="button i18n" name="value-remove-selected-students" type="button" value="Remove selected students ->" onclick="removeMembers()"/>
       <div id="members">
       </div>
     </div>
     <div class="col-1-3 main-display">
-      <h3>Non-Members</h3>
+      <h3 class="i18n" name="content-non-members">Non-Members</h3>
       <form class="form-container"
             id="class-registration-widget"
             enctype="multipart/form-data"
@@ -60,22 +61,22 @@
             method="post"
             style="white-space:nowrap;background:#eeeeee;padding:2px;">
         <input type="file" id="class-registration-list" name="classRegistrationList" />
-        <input class="floated-button" type="submit" value="Upload CSV" title="Format is &quot;name&quot;,&quot;email&quot;" alt="Format is &quot;name&quot;,&quot;email&quot;"/>
+        <input class="floated-button i18n" name="value-upload-csv" type="submit" value="Upload CSV" title="Format is &quot;name&quot;,&quot;email&quot;" alt="Format is &quot;name&quot;,&quot;email&quot;"/>
       </form>
-      <input class="button" type="button" value="<- Add selected students" onclick="addMembers()"/>
+      <input class="button i18n" name="value-add-selected-students" type="button" value="<- Add selected students" onclick="addMembers()"/>
       <div id="non-members">
       </div>
     </div>
     <div class="col-1-1 non-submitters-display" style="display:none;">
-      <h3>Students with Pending Quiz Responses</h3>
+      <h3 class="i18n" name="content-responses-pending-from">Students with Pending Quiz Responses</h3>
     </div>
     <div class="col-1-1 non-submitters-display" style="display:none;">
       <table width="100%">
         <thead>
           <tr>
-            <td>Name</td>
-            <td>Pending</td>
-            <td>Email</td>
+            <td class="i18n" name="content-name">Name</td>
+            <td class="i18n" name="content-pending">Pending</td>
+            <td class="i18n" name="content-email">Email</td>
           </tr>
         </thead>
         <tbody id="non-submitters-list"> 

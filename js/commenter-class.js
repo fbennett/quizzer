@@ -80,7 +80,7 @@ function setRuleButtons () {
         button.setAttribute('type', 'button');
         button.setAttribute('class', 'button rule-lang-buttons');
         button.setAttribute('onclick', 'setButtonMode("' + row.lang + '","' + row.langName + '")');
-        button.value = 'Glosses: ' + row.langName;
+        button.value = i18nStrings['glosses'] + row.langName;
         ruleLangButtons.appendChild(button);
     }
 }

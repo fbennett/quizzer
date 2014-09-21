@@ -16,14 +16,13 @@
     <link rel="stylesheet" type="text/css" href="css/local.css"/>
     <link rel="stylesheet" type="text/css" href="css/admin-rules.css"/>
   </head>
-  <body onLoad="installLanguages(true);editRules();buildRulesLists()" onScroll="trackScroll(event)">
+  <body onLoad="installLanguages(true);editRules();buildRulesLists();i18n();" onScroll="trackScroll(event);">
     <iframe id="download-frame" style="display:none"></iframe>
     <div class="grid">
       <div class="col-1-1">
-        <h1>Quizzer Admin</h1>
-        <h2 id="rules-display-title">Rules</h2>
+        <h1 class="i18n" name="content-quizzer-admin-rules" id="rules-display-title">Quizzer Admin</h1>
         <div>
-          <input class="button" type="button" value="Back" onclick="window.location = fixPath('/?admin=' + getParameterByName('admin') + '&page=groups')"/>
+          <input class="button i18n" name="value-back" type="button" value="Back" onclick="window.location = fixPath('/?admin=' + getParameterByName('admin') + '&page=groups')"/>
         </div>
         <hr/>
         <div id="languages">
@@ -33,7 +32,7 @@
           <span>Four</span>
         </div>
         <div class="col-1-2">
-          <h3>Admin</h3>
+          <h3 class="i18n" name="content-admin-control">Admin</h3>
           <div id="commenters-list-container">
             <div id="commenters-list-phantom" style="visiblity:hidden;">
             </div>
@@ -44,7 +43,7 @@
           </table>
         </div>
         <div class="col-1-2">
-          <h3>Commenters</h3>
+          <h3 class="i18n" name="content-commenter-control">Commenters</h3>
           <table id="rules-list-commenters">
           </table>
         </div>

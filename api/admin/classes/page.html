@@ -9,20 +9,20 @@
   <link rel="stylesheet" type="text/css" href="css/local.css"/>
   <link rel="stylesheet" type="text/css" href="css/admin-classes.css"/>
 </head>
-<body onLoad="buildRuleGroupsList();buildClassList()">
+<body onLoad="buildRuleGroupsList();buildClassList();i18n();">
+  <input style="display:none" class="i18n" name="value-delete-query" value="Delete?">
   <div class="grid">
     <div class="col-1-1">
-      <h1>Quizzer Admin</h1>
-      <h2 id="main-display-title">Class List</h2>
+      <h1 class="i18n" name="content-quizzer-admin-class-list">Quizzer Admin: Class List</h1>
       <div>
-        <input class="button" type="button" value="Back" onclick="window.location = fixPath('/?admin=' + getParameterByName('admin') + '&page=top')"/>
+        <input name="value-back" class="button i18n" type="button" value="Back" onclick="window.location = fixPath('/?admin=' + getParameterByName('admin') + '&page=top')"/>
       </div>
       <div class="button-bold">
-        <input class="button" id="add-class-button" type="button" value="Add Class" onclick="addClass()"/>
-        <input class="button" id="save-class-button" type="button" value="Save Class" onclick="saveClass()" style="display:none;"/>
+        <input class="button i18n" name="value-add-class" id="add-class-button" type="button" value="Add Class" onclick="addClass()"/>
+        <input class="button i18n" name="value-save-class" id="save-class-button" type="button" value="Save Class" onclick="saveClass()" style="display:none;"/>
         <span id="class-boxes" style="display:none;">
-          Name:
-          <input id="class-name" type="text" size="30"/>
+          <span class="i18n" name="content-class-name-label">Name:</span><!-- nospace
+          --><input id="class-name" type="text" size="30"/>
           <input id="class-id" type="text" size="20" style="display:none;"/>
           <select id="class-rule-group">
           </select>
@@ -32,8 +32,8 @@
       <table>
         <thead>
           <tr>
-            <td>Class</td>
-            <td>Rule Group</td>
+            <td class="i18n" name="content-class">Class</td>
+            <td class="i18n" name="content-rule-group">Rule Group</td>
           </tr>
         </thead>
         <tbody id="class-list">

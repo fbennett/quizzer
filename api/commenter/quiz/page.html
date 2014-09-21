@@ -16,14 +16,14 @@
     <script type="text/javascript" src="js/marked.js"></script>
     <script type="text/javascript" src="js/commenter-quiz.js"></script>  
   </head>
-  <body onLoad="showMistakes()">
+  <body onLoad="showMistakes();i18n();">
     <div class="grid">
       <div class="col-1-1">
-        <h1>Quizzer Comments</h1>
-        <h2>@@CLASS@@: Quiz @@QUIZ_NUMBER@@</h2>
-        <h3>Commenting by @@COMMENTER@@</h3>
+        <h1 class="i18n" name="content-quizzer-comments">Quizzer Comments</h1>
+        <h2>@@CLASS@@<span class="i18n" name="content-quiz-number-label">: Quiz </span>@@QUIZ_NUMBER@@</h2>
+        <h3>@@COMMENTER@@</h3>
         <div>
-          <input class="button" type="button" value="Back" onclick="window.location = fixPath('/?commenter=' + getParameterByName('commenter') + '&page=class&classid=' + getParameterByName('classid'))"/>
+          <input class="button i18n" name="value-back" type="button" value="Back" onclick="window.location = fixPath('/?commenter=' + getParameterByName('commenter') + '&page=class&classid=' + getParameterByName('classid'))"/>
         </div>
         <hr/>
         <div id="quiz-mistakes">

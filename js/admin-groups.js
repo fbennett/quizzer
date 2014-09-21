@@ -109,9 +109,10 @@ function buildGroupList (rows) {
         var buttonTD = document.createElement('td');
         var button = document.createElement('input');
         button.setAttribute('type', 'button');
+        button.setAttribute('name', 'value-edit');
         button.setAttribute('value', 'Edit');
         button.setAttribute('onclick', 'addGroup(this.parentNode.parentNode)');
-        button.setAttribute('class', 'button-small');
+        button.setAttribute('class', 'button-small i18n');
         buttonTD.appendChild(button);
         tr.appendChild(buttonTD);
         container.appendChild(tr);

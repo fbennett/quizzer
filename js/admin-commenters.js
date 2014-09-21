@@ -90,8 +90,8 @@ function buildCommenterList (rows) {
         if (row.complete == 0) {
             commenterTR.setAttribute('class','inactive');
         }
-        commenterTR.innerHTML = '<td><input class="button-small" type="button" value="Edit" onclick="addCommenter(this)"/></td>'
-            +'<td><a href="' + row.url + '">' + row.name + '</a></td>'
+        commenterTR.innerHTML = '<td><input class="button-small i18n" name="value-edit" type="button" value="Edit" onclick="addCommenter(this)"/></td>'
+            + '<td><a href="' + fixPath("/?commenter=" + row.adminKey) + '">' + row.name + '</a></td>'
             + '<td>' + getMailDaySelect(row.adminKey,row.interval) + '</td>'
             + '<td class="email">' + getEmail(row.email)  + '</td>'
             + '<td style="display:none;">' + row.adminKey + '</td>'
@@ -123,14 +123,14 @@ function getEmail (email) {
 }
 
 function getMailDaySelect(commenterID,dow,disabled) {
-    var days = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+    var days = ["sunday","monday","tuesday","wednesday","thursday","friday","saturday"];
     var select = '<select onchange="setCommenterMailDay(this,\'' + commenterID + '\')"/>'
-        + '<option value="none">none</option>'
+        + '<option class="i18n" name="content-none" value="none">none</option>'
     for (var i=0,ilen=7;i<ilen;i+=1) {
         if (i === dow) {
-            select += '<option value="' + i + '" selected="true">' + days[i] + '</option>';
+            select += '<option class="i18n" name="content-' + days[i] + '" value="' + i + '" selected="true">' + days[i] + '</option>';
         } else {
-            select += '<option value="' + i + '">' + days[i] + '</option>';
+            select += '<option class="i18n" name="content-' + days[i] + '" value="' + i + '">' + days[i] + '</option>';
         }
     }
     select += '</select>'

@@ -8,26 +8,25 @@
   <link rel="stylesheet" type="text/css" href="css/local.css"/>
   <link rel="stylesheet" type="text/css" href="css/admin-students.css"/>
 </head>
-<body onLoad="getLanguages();buildStudentList();">
+<body onLoad="i18n();getLanguages();buildStudentList();">
   <div class="grid">
     <div class="col-1-1">
-      <h1>Quizzer Admin - students</h1>
+      <h1 class="i18n" name="content-quizzer-admin-students">Quizzer Admin - students</h1>
       <div>
-        <input class="button" type="button" value="Back" onclick="window.location = fixPath('/?admin=' + getParameterByName('admin'))"/>
+        <input class="button i18n" name="value-back" type="button" value="Back" onclick="window.location = fixPath('/?admin=' + getParameterByName('admin'))"/>
       </div>
       <div class="button-bold">
-        <input class="button" id="add-student-button" type="button" value="Add Student" onclick="addStudent()"/>
-        <input class="button" id="save-student-button" type="button" value="Save Student" onclick="saveAddStudent()" style="display:none;"/>
-        <input class="button" id="main-display-button" type="button" value="Return to Main Display" onclick="showStudents()" style="display:none;"/>
+        <input class="button i18n" name="value-add-student" id="add-student-button" type="button" value="Add Student" onclick="addStudent()"/>
+        <input class="button i18n" name="value-save-student" id="save-student-button" type="button" value="Save Student" onclick="saveAddStudent()" style="display:none;"/>
         <span id="student-boxes" style="display:none;">
-          Name:
-          <input id="student-name" type="text" size="20"/>
-          Email:
-          <input id="student-email" type="text" size="20"/>
-          External:
-          <input id="student-status" type="checkbox"/>
-          Language:
-          <select id="student-language"/>
+          <span class="i18n" name="content-name-label">Name:</span><!-- nospace 
+          --><input id="student-name" type="text" size="20"/>
+          <span class="i18n" name="content-email-label">Email:</span><!-- nospace
+          --><input id="student-email" type="text" size="20"/>
+          <span class="i18n" name="content-external-label">External:</span><!-- nospace
+          --><input id="student-status" type="checkbox"/>
+          <span class="i18n" name="content-language-label">Language:</span><!-- nospace
+          --><select id="student-language"/>
           <input id="student-id" type="text" size="5" style="display:none;"/>
           
         </span>
@@ -35,17 +34,6 @@
       <hr/>
       <div id="student-list">
       </div>
-      <table id="external-league-tables" style="display:none;">
-        <thead>
-          <tr>
-            <td>Name</td>
-            <td>Answers</td>
-            <td>Average</td>
-          </tr>
-        </thead>
-        <tbody id="external-league-tables-list">
-        </tbody>
-      </table>
     </div>
   </div>
 </body>

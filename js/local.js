@@ -1,3 +1,49 @@
+var i18nStrings = {};
+function i18n () {
+    var data = {
+        value:[],
+        content:[]
+    };
+    var nodes = document.getElementsByClassName('i18n');
+    for (var i=0,ilen=nodes.length;i<ilen;i++) {
+        var node = nodes[i];
+        var nodeName = node.getAttribute('name');
+        if (nodeName) {
+            var m = nodeName.match(/^(value|content)-(.*)$/);
+            if (m) {
+                data[m[1]].push({
+                    node:node,
+                    string:m[2]
+                })
+                i18nStrings[m[2]] = "undefined";
+            }
+        }
+    }
+    // Send strings to server in a batch
+    var adminID = getParameterByName('admin');
+    var roleName = 'admin';
+    if (!adminID) {
+        adminID = getParameterByName('commenter');
+        roleName = 'commenter'
+    }
+    i18nStrings = apiRequest(
+        '/?' + roleName + '='
+            + adminID 
+            + '&page=i18n'
+        , {
+            strings:i18nStrings
+        }
+    );
+    if (false === i18nStrings) return;
+    // Perform substitutions
+    for (var i=0,ilen=data.value.length;i<ilen;i++) {
+        data.value[i].node.setAttribute('value',i18nStrings[data.value[i].string]);
+    }
+    for (var i=0,ilen=data.content.length;i<ilen;i++) {
+        data.content[i].node.innerHTML = i18nStrings[data.content[i].string];
+    }
+}
+
 function getParameterByName(name) {
     var match = RegExp('[?&]' + name + '=([^&]*)').exec(window.location.search);
     return match && decodeURIComponent(match[1].replace(/\+/g, ' '));
@@ -71,10 +117,10 @@ function confirmDelete (node,callbackName) {
     var origValue,origEvent;
     if (node.value) {
         origValue = node.value;
-        node.value="Delete?";
+        node.value= i18nStrings["delete-query"];
     } else {
         origValue = node.innerHTML;
-        node.innerHTML ="Delete?";
+        node.innerHTML = i18nStrings["delete-query"];
     }
     var origEvent = '' + node.getAttribute('onclick');
     var origStyle = node.parentNode.style;

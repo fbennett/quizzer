@@ -9,25 +9,26 @@
   <link rel="stylesheet" type="text/css" href="css/local.css"/>
   <link rel="stylesheet" type="text/css" href="css/commenter-class.css"/>
 </head>
-<body onLoad="setRuleButtons();buildQuizList();">
+<body onLoad="buildQuizList();i18n();setRuleButtons();">
+  <input class="i18n" name="value-glosses" style="display:none" value="Glosses:"/>
   <div class="grid">
     <div class="col-1-1">
-      <h1>Quizzer Comments</h1>
+      <h1 class="i18n" name="content-quizzer-comments">Quizzer Comments</h1>
       <h2>@@CLASS@@</h2>
-        <h3 id="main-display-title">Commenting by @@COMMENTER@@</h3>
+        <h3 id="main-display-title">@@COMMENTER@@</h3>
         <h3 style="display:none;" id="rules-display-title"><span id="rule-language"></span></h3>
       <div>
-        <input class="button" type="button" value="Back" onclick="window.location = fixPath('/?commenter=' + getParameterByName('commenter') + '&page=top')"/>
+        <input class="button i18n" name="value-back" type="button" value="Back" onclick="window.location = fixPath('/?commenter=' + getParameterByName('commenter') + '&page=top')"/>
       </div>
       <div id="return-to-main-display-button" style="display:none;">
-        <input class="button" type="button" value="Return to main display" onclick="setButtonMode();"/>
+        <input class="button i18n" name="value-return-to-main" type="button" value="Return to main display" onclick="setButtonMode();"/>
       </div>
       <div id="rule-lang-buttons">
       </div>
       <hr/>
     </div>
     <div class="col-1-1">
-      <h3>Quizzes</h3>
+      <h3 class="i18n" name="content-quizzes">Quizzes</h3>
       <div id="main-display">
         <div id="quiz-list">
         </div>
