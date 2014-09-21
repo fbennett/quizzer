@@ -26,10 +26,15 @@ function i18n () {
         adminID = getParameterByName('commenter');
         roleName = 'commenter'
     }
+    var roleAndID;
+    if (adminID) {
+        roleAndID = roleName + '=' + adminID + '&';
+    } else {
+        roleAndID = '';
+    }
     i18nStrings = apiRequest(
-        '/?' + roleName + '='
-            + adminID 
-            + '&page=i18n'
+        '/?' + roleAndID 
+            + 'page=i18n'
         , {
             strings:i18nStrings
         }
