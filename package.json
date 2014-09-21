@@ -1,6 +1,6 @@
 {
   "name": "quizzer",
-  "version": "1.2.60",
+  "version": "1.2.61",
   "engines": {
     "node": "0.10.x"
   },
