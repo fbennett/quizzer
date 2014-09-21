@@ -66,9 +66,9 @@ function fixPath (path) {
         //   (3) remove any port designation from URL
         path = path.replace(/(https?:\/\/[^\/]*):[0-9]+/, '$1');
         //   (4) if URL carries a commenter key, address to staff.html
-        //if (path.match(/commenter=/) {
-        //    path = path.replace('admin.html', 'staff.html');
-        //}
+        if (path.match(/commenter=/)) {
+            path = path.replace('admin.html', 'staff.html');
+        }
     }
     return path;
 }
