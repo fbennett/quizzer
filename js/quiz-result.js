@@ -301,11 +301,13 @@ function showRule (node,offerRetest) {
 
     var tr = document.createElement('tr');
     setDisplaySourceView(tr,row);
-    rownode.parentNode.insertBefore(tr,rownode.nextSibling);
-    node.setAttribute('onclick','closeRule(this,true);');
     if (offerRetest) {
         testButton.style.display = 'inline';
+        node.setAttribute('onclick','closeRule(this,true);');
+    } else {
+        node.setAttribute('onclick','closeRule(this);');
     }
+    rownode.parentNode.insertBefore(tr,rownode.nextSibling);
     setChildHeight(rownode.nextSibling.childNodes[1].childNodes[0]);
     setChildHeight(rownode.nextSibling.childNodes[0].childNodes[0]);
 }
@@ -445,7 +447,7 @@ function closeRule (node,showRule) {
     var contentrownode = rownode.nextSibling;
     contentrownode.parentNode.removeChild(contentrownode);
     if (showRule) {
-        node.setAttribute('onclick', 'showRule(this);');
+        node.setAttribute('onclick', 'showRule(this,true);');
         testButton.style.display = 'none';
     } else {
         node.setAttribute('onclick', 'openRule(this);');
