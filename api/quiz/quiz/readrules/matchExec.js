@@ -71,7 +71,7 @@
                 + '    JOIN quizAnswers ON quizAnswers.quizID=quizzes.quizID AND quizAnswers.studentID=? '
                 + '    JOIN choices USING(questionID) '
                 + '    JOIN rulesToChoices USING(choiceID) '
-                + '    WHERE classes.classID=? AND rulesToChoices.ruleID=? '
+                + '    WHERE classes.classID=? AND rulesToChoices.ruleID=? AND examName IS NULL '
                 + '    GROUP BY questions.questionID '
                 + '    ORDER BY quizAnswers.submissionDate DESC,questions.questionID '
                 + '    LIMIT 2) Q '
