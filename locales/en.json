@@ -11,7 +11,7 @@
 	"return-to-main": "Return to main view",
 	"name-label": "Name: ",
 	"email-label": "Email: ",
-	"external-label": "External: ",
+	"external-label": "Ext: ",
 	"language-label": "Language: ",
 	"quizzer-admin-class-list": "Quizzer Admin: Classes",
 	"add-class": "Add Class",

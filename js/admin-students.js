@@ -57,7 +57,7 @@ function editStudent(node) {
     editDiv.setAttribute('id',id);
     editDiv.setAttribute('class','bubble-edit');
     editDiv.innerHTML = '<b>Name:</b> <input id="bubble-name" type="text" size="15" value="' + name + '"/> '
-        + '<b>Email:</b> <input id="bubble-email" type="text" size="25" value="' + email + '"/> '
+        + '<b>Email:</b> <input id="bubble-email" type="text" size="18" value="' + email + '"/> '
         + '<b>External:</b> ' + '<input id="bubble-privacy" type="checkbox" ' + checked +'/> '
         + '<b>Language:</b> '
         + '<select id="bubble-language">'
