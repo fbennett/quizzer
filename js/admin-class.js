@@ -425,6 +425,7 @@ function generateProfileChart() {
 }
 
 function buttonMode (mode) {
+    var backButton = document.getElementById('back-button');
     var setupButton = document.getElementById('exam-setup');
     var createButton = document.getElementById('exam-create');
     var examBoxes = document.getElementById('exam-boxes');
@@ -443,6 +444,7 @@ function buttonMode (mode) {
         nonSubmittersButton.style.display = 'none';
         profileButton.style.display = 'none';
     } else if (mode === 'non-submitters-display') {
+        backButton.disabled = true;
         setupButton.style.display = 'none';
         setupButton.disabled = true;
         createButton.style.display = 'none';
@@ -456,6 +458,7 @@ function buttonMode (mode) {
         nonSubmittersButton.style.display = 'none';
         showNonSubmitters();
     } else if (mode === 'profile-display') {
+        backButton.disabled = true;
         mainDisplayButton.style.display = 'inline';
         nonSubmittersButton.style.display = 'none';
         profileButton.style.display = 'none';
@@ -463,6 +466,7 @@ function buttonMode (mode) {
         hideRevealMainDisplay('none');
         hideRevealProfileDisplay('block');
     } else if (mode === 'main-display') {
+        backButton.disabled = false;
         setupButton.style.display = 'inline';
         setupButton.disabled = false;
         createButton.style.display = 'none';
@@ -476,6 +480,7 @@ function buttonMode (mode) {
         nonSubmittersButton.style.display = 'inline';
         profileButton.style.display = 'inline';
     } else {
+        backButton.disabled = false;
         setupButton.style.display = "inline";
         createButton.style.display = "none";
         examBoxes.style.display = "none";
