@@ -1,3 +1,27 @@
+ul.rule-description-list li {
+    margin-bottom: 0.5em;
+}
+
+span.cleared-rule-inline {
+    border: 2px solid green;
+    border-radius: 0.5em;
+    padding: 0 0.25em 0 0.25em;
+}
+
+span.study-needed-rule-inline {
+    border: 2px solid #dddd00;
+    background: #ffffdd;
+    border-radius: 0.5em;
+    padding: 0 0.25em 0 0.25em;
+}
+
+span.untested-rule-inline {
+    border: 2px solid #aaaaaa;
+    border-radius: 0.5em;
+    padding: 0 0.25em 0 0.25em;
+}
+
+
 pre.show-box-child {
     background: #eeeeee;
     margin: 0 0 0 0;
@@ -66,6 +90,15 @@ table#rules-for-lang td {
     border-radius:1em;
     padding: 0.5em;
     text-align: left;
+}
+
+table#rules-for-lang td.cleared-rule {
+    border: 3px solid green;
+}
+
+table#rules-for-lang td.study-needed-rule {
+    border: 4px solid yellow;
+    background: #ffffdd;
 }
 
 table#rules-for-lang td.left:hover {

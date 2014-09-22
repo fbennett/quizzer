@@ -2,6 +2,7 @@ var classID = getParameterByName('classid');
 var studentID = getParameterByName('studentid');
 var studentKey = getParameterByName('studentkey');
 var quizNumber = getParameterByName('quizno');
+
 var pageData = {};
 
 function runResult () {
@@ -81,6 +82,8 @@ function runResult () {
         }
     }
     MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
+    if (zzz) {
+    }
 }
 
 
@@ -104,7 +107,6 @@ function buildComment (commenter,comment) {
 function setRuleButtons () {
     var ruleLangButtons = document.getElementsByClassName('rule-lang-buttons');
     // API call
-    var commenterKey = getParameterByName('commenter');
     var rows = apiRequest(
         '/?cmd=readrulelangs&classid=' 
             + classID
@@ -134,38 +136,26 @@ function setRuleButtons () {
 
 function setButtonMode (mode,langName) {
     var ruleLangButtons = document.getElementsByClassName('rule-lang-buttons');
-    var profileButtons = document.getElementsByClassName('profile-buttons');
     var returnToMainDisplayButton = document.getElementById('return-to-main-display-button');
     var mainDisplay = document.getElementsByClassName('main-display');
-    var profileDisplay = document.getElementsByClassName('profile-display');
     var rulesDisplay = document.getElementsByClassName('rules-display');
     var studentLanguage = document.getElementsByClassName('student-language');
     //var mainDisplayTitle = document.getElementById('main-display-title');
     //var rulesDisplayTitle = document.getElementById('rules-display-title');
-    if (mode === 'profile-display') {
-        setNodesDisplay(ruleLangButtons,false);
-        setNodesDisplay(mainDisplay,false);
-        setNodesDisplay(rulesDisplay,false);
-        setNodesDisplay(profileDisplay,true);
-        setNodesDisplay(profileButtons,false);
-        returnToMainDisplayButton.style.display = 'inline';
-    } else if (mode) {
+    if (mode) {
         pageData.lang = mode;
         pageData.langName = langName;
         buildRulesList(mode,langName);
 
         setNodesDisplay(ruleLangButtons,false);
-        setNodesDisplay(profileButtons,false);
         setNodesDisplay(mainDisplay,false);
         setNodesDisplay(rulesDisplay,true);
         setNodesInnerHtml(studentLanguage,langName);
         returnToMainDisplayButton.style.display = 'inline';
     } else {
         setNodesDisplay(ruleLangButtons,true);
-        setNodesDisplay(profileButtons,true);
         setNodesDisplay(mainDisplay,true);
         setNodesDisplay(rulesDisplay,false);
-        setNodesDisplay(profileDisplay,false);
         returnToMainDisplayButton.style.display = 'none';
     }
 }
@@ -218,28 +208,112 @@ function buildRulesList () {
     for (var i=0,ilen=rulesForLang.childNodes.length;i<ilen;i+=1) {
         rulesForLang.removeChild(rulesForLang.childNodes[0]);
     }
+
     for (var i=0,ilen=rows.length;i<ilen;i+=1) {
         var row = rows[i];
+        var questionIDs = row.questionIDs.split(',');
         var tr = document.createElement('tr');
         tr.setAttribute('id','rule-' + row.ruleID);
-        var needsGloss = ' needs-gloss';
-        var disabledClass = '';
-        if (row.performance === 1) {
-            disabledClass = ' disabled-rule';
-        } else if (row.transGloss) {
-            needsGloss = '';
+        var onClick;
+        var rowStyle;
+        if (questionIDs.length > 1) {
+            if (row.count) {
+                // Study candidate, display rendered, offer to send questions
+                onClick = ' onclick="showRule(this,true)"';
+                // Yellow border
+                rowStyle = " study-needed-rule";
+            } else {
+                // Cleared, display source, offer to edit
+                onClick = ' onclick="openRule(this)"';
+                // Green border
+                rowStyle = " cleared-rule";
+            }
+        } else {
+            // Read-only rule, display rendered
+            onClick = ' onclick="showRule(this)"';
+            // Grey border
+            rowStyle = "";
         }
-        var onClick = ' onclick="openRule(this)"';
-        tr.innerHTML = '<td class="left' + needsGloss + disabledClass + '"' + onClick + '><div>' + markdown(row.ruleText) + '</div></td><td class="right"><input type="button" class="button float-right" value="Save" onclick="saveRule(this)" style="display:none;"/><input type="button" class="button float-right" value="Edit" onclick="editRule(this)" style="display:none;"/><input type="button" class="button no-float" value="Del" onclick="confirmDelete(this,\'deleteRule\')" style="display:none;"/></td>';
+        tr.innerHTML = '<td class="left' + rowStyle + '"' + onClick + '><div>' + markdown(row.ruleText) + '</div></td><td class="right"><input type="button" class="button float-right" value="Save" onclick="saveRule(this)" style="display:none;"/><input type="button" class="button float-right" value="Edit" onclick="editRule(this)" style="display:none;"/><input type="button" class="button no-float" value="Del" onclick="confirmDelete(this,\'deleteRule\')" style="display:none;"/><input type="button" class="button float-right" value="Test Yourself!" onclick="window.location.href = \'' + composeRetryURL(row.questionIDs) + '\'" style="display:none;"></td>';
+
         rulesForLang.appendChild(tr);
     }
 };
+
+function composeRetryURL(ids) {
+
+    // So what the hell does this do?
+    // It will need access to the questionIDs reported from the call, so that string should
+    // be set on a hidden node or an attribute. If we have that, we can generate the mail ...
+    // and then it's up to other architecture in the system.
+    var questionIDs = ids.split(',');
+
+    // This can either send a mail out with a link, or it can immediately
+    // open a browser tab that contains the targeted quizzlet. Immediate
+    // opening probably makes more sense -- unless that won't play well
+    // on cellphones, which some students will be using.
+
+    // Probably the smoothest thing would be to not open a new anything.
+    // Click the button, and the mini-quiz loads in the current
+    // window and tab. Finish the quiz, get your feedback, then click 
+    // continue (somewhere), and the rules-list is called again, with 
+    // updated decorations.
+
+    // So you'll need all of the parameters necessary to regenerate the
+    // rules list in the reTest server call.
+    
+    // Need gloss language, so we can come back here.
+
+    return fixPath('/?studentid=' 
+                   + studentID 
+                   + '&studentkey=' 
+                   + studentKey 
+                   + '&classid=' 
+                   + classID
+                   + '&quizno='
+                   + quizNumber
+                   + '&questionids=' 
+                   + questionIDs
+                   + '&glosslang=' 
+                   + pageData.lang);
+}
+
+function showRule (node,offerRetest) {
+    var rownode = node.parentNode;
+    var testButton = rownode.childNodes[1].childNodes[3];
+    var ruleID = rownode.id.split('-').slice(-1)[0];
+    // API call
+    var row = apiRequest(
+        '/?cmd=readonerule&classid=' 
+            + classID
+            + '&studentid=' 
+            + studentID 
+            + '&studentkey=' 
+            + studentKey 
+            + '&quizno=' 
+            + quizNumber
+        ,{
+            ruleid:ruleID,
+            lang:pageData.lang
+        }
+    );
+    if (false === row) return;
+
+    var tr = document.createElement('tr');
+    setDisplaySourceView(tr,row);
+    rownode.parentNode.insertBefore(tr,rownode.nextSibling);
+    node.setAttribute('onclick','closeRule(this,true);');
+    if (offerRetest) {
+        testButton.style.display = 'inline';
+    }
+    setChildHeight(rownode.nextSibling.childNodes[1].childNodes[0]);
+    setChildHeight(rownode.nextSibling.childNodes[0].childNodes[0]);
+}
 
 function openRule (node) {
     var rownode = node.parentNode;
     var ruleID = rownode.id.split('-').slice(-1)[0];
     // API call
-    var commenterKey = getParameterByName('commenter');
     var row = apiRequest(
         '/?cmd=readonerule&classid=' 
             + classID
@@ -270,6 +344,10 @@ function openRule (node) {
 
 function setEditableSourceView(tr,row) {
     tr.innerHTML = '<td class="show-box"><pre class="show-box-child">' + row.stringOrig + '</pre></td><td class="edit-box"><textarea>' + row.stringTrans + '</textarea></td>'
+};
+
+function setDisplaySourceView(tr,row) {
+    tr.innerHTML = '<td class="show-box"><div class="show-box-child">' + markdown(row.stringOrig) + '</div></td><td class="show-box"><div class="show-box-child">' + markdown(row.stringTrans) + '</div></td>'
 };
 
 function saveRule (node) {
@@ -308,6 +386,7 @@ function saveRule (node) {
         rulenode.parentNode.replaceChild(ruleTextNode,rulenode);
         ruleTextNode.parentNode.setAttribute('onclick','closeRule(this);');
     }
+
     orignode.innerHTML = '<div class="show-box-child">' + markdown(row.stringOrig) + '</div>';
     var renderedNode = document.createElement('div');
     renderedNode.innerHTML = markdown(row.stringTrans);
@@ -326,7 +405,6 @@ function editRule (node) {
     var editButton = rownode.childNodes[1].childNodes[1];
     var deleteButton = rownode.childNodes[1].childNodes[2];
     // API call
-    var commenterKey = getParameterByName('commenter');
     var row = apiRequest(
         '/?cmd=readonerule&classid=' 
             + classID
@@ -355,58 +433,26 @@ function editRule (node) {
     setChildHeight(rownode.nextSibling.childNodes[0].childNodes[0]);
 };
 
-function closeRule (node) {
+function closeRule (node,showRule) {
     var rownode = node.parentNode;
     var saveButton = rownode.childNodes[1].childNodes[0];
     var editButton = rownode.childNodes[1].childNodes[1];
     var deleteButton = rownode.childNodes[1].childNodes[2];
+    var testButton = rownode.childNodes[1].childNodes[3];
     saveButton.style.display = 'none';
     editButton.style.display = 'none';
     deleteButton.style.display = 'none';
     var contentrownode = rownode.nextSibling;
     contentrownode.parentNode.removeChild(contentrownode);
-    node.setAttribute('onclick', 'openRule(this);');
+    if (showRule) {
+        node.setAttribute('onclick', 'showRule(this);');
+        testButton.style.display = 'none';
+    } else {
+        node.setAttribute('onclick', 'openRule(this);');
+    }
 };
 
 function setChildHeight (textarea) {
     var height = textarea.parentNode.offsetHeight;
     textarea.style.height = height + 'px';
 };
-
-
-/* Profile */
-
-
-function showProfile () {
-    generateProfileChart();
-    setButtonMode('profile-display');
-}
-
-function generateProfileChart() {
-    var classID = getParameterByName('classid');
-    var studentID = getParameterByName('studentid');
-    var studentKey = getParameterByName('studentkey');
-    var graphData = apiRequest(
-        '/?cmd=getprofiledata&classid='
-            + classID
-            + '&studentid=' 
-            + studentID 
-            + '&studentkey=' 
-            + studentKey 
-            + '&page=quiz'
-    );
-    if (false === graphData) return;
-
-    var data = {
-        xScale: 'ordinal',
-        yScale: 'linear',
-        main: [
-            {
-                className: '.pizza',
-                data: graphData
-            }
-        ]
-    }
-    var myChart = new xChart('bar', data, '#profile-chart');
-}
-

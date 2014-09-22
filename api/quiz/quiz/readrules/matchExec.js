@@ -19,90 +19,88 @@
         // * count the questions, ignoring those in which the student violated the rule
         // * for each rule with no wrong answers in the set, return the ruleID, ruleText, origText and transText
 
-        var rulesData = [];
-        var rulesReturn = [];
-
         sys.db.run('BEGIN TRANSACTION',function(err){
             if (err) {};
             getRuleData();
         });
 
         function getRuleData () {
-        var sql = 'SELECT DISTINCT rulesToChoices.ruleID AS ruleID,'
+        var sql = 'SELECT DISTINCT rules.ruleID AS ruleID,'
                 + 'ruleStrings.string AS ruleText,'
                 + 'RTO.string AS origGloss,'
                 + 'RTT.string AS transGloss '
-                + 'FROM classes '
-                + 'JOIN quizzes USING(classID) '
-                + 'JOIN questions USING(quizID) '
-                + 'JOIN choices USING(questionID) '
-                + 'JOIN rulesToChoices USING(choiceID) '
-                + 'JOIN rules USING(ruleID) '
+                + 'FROM rules '
                 + 'JOIN ruleStrings USING(ruleStringID) '
                 + "JOIN (SELECT ruleID,string FROM ruleTranslations WHERE lang='en') RTO USING(ruleID) "
                 + "LEFT JOIN (SELECT ruleID,string FROM ruleTranslations WHERE lang=?) RTT USING(ruleID) "
-                + 'WHERE classes.classID=?;';
-            sys.db.all(sql,[lang,classID],function(err,rows){
+                + 'ORDER BY ruleText;';
+            sys.db.all(sql,[lang],function(err,rows){
                 if (err||!rows) {return oops(response,err,'**quiz/readrules(1)')}
                 if (rows && rows.length) {
-                    for (var i=0,ilen=rows.length;i<ilen;i+=1) {
-                        var row = rows[i];
-                        rulesData.push(row);
-                    }
-                    getRecentQuestionsForRule(0,rulesData.length);
+                    getRecentQuestionsForRule(0,rows.length,rows);
                 } else {
                     endTransaction();
                 }
             });
         }
 
-        function getRecentQuestionsForRule(pos,limit) {
+        function getRecentQuestionsForRule(pos,limit,rulesData) {
             if (pos === limit) {
-                endTransaction();
+                endTransaction(rulesData);
                 return;
             }
             var ruleID = rulesData[pos].ruleID;
-            // Outer SELECT yields the list of recent questions in which the rule was not missed by this student.
-            // Inner SELECT yields the two most recent questions that are relevant
-            var sql = 'SELECT COUNT(*) AS count FROM '
-                + '(SELECT questionID FROM '
+            // With a little arm-twisting, SQLite will do this.
+
+            // Inner SELECT yields the two most recent relevant questions answered by this student.
+            //   (the select is broader here b/c choice is not constrained to the student's own choice)
+            // Outer SELECT yields the list of recent questions answered (correctly or incorrectly) by this student.
+            //   (here the answer.choice constraint is imposed)
+            //   (outer select converts ruleToChoiceID to a one-step counter, and the most-outer select sums the result)
+
+            var sql = 'SELECT group_concat(DISTINCT questionID) AS questionIDs,'
+                + ' SUM(errors) AS count '
+                + ' FROM '
+                + ' (SELECT Q.questionID,'
+                + '  CASE WHEN RTC.ruleToChoiceID IS NOT NULL THEN 1 ELSE 0 END AS errors '
+                + '  FROM '
                 + '  (SELECT questions.questionID '
                 + '    FROM classes '
                 + '    JOIN quizzes USING(classID) '
                 + '    JOIN questions USING(quizID) '
+                + '    JOIN quizAnswers ON quizAnswers.quizID=quizzes.quizID AND quizAnswers.studentID=? '
                 + '    JOIN choices USING(questionID) '
                 + '    JOIN rulesToChoices USING(choiceID) '
                 + '    WHERE classes.classID=? AND rulesToChoices.ruleID=? '
                 + '    GROUP BY questions.questionID '
-                + '    ORDER BY quizzes.quizNumber DESC, questions.questionNumber DESC '
+                + '    ORDER BY quizAnswers.submissionDate DESC,questions.questionID '
                 + '    LIMIT 2) Q '
-                + '  JOIN answers USING(questionID) '
-                + '  JOIN choices USING(questionID,choice) '
-                + '  LEFT JOIN rulesToChoices USING(choiceID) '
-                + '  WHERE answers.studentID=? AND rulesToChoices.ruleToChoiceID IS NULL);'
-            sys.db.get(sql,[classID,ruleID,studentID],function(err,row){
-                if (err) {return oops(response,err,'**quiz/readrules(2)')};
-                if (row.count === 2) {
-                    data = rulesData[pos];
-                    rulesReturn.push(data);
+                + '  JOIN answers A ON A.questionID=Q.questionID AND A.studentID=? '
+                + '  JOIN choices C ON C.questionID=A.questionID  AND C.choice=A.choice '
+                + '  LEFT JOIN rulesToChoices RTC ON RTC.choiceID=C.choiceID);'
+            sys.db.all(sql,[studentID,classID,ruleID,studentID],function(err,rows){
+                if (err|!rows) {return oops(response,err,'**quiz/readrules(2)')};
+                for (var i=0,ilen=rows.length;i<ilen;i++) {
+                    if (rows[i].questionIDs) {
+                        rulesData[pos].questionIDs = rows[i].questionIDs;
+                    } else {
+                        rulesData[pos].questionIDs = "";
+                    }
+                    if (rows[i].count) {
+                        rulesData[pos].count = rows[i].count;
+                    } else {
+                        rulesData[pos].count = 0;
+                    }
+                    // console.log("XXX: count=" + rulesData[pos].count + ", studentID="+studentID+ ", questionID=" + rulesData[pos].questionIDs + ', ruleID='+rulesData[pos].ruleID+"/"+ruleID+", ruleText="+rulesData[pos].ruleText);
                 }
-                getRecentQuestionsForRule(pos+1,limit);
+                getRecentQuestionsForRule(pos+1,limit,rulesData);
             });
         };
-        function endTransaction () {
+        function endTransaction (rulesData) {
             sys.db.run('END TRANSACTION',function(err){
                 if (err) {return oops(response,err,'**quiz/readrules(3)')};
-                rulesReturn.sort(function(a,b){
-                    if (a.transGloss && !b.transGloss) {
-                        return 1;
-                    } else if (!a.transGloss && b.transGloss) {
-                        return -1;
-                    } else {
-                        return 0
-                    }
-                });
                 response.writeHead(200, {'Content-Type': 'application/json'});
-                response.end(JSON.stringify(rulesReturn));
+                response.end(JSON.stringify(rulesData));
             });
         };
     }

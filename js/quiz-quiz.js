@@ -8,6 +8,7 @@ var classID = getParameterByName('classid');
 var studentID = getParameterByName('studentid');
 var studentKey = getParameterByName('studentkey');
 var quizNumber = getParameterByName('quizno');
+var questionIDs = getParameterByName('questionids');
 
 var quizResult = {};
 
@@ -15,6 +16,8 @@ var quizData;
 
 function showQuiz() {
     // Get quiz data
+    var quizNumberString = quizNumber ? '&quizno=' + quizNumber : '';
+    var questionIDsString = questionIDs ? '&questionids=' + questionIDs : '';
     quizData = apiRequest(
         '/?cmd=quizdata&classid=' 
             + classID
@@ -22,8 +25,8 @@ function showQuiz() {
             + studentID 
             + '&studentkey=' 
             + studentKey 
-            + '&quizno=' 
-            + quizNumber);
+            + quizNumberString
+            + questionIDsString);
     if (false === quizData) return;
     
     var numberOfQuestionsNode = document.getElementById('number-of-questions');
@@ -88,8 +91,9 @@ function displaychild() {
 
 function FunNextNode() {
 	var questions = quizData.questions;
+    var realQuizNo = questions[nextnodecounter].quizNumber;
     var realqno = questions[nextnodecounter].number;
-    quizResult[realqno] = questions[nextnodecounter].remap[getvalue];
+    quizResult[realQuizNo + ':' + realqno] = questions[nextnodecounter].remap[getvalue];
 	nextnodecounter = nextnodecounter + 1;
     if (questions.length == (nextnodecounter)) {
         document.getElementById("nextButton").innerHTML = "Show&nbsp;Result";
@@ -114,6 +118,16 @@ function enablebtn(setvalue) {
 }  
 
 function ShowResult() {
+
+    // quizResult contains quizno for display and transaction
+    // purposes, but matchExec on server side relies on
+    // quiz numbers recorded in individual responses
+    // instead.
+
+    if (!quizNumber) {
+        quizNumber = document.getElementById("quizno").textContent;
+    }
+
     var resultPageUrl = apiRequest(
         '/?cmd=writequizresult&classid=' 
             + classID 

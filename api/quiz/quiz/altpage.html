@@ -19,7 +19,7 @@
     <script type="text/javascript" src="js/marked.js"></script>
     <script type="text/javascript" src="js/quiz-result.js"></script>
   </head>  
-  <body onload="setRuleButtons();runResult()">
+  <body onload="setRuleButtons();runResult();">
     <div class="grid">
       <div class="col-1-1">
         <h1>@@STUDENT_NAME@@</h1>
@@ -34,25 +34,46 @@
         <div class="rules-display" style="display:none;">
           <h2>Glosses in: <span class="student-language">English</span></h2>
           <p>
-            Rules that you have mastered are listed below. By clicking
-            on a rule, you can open it to provide or improve upon its
-            explanation in <span class="student-language"></span>. Your
-            contribution will assist others who share your language.
+            The most important rules to be followed are listed
+            below. They are color-coded, as follows:
           </p>
+          <ul class="rule-description-list">
+            <li>
+              Rules with a <span class="cleared-rule-inline">green
+              border</span> are those that you have gotten right twice
+              in a row recently. By clicking on these rules, you can
+              add a translation of the rule
+              into <span class="student-language"></span>.  This is
+              helpful to classmates, and you will receive academic
+              credit for your translations and edits.
+            </li>
+            <li>
+              Rules
+              in <span class="study-needed-rule-inline">yellow</span>
+              are those on which you made one or more mistakes. If you
+              click on the rule, you can try again.  You can retest as
+              often as you like. When you get both test questions
+              right, the border will turn green, and you can translate
+              or edit the rule.
+            </li>
+            <li>
+              Rules with a <span class="untested-rule-inline">gray
+              border</span> have not been fully tested in the
+              course&mdash;yet!
+            </li>
+          </ul>
           <p>
-            By submitting text through this page, you will offer it under
-            a <a href="http://creativecommons.org/licenses/by-sa/4.0/">Creative 
-            Commons Attribution-ShareAlike</a> license. This means that
-            your contribution may be used by others (for example, in textbooks and
-            teaching materials), and that you will be acknowledged
-            if they do so.
+            <b>Note:</b> By submitting translations through this page,
+            you will publish your contribution under
+            a <a href="http://creativecommons.org/licenses/by-sa/4.0/">Creative
+            Commons Attribution-ShareAlike</a> license. This means
+            that your text may be used by others (for example, in the
+            preparation of teaching materials), and that you will be
+            acknowledged if they do so.
           </p>
         </div>
         <div id="return-to-main-display-button" style="display:none;">
           <input class="button" type="button" value="Return to main display" onclick="setButtonMode();"/>
-        </div>
-        <div class="profile-buttons float-left">
-          <input class="button" id="class-profile-button" type="button" value="Progress Profile" onclick="showProfile();"/>
         </div>
         <div id="rule-lang-buttons">
         </div>
@@ -65,8 +86,6 @@
           <table id="rules-for-lang">
           </table>
         </div>
-      </div>
-      <div class="col-1-1 profile-display" style="display:none;" id="profile-chart" style="height:300px;">
       </div>
     </div>
   </body>  

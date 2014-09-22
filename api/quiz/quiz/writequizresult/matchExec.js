@@ -20,19 +20,49 @@
             port = '';
             stub = pathName.replace(/(.*\/).*/, '$1/quiz.html');
         }
-        var resultUrl = 'http://' + hostname + port + stub + '?classid=' + classID+ '&studentid=' + studentID + '&studentkey=' + studentKey + '&quizno=' + quizNumber;
+        // Flag to catch retests
+        var retestFlag = false;
+
+        // OKAY! So this just needs to work from the quizNumber recorded in the
+        // result, rather than making assumptions based on the quiz number
+        // provided in the call.
+
+        // quizNumber in the call is still useful, though, since it helps us navigate
+        // back to results of a full quiz.
+
+        var glossLangString = params.glosslang ? '&glosslang=' + params.glosslang : '';
+
+        var resultUrl = 'http://' + hostname + port + stub + '?classid=' + classID+ '&studentid=' + studentID + '&studentkey=' + studentKey + '&quizno=' + quizNumber + glossLangString;
+
         var data = [];
-        for (var questionNumber in quizResult) {
-            var choice = quizResult[questionNumber];
-            data.push({questionNumber:questionNumber,choice:choice});
+        for (var quizAndQuestionNumber in quizResult) {
+            // XXX Here is where we parse out the two elements of the key:
+            //   quizNumber:questionNumber
+            var quizNumber = quizAndQuestionNumber.split(":")[0];
+            var questionNumber = quizAndQuestionNumber.split(":")[1];
+            var choice = quizResult[quizAndQuestionNumber];
+            data.push({
+                quizNumber:quizNumber,
+                questionNumber:questionNumber,
+                choice:choice
+            });
         }
-        checkAnswers(0,data.length);
+        beginTransaction(0,data.length);
+
+        function beginTransaction(pos,limit){
+            sys.db.run('BEGIN TRANSACTION',function(err){
+                if (err){return oops(response,err,'quiz/sendquiz(1)')}
+                checkAnswers(pos,limit);
+            });
+        };
 
         function checkAnswers(pos,limit) {
             if (pos === limit) {
                 saveAnswers(0,limit);
                 return;
             }
+            var quizNumber = data[pos].quizNumber;
+            var questionNumber = data[pos].questionNumber;
             var sql = 'SELECT answerID '
                 + 'FROM quizzes '
                 + 'NATURAL JOIN questions '
@@ -49,19 +79,41 @@
                 checkAnswers(pos+1,limit);
             });
         };
+        // XXX To overwrite entries, we need to check for presence first, then
+        // XXX use UPDATE or INSERT as appropriate.
         function saveAnswers(pos,limit) {
             if (pos === limit) {
-                setSubmissionTimestamp();
+                if (retestFlag) {
+                    endTransaction();
+                } else {
+                    setSubmissionTimestamp();
+                }
                 return;
             }
-            var sql = 'INSERT OR REPLACE INTO answers (answerID,questionID,studentID,choice) '
-                + 'SELECT ?,questionID,?,? '
+            if (data[pos].answerID) {
+                saveByUpdate(pos,limit);
+            } else {
+                saveByInsert(pos,limit);
+            }
+        }
+        function saveByInsert (pos,limit) {
+            var obj = data[pos];
+            var sql = 'INSERT INTO answers (answerID,questionID,studentID,choice) '
+                + 'SELECT NULL,questionID,?,? '
                 + 'FROM quizzes '
                 + 'NATURAL JOIN questions '
-                + 'WHERE classID=? AND quizNumber=? AND questionNumber=?'
-            var o = data[pos];
-            sys.db.run(sql,[o.answerID,o.studentID,o.choice,classID,quizNumber,o.questionNumber],function(err){
-                if (err) {return oops(response,err,'*quiz/writequizresult')};
+                + 'WHERE classID=? AND quizNumber=? AND questionNumber=?;';
+            sys.db.run(sql,[obj.studentID,obj.choice,classID,obj.quizNumber,obj.questionNumber],function(err){
+                if (err) {return oops(response,err,'*quiz/writequizresult(2)')};
+                saveAnswers(pos+1,limit);
+            });
+        };
+        function saveByUpdate (pos,limit) {
+            retestFlag = true;
+            var obj = data[pos];
+            var sql = 'UPDATE answers SET choice=? WHERE answerID=?;';
+            sys.db.run(sql,[obj.choice,obj.answerID],function(err){
+                if (err) {return oops(response,err,'*quiz/writequizresult(3)')};
                 saveAnswers(pos+1,limit);
             });
         };
@@ -72,7 +124,13 @@
                 + 'FROM quizzes '
                 + 'WHERE classID=? AND quizNumber=?';
             sys.db.run(sql,[studentID,classID,quizNumber],function(err){
-                if (err) {return oops(response,err,'*quiz/writequizresult')};
+                if (err) {return oops(response,err,'*quiz/writequizresult(4)')};
+                endTransaction();
+            });
+        };
+        function endTransaction () {
+            sys.db.run('END TRANSACTION',function(err){
+                if (err) {return oops(response,err,'quiz/sendquiz(8)')};
                 response.writeHead(200, {'Content-Type': 'text/plain'});
                 response.end(resultUrl);
             });
