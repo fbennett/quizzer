@@ -219,7 +219,7 @@ function buildRulesList () {
         if (questionIDs.length > 1) {
             if (row.count) {
                 // Study candidate, display rendered, offer to send questions
-                onClick = ' onclick="showRule(this,true)"';
+                onClick = ' onclick="showRule(this,true,true)"';
                 // Yellow border
                 rowStyle = " study-needed-rule";
             } else {
@@ -230,7 +230,7 @@ function buildRulesList () {
             }
         } else {
             // Read-only rule, display rendered
-            onClick = ' onclick="showRule(this)"';
+            onClick = ' onclick="showRule(this,true)"';
             // Grey border
             rowStyle = "";
         }
@@ -278,7 +278,7 @@ function composeRetryURL(ids) {
                    + pageData.lang);
 }
 
-function showRule (node,offerRetest) {
+function showRule (node,readOnly,offerRetest) {
     var rownode = node.parentNode;
     var testButton = rownode.childNodes[1].childNodes[3];
     var ruleID = rownode.id.split('-').slice(-1)[0];
@@ -303,9 +303,9 @@ function showRule (node,offerRetest) {
     setDisplaySourceView(tr,row);
     if (offerRetest) {
         testButton.style.display = 'inline';
-        node.setAttribute('onclick','closeRule(this,true);');
+        node.setAttribute('onclick','closeRule(this,true,true);');
     } else {
-        node.setAttribute('onclick','closeRule(this);');
+        node.setAttribute('onclick','closeRule(this,true);');
     }
     rownode.parentNode.insertBefore(tr,rownode.nextSibling);
     setChildHeight(rownode.nextSibling.childNodes[1].childNodes[0]);
@@ -435,7 +435,7 @@ function editRule (node) {
     setChildHeight(rownode.nextSibling.childNodes[0].childNodes[0]);
 };
 
-function closeRule (node,showRule) {
+function closeRule (node,readOnly,offerRetest) {
     var rownode = node.parentNode;
     var saveButton = rownode.childNodes[1].childNodes[0];
     var editButton = rownode.childNodes[1].childNodes[1];
@@ -446,9 +446,11 @@ function closeRule (node,showRule) {
     deleteButton.style.display = 'none';
     var contentrownode = rownode.nextSibling;
     contentrownode.parentNode.removeChild(contentrownode);
-    if (showRule) {
-        node.setAttribute('onclick', 'showRule(this,true);');
+    if (offerRetest) {
+        node.setAttribute('onclick', 'showRule(this,true,true);');
         testButton.style.display = 'none';
+    } else if (readOnly) {
+        node.setAttribute('onclick', 'showRule(this,true);');
     } else {
         node.setAttribute('onclick', 'openRule(this);');
     }
