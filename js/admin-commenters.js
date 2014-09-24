@@ -100,7 +100,7 @@ function buildCommenterList (rows) {
             + '<td class="language-bubbles" ondragover="allowDrop(event)" ondrop="dropLang(event)" ondragenter="dragenterLang(event)" ondragleave="dragleaveLang(event)">' + getSerializedLanguageNodes(row.languages) + '<div></div></td>';
         container.appendChild(commenterTR);
     }
-    i18nStrings = i18n();
+    i18n();
 }
 
 function getSerializedLanguageNodes(langstr) {
