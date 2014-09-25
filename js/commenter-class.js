@@ -143,11 +143,17 @@ function buildRulesList () {
         var row = rows[i];
         var tr = document.createElement('tr');
         tr.setAttribute('id','rule-' + row.ruleID);
-        var needsGloss = ' needs-gloss';
-        if (row.hasGloss) {
-            needsGloss = '';
+        var statusFlag = '';
+        if (row.status == 0) {
+            statusFlag = ' untranslated-rule';
+        } else if (row.status == 1) {
+            statusFlag = ' revised-rule';
+        } else if (row.status == 2) {
+            statusFlag = ' student-edited-rule';
+        } else if (row.status == 3) {
+            statusFlag = ' up-to-date-rule';
         }
-        tr.innerHTML = '<td class="left' + needsGloss + '" onclick="openRule(this)"><div>' + markdown(row.ruleText) + '</div></td><td class="right"><input type="button" class="button float-right" value="Save" onclick="saveRule(this)" style="display:none;"/><input type="button" class="button float-right" value="Edit" onclick="editRule(this)" style="display:none;"/><input type="button" class="button no-float" value="Del" onclick="confirmDelete(this,\'deleteRule\')" style="display:none;"/></td>';
+        tr.innerHTML = '<td class="left' + statusFlag + '" onclick="openRule(this)"><div>' + markdown(row.ruleText) + '</div></td><td class="right"><input type="button" class="button float-right" value="Save" onclick="saveRule(this)" style="display:none;"/><input type="button" class="button float-right" value="Edit" onclick="editRule(this)" style="display:none;"/><input type="button" class="button no-float" value="Del" onclick="confirmDelete(this,\'deleteRule\')" style="display:none;"/></td>';
         rulesForLang.appendChild(tr);
     }
 };

@@ -1,3 +1,5 @@
+
+
 table#rules-for-lang {
     table-layout: fixed;
     width: 100%;
@@ -8,6 +10,23 @@ table#rules-for-lang td {
     border-radius:1em;
     padding: 0.5em;
     text-align: left;
+}
+
+table#rules-for-lang td.up-to-date-rule {
+    border: 3px solid green;
+}
+
+table#rules-for-lang td.student-edited-rule {
+    border: 4px solid yellow;
+    background: #ffffdd;
+}
+
+table#rules-for-lang td.revised-rule {
+    border: 3px solid orange;
+}
+
+table#rules-for-lang td.untranslated-rule {
+    border: 3px solid red;
 }
 
 table#rules-for-lang td.left:hover {
