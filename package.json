@@ -49,7 +49,7 @@
     "argparse": ">=0.1.15",
     "async": ">=0.2.9",
     "csv": ">=0.3.6",
-    "nodemailer": "=0.7.1",
+    "nodemailer": "0.7.1",
     "marked": ">=0.2.10",
     "multiparty": ">=3.1.1",
     "node-schedule": ">=0.1.13",
