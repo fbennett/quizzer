@@ -184,7 +184,7 @@ CREATE UNIQUE INDEX rulestrings_idx ON ruleStrings(string);
 
 CREATE TABLE ruleTranslations (
        ruleTranslationID INTEGER PRIMARY KEY,
-       ruleID NOT NULL,
+       ruleID INTEGER NOT NULL,
        string TEXT,
        lang TEXT NOT NULL,
        UNIQUE (ruleID,lang),
