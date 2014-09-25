@@ -17,7 +17,7 @@
                 endTransaction();
                 return;
             }
-            var sql = 'INSERT INTO memberships VALUES(NULL,?,?,?,NULL);';
+            var sql = 'INSERT INTO memberships VALUES(NULL,?,?,?,NULL,NULL);';
             var addmemberID = params.addmembers[pos];
             var addmemberKey = getRandomKey(8,36);
             sys.db.run(sql,[classID,addmemberID,addmemberKey],function(err){
