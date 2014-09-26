@@ -21,6 +21,7 @@
         var studentCount = 0;
         var stringsCount = 0;
         var documentCount = 0;
+        var utf8 = this.sys.utf8;
 
         makeDirectories();
 
@@ -38,7 +39,7 @@
                 } else {
                     response.writeHead(200, {
                         'Content-Type': 'application/octet-stream',
-                        'Content-Disposition': 'attachment; filename="' + quizObject.zipName + '.zip"'
+                        'Content-Disposition': 'attachment; filename="' + utf8.encode(quizObject.zipName) + '.zip"'
                     });
                     response.end(data);
                 }
@@ -119,7 +120,7 @@
             }
             // Now latex-ify the string content of the object
             stringsCount += stringsToConvert.length;
-            sys.async.eachLimit(stringsToConvert, 1, pandocIterator, function(err){
+            sys.async.eachLimit(stringsToConvert, 1, pandocOnce, function(err){
                 if (err) { console.log("ERROR: "+err) }
             });
         }
@@ -210,7 +211,7 @@
                 latexDoc = latexDoc.replace(/\(\(([a-zA-Z1-9])\)\)/g,'\\mycirc{$1}');
 
                 // Write to file
-                sys.fs.writeFileSync(latexDir + studentInfo.studentName + '.ltx',latexDoc);
+                sys.fs.writeFileSync(latexDir + utf8.encode(studentInfo.studentName) + '.ltx',latexDoc);
             }
             renderPDF();
         }
@@ -227,7 +228,7 @@
                     documentQueue.push(fileName);
                 }
                 documentCount += documentQueue.length;
-                sys.async.eachLimit(documentQueue, 1, latexIterator, function(err){
+                sys.async.eachLimit(documentQueue, 1, iconvOnce, function(err){
                     if (err) { console.log("ERROR: "+err) }
                 });
             });
@@ -252,7 +253,7 @@
                     } else {
                         response.writeHead(200, {
                             'Content-Type': 'application/octet-stream',
-                            'Content-Disposition': 'attachment; filename="' + quizObject.zipName + '.zip"'
+                            'Content-Disposition': 'attachment; filename="' + utf8.encode(quizObject.zipName) + '.zip"'
                         });
                         response.end(data);
                         sys.db.run('UPDATE quizzes SET sent=? WHERE classID=? AND quizNumber=?',[1,classID,quizNumber],function(err){
@@ -265,15 +266,43 @@
 
         };
 
-        function latexIterator (data, callback) {
-            var ltx = sys.spawn("pdflatex",[data],{cwd:latexDir})
+        function iconvOnce(data, callback) {
+            var newFileName = data.replace(/^(.*)(\.ltx)$/,"$1-euc$2");
+            var ltx = sys.spawn("iconv",['-f','UTF8','-t','EUC-JP','-o',newFileName],{cwd:latexDir})
+            ltx.stdout.on('data',function(data) {
+                //console.log(data.toString());
+            });
+            ltx.stderr.on('data',function(data) {
+                console.log(data.toString());
+            });
+            ltx.on('close', function (code) {
+                latexOnce(newFileName, callback);
+            });
+        };
+
+        function latexOnce (data, callback) {
+            var ltx = sys.spawn("platex",[data],{cwd:latexDir})
             ltx.stdout.on('data',function(data) {
                 //console.log(data.toString());
             });
             ltx.stderr.on('data',function(data) {
                 //console.log(data.toString());
             });
-            ltx.stderr.on('close', function (code) {
+            ltx.on('close', function (code) {
+                var dvifilename = data.replace(/\.ltx/,".dvi");
+                dvipdfOnce(dvifilename, callback);
+            });
+        };
+
+        function dvipdfOnce (data, callback) {
+            var dvi = sys.spawn("dvipdfmx",[data],{cwd:latexDir})
+            dvi.stdout.on('data',function(data) {
+                //console.log(data.toString());
+            });
+            dvi.stderr.on('data',function(data) {
+                console.log(data.toString());
+            });
+            dvi.on('close', function (code) {
                 callback();
                 documentCount += -1;
                 if (!documentCount) {
@@ -296,10 +325,10 @@
             return lst.join('');
         };
 
-        function pandocIterator (data, callback) {
+        function pandocOnce (data, callback) {
             sys.pandoc.convert('html+tex_math_dollars',data.obj[data.key],['latex'],function(result, err){
                 if (err) {
-                    throw "Error in pandocIterator(): " + err;
+                    throw "Error in pandocOnce(): " + err;
                 }
                 data.obj[data.key] = pandocLatexTableFix(result.latex);
                 callback();

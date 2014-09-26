@@ -5,6 +5,7 @@
         var adminID = params.adminid;
         var classID = params.classid;
         var sys = this.sys;
+        var utf8 = this.sys.utf8;
         var retObj = {
             className:'',
             studentCount:0,
@@ -142,7 +143,7 @@
                 }
                 row = '"' + row.join('","') + '"';
             };
-            response.writeHead(200, {'Content-Type': 'text/csv','Content-Disposition':'attachment; filename="' + retObj.className + ' (roster).csv"'});
+            response.writeHead(200, {'Content-Type': 'text/csv','Content-Disposition':'attachment; filename="' + utf8.encode(retObj.className) + ' (roster).csv"'});
             response.end(retObj.sheet.join('\n'));
         }
     }
