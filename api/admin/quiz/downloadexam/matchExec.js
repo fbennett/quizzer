@@ -215,7 +215,7 @@
                 latexDoc = latexDoc.replace(/\(\(([a-zA-Z1-9])\)\)/g,'\\mycirc{$1}');
 
                 // Write to file
-                sys.fs.writeFileSync(latexDir + utf8.encode(studentInfo.studentName) + '.ltx',latexDoc);
+                sys.fs.writeFileSync(latexDir + studentInfo.studentName + '.ltx',latexDoc);
             }
             renderPDF();
         }
@@ -289,7 +289,7 @@
                 for (var i=0,ilen=files.length;i<ilen;i+=1) {
                     var fileName = files[i];
                     if (!fileName.match(/\.pdf$/)) continue;
-                    archive.append(sys.fs.createReadStream(latexDir + fileName), { name: utf8.decode(quizObject.zipName + '/' + fileName) })
+                    archive.append(sys.fs.createReadStream(latexDir + fileName), { name: quizObject.zipName + '/' + fileName })
                 }
                 archive.finalize();
             });
@@ -298,7 +298,7 @@
 
         function iconvOnce(data, callback) {
             var newFileName = data.replace(/^(.*)(\.ltx)$/,"$1-euc$2");
-            var ltx = sys.spawn("iconv",['-f','UTF8','-t','EUC-JP','-o',newFileName],{cwd:latexDir})
+            var ltx = sys.spawn("iconv",['-f','UTF8','-t','EUC-JP','-o',newFileName,data],{cwd:latexDir})
             ltx.stdout.on('data',function(data) {
                 //console.log(data.toString());
             });
