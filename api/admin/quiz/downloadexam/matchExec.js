@@ -6,7 +6,16 @@
         var classID = params.classid;
         var quizNumber = params.quizno;
         var sys = this.sys;
+
+        var usePlatex = this.sys.use_platex;
+        var useEucJp = this.sys.use_euc_jp;
+
         var examDocumentTemplate = this['exam-document'].toString();
+        if (useEucJp) {
+            examDocumentTemplate.replace('@@ENCODING-DECLARATION@@', '');
+        } else {
+            examDocumentTemplate.replace('@@ENCODING-DECLARATION@@', '\\usepackage[utf8]{inputenc}');
+        }
         var examQuestionTemplate = this['exam-question'].toString();
         var examChoiceTemplate = this['exam-choice'].toString();
         var stringsToConvert = [];
@@ -22,8 +31,6 @@
         var stringsCount = 0;
         var documentCount = 0;
         var utf8 = this.sys.utf8;
-        var usePlatex = this.sys.use_platex;
-        var useEucJp = this.sys.use_euc_jp;
 
         var archiver = require('archiver');
 

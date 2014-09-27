@@ -8,7 +8,7 @@
 \usepackage{float}
 \usepackage{hyphenat}
 \usepackage{amsmath}
-\usepackage[utf8]{inputenc}
+@@ENCODING-DECLARATION@@
 
 \newcommand*\mycirc[1]{\tikz[baseline=(char.base)]{{\small
   \node[shape=circle,draw,inner sep=1.5pt] (char) {#1};}}}
