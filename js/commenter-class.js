@@ -92,6 +92,7 @@ function setButtonMode (mode,langName) {
     var rulesDisplay = document.getElementById('rules-display');
     var mainDisplayTitle = document.getElementById('main-display-title');
     var rulesDisplayTitle = document.getElementById('rules-display-title');
+    var backButton = document.getElementById('back-button');
     if (mode) {
         pageData.lang = mode;
         pageData.langName = langName;
@@ -104,6 +105,7 @@ function setButtonMode (mode,langName) {
         mainDisplayTitle.style.display = 'none';
         rulesDisplay.style.display = 'table';
         rulesDisplayTitle.style.display = 'block';
+        backButton.disabled = true;
     } else {
         for (var i=0,ilen=ruleLangButtons.length;i<ilen;i+=1) {
             ruleLangButtons[i].style.display = 'inline';
@@ -113,6 +115,7 @@ function setButtonMode (mode,langName) {
         mainDisplayTitle.style.display = 'block';
         rulesDisplay.style.display = 'none';
         rulesDisplayTitle.style.display = 'none';
+        backButton.disabled = false;
     }
 }
 
@@ -153,9 +156,10 @@ function buildRulesList () {
         } else if (row.status == 3) {
             statusFlag = ' up-to-date-rule';
         }
-        tr.innerHTML = '<td class="left' + statusFlag + '" onclick="openRule(this)"><div>' + markdown(row.ruleText) + '</div></td><td class="right"><input type="button" class="button float-right" value="Save" onclick="saveRule(this)" style="display:none;"/><input type="button" class="button float-right" value="Edit" onclick="editRule(this)" style="display:none;"/><input type="button" class="button no-float" value="Del" onclick="confirmDelete(this,\'deleteRule\')" style="display:none;"/></td>';
+        tr.innerHTML = '<td class="left' + statusFlag + '" onclick="openRule(this)"><div>' + markdown(row.ruleText) + '</div></td><td class="right"><input type="button" class="button float-right i18n" name="value-save" value="Save" onclick="saveRule(this)" style="display:none;"/><input type="button" class="button float-right i18n" name="value-edit" value="Edit" onclick="editRule(this)" style="display:none;"/><input type="button" class="button no-float i18n" name="value-delete" value="Del" onclick="confirmDelete(this,\'deleteRule\')" style="display:none;"/></td>';
         rulesForLang.appendChild(tr);
     }
+    i18n();
 };
 
 function deleteRule (node) {

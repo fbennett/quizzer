@@ -226,10 +226,10 @@ function showAnswers () {
         tResult.appendChild(rightWrong);
         tRow.appendChild(tLabel);
         tRow.appendChild(tResult);
-        console.log('XX1 '+i);
-        console.log('XX2 '+myQuestionNumbers[i]);
-        console.log('XX3 '+questionCol[myQuestionNumbers[i]]);
-        console.log('XX4 '+column[questionCol[myQuestionNumbers[i]]]);
+        //console.log('XX1 '+i);
+        //console.log('XX2 '+myQuestionNumbers[i]);
+        //console.log('XX3 '+questionCol[myQuestionNumbers[i]]);
+        //console.log('XX4 '+column[questionCol[myQuestionNumbers[i]]]);
         var container = column[questionCol[myQuestionNumbers[i]]];
         container.appendChild(tRow);
     }
@@ -332,6 +332,9 @@ function buildQuestionList (quizobj) {
     }
     qzi.pending = quizobj.pending;
     var questionsLst = displayQuestions(quizobj.questions);
+    if (!questionsLst) {
+        questionsLst = [];
+    }
     var button = document.getElementById('add-question-button');
     button.disabled = false;
     if (quizobj.examName) {
@@ -466,10 +469,10 @@ function openQuestion (questionNumber) {
     }
     var rubric = document.createElement('div');
     rubric.setAttribute("class", "rubric");
-    rubric.innerHTML = '<textarea tabindex="1" style="vertical-align:top;" placeholder="Enter rubric here" cols="70" rows="3">'
+    rubric.innerHTML = '<textarea tabindex="1" style="vertical-align:top;" placeholder="' + i18nStrings['enter-rubric-here'] + '" cols="70" rows="3">'
         + qobj.rubric
         + '</textarea>'
-        + '<input type="button" value="Standard" onclick="standardRubric(' + questionNumber + ');" class="button"/>'
+        + '<input type="button" name="value-standard" value="Standard" onclick="standardRubric(' + questionNumber + ');" class="button i18n"/>'
     node.appendChild(rubric);
 
     for (var i=0,ilen=qobj.questions.length;i<ilen;i+=1) {
@@ -481,15 +484,15 @@ function openQuestion (questionNumber) {
         }
         var buttonAttrs = ''
         if (i === 0) {
-            buttonAttrs = 'value="Copy to all" onclick="copyToAll(' + questionNumber + ')" class="button"'
+            buttonAttrs = 'name="value-copy-to-all" value="Copy to all" onclick="copyToAll(' + questionNumber + ')" class="button i18n"'
         } else {
-            buttonAttrs = 'value="Ditto" onclick="dittoPrevious(' + questionNumber + ',' + i + ')" class="button"'
+            buttonAttrs = 'name="value-ditto" value="Ditto" onclick="dittoPrevious(' + questionNumber + ',' + i + ')" class="button i18n"'
         }
         cw.innerHTML = '<input type="radio" class="selection" ' 
             + checked
             + 'name="question-' + questionNumber + '" '
             + '/>'
-            + '<textarea tabindex="' + (i+2) + '" cols="60" rows="3" class="selection-text" placeholder="Enter choice here">'
+            + '<textarea tabindex="' + (i+2) + '" cols="60" rows="3" class="selection-text" placeholder="' + i18nStrings["enter-choice-here"] + '">'
             + qobj.questions[i]
             + '</textarea>'
             + '<input type="button" ' + buttonAttrs+ '/>';
@@ -503,16 +506,18 @@ function openQuestion (questionNumber) {
     } else {
         button.setAttribute('onclick', 'closeQuestion("' + questionNumber + '",true)');
     }
-    button.setAttribute('class', 'button');
+    button.setAttribute('class', 'button i18n');
+    button.setAttribute('name', 'value-save-question');
     button.setAttribute('tabindex', '6');
     node.appendChild(button);
+    i18n(node);
     return node;
 }
 
 function standardRubric (questionNumber) {
     var node = document.getElementById('quiz-question-' + questionNumber);
     if (!node.childNodes[0].childNodes[0].value) {
-        node.childNodes[0].childNodes[0].value = "Which of the following is correct?";
+        node.childNodes[0].childNodes[0].value = i18nStrings["which-is-correct"];
     }
 }
 
@@ -549,10 +554,11 @@ function closeQuestion (questionNumber, moveToBottom) {
     var abort = false;
     if (!rubric) {
         abort = true;
-        alert("Rubric is empty. All fields must have content.");
+        alert(i18nStrings["rubric-empty"]);
     }
     var correct = 0;
     var questions = [];
+    var error = i18nStrings['all-fields-must-have-content'];
     for (var i=1,ilen=node.childNodes.length - 1;i<ilen;i+=1) {
         if (node.childNodes[i].childNodes[0].checked) {
             correct = (i-1);
@@ -560,10 +566,24 @@ function closeQuestion (questionNumber, moveToBottom) {
         var content = node.childNodes[i].childNodes[1].value;
         if (!content && !abort) {
             abort = true;
-            alert("Choice " + i + " is empty. All fields must have content.");
+            alert(error);
+            break;
         }
         questions.push(content);
     }
+    // Check for duplicates
+    var error = i18nStrings["choices-must-be-unique"];
+    outer:
+    for (var i=0,ilen=questions.length;i<ilen;i++) {
+        for (var j=i+1,jlen=questions.length;j<jlen;j++) {
+            if (questions[i].trim() == questions[j].trim()) {
+                abort = true;
+                alert(error);
+                break outer;
+            }
+        }
+    }
+    
     if (abort) return;
     var obj = {
         rubric: rubric,
@@ -630,7 +650,7 @@ function displayQuestion (qobj, questionNumber) {
     var rubric = document.createElement('div');
     rubric.setAttribute('class','rubric-wrapper');
     rubric.innerHTML = '<div class="raw-text-wrapper">'
-        + '<div class="raw-text-marker">Source</div>'
+        + '<div class="raw-text-marker i18n" name="content-source">Source</div>'
         + '<pre class="raw-text">' + qobj.rubric.replace(/<br\/?>/g,'&lt;br/&gt') + '</pre>'
         + '</div>'
         + '<div class="rubric">' + markdown(qobj.rubric) + '</div>'
@@ -656,10 +676,12 @@ function displayQuestion (qobj, questionNumber) {
     var button = document.createElement('input');
     button.setAttribute('type', 'button');
     button.setAttribute('value', 'Edit Question');
-    button.setAttribute('class', 'button editing-button');
+    button.setAttribute('name', 'value-edit-question');
+    button.setAttribute('class', 'button editing-button i18n');
     button.setAttribute('onclick', 'openQuestion("' + questionNumber + '")');
     node.appendChild(button);
     MathJax.Hub.Queue(["Typeset",MathJax.Hub,"quiz-question-" + questionNumber]);
+    i18n(node);
 }
 
 function setDisplayMode (mode) {
@@ -688,6 +710,7 @@ function setButtonState (state,lst) {
     }
     var sendQuiz = document.getElementById('send-quiz');
     var quizDone = document.getElementById('quiz-done');
+    var quizDraft = document.getElementById('quiz-draft');
     var downloadExam = document.getElementById('download-exam');
     var markExam = document.getElementById('mark-exam');
     var addQuestion = document.getElementById('add-question-button');
@@ -709,7 +732,7 @@ function setButtonState (state,lst) {
         if (lst.length == 0) {
             sendQuiz.style.display = 'none';
             quizDone.style.display = 'inline';
-            quizDone.value = "In Draft";
+            quizDone.value = i18nStrings["in-draft"];
             enableEditing();
         } else if (pending == -1) {
             sendQuiz.style.display = 'inline';
@@ -719,11 +742,11 @@ function setButtonState (state,lst) {
         } else if (pending === 0) {
             sendQuiz.style.display = 'none';
             quizDone.style.display = 'inline';
-            quizDone.value = "Responses Complete";
+            quizDone.value = i18nStrings["responses-complete"];
             disableEditing();
         } else {
             sendQuiz.style.display = 'inline';
-            sendQuiz.value = 'Responses Pending: ' + pending;
+            sendQuiz.value = i18nStrings["responses-pending"] + pending;
             quizDone.style.display = 'none';
             disableEditing();
         }
@@ -731,7 +754,7 @@ function setButtonState (state,lst) {
     case 'quiz-done':
         sendQuiz.style.display = 'none';
         quizDone.style.display = 'inline';
-        quizDone.value = 'Quiz Sent';
+        quizDone.value = i18nStrings["quiz-sent"]
         downloadExam.style.display = 'none';
         disableEditing();
         break;
@@ -744,7 +767,7 @@ function setButtonState (state,lst) {
     case 'exam-results':
         quizDone.style.display = 'none';
         downloadExam.style.display = 'none';
-        markExam.value = 'Display Results';
+        markExam.value = i18nStrings["display-results"];
         markExam.style.display = 'inline';
         sendQuiz.style.display = 'none';
         disableEditing();

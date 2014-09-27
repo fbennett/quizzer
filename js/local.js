@@ -1,10 +1,15 @@
 var i18nStrings = {};
-function i18n () {
+function i18n (node) {
+
+    if (!node) {
+        node = document;
+    }
+    
     var data = {
         value:[],
         content:[]
     };
-    var nodes = document.getElementsByClassName('i18n');
+    var nodes = node.getElementsByClassName('i18n');
     for (var i=0,ilen=nodes.length;i<ilen;i++) {
         var node = nodes[i];
         var nodeName = node.getAttribute('name');

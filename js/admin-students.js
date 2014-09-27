@@ -56,16 +56,17 @@ function editStudent(node) {
     var options = getLanguageOptions(langtag);
     editDiv.setAttribute('id',id);
     editDiv.setAttribute('class','bubble-edit');
-    editDiv.innerHTML = '<b>Name:</b> <input id="bubble-name" type="text" size="15" value="' + name + '"/> '
-        + '<b>Email:</b> <input id="bubble-email" type="text" size="18" value="' + email + '"/> '
-        + '<b>External:</b> ' + '<input id="bubble-privacy" type="checkbox" ' + checked +'/> '
-        + '<b>Language:</b> '
+    editDiv.innerHTML = '<b class="i18n" name="content-name-label">Name:</b><input id="bubble-name" type="text" size="15" value="' + name + '"/> '
+        + '<b class="i18n" name="content-email-label">Email:</b><input id="bubble-email" type="text" size="18" value="' + email + '"/> '
+        + '<b class="i18n" name="content-external-label">External:</b>' + '<input id="bubble-privacy" type="checkbox" ' + checked +'/> '
+        + '<b class="i18n" name="content-language-label">Language:</b>'
         + '<select id="bubble-language">'
         + options
         + '</select> '
-        + '<input type="button" value="Cancel" onclick="saveEditStudent(this.parentNode,true)"/>'
-        + '<input type="button" value="Save" onclick="saveEditStudent(this.parentNode)"/>'
+        + '<input class="i18n" name="value-cancel" type="button" value="Cancel" onclick="saveEditStudent(this.parentNode,true)"/>'
+        + '<input class="i18n" name~"value-save" type="button" value="Save" onclick="saveEditStudent(this.parentNode)"/>'
     node.parentNode.replaceChild(editDiv,node);
+    i18n(editDiv);
 }
 
 function getLanguageOptions(langtag) {

@@ -47,35 +47,35 @@ function showMistakes () {
             + '<div class="right-answer">' + correctText + '</div>'
             + '<div class="wrong-answer">' + wrongText + '</div></div>'
             + '<div class="button-bold">'
-            + '<input type="button" class="button" '
+            + '<input type="button" class="button i18n" '
             + 'id="comment-button-' + mistake.questionNumber + '-' + mistake.wrongChoice + '" '
             + 'style="display:'
             + buttonMode.comment
-            + '" value="Comment" '
+            + '" name="value-comment" value="Comment" '
             + 'onclick="newComment(this,\'comment-' + commenterInfo.commenterID + '-' + mistake.questionNumber + '-' + mistake.wrongChoice + '\')"'
             +'/>'
-            + '<input type="button" class="button" '
+            + '<input type="button" class="button i18n" '
             + 'id="edit-button-' + mistake.questionNumber + '-' + mistake.wrongChoice + '" '
             + 'style="display:'
             + buttonMode.edit
-            + '" value="Edit" '
+            + '" name="value-edit" value="Edit" '
             + 'onclick="openComment(\'comment-' + commenterInfo.commenterID + '-' + mistake.questionNumber + '-' + mistake.wrongChoice + '\')"'
             +'/>'
-            + '<input type="button" class="button" '
+            + '<input type="button" class="button i18n" '
             + 'id="save-button-' + mistake.questionNumber + '-' + mistake.wrongChoice + '" '
             + 'style="display:'
             + buttonMode.save
-            + '" value="Save" '
+            + '" name="value-save" value="Save" '
             + 'onclick="saveComment(\'comment-' + commenterInfo.commenterID + '-' + mistake.questionNumber + '-' + mistake.wrongChoice + '\')"'
             +'/>'
-            + '<input type="button" class="button" '
+            + '<input type="button" class="button i18n" '
             + 'id="eg-button-' + mistake.questionNumber + '-' + mistake.wrongChoice + '" '
             + 'style="display:'
             + buttonMode.save
-            + '" value="e.g." '
+            + '" name="value-eg" value="e.g." '
             + 'onclick="copyDown(this,\'comment-' + commenterInfo.commenterID + '-' + mistake.questionNumber + '-' + mistake.wrongChoice + '\')"'
             +'/>'
-            + '<select class="rule-dropdown" onclick="" id="rule-' + mistake.questionNumber + '-' + mistake.wrongChoice + '" onfocus="buildRuleSelect(this);" onchange="addRuleToMistake(this)"><option value="none">Tag with a rule</option></select> <a target="_blank" href="commenter-manual.html">[help]</a>'
+            + '<select class="rule-dropdown" onclick="" id="rule-' + mistake.questionNumber + '-' + mistake.wrongChoice + '" onfocus="buildRuleSelect(this);" onblur="shrinkOnBlur(this);" onchange="addRuleToMistake(this)"><option class="i18n" name="content-tag-with-a-rule" value="none">Tag with a rule</option></select> <a class="i18n" name="content-help" target="_blank" href="commenter-manual.html">[help]</a>'
             + '<div style="display:none;">' + mistake.wrong + '</div>'
             + '</div>';
         var questionNumber = mistake.questionNumber;
@@ -135,6 +135,19 @@ function addRuleToMistake (node) {
     // Then reset the value on the select
     node.selectedIndex = 0;
     node.blur();
+};
+
+function shrinkOnBlur (node) {
+    // This is kind of crappy, but there is no cross-browser way
+    // of detecting 
+    // Remove the select nodes, for consistent UI layout without
+    // pre-populating selection lists everywhere.
+    // This only fires when a selection is made, or when the
+    // node is blurred. Not ideal, but the best we can do.
+    for (var i=node.childNodes.length-1;i>0;i--) {
+        var child = node.childNodes[i];
+        node.removeChild(child);
+    }
 };
 
 function buildRuleSelect (node) {
@@ -325,7 +338,7 @@ function buildRule (questionNumber,wrongChoice,ruleID,ruleText) {
     ruleContainer.setAttribute('class', 'rule-container');
     ruleContainer.setAttribute('id', 'rule-' + ruleID + '-' + questionNumber + '-' +wrongChoice);
     // XXXX
-    ruleContainer.innerHTML = '<div class="rule-button"><input type="button" id="removerule-' + questionNumber + '-' + wrongChoice + '-' + ruleID + '" class="button-small" onclick="confirmDelete(this,\'removeRule\')" value="Del"/></div><div>' + markdown(ruleText) + '</div>';
+    ruleContainer.innerHTML = '<div class="rule-button"><input type="button" id="removerule-' + questionNumber + '-' + wrongChoice + '-' + ruleID + '" class="button-small i18n" name="value-delete" onclick="confirmDelete(this,\'removeRule\')" value="Del"/></div><div>' + markdown(ruleText) + '</div>';
     // Return
     return ruleContainer;
 };
