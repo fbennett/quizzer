@@ -12,9 +12,9 @@
 
         var examDocumentTemplate = this['exam-document'].toString();
         if (useEucJp) {
-            examDocumentTemplate.replace('@@ENCODING-DECLARATION@@', '');
+            examDocumentTemplate = examDocumentTemplate.replace('@@ENCODING-DECLARATION@@', '');
         } else {
-            examDocumentTemplate.replace('@@ENCODING-DECLARATION@@', '\\usepackage[utf8]{inputenc}');
+            examDocumentTemplate = examDocumentTemplate.replace('@@ENCODING-DECLARATION@@', '\\usepackage[utf8]{inputenc}');
         }
         var examQuestionTemplate = this['exam-question'].toString();
         var examChoiceTemplate = this['exam-choice'].toString();
