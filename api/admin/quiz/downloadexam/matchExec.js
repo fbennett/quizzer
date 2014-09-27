@@ -22,6 +22,10 @@
         var stringsCount = 0;
         var documentCount = 0;
         var utf8 = this.sys.utf8;
+        var usePlatex = this.sys.use_platex;
+        var useEucJp = this.sys.use_euc_jp;
+
+        var archiver = require('archiver');
 
         makeDirectories();
 
@@ -228,24 +232,35 @@
                     documentQueue.push(fileName);
                 }
                 documentCount += documentQueue.length;
-                sys.async.eachLimit(documentQueue, 1, iconvOnce, function(err){
+                var doOnce;
+                if (useEucJp) {
+                    doOnce = iconvOnce;
+                } else {
+                    doOnce = getPdfFunction();
+                }
+                sys.async.eachLimit(documentQueue, 1, doOnce, function(err){
                     if (err) { console.log("ERROR: "+err) }
                 });
             });
         };
 
+        function getPdfFunction () {
+            if (usePlatex) {
+                return pLatexOnce;
+            } else {
+                return latexOnce;
+            }
+        };
+
         function zipFiles () {
-            require('node-zip');
-            var zip = new JSZip();
-            sys.fs.readdir(latexDir,function(err,files){
-                for (var i=0,ilen=files.length;i<ilen;i+=1) {
-                    var fileName = files[i];
-                    if (!fileName.match(/\.pdf$/)) continue;
-                    var buf = sys.fs.readFileSync(latexDir + fileName);
-                    zip.file(quizObject.zipName + '/' + fileName, buf.toString('base64'),{base64:true});
-                }
-	            var mydata = zip.generate({base64:false});
-	            sys.fs.writeFileSync(quizObject.zipDirName + '.zip', mydata, 'binary');
+            // Set up archiver
+            var archiver = require('archiver');
+            var output = sys.fs.createWriteStream(quizObject.zipDirName + '.zip');
+            var archive = archiver('zip');
+            output.on('close', function() {
+                console.log(archive.pointer() + ' total bytes');
+                console.log('archiver has been finalized and the output file descriptor has closed.');
+
                 console.log('Done!\nSend the bundle back to the client.');
                 sys.fs.readFile(quizObject.zipDirName + '.zip',function(err, data){
                     if (err) {
@@ -262,6 +277,21 @@
 
                     }
                 });
+
+            });
+            archive.on('error', function(err) {
+                throw err;
+            });
+            archive.pipe(output);
+
+            // Process files to completion
+            sys.fs.readdir(latexDir,function(err,files){
+                for (var i=0,ilen=files.length;i<ilen;i+=1) {
+                    var fileName = files[i];
+                    if (!fileName.match(/\.pdf$/)) continue;
+                    archive.append(sys.fs.createReadStream(latexDir + fileName), { name: utf8.decode(quizObject.zipName + '/' + fileName) })
+                }
+                archive.finalize();
             });
 
         };
@@ -276,11 +306,29 @@
                 console.log(data.toString());
             });
             ltx.on('close', function (code) {
-                latexOnce(newFileName, callback);
+                var doOnce = getPdfFunction();
+                doOnce(newFileName, callback);
             });
         };
 
         function latexOnce (data, callback) {
+            var ltx = sys.spawn("pdflatex",[data],{cwd:latexDir})
+            ltx.stdout.on('data',function(data) {
+                //console.log(data.toString());
+            });
+            ltx.stderr.on('data',function(data) {
+                //console.log(data.toString());
+            });
+            ltx.on('close', function (code) {
+                callback();
+                documentCount += -1;
+                if (!documentCount) {
+                    zipFiles();
+                }
+            });
+        };
+
+        function pLatexOnce (data, callback) {
             var ltx = sys.spawn("platex",[data],{cwd:latexDir})
             ltx.stdout.on('data',function(data) {
                 //console.log(data.toString());
