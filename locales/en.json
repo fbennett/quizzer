@@ -95,5 +95,6 @@
     "rubric-empty": "Rubric is empty. All fields must have content.",
 	"all-fields-must-have-content": "All fields must have content",
 	"choices-must-be-unique": "Choices must be unique.",
-	"which-is-correct": "Which of the following is best?"
+	"which-is-correct": "Which of the following is best?",
+	"chart-note": "<b>Note:</b> This chart shows student quiz performance by quintile. The <span style='background:#eaf2f6;padding:0 0.25em 0 0.25em;border:1px solid #3880aa;border-radius:0.5em;'>shaded curve</span> charts early returns, the <span style='padding:0 0.25em 0 0.25em;border:1px solid #3880aa;border-radius:0.5em;'>unshaded curve</span> the most recent. All students are represented in both curves, with roughly equal per-student response numbers in each."
 }
