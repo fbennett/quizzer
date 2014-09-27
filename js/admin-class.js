@@ -294,8 +294,8 @@ function generateProfileChart() {
     // We will return values as percentages of the class in each of the five quintiles.
     //
     // Split it into two halves, early and late.
-    var midPoint = ~~(graphData.length/2);
-    var slicePos = [[0,midPoint],[midPoint,graphData.length]];
+    //var midPoint = ~~(graphData.length/2);
+    //var slicePos = [[0,midPoint],[midPoint,graphData.length]];
     var responderTotal = [0,0];
     var cohortNormalizationFactor = [1,1];
     var quintileDataSets = [];
@@ -304,7 +304,7 @@ function generateProfileChart() {
     for (var i=0,ilen=2;i<ilen;i++) {
         //
         // For each half ...
-        var rawdata = graphData.slice(slicePos[i][0],slicePos[i][1]);
+        var rawdata = graphData[i];
         // Get total questions answered and total correct for each student
         var dataByStudent = {};
         var maxAnswers = 0;
@@ -342,10 +342,11 @@ function generateProfileChart() {
             var student = dataByStudent[studentID];
             if (student.percentage === 100) {
                 // Otherwise 100% correct snaps to zero
-                student.percentage = 99;
+                quintileData[4].push(student);
+            } else {
+                var quintpos = parseInt((student.percentage/20) % 5,10);
+                quintileData[quintpos].push(student);
             }
-            var quintpos = parseInt((student.percentage/20) % 5,10);
-            quintileData[quintpos].push(student);
         }
         quintileDataSets.push(quintileData);
     }
@@ -356,15 +357,12 @@ function generateProfileChart() {
     }
     // Set cohort normalization factor
     var curvename;
-    var normfactor = 0;
     if (responderTotal[0] > responderTotal[1]) {
         cohortNormalizationFactor[1] = responderTotal[0]/responderTotal[1];
         curvename = 'unshaded';
-        normfactor = cohortNormalizationFactor[1];
     } else if (responderTotal[0] < responderTotal[1]) {
         cohortNormalizationFactor[0] = responderTotal[1]/responderTotal[0];
         curvename = 'shaded';
-        normfactor = cohortNormalizationFactor[0];
     }
     for (var i=0,ilen=2;i<ilen;i++) {
         var quintileData = quintileDataSets[i];
@@ -377,9 +375,6 @@ function generateProfileChart() {
                 y:0
             };
             for (var k=0,klen=quintData.length;k<klen;k++) {
-                // Unweighted return
-                //quint.y += 1;
-                // Weighted by response rate within cohort
                 //quint.y += quintData[k].weight;
                 // Normalized, unweighted
                 quint.y += cohortNormalizationFactor[i];
@@ -410,18 +405,6 @@ function generateProfileChart() {
     }
     var opts = {};
     var myChart = new xChart('line', data, '#profile-chart', opts);
-    var curveName = document.getElementById('curvename');
-    curveName.innerHTML = curvename;
-    var firstHalfRate = document.getElementById('first-half-rate');
-    firstHalfRate.innerHTML = parseInt(responderTotal[0]*100/studentCount,10);
-    var secondHalfRate = document.getElementById('second-half-rate');
-    secondHalfRate.innerHTML = parseInt(responderTotal[1]*100/studentCount,10);
-    if (normfactor) {
-        var useNormFactor = document.getElementById('use-normfactor');
-        useNormFactor.style.display = 'inline';
-        var normFactor = document.getElementById('normfactor');
-        normFactor.innerHTML = parseInt(((normfactor-1)*100),10);
-    }
 }
 
 function buttonMode (mode) {
