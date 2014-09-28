@@ -16,6 +16,21 @@
         // 3           1               3         How high a  1        30         A lot.        0      16       Ten meter   2                   
         // 3           1               3         How high a  1        30         A lot.        2      43       Many.       1                   
         //
+        // Project: Adjust sort behavior so that commenter gets items
+        // in his/her own language(s) at the top of the listing. More
+        // precisely, the order of sort keys should be: (1) commented
+        // in instance language or not [boolean DESC for non-instance
+        // languages, ASC for instance language]; then (2) fully
+        // commented in commenter's own language(s) or not [boolean
+        // ASC]; then (2) frequency of error [integer DESC].
+        //
+        // Uh-oh, sort of. DB schema does not flag the language of a
+        // comment, and commenters can only add one comment each to a
+        // given mistake. So ... it needs not to *break* if commenter
+        // has multiple languages, but for management simplicity, a
+        // commenter should be designated to only one language, and
+        // stay there.
+        // 
         var mistakeCount = 0;
         var data = {commenter:commenter,commenterID:commenterID,mistakes:[],selections:[]};
         var sql = 'SELECT ruleID,string AS ruleText '
