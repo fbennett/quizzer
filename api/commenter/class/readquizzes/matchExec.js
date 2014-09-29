@@ -47,7 +47,7 @@
         //     * Keep current toggle behavior                                   [DONE]
 
 
-        // XXX Need to collect commenter languages before executing the code below. Just chain SQL calls to keep from going completely crazy.
+
         function getCommenterLanguages() {
             var sql = "SELECT adminID,lang FROM admin LEFT JOIN adminLanguages USING (adminID) WHERE adminKey=?;"
             db.all(sql,[commenterKey],function(err,rows){
@@ -59,102 +59,28 @@
                         commenterLangs.push(commenter.lang);
                     }
                 }
-                getQuizData(commenterID,commenterLangs);
-            })
+                getQuizData(commenterLangs);
+            });
         }
-
-
-        function getQuizData(commenterID,commenterLangs) {
+        
+        function getQuizData(commenterLangs) {
             
-            var otherLanguageJoin = "LEFT JOIN ("
-                +     "SELECT choiceID "
-                +     "FROM quizzes "
-                +     "JOIN questions USING(quizID) "
-                +     "JOIN choices USING(questionID) "
-                +     "JOIN answers USING(questionID,choice) "
-                +     "JOIN comments USING(choiceID) "
-                +     "JOIN admin USING(adminID) "
-                +     "JOIN adminLanguages USING(adminID) "
-                +     "WHERE classID=? AND NOT answers.choice=questions.correct AND lang IN (@@langSQL@@) "     // commenter langs
-                +   ") OTHER USING(choiceID) ";
-
-            var instanceCounterSQL = "CASE WHEN INSTANCE.choiceID IS NULL THEN 1 ELSE NULL END";
-
-            var otherCounterSQL = "CASE WHEN INSTANCE.choiceID IS NOT NULL AND COUNT(OTHER.choiceID) < @@COMMENTER_LANGUAGE_COUNT@@ THEN 1 ELSE NULL END";
-
-            var instanceInnerSelectConditions = "INSTANCE.choiceID IS NULL AND rulesToChoices.choiceID IS NULL ";
-
-            var otherInnerSelectConditions = "students.lang IN (@@langSQL@@) AND INSTANCE.choiceID IS NOT NULL AND OTHER.choiceID IS NULL ";
-
-            // For locale commentrs, below
-            // "WHERE quizzes.classID=? AND NOT answers.choice=questions.correct AND INSTANCE.choiceID IS NULL AND rulesToChoices.choiceID IS NULL "
-            //
-
+            var mistakenChoices = getMistakenChoices(locale,commenterLangs,classID);
 
             var sql = "SELECT quizzes.quizNumber,examName,COUNT(res.commentNeeded) AS numberOfCommentsNeeded "
                 + "FROM quizzes "
                 + "LEFT JOIN ("
-                +   "SELECT classID,quizNumber,@@INSTANCE_COUNTER@@ AS commentNeeded "
-                +   "FROM quizzes "
-                +   "JOIN questions USING(quizID) "
-                +   "JOIN choices USING(questionID) "
-                +   "JOIN answers USING(questionID,choice) "
-                +   "JOIN students USING(studentID) "
-                +   "LEFT JOIN ("
-                +     "SELECT choiceID "
-                +     "FROM quizzes "
-                +     "JOIN questions USING(quizID) "
-                +     "JOIN choices USING(questionID) "
-                +     "JOIN answers USING(questionID,choice) "
-                +     "JOIN comments USING(choiceID)"
-                +     "JOIN admin USING(adminID) "
-                +     "JOIN adminLanguages USING(adminID) "
-                +     "WHERE classID=? AND NOT answers.choice=questions.correct AND lang=? "                        // instance lang
-                +   ") INSTANCE USING(choiceID) "
-                +   "@@OTHER_LANGUAGE_JOIN@@"
-                +   "LEFT JOIN rulesToChoices USING(choiceID) "
-                +   "WHERE quizzes.classID=? AND NOT answers.choice=questions.correct AND @@INNER_SELECT_CONDITIONS@@ "
-                +   "GROUP BY quizzes.quizNumber, questions.questionNumber, choices.choice "
-                + ") as res ON res.classID=quizzes.classID AND res.quizNumber=quizzes.quizNumber "
+                +   mistakenChoices.sql
+                + ") res ON res.classID=quizzes.classID AND res.quizNumber=quizzes.quizNumber "
                 + "WHERE quizzes.classID=? AND sent=1 "
                 + "GROUP BY quizzes.quizNumber;";
 
-            var sqlVars;
 
-            // XXX Add the otherCounterSQL substitutions below, etc ...
+            var sqlVars = mistakenChoices.vars;
+            sqlVars.push(classID);
 
-            if (commenterLangs.indexOf(locale) > -1) {
-                // Instance lang mode
-                sql = sql.replace("@@INSTANCE_COUNTER@@",instanceCounterSQL);
-                sqlVars = [classID,locale,classID,classID];
-                sql = sql.replace('@@OTHER_LANGUAGE_JOIN@@','');
-                sql = sql.replace('@@INNER_SELECT_CONDITIONS@@',instanceInnerSelectConditions);
-            } else {
-                // Commenter lang mode
-                var commenterLanguageCount = 0;
-                var langSQL = [];
-                sqlVars = [classID,locale,classID];
-                for (var i=0,ilen=commenterLangs.length;i<ilen;i++) {
-                    sqlVars.push(commenterLangs[i]);
-                    langSQL.push('?');
-                    commenterLanguageCount += 1;
-                }
-                langSQL = langSQL.join(',');
-                sqlVars.push(classID);
-                for (var i=0,ilen=commenterLangs.length;i<ilen;i++) {
-                    sqlVars.push(commenterLangs[i]);
-                }
-                sqlVars.push(classID);
-                sql = sql.replace('@@OTHER_LANGUAGE_JOIN@@',otherLanguageJoin);
-                otherCounterSQL = otherCounterSQL.replace("@@COMMENTER_LANGUAGE_COUNT@@",commenterLanguageCount);
-                sql = sql.replace("@@INSTANCE_COUNTER@@",otherCounterSQL);
-                sql = sql.replace('@@INNER_SELECT_CONDITIONS@@',otherInnerSelectConditions);
-                sql = sql.replace("@@langSQL@@",langSQL);
-                sql = sql.replace("@@langSQL@@",langSQL);
-            }
-
-            console.log("SQL: "+sql);
-            console.log("VARS: "+sqlVars);
+            // console.log("XX "+sql);
+            // console.log("XX "+sqlVars);
 
             db.all(sql,sqlVars,function(err,rows){
                 if (err||!rows) {return oops(response,err,'class/readquizzes')};
@@ -169,6 +95,110 @@
                 response.end(JSON.stringify(retRows));
             });
         }
+
+        function getMistakenChoices (locale,commenterLangs,classID,quizNumber) {
+            
+            if (commenterLangs) {
+                if (commenterLangs.length) {
+                    if (commenterLangs.indexOf(locale) > -1) {
+                        commenterLangs = false;
+                    }
+                } else {
+                    commenterLangs = false;
+                }
+            }
+            
+            function getSQL() {
+                
+                var sql = "SELECT classID,quizNumber,choices.choiceID," + returnColumns(commenterLangs) + " "
+                    +   "FROM quizzes "
+                    +   "JOIN questions USING(quizID) "
+                    +   "JOIN choices USING(questionID) "
+                    +   "JOIN answers USING(questionID,choice) "
+                    +   "JOIN students USING(studentID) "
+                    +   "LEFT JOIN ("
+                    +     "SELECT choiceID "
+                    +     "FROM quizzes "
+                    +     "JOIN questions USING(quizID) "
+                    +     "JOIN choices USING(questionID) "
+                    +     "JOIN answers USING(questionID,choice) "
+                    +     "JOIN comments USING(choiceID)"
+                    +     "JOIN admin USING(adminID) "
+                    +     "JOIN adminLanguages USING(adminID) "
+                    +     "WHERE classID=? AND NOT answers.choice=questions.correct AND lang=? " // instance lang
+                    +   ") INSTANCE USING(choiceID) "
+                    +   otherLanguageJoin(commenterLangs)
+                    +   "LEFT JOIN rulesToChoices USING(choiceID) "
+                    +   "WHERE quizzes.classID=? AND NOT answers.choice=questions.correct AND " + innerSelectConditions(commenterLangs) + " "
+                    +   "GROUP BY quizzes.quizNumber, questions.questionNumber, choices.choice ";
+                
+                function returnColumns(commenterLangs) {
+                    var sub = {
+                        locale: "CASE WHEN INSTANCE.choiceID IS NULL THEN 1 ELSE NULL END AS commentNeeded",
+                        langs: "CASE WHEN INSTANCE.choiceID IS NOT NULL AND COUNT(OTHER.choiceID) < " + commenterLangs.length + " THEN 1 ELSE NULL END AS commentNeeded"
+                    }
+                    return commenterLangs ? sub.langs : sub.locale;
+                }
+                
+                function otherLanguageJoin(commenterLangs) {
+                    var sub = {
+                        locale: '',
+                        langs: "LEFT JOIN ("
+                            +     "SELECT choiceID "
+                            +     "FROM quizzes "
+                            +     "JOIN questions USING(quizID) "
+                            +     "JOIN choices USING(questionID) "
+                            +     "JOIN answers USING(questionID,choice) "
+                            +     "JOIN comments USING(choiceID) "
+                            +     "JOIN admin USING(adminID) "
+                            +     "JOIN adminLanguages USING(adminID) "
+                            +     "WHERE classID=? AND NOT answers.choice=questions.correct AND lang IN (" + langSQL() + ") "
+                            +   ") OTHER USING(choiceID) "
+                    }
+                    return commenterLangs ? sub.langs : sub.locale;
+                }
+                
+                function innerSelectConditions(commenterLangs) {
+                    sub = {
+                        locale: "INSTANCE.choiceID IS NULL AND rulesToChoices.choiceID IS NULL ",
+                        langs: "students.lang IN (" + langSQL() + ") AND INSTANCE.choiceID IS NOT NULL AND OTHER.choiceID IS NULL "
+                    }
+                    return commenterLangs ? sub.langs : sub.locale;
+                }               
+                
+                function langSQL () {
+                    var ret = [];
+                    for (var i=0,ilen=commenterLangs.length;i<ilen;i++) {
+                        ret.push('?');
+                    }
+                    return ret.join(',');
+                };
+
+                return sql;
+            };
+
+            function getSqlVars () {
+                var sqlVars;
+                if (!commenterLangs) {
+                    // Instance lang mode
+                    sqlVars = [classID,locale,classID];
+                } else {
+                    // Commenter lang mode
+                    sqlVars = [classID,locale,classID];
+                    for (var i=0,ilen=commenterLangs.length;i<ilen;i++) {
+                        sqlVars.push(commenterLangs[i]);
+                    }
+                    sqlVars.push(classID);
+                    for (var i=0,ilen=commenterLangs.length;i<ilen;i++) {
+                        sqlVars.push(commenterLangs[i]);
+                    }
+                }
+                return sqlVars;
+            }
+            
+            return { sql: getSQL(), vars: getSqlVars() }
+        }
+        
     }
     exports.cogClass = cogClass;
 })();
