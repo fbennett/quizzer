@@ -8,6 +8,7 @@
         var quizNumber = params.quizno;
         var commenter = this.sys.validCommenter(params).name;
         var commenterID = this.sys.validCommenter(params).id;
+        var commenterKey = params.commenter;
         // This gets us a clean list of wrong answers, with rubric, correct and wrong choices, and the stringID and text for each,
         // plus a count of the frequency of each error
         //
@@ -49,17 +50,29 @@
 
         
         function getMistakeData(classID,quizNumber) {
-            var sql = "SELECT qq.questionNumber,"
-                + "res.rubricID,r.string AS rubricText,"
-                + "res.correct,res.correctID,cc.string AS correctText,"
-                + "res.wrong,res.wrongID,ww.string AS wrongText,"
-                + "COUNT(res.studentID) AS count,"
+            var sql = "SELECT questionNumber,"
+                + "questions.stringID AS rubricID,RUBRIC.string AS rubricText,"
+                + "CHOICE.choice AS correct,CHOICE.stringID AS correctID,CORRECT.string AS correctText,"
+                + "MISTAKE.wrong,MISTAKE.choiceID AS wrongID,WRONG.string AS wrongText,"
+                + "COUNT(MISTAKE.studentID) AS count,"
                 + "CASE WHEN COUNT(res.comment)>0 THEN 1 ELSE 0 END AS commentCount,"
                 + "group_concat(distinct res.lang) AS langs "
-                + "FROM quizzes AS qz "
+                + "FROM classes AS cls "
+                + "JOIN quizzes AS qz USING(classID) "
                 + 'JOIN questions AS qq USING(quizID) '
-                + "JOIN classes AS cls ON cls.classID=qz.classID "
-                + "LEFT JOIN ("
+                + "JOIN ("
+                + getMistakenChoices(locale,commenterLangs,classID,quizNumber)
+                + ") MISTAKE USING(classID,quizNumber) "
+                + "JOIN choice CHOICE USING(questionID,choice) "
+                + "JOIN strings CORRECT ON CORRECT.stringID=CHOICE.stringID "
+                + "JOIN strings WRONG ON WRONG.stringID=MISTAKE.stringID "
+                + "JOIN strings RUBRIC ON questions.stringID=strings.stringID "
+                + "JOIN answers ON answers.questionID=questions.questionID AND answers.choice=MISTAKE.choice "
+
+            // Now we have choiceID in the list, and we can join to it to get what we need.
+
+                + ""
+
                 +     "SELECT DISTINCT que.questionID,que.questionNumber,que.correct,ach.choice AS wrong,"
                 +     'qch.stringID AS correctID,'
                 +     'ach.stringID AS wrongID,'
@@ -77,12 +90,15 @@
                 +     "LEFT JOIN rulesToChoices AS rtc ON rtc.choiceID=ach.choiceID "
                 +     "WHERE NOT ans.choice=que.correct AND qui.classID=? AND qui.quizNumber=? "
                 +     "GROUP BY qui.quizNumber,que.questionNumber,ans.choice,ans.studentID"
+
                 + ") as res ON res.questionID=qq.questionID "
                 + "LEFT JOIN strings AS r ON r.stringID=res.rubricID "
                 + "LEFT JOIN strings AS cc ON cc.stringID=res.correctID "
                 + "LEFT JOIN strings AS ww ON ww.stringID=res.wrongID "
-                + "WHERE qz.classID=? AND qz.quizNumber=? AND res.questionNumber IS NOT NULL "
-                + "GROUP BY qz.quizNumber,res.questionNumber,res.wrong "
+
+
+                + "WHERE qz.classID=? AND qz.quizNumber=? "
+                + "GROUP BY quizNumber,MISTAKE.questionNumber,MISTAKE.wrong "
                 + "ORDER BY commentCount,count DESC,langs;";
             sys.db.all(sql,[classID,quizNumber,classID,quizNumber],function(err,rows){
                 if (err||!rows) {return oops(response,err,'**quiz/quizmistakes(1)')};
