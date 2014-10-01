@@ -12,7 +12,7 @@
 	var locale = this.sys.locale;
 	var getCommenterLanguages = this.utils.getCommenterLanguages;
 	var getMistakenChoices = this.utils.getMistakenChoices;
-        // This gets us a clean list of wrong answers, with rubric, correct and wrong choices, and the stringID and text for each,
+        // This gets us a clean list of wronga answers, with rubric, correct and wrong choices, and the stringID and text for each,
         // plus a count of the frequency of each error
         //
         // quizNumber  questionNumber  rubricID  rubricText  correct  correctID  correctText   wrong  wrongID  wrongText   COUNT(res.studentID)
@@ -53,31 +53,40 @@
 
 	        
         function getMistakeData(commenterLangs) {
-            var sql = "SELECT questionNumber,"
+            var mistakenChoices = getMistakenChoices(locale,commenterLangs,classID,quizNumber);
+            //console.log("XX "+mistakenChoices.sql);
+            //console.log("XX "+mistakenChoices.vars);
+            var sql = "SELECT questions.questionNumber,"
                 + "questions.stringID AS rubricID,RUBRIC.string AS rubricText,"
                 + "CHOICE.choice AS correct,CHOICE.stringID AS correctID,CORRECT.string AS correctText,"
                 + "MISTAKE.wrong,MISTAKE.choiceID AS wrongID,WRONG.string AS wrongText,"
-                + "COUNT(studentID) AS count,"
-                + "CASE WHEN COUNT(res.comment)>0 THEN 1 ELSE 0 END AS commentCount,"
-                + "group_concat(DISTINCT res.lang) AS langs "
+                + "COUNT(students.studentID) AS count,"
+                + "CASE WHEN COUNT(comments.commentID)>0 THEN 1 ELSE 0 END AS commentCount,"
+                + "group_concat(DISTINCT students.lang) AS langs "
                 + "FROM classes "
                 + "JOIN quizzes USING(classID) "
                 + 'JOIN questions USING(quizID) '
                 + "JOIN ("
-                + getMistakenChoices(locale,commenterLangs,classID,quizNumber)
-                + ") MISTAKE USING(classID,quizNumber) "
-                + "JOIN choice CHOICE USING(questionID,choice) "
+                + mistakenChoices.sql
+                + ") MISTAKE ON MISTAKE.classID=classes.classID AND MISTAKE.quizNumber=quizzes.quizNumber AND MISTAKE.questionNumber=questions.questionNumber "
+                + "JOIN choices CHOICE ON CHOICE.questionID=questions.questionID AND CHOICE.choice=questions.correct "
+                + "JOIN answers ANSWERS ON ANSWERS.questionID=questions.questionID AND ANSWERS.choice=MISTAKE.wrong "
                 + "JOIN strings CORRECT ON CORRECT.stringID=CHOICE.stringID "
                 + "JOIN strings WRONG ON WRONG.stringID=MISTAKE.stringID "
-                + "JOIN strings RUBRIC ON questions.stringID=strings.stringID "
-                + "JOIN answers ON answers.questionID=questions.questionID AND answers.choice=MISTAKE.choice "
-		+ "JOIN students ON students.studentID=answers.studentID "
-		+ "JOIN comments ON comments.choiceID=MISTAKE.choiceID "
-                + "WHERE classID=? AND quizNumber=? "
-                + "GROUP BY quizNumber,MISTAKE.questionNumber,MISTAKE.wrong "
+                + "JOIN strings RUBRIC ON RUBRIC.stringID=questions.stringID "
+		        + "JOIN students ON students.studentID=ANSWERS.studentID "
+		        + "LEFT JOIN comments ON comments.choiceID=MISTAKE.choiceID "
+                + "WHERE classes.classID=? AND quizzes.quizNumber=? "
+                + "GROUP BY quizzes.quizNumber,questions.questionNumber,MISTAKE.wrong "
                 + "ORDER BY commentCount,count DESC,langs;";
-            sys.db.all(sql,[classID,quizNumber,classID,quizNumber],function(err,rows){
+            var sqlVars = mistakenChoices.vars;
+            console.log("XXX sql: "+sql);
+            sqlVars.push(classID);
+            sqlVars.push(quizNumber);
+            console.log("XXX sqlVars: "+sqlVars);
+            sys.db.all(sql,sqlVars,function(err,rows){
                 if (err||!rows) {return oops(response,err,'**quiz/quizmistakes(1)')};
+
                 mistakeCount += rows.length;
                 if (!mistakeCount) {
                     response.writeHead(200, {'Content-Type': 'application/json'});

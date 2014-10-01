@@ -50,6 +50,9 @@
         function getQuizData(commenterLangs) {
             
             var mistakenChoices = getMistakenChoices(locale,commenterLangs,classID);
+            
+            // console.log("XX "+mistakenChoices.sql);
+            // console.log("XX "+mistakenChoices.vars);
 
             var sql = "SELECT quizzes.quizNumber,examName,COUNT(res.commentNeeded) AS numberOfCommentsNeeded "
                 + "FROM quizzes "
