@@ -331,17 +331,27 @@ function buildQuestionList (quizobj) {
         if (false === quizobj) return;
     }
     qzi.pending = quizobj.pending;
-    var questionsLst = displayQuestions(quizobj.questions);
+
+
+    var isEditable;
+    if (quizobj.examName) {
+        isEditable = setButtonState('download-exam',questionsLst);
+    } else {
+        isEditable = setButtonState('send-quiz',questionsLst);
+    }
+    
+    var addButton = document.getElementById('add-question-button');
+    if (isEditable) {
+        addButton.disabled = false;
+    } else {
+        addButton.disabled = true;
+    }
+
+    var questionsLst = displayQuestions(quizobj.questions,isEditable);
     if (!questionsLst) {
         questionsLst = [];
     }
-    var button = document.getElementById('add-question-button');
-    button.disabled = false;
-    if (quizobj.examName) {
-        setButtonState('download-exam',questionsLst);
-    } else {
-        setButtonState('send-quiz',questionsLst);
-    }
+
 }
 
 function enableEditing () {
@@ -424,14 +434,25 @@ function addQuestion () {
     button.disabled = true;
 }
 
-function openQuestion (questionNumber) {
+function openQuestion (node) {
 
     var adminID = getParameterByName('admin');
     var classID = getParameterByName('classid');
     var quizNumber = getParameterByName('quizno');
-
-    if (!questionNumber) {
+    
+    var questionNumber;
+    if (!node) {
         questionNumber = 0;
+        console.log("XX (1)");
+    } else {
+        var m = node.parentNode.getAttribute('id').match(/.*-([0-9]+)/);
+        if (m) {
+            questionNumber = m[1];
+            console.log("XX (2)");
+        } else {
+            questionNumber = 0;
+            console.log("XX (3)");
+        }
     }
     var qobj = {};
     var node;
@@ -617,24 +638,23 @@ function closeQuestion (questionNumber, moveToBottom) {
     MathJax.Hub.Queue(["Typeset",MathJax.Hub,"quiz-question-" + questionNumber]);
 }
 
-function displayQuestions (qlst) {
+function displayQuestions (qlst,isEditable) {
     var questions = document.getElementById('quiz-questions');
     // Purge children
     for (var i=0,ilen=questions.childNodes.length;i<ilen;i+=1) {
         questions.removeChild(questions.childNodes[0]);
     }
-    setButtonState('send-quiz',qlst);
     // Display objects in list
     for (var i=0,ilen=qlst.length;i<ilen;i+=1) {
         var question = qlst[i];
-        displayQuestion(question,question.questionNumber);
+        displayQuestion(question,question.questionNumber,isEditable);
         var node = document.createElement('li');
         node.setAttribute('id', 'quiz-question-' + question.questionNumber);
     }
     return qlst;
 }
 
-function displayQuestion (qobj, questionNumber) {
+function displayQuestion (qobj, questionNumber, isEditable) {
 
     // XXX Put a listener on the checkbox nodes, so that correct answer
     // XXX can be set and saved without opening and closing the
@@ -647,41 +667,72 @@ function displayQuestion (qobj, questionNumber) {
         node.setAttribute('id', 'quiz-question-' + questionNumber);
         questions.appendChild(node);
     }
+    setRubric(node,qobj.rubric);
+    for (var i=0,ilen=qobj.questions.length;i<ilen;i+=1) {
+        var choiceText = qobj.questions[i];
+        var isCorrect = qobj.correct === i ? true : false;
+        setChoice(node,questionNumber,i,choiceText,isCorrect,isEditable);
+    }
+    setEditButton(node,questionNumber,isEditable);
+    MathJax.Hub.Queue(["Typeset",MathJax.Hub,"quiz-question-" + questionNumber]);
+    i18n(node);
+}
+
+function setChoice(node,questionNumber,choiceNumber,choiceText,isCorrect,isEditable) {
+    var choiceWrapper = document.createElement('div');
+    choiceWrapper.setAttribute('class', 'choice');
+    var choiceMarker = getChoiceMarker(questionNumber,choiceNumber,isCorrect);
+    var choiceText = getChoiceText(choiceText);
+    choiceWrapper.innerHTML = choiceMarker + choiceText;
+    node.appendChild(choiceWrapper)
+}
+
+function getChoiceMarker(questionNumber,choiceNumber,isCorrect,isEditable) {
+    checked = isCorrect ? ' checked="true"' : '';
+    var ret;
+    if (isEditable) {
+        ret = '<input type="radio" name="question-' + questionNumber + '" '
+            + 'class="selection" onclick="writeChoice(this,' + questionNumber+ ',' + choiceNumber + ');"'
+            + checked + '/>'
+    } else {
+        if (isCorrect) {
+            ret = '<span class="selection correct">\u25ef</span>';
+        } else {
+            ret = '<span class="selection wrong">\u00d7</span>';
+        }
+    }
+    return ret;
+}
+
+function getChoiceText(choiceText) {
+    return '<div class="selection-text">' +markdown(choiceText) + '</div>'
+}
+
+function setEditButton(node,questionNumber,isEditable) {
+    var button = document.createElement('input');
+    button.setAttribute('type', 'button');
+    button.setAttribute('class', 'button editing-button i18n');
+    if (isEditable) {
+        button.setAttribute('value', 'Edit Question');
+        button.setAttribute('name', 'value-edit-question');
+        button.setAttribute('onclick', 'openQuestion(this)');
+    } else {
+        button.setAttribute('value', 'Edit Question');
+        button.setAttribute('name', 'value-reedit-question');
+        button.setAttribute('onclick', 'confirmDelete(this,"openQuestion","edit-query")');
+    }
+    node.appendChild(button);
+}
+
+function setRubric(node,rubricText) {
     var rubric = document.createElement('div');
     rubric.setAttribute('class','rubric-wrapper');
     rubric.innerHTML = '<div class="raw-text-wrapper">'
         + '<div class="raw-text-marker i18n" name="content-source">Source</div>'
-        + '<pre class="raw-text">' + qobj.rubric.replace(/<br\/?>/g,'&lt;br/&gt') + '</pre>'
+        + '<pre class="raw-text">' + rubricText.replace(/<br\/?>/g,'&lt;br/&gt') + '</pre>'
         + '</div>'
-        + '<div class="rubric">' + markdown(qobj.rubric) + '</div>'
+        + '<div class="rubric">' + markdown(rubricText) + '</div>'
     node.appendChild(rubric);
-    for (var i=0,ilen=qobj.questions.length;i<ilen;i+=1) {
-        var choice_wrapper = document.createElement('div');
-        choice_wrapper.setAttribute('class', 'choice');
-        var checkbox = document.createElement('input');
-        checkbox.setAttribute('type', 'radio');
-        checkbox.setAttribute('name', 'question-' + questionNumber);
-        checkbox.setAttribute('class', 'selection');
-        checkbox.setAttribute('onclick', 'writeChoice(this,' + questionNumber + ',' + i + ');');
-        if (qobj.correct == i) {
-            checkbox.checked = true;
-        }
-        choice_wrapper.appendChild(checkbox)
-        var selectionText = document.createElement('div');
-        selectionText.setAttribute('class', 'selection-text');
-        selectionText.innerHTML = markdown(qobj.questions[i]);
-        choice_wrapper.appendChild(selectionText)
-        node.appendChild(choice_wrapper)
-    }
-    var button = document.createElement('input');
-    button.setAttribute('type', 'button');
-    button.setAttribute('value', 'Edit Question');
-    button.setAttribute('name', 'value-edit-question');
-    button.setAttribute('class', 'button editing-button i18n');
-    button.setAttribute('onclick', 'openQuestion("' + questionNumber + '")');
-    node.appendChild(button);
-    MathJax.Hub.Queue(["Typeset",MathJax.Hub,"quiz-question-" + questionNumber]);
-    i18n(node);
 }
 
 function setDisplayMode (mode) {
@@ -708,6 +759,7 @@ function setButtonState (state,lst) {
     if ("undefined" === typeof lst) {
         lst = [1];
     }
+    var isEditable = true;
     var sendQuiz = document.getElementById('send-quiz');
     var quizDone = document.getElementById('quiz-done');
     var quizDraft = document.getElementById('quiz-draft');
@@ -733,22 +785,22 @@ function setButtonState (state,lst) {
             sendQuiz.style.display = 'none';
             quizDone.style.display = 'inline';
             quizDone.value = i18nStrings["in-draft"];
-            enableEditing();
+            isEditable = true;
         } else if (pending == -1) {
             sendQuiz.style.display = 'inline';
             sendQuiz.value = 'Send Quiz';
             quizDone.style.display = 'none';
-            enableEditing();
+            isEditable = true;
         } else if (pending === 0) {
             sendQuiz.style.display = 'none';
             quizDone.style.display = 'inline';
             quizDone.value = i18nStrings["responses-complete"];
-            disableEditing();
+            isEditable = false;
         } else {
             sendQuiz.style.display = 'inline';
             sendQuiz.value = i18nStrings["responses-pending"] + pending;
             quizDone.style.display = 'none';
-            disableEditing();
+            isEditable = false;
         }
         break;
     case 'quiz-done':
@@ -756,13 +808,14 @@ function setButtonState (state,lst) {
         quizDone.style.display = 'inline';
         quizDone.value = i18nStrings["quiz-sent"]
         downloadExam.style.display = 'none';
-        disableEditing();
+        isEditable = false;
         break;
     case 'download-exam':
         sendQuiz.style.display = 'none';
         quizDone.style.display = 'none';
         downloadExam.style.display = 'inline';
         markExam.style.display = 'none';
+        isEditable = false;
         break;
     case 'exam-results':
         quizDone.style.display = 'none';
@@ -770,20 +823,22 @@ function setButtonState (state,lst) {
         markExam.value = i18nStrings["display-results"];
         markExam.style.display = 'inline';
         sendQuiz.style.display = 'none';
-        disableEditing();
+        isEditable = false;
         break;
     case 'mark-exam':
         sendQuiz.style.display = 'none';
         quizDone.style.display = 'none';
         downloadExam.style.display = 'inline';
         markExam.style.display = 'inline';
-        disableEditing();
+        isEditable = false;
         break;
     default:
         sendQuiz.style.display = 'inline';
         quizDone.style.display = 'none';
         downloadExam.style.display = 'none';
+        isEditable = false;
         break;
     }
+    return isEditable;
 }
 

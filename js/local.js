@@ -127,14 +127,17 @@ function markdown (txt) {
     return marked.parse(txt);
 }
 
-function confirmDelete (node,callbackName) {
+function confirmDelete (node,callbackName,message) {
+    if (!message) {
+        message = "delete-query";
+    }
     var origValue,origEvent;
     if (node.value) {
         origValue = node.value;
-        node.value= i18nStrings["delete-query"];
+        node.value= i18nStrings[message];
     } else {
         origValue = node.innerHTML;
-        node.innerHTML = i18nStrings["delete-query"];
+        node.innerHTML = i18nStrings[message];
     }
     var origEvent = '' + node.getAttribute('onclick');
     var origStyle = node.parentNode.style;
