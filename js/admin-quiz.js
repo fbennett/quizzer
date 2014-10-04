@@ -331,14 +331,9 @@ function buildQuestionList (quizobj) {
         if (false === quizobj) return;
     }
     qzi.pending = quizobj.pending;
+    qzi.examName = quizobj.examName;
 
-
-    var isEditable;
-    if (quizobj.examName) {
-        isEditable = setButtonState('download-exam',questionsLst);
-    } else {
-        isEditable = setButtonState('send-quiz',questionsLst);
-    }
+    var isEditable = setButtonState('send-quiz',questionsLst);
     
     var addButton = document.getElementById('add-question-button');
     if (isEditable) {
@@ -770,6 +765,9 @@ function setButtonState (state,lst) {
         sendQuiz.disabled = true;
     } else {
         sendQuiz.disabled = false;
+    }
+    if (qzi.examName) {
+        state = 'download-exam';
     }
     if ('download-exam' === state) {
         if (pending > 0) {
