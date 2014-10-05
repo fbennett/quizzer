@@ -62,20 +62,50 @@ short notice to fill a critical need, and it has been a real pleasure
 to see how quickly it could be brought together, and how smoothly
 it could be extended.
 
+## Requirements
+
+Quizzer is a `node.js` module. To get the website running, the
+minimum requirements are:
+
+> * `npm` >=1.3.x
+> * `node` >=0.10.x
+
+In addition, the following external utilities are required
+for the typesetting of exams:
+
+> * `pandoc` >=1.11.x (preferably compiled with texmath support)
+> * either `pdflatex`, or `platex` and `dvipdfmx` (the latter pair is needed
+>   only if Japanese text must be handled)
+
+LaTex (pLaTeX) documents created by Quizzer use the following
+packages:
+
+> * `makebarcode`
+> * `marginnote`
+> * `graphicx`
+> * `tikz`
+> * `ctable`
+> * `float`
+> * `hyphenat`
+> * `amsmath`
+
+Quizzer must have access to a mail transfer agent (MTA). This can
+either be a `sendmail` instance running on the same server, or a mail
+API to a service such as GMail.
+
+With the above requirements in place, Quizzer can be run on a
+workstation for initial trials, accessed via a port on `localhost`
+(aka `127.0.0.1`). For production use, Quizzer should be placed behind
+a webserver, such as `lighttpd` or `apache`. Instructions for setting
+up the former are given below.
+
 ## Basic Installation
 
 Install quizzer from the `npm` repository:
 
     npm install quizzer
 
-In addition to the dependencies pulled in by `npm`, Quizzer needs to
-have access to the external programs `pandoc` and `pdflatex`. Both
-should be available as package installs on your operating system (the
-latter as part of the `texlive` package -- but on some systems, it
-may be necessary to obtain and install of `makebarcode` LaTeX package separately).
-
-Run the server by saving the following code to a file (such as `quizServer.js`,
-say):
+Run the server by saving the following code to a file (say, `quizServer.js`):
 
     var qz = require('quizzer');
     qz.run();
@@ -87,8 +117,9 @@ Run the script from command line like this:
 The script will whinge on first run, asking for some essential
 details:
 
-    usage: quizServer.js [-h] [-v] [-H PROXY_HOSTNAME] [-p REAL_PORT]
-                         [-e EMAIL_ACCOUNT] [-s SMTP_HOST]
+    usage: quizServer.js [-h] [-v] [-H PROXY_HOSTNAME] [-Q QUIZZER_PATH]
+                         [-p REAL_PORT] [-e EMAIL_ACCOUNT] [-s SMTP_HOST]
+                         [-l LOCALE] [-P] [-E]
                          
     
     Quizzer, a quiz server
@@ -98,41 +129,51 @@ details:
       -v, --version         Show program's version number and exit.
       -H PROXY_HOSTNAME, --proxy-hostname PROXY_HOSTNAME
                             Host name for external access
+      -Q QUIZZER_PATH, --quizzer-path QUIZZER_PATH
+                            Server path to quizzer (default: "/quizzer/")
       -p REAL_PORT, --real-port REAL_PORT
                             Port on which to listen for local connections
+                            (defaults to 3498)
       -e EMAIL_ACCOUNT, --email-account EMAIL_ACCOUNT
                             Full username of email account (e.g. useme@gmail.com)
       -s SMTP_HOST, --smtp-host SMTP_HOST
                             SMTP host name (e.g. smtp.gmail.com)
-      ERROR: must set option smtp_host
+      -l LOCALE, --locale LOCALE
+                            Language locale for admin interface ("en" or "ja")
+      -P, --use-platex      Use platex engine + dvipdfmx for PDF generation
+      -E, --use-euc-jp      Convert input text from UTF8 to legacy EUC-JP 
+                            encoding before LaTeX processing
       ERROR: must set option proxy_hostname
       ERROR: must set option email_account
 
-A GMail account can be used as `EMAIL_ACCOUNT`, with `smtp.gmail.com` as `SMTP_HOST`.
-`REAL_PORT` will default to `3498`, but can be set to other values for multiple
-server instances. For initial testing, `PROXY_HOSTNAME` should be set to `127.0.0.1`
-or `localhost`. Running again will yield this:
+To get Quizzer running, set `proxy_hostname` to `localhost` (or `127.0.0.1`), and
+set `email_account` to your mail address (`me@mail.com` in the example below):
 
-    ERROR: file mypwd.txt not found: Error: ENOENT, no such file or directory './mypwd.txt'
+    node ./quizServer -H localhost -e me@mail.com
 
-Save the email account password to disk in a file `mypwd.txt` (only the user running
-Quizzer should have access permissions on the file, obviously). This will get the server
-running:
+Quizzer will come up with a message like the following:
 
     Wrote config parameters to quizzer-3498.cfg
     Quizzer can now be run with the single option: -p 3498
-    Admin URL: http://localhost:3498/?admin=fyvg19vx
+    Message: no mypwd.txt file found, will use local Sendmail transport
+    Using local Sendmail transport
+    Admin URL: http://localhost:3498/?admin=179359xq
     Adding admin role
     Loaded class membership keys
+    Woke up the mail schedulers
     Done. Ready to shake, rattle and roll!
 
-Connect to the listed URL with a browser, and you're ready to go.  The
-database and configuration files are created in the directory from
+The website can now be accessed at the URL reported in the fifth line.
+(Note that the `admin` key is automatically generated, and will differ
+from that shown in the example above.)
+
+The database and configuration files are created in the directory from
 which the script is run, named after the port number. The server can
 be shut down with `CTRL-c` (`SIGINT`), and as the startup message
 says, it can be restarted with the single option `-p <REAL_PORT>`
-(Note that the `admin` key is automatically generated, and will differ
-from that shown in the example above.)
+
+A full explanation of the remaining options will be added to this
+README as time permits.
 
 ## Running Quizzer behind a Proxy
 
@@ -172,76 +213,3 @@ settings like the following should do the trick:
       )
     )
     
-## Adding Commenters
-
-Quizzer data is held in an `sqlite3` database, located in the directory
-from which the script is run, and named after the port number under
-which the instance is running. 
-
-commenters are held in the `admin` table of the Quizzer database.
-There is no web interface to this table: add commenters by inserting
-them directly, using the `sqlite3` access tool, like so:
-
-    sqlite3> INSERT INTO admin VALUES (NULL, 'jeff', 'ahTh3nie', 2, 0);
-
-The `NULL` value in the first column is for the automatically-assigned
-numeric ID of the database row. The second column is the screen
-name of the commenter, which must be unique. The third column is the
-access key that will be included in the personal URL of the commenter,
-and must also be unique. Under Linux, the `pwgen` utility is a handy
-tool for creating these. The fourth column is the role of the commenter,
-and must be set to `2`. The fifth column is currently unused, but may
-eventually control the intervals at which scheduled key resets and
-reminder mailings occur.
-
-After commenters have been added to the `admin` table, their
-access URLs will be reported in the startup chatter. For example:
-
-    Reading config from quizzer-3498.cfg
-    Admin URL: http://localhost:3498/?admin=fyvg19vx
-    Adding admin role
-    Adding commenter 'adam' with URL http://localhost:3498/?commenter=En5chaej
-    Adding commenter 'bob' with URL http://localhost:3498/?commenter=koosha1D
-    Adding commenter 'chris' with URL http://localhost:3498/?commenter=Ro5aise5
-    Loaded class membership keys
-    Done. Ready to shake, rattle and roll!
-
-The commenter links show a list of courses, and course links a list
-of quizzes with the number of uncommented mistakes, if any. Clicking on
-a quiz link opens a list of wrong answers, sorted in descending order
-of frequency among quiz-takers, and with already-commented answers
-pushed to the bottom.
-
-`Markdown` syntax is recognized in comment text, with a few small
-extensions. To set markers in text, enclose a number or letter in
-double parens:
-
-    This will render as a circle-A: ((A))
-
-For an explanation of why a wrong answer was wrong,
-set a single `>` character at the beginning of the line,
-followed by the pasted text of the wrong answer to be explained:
-
-    > Many new legislations were passed in 2010.
-
-Mark text targeted for specific comment by wrapping it in
-double-quotes, opening with a single letter or number:
-
-    > ((1 Many)) new ((2 legislations)) ((3 were)) passed in 2010.
-
-    ((2)) is a non-countable noun, and is *never* written
-    with an 's'. With a non-countable noun, use 'much', not
-    'many' at ((1)), and the singular verb form at ((3)).
-
-For a comment that states a pattern, open with two '>' characters:
-
-    >> I studied *for* two hours.
-
-For a comment that states a grammatical rule, open with
-three '>' characters:
-
-    >>> Never use the word "nowadays" in formal writing.
-
-When set at the very beginning of an entry, the explanation,
-pattern, and rule prefixes trigger a tidy heading in the displayed
-entry.
