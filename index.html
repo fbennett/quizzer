@@ -34,56 +34,115 @@
         <h2>
 <a name="overview" class="anchor" href="#overview"><span class="octicon octicon-link"></span></a>Overview</h2>
 
-<p>Quizzer is a tool for writing instruction, tailored to the needs of
-second language learners and students encountering the demands of
-formal writing for the first time. The system and method are designed
-to make efficient use of staff time, and to motivate students by
-applying a non-punitive 'fail early, fail often' approach to the
-writing process. The system is simple to set up (see below).</p>
+<p>Quizzer is an online support tool for academic writing instruction.
+It can be installed with a single command, requires no student IDs or
+passwords, and works well with classes made up of students at varying
+stages of language acquisition, and from diverse language backgrounds.</p>
 
-<p>In or Academic Writing program in the Nagoya University Faculty of
-Law, Quizzer supports the following workflow:</p>
+<p>The basic concept is to use student writing as the basis for a flood
+of pattern-recognition exercises, cast as online quizzes delivered by
+email.  By raising the pace of iteration, the aim is to help students
+internalize a sense of grammatical anomalies and stylistic
+infelicities.</p>
+
+<p>While Quizzer can be used to generate multiple-choice quizzes for
+a variety of purposes, the workflow it was built for runs like this:</p>
 
 <ol>
 <li>Students submit a 400-word essay once each week on an arbitrary
 topic.</li>
-<li>The instructor selects one poorly-written sentence from each
-essay, and composes a multiple-choice question consisting of the
-student's own sentence, two alternatives that also contain errors,
-and a corrected version. <em>The essays themselves are not assessed.</em>
-</li>
+<li>The instructor selects representative errors of style and grammar
+from the submissions, and composes a multiple-choice question
+consisting of the student's own sentence, two alternatives that
+also contain errors, and a corrected version.</li>
 <li>After constructing one question from each submitted essay, students
 are sent personalized links to the resulting quiz.</li>
 <li>Students submit their responses, which are recorded on the Quizzer
-server. Student receive feedback immediately feedback on their
-incorrect responses.</li>
+server. Students receive feedback immediately feedback on their
+incorrect responses. <em>Neither the essays nor the quiz results are
+assessed.</em>
+</li>
 <li>Class commenters (TAs, instructors, and other experienced writers)
-post short explanations of why the wrong answers were wrong.</li>
+post short explanations of why the wrong answers were wrong. Where
+appropriate, commenters from the students' own language domain can
+be brought in to provide supplementary native-language guidance.</li>
+<li>Class commenters of the target language domain can set persistent
+"rules" on-the-fly to cover issues that arise frequently. These
+rules can then to set as comments on specific wrong answers, and
+they can be translated by native-language commenters, for reference
+by students of the same language domain.</li>
 <li>When students revisit their quiz links, they will find
-both the comments, and a list of classmates who gave the correct answer
-to the questions that they missed.</li>
+their errors attached with explanatory rule, comments, and a list
+of classmates who answered the question correctly.</li>
 <li>Students are given an assessed, paper-based, multiple-choice
 supplementary mid-term and final exam, consisting entirely of
 questions from the quizzes.</li>
-</ol><p>Quiz distribtion, commenting, exam composition, and marking are all
+</ol><p>Quiz distribution, commenting, exam composition, and marking are all
 managed by Quizzer. Paper tests are randomized as a hedge against
 cheating, and marked with a barcode reader for quick assessment.</p>
 
-<p>The original motivation for this work was an unpleasant encounter with
-the products of a commercial vendor. Quizzes are <em>simple</em> things. They
-should be easy to customise, and deploying a quiz to a given group of
-students should not require weeks of effort, large volumes of email,
-numerous meetings and progress reports, or extensive trial-and-error
-exploration of a byzantine menu system. Software is supposed to save
-time, not the other way around. It should just do its job, so that we
-can get on with our own.</p>
-
-<p>The initial inspiration for this particular attempt to do better was a
-simple <a href="http://chetan0389.blogspot.jp/2013/06/quiz-using-htmlcss-jquery-xml-javascript.html">code
+<p>The initial inspiration for Quizzer was a small <a href="http://chetan0389.blogspot.jp/2013/06/quiz-using-htmlcss-jquery-xml-javascript.html">code
 sample</a>
-posted by Chetan Jain. The code has been refactored and extended considerably
-for this project, but I gratefully acknowledge the starting
-point for this frolic.</p>
+posted by Chetan Jain. The code has been refactored and extended
+considerably for this project, but I gratefully acknowledge the
+starting point for this frolic. Hats off also to the developers of
+<code>node.js</code>, and LaTeX and, well, everything else. Quizzer was built on
+short notice to fill a critical need, and it has been a real pleasure
+to see how quickly it could be brought together, and how smoothly
+it could be extended.</p>
+
+<h2>
+<a name="requirements" class="anchor" href="#requirements"><span class="octicon octicon-link"></span></a>Requirements</h2>
+
+<p>Quizzer is a <code>node.js</code> module. To get the website running, the
+minimum requirements are:</p>
+
+<blockquote>
+<ul>
+<li>
+<code>npm</code> &gt;=1.3.x</li>
+<li>
+<code>node</code> &gt;=0.10.x</li>
+</ul>
+</blockquote>
+
+<p>In addition, the following external utilities are required
+for the typesetting of exams:</p>
+
+<blockquote>
+<ul>
+<li>
+<code>pandoc</code> &gt;=1.11.x (preferably compiled with texmath support)</li>
+<li>either <code>pdflatex</code>, or <code>platex</code> and <code>dvipdfmx</code> (the latter pair is needed
+only if Japanese text must be handled)</li>
+</ul>
+</blockquote>
+
+<p>LaTex (pLaTeX) documents created by Quizzer use the following
+packages:</p>
+
+<blockquote>
+<ul>
+<li><code>makebarcode</code></li>
+<li><code>marginnote</code></li>
+<li><code>graphicx</code></li>
+<li><code>tikz</code></li>
+<li><code>ctable</code></li>
+<li><code>float</code></li>
+<li><code>hyphenat</code></li>
+<li><code>amsmath</code></li>
+</ul>
+</blockquote>
+
+<p>Quizzer must have access to a mail transfer agent (MTA). This can
+either be a <code>sendmail</code> instance running on the same server, or a mail
+API to a service such as GMail.</p>
+
+<p>With the above requirements in place, Quizzer can be run on a
+workstation for initial trials, accessed via a port on <code>localhost</code>
+(aka <code>127.0.0.1</code>). For production use, Quizzer should be placed behind
+a webserver, such as <code>lighttpd</code> or <code>apache</code>. Instructions for setting
+up the former are given below.</p>
 
 <h2>
 <a name="basic-installation" class="anchor" href="#basic-installation"><span class="octicon octicon-link"></span></a>Basic Installation</h2>
@@ -93,37 +152,7 @@ point for this frolic.</p>
 <pre><code>npm install quizzer
 </code></pre>
 
-<p>In addition to the dependencies pulled in by <code>npm</code>, Quizzer needs to
-have access to the external programs <code>pandoc</code> and <code>pdflatex</code>. While
-<code>pdflatex</code> should be available as package installs on your operating
-system (probably as part of the <code>texlive</code> package), <code>pandoc</code> is a
-different matter.</p>
-
-<p>Quizzer uses a simple JavaScript module to convert <code>markdown</code> text to
-HTML, supplemented by <code>MathJax</code> for mathematical formulae. When generating
-examination papers, the <code>markdown</code> + <code>MathJax</code> markup must be converted to
-<code>LaTeX</code>, and <code>pandoc</code> is used for that purpose. For things to work correctly,
-mathematical formulae must be left intact during the conversion. An extension
-to <code>pandoc</code> (<code>tex_math_dollars</code>) exists for this exact purpose, but unfortunately
-it is available only in <code>pandoc</code> version 1.10 and above.</p>
-
-<p>Depending on your system, installing <code>pandoc</code> 1.10+ may be something
-of a chore at this point in time. In our own environment, getting it
-in place on an aging virtual server running CentOS 6 required a
-scratch build of both the Glasgow Haskell Compiler and the Haskell Platform.
-Everything worked swimmingly after that was done, but the compile process
-took several hours, and needed to be nudged forward repeatedly.</p>
-
-<p>If <code>pandoc</code> 1.10 is not an option, and you don't need maths rendering, you
-can use an earlier pandoc by editing the following file:</p>
-
-<p>./api/admin/quiz/downloadexam/matchExec.js</p>
-
-<p>Just change <code>html+tex_math_dollars</code> to simply <code>html</code>, and you should be good.</p>
-
-<p>Apart from this transitional speed bump, installation is simple. Run
-the server by saving the following code to a file (such as
-<code>quizServer.js</code>, say):</p>
+<p>Run the server by saving the following code to a file (say, <code>quizServer.js</code>):</p>
 
 <pre><code>var qz = require('quizzer');
 qz.run();
@@ -137,8 +166,9 @@ qz.run();
 <p>The script will whinge on first run, asking for some essential
 details:</p>
 
-<pre><code>usage: quizServer.js [-h] [-v] [-H PROXY_HOSTNAME] [-p REAL_PORT]
-                     [-e EMAIL_ACCOUNT] [-s SMTP_HOST]
+<pre><code>usage: quizServer.js [-h] [-v] [-H PROXY_HOSTNAME] [-Q QUIZZER_PATH]
+                     [-p REAL_PORT] [-e EMAIL_ACCOUNT] [-s SMTP_HOST]
+                     [-l LOCALE] [-P] [-E]
 
 
 Quizzer, a quiz server
@@ -148,44 +178,54 @@ Optional arguments:
   -v, --version         Show program's version number and exit.
   -H PROXY_HOSTNAME, --proxy-hostname PROXY_HOSTNAME
                         Host name for external access
+  -Q QUIZZER_PATH, --quizzer-path QUIZZER_PATH
+                        Server path to quizzer (default: "/quizzer/")
   -p REAL_PORT, --real-port REAL_PORT
                         Port on which to listen for local connections
+                        (defaults to 3498)
   -e EMAIL_ACCOUNT, --email-account EMAIL_ACCOUNT
                         Full username of email account (e.g. useme@gmail.com)
   -s SMTP_HOST, --smtp-host SMTP_HOST
                         SMTP host name (e.g. smtp.gmail.com)
-  ERROR: must set option smtp_host
+  -l LOCALE, --locale LOCALE
+                        Language locale for admin interface ("en" or "ja")
+  -P, --use-platex      Use platex engine + dvipdfmx for PDF generation
+  -E, --use-euc-jp      Convert input text from UTF8 to legacy EUC-JP 
+                        encoding before LaTeX processing
   ERROR: must set option proxy_hostname
   ERROR: must set option email_account
 </code></pre>
 
-<p>A GMail account can be used as <code>EMAIL_ACCOUNT</code>, with <code>smtp.gmail.com</code> as <code>SMTP_HOST</code>.
-<code>REAL_PORT</code> will default to <code>3498</code>, but can be set to other values for multiple
-server instances. For initial testing, <code>PROXY_HOSTNAME</code> should be set to <code>127.0.0.1</code>
-or <code>localhost</code>. Running again will yield this:</p>
+<p>To get Quizzer running, set <code>proxy_hostname</code> to <code>localhost</code> (or <code>127.0.0.1</code>), and
+set <code>email_account</code> to your mail address (<code>me@mail.com</code> in the example below):</p>
 
-<pre><code>ERROR: file mypwd.txt not found: Error: ENOENT, no such file or directory './mypwd.txt'
+<pre><code>node ./quizServer -H localhost -e me@mail.com
 </code></pre>
 
-<p>Save the email account password to disk in a file <code>mypwd.txt</code> (only the user running
-Quizzer should have access permissions on the file, obviously). This will get the server
-running:</p>
+<p>Quizzer will come up with a message like the following:</p>
 
 <pre><code>Wrote config parameters to quizzer-3498.cfg
 Quizzer can now be run with the single option: -p 3498
-Admin URL: http://localhost:3498/?admin=fyvg19vx
+Message: no mypwd.txt file found, will use local Sendmail transport
+Using local Sendmail transport
+Admin URL: http://localhost:3498/?admin=179359xq
 Adding admin role
 Loaded class membership keys
+Woke up the mail schedulers
 Done. Ready to shake, rattle and roll!
 </code></pre>
 
-<p>Connect to the listed URL with a browser, and you're ready to go.  The
-database and configuration files are created in the directory from
-which the script is run, named after the port number. The server can
-be shut down with <code>CTRL-c</code> (<code>SIGINT</code>), and as the startup message
-says, it can be restarted with the single option <code>-p &lt;REAL_PORT&gt;</code>
+<p>The website can now be accessed at the URL reported in the fifth line.
 (Note that the <code>admin</code> key is automatically generated, and will differ
 from that shown in the example above.)</p>
+
+<p>The database and configuration files are created in the directory from
+which the script is run, named after the port number. The server can
+be shut down with <code>CTRL-c</code> (<code>SIGINT</code>), and as the startup message
+says, it can be restarted with the single option <code>-p &lt;REAL_PORT&gt;</code></p>
+
+<p>A full explanation of the remaining options will be added to this
+README as time permits.</p>
 
 <h2>
 <a name="running-quizzer-behind-a-proxy" class="anchor" href="#running-quizzer-behind-a-proxy"><span class="octicon octicon-link"></span></a>Running Quizzer behind a Proxy</h2>
@@ -226,88 +266,6 @@ auth.require = ( "/quizzer/admin.html" =&gt;
   )
 )
 </code></pre>
-
-<h2>
-<a name="adding-commenters" class="anchor" href="#adding-commenters"><span class="octicon octicon-link"></span></a>Adding Commenters</h2>
-
-<p>Quizzer data is held in an <code>sqlite3</code> database, located in the directory
-from which the script is run, and named after the port number under
-which the instance is running. </p>
-
-<p>commenters are held in the <code>admin</code> table of the Quizzer database.
-There is no web interface to this table: add commenters by inserting
-them directly, using the <code>sqlite3</code> access tool, like so:</p>
-
-<pre><code>sqlite3&gt; INSERT INTO admin VALUES (NULL, 'jeff', 'ahTh3nie', 2, 0);
-</code></pre>
-
-<p>The <code>NULL</code> value in the first column is for the automatically-assigned
-numeric ID of the database row. The second column is the screen
-name of the commenter, which must be unique. The third column is the
-access key that will be included in the personal URL of the commenter,
-and must also be unique. Under Linux, the <code>pwgen</code> utility is a handy
-tool for creating these. The fourth column is the role of the commenter,
-and must be set to <code>2</code>. The fifth column is currently unused, but may
-eventually control the intervals at which scheduled key resets and
-reminder mailings occur.</p>
-
-<p>After commenters have been added to the <code>admin</code> table, their
-access URLs will be reported in the startup chatter. For example:</p>
-
-<pre><code>Reading config from quizzer-3498.cfg
-Admin URL: http://localhost:3498/?admin=fyvg19vx
-Adding admin role
-Adding commenter 'adam' with URL http://localhost:3498/?commenter=En5chaej
-Adding commenter 'bob' with URL http://localhost:3498/?commenter=koosha1D
-Adding commenter 'chris' with URL http://localhost:3498/?commenter=Ro5aise5
-Loaded class membership keys
-Done. Ready to shake, rattle and roll!
-</code></pre>
-
-<p>The commenter links show a list of courses, and course links a list
-of quizzes with the number of uncommented mistakes, if any. Clicking on
-a quiz link opens a list of wrong answers, sorted in descending order
-of frequency among quiz-takers, and with already-commented answers
-pushed to the bottom.</p>
-
-<p><code>Markdown</code> syntax is recognized in comment text, with a few small
-extensions. To set markers in text, enclose a number or letter in
-double parens:</p>
-
-<pre><code>This will render as a circle-A: ((A))
-</code></pre>
-
-<p>For an explanation of why a wrong answer was wrong,
-set a single <code>&gt;</code> character at the beginning of the line,
-followed by the pasted text of the wrong answer to be explained:</p>
-
-<pre><code>&gt; Many new legislations were passed in 2010.
-</code></pre>
-
-<p>Mark text targeted for specific comment by wrapping it in
-double-quotes, opening with a single letter or number:</p>
-
-<pre><code>&gt; ((1 Many)) new ((2 legislations)) ((3 were)) passed in 2010.
-
-((2)) is a non-countable noun, and is *never* written
-with an 's'. With a non-countable noun, use 'much', not
-'many' at ((1)), and the singular verb form at ((3)).
-</code></pre>
-
-<p>For a comment that states a pattern, open with two '&gt;' characters:</p>
-
-<pre><code>&gt;&gt; I studied *for* two hours.
-</code></pre>
-
-<p>For a comment that states a grammatical rule, open with
-three '&gt;' characters:</p>
-
-<pre><code>&gt;&gt;&gt; Never use the word "nowadays" in formal writing.
-</code></pre>
-
-<p>When set at the very beginning of an entry, the explanation,
-pattern, and rule prefixes trigger a tidy heading in the displayed
-entry.</p>
       </section>
     </div>
 
