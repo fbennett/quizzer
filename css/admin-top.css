@@ -1,15 +1,22 @@
-div.button-wrapper {
+div.button-wrapper-outer {
+    text-align: center;
     font-size:300%;
     line-height: 3em;
 }
 
-div.button-wrapper input {
+div.button-wrapper-inner {
+    display: inline-block;
+}
+
+div.button-wrapper-inner input {
     font-size:100%;
     border:5px solid #bbbbbb;
     border-radius:1em;
     padding:0.5em;
+    margin: 0.1em 0 0.1em;
+    display: inline-block;
 }
 
-div.button-wrapper input:hover {
+div.button-wrapper-inner input:hover {
     cursor:pointer;
 }
