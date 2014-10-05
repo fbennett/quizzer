@@ -1,52 +1,50 @@
 # Quizzer
 
-A lightweight quiz engine for `node.js`
+A lightweight writing instruction tool
 
 --------------------
 
 ## Overview
 
-Quizzer is a tool for writing instruction. It is particularly suitable
-for:
+Quizzer is an online support tool for academic writing instruction.
+It can be installed with a single command, requires no student IDs or
+passwords, and works well with classes made up of students at varying
+stages of language acquisition, and from diverse language backgrounds.
 
-* Second language learners
-* Students facing novel stylistic demands (such as in law school)
-* Any teaching environment where staff resources are in short supply
+The basic concept is to use student writing as the basis for a flood
+of pattern-recognition exercises, cast as online quizzes delivered by
+email.  By raising the pace of iteration, the aim is to help students
+internalize a sense of grammatical anomalies and stylistic
+infelicities.
 
-In contrast to many commercial offerings in the online education
-"sphere", Quizzer is not designed to replace the instructor: it was
-build *by* an instructor, to enable more efficient and positive
-interaction with students over issues of grammar and style.
-
-Quizzer is simple to install and use. A couple of highlights to
-encourage the reader:
-
-* Students do not need to be issued IDs and passwords. It just works.
-* The entire system can be installed with a single command.
-
-Quizzer makes intensive use of multiple-choice quizzes, *not* as a
-test of knowledge or of skill "level", but as a lightweight means of
-encouraging students to engage positively with flaws in their
-writing. In our Academic Writing program in the Nagoya University
-Faculty of Law, Quizzer supports the following workflow:
+While Quizzer can be used to generate multiple-choice quizzes for
+a variety of purposes, the workflow it was built for runs like this:
 
 1. Students submit a 400-word essay once each week on an arbitrary
    topic.
-2. The instructor selects one poorly-written sentence from each
-   essay, and composes a multiple-choice question consisting of the
-   student's own sentence, two alternatives that also contain errors,
-   and a corrected version. *The essays themselves are not assessed.*
+2. The instructor selects representative errors of style and grammar
+   from the submissions, and composes a multiple-choice question
+   consisting of the student's own sentence, two alternatives that
+   also contain errors, and a corrected version.
 3. After constructing one question from each submitted essay, students
    are sent personalized links to the resulting quiz.
 4. Students submit their responses, which are recorded on the Quizzer
    server. Students receive feedback immediately feedback on their
-   incorrect responses.
+   incorrect responses. *Neither the essays nor the quiz results are
+   assessed.*
 5. Class commenters (TAs, instructors, and other experienced writers)
-   post short explanations of why the wrong answers were wrong.
-6. When students revisit their quiz links, they will find
-   both the comments, and a list of classmates who gave the correct answer
-   to the questions that they missed.
-7. Students are given an assessed, paper-based, multiple-choice
+   post short explanations of why the wrong answers were wrong. Where
+   appropriate, commenters from the students' own language domain can
+   be brought in to provide supplementary native-language guidance.
+6. Class commenters of the target language domain can set persistent
+   "rules" on-the-fly to cover issues that arise frequently. These
+   rules can then to set as comments on specific wrong answers, and
+   they can be translated by native-language commenters, for reference
+   by students of the same language domain.
+7. When students revisit their quiz links, they will find
+   their errors attached with explanatory rule, comments, and a list
+   of classmates who answered the question correctly.
+8. Students are given an assessed, paper-based, multiple-choice
    supplementary mid-term and final exam, consisting entirely of
    questions from the quizzes.
 
@@ -54,20 +52,15 @@ Quiz distribution, commenting, exam composition, and marking are all
 managed by Quizzer. Paper tests are randomized as a hedge against
 cheating, and marked with a barcode reader for quick assessment.
 
-As an additional feature suited to our own environment, the native
-languages of students choosing each wrong answer are shown in the
-commenter view. This allows satellite commenters (alumni with
-strong English writing skills, in our case) to provide guidance
-in the native language of the students concerned.
-
 The initial inspiration for Quizzer was a small [code
 sample](http://chetan0389.blogspot.jp/2013/06/quiz-using-htmlcss-jquery-xml-javascript.html)
 posted by Chetan Jain. The code has been refactored and extended
 considerably for this project, but I gratefully acknowledge the
 starting point for this frolic. Hats off also to the developers of
-`node.js`, and LaTeX and, well, everything else. Quizzer was built
-on short notice to fill a critical need, and it has been a real
-pleasure to see how quickly the whole thing could be brought together.
+`node.js`, and LaTeX and, well, everything else. Quizzer was built on
+short notice to fill a critical need, and it has been a real pleasure
+to see how quickly it could be brought together, and how smoothly
+it could be extended.
 
 ## Basic Installation
 
