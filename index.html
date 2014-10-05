@@ -2,9 +2,9 @@
 <html>
 
   <head>
-    <meta charset='utf-8' />
-    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
-    <meta name="description" content="Quizzer : A lightweight writing lab quiz engine for node.js" />
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="description" content="Quizzer : A lightweight writing lab quiz engine for node.js">
 
     <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
 
@@ -31,55 +31,36 @@
     <!-- MAIN CONTENT -->
     <div id="main_content_wrap" class="outer">
       <section id="main_content" class="inner">
-        <p><strong>Contents</strong></p>
+        <h1>
+<a name="quizzer" class="anchor" href="#quizzer"><span class="octicon octicon-link"></span></a>Quizzer</h1>
 
-<ul>
-<li><a href="#overview">Overview</a></li>
-<li><a href="#commenting">Commenting</a></li>
-<li><a href="#storage-and-files">Storage and files</a></li>
-<li><a href="#basic-installation">Basic Installation</a></li>
-<li><a href="#running-quizzer-behind-a-proxy">Running Quizzer behind a Proxy</a></li>
-<li><a href="#screenshots">Screenshots</a></li>
-</ul><h2>
+<p>A lightweight quiz engine for <code>node.js</code></p>
+
+<hr><h2>
 <a name="overview" class="anchor" href="#overview"><span class="octicon octicon-link"></span></a>Overview</h2>
 
-<p>Quizzer is a tool for writing instruction. It is particularly suitable
-for:</p>
+<p>Quizzer is a tool for writing instruction, tailored to the needs of
+second language learners and students encountering the demands of
+formal writing for the first time. The system and method are designed
+to make efficient use of staff time, and to motivate students by
+applying a non-punitive 'fail early, fail often' approach to the
+writing process. The system is simple to set up (see below).</p>
 
-<ul>
-<li>Students facing novel stylistic demands</li>
-<li>Second language learners</li>
-<li>Any teaching environment where staff resources are in short supply</li>
-</ul><p>In contrast to many commercial offerings in the online education
-"sphere", Quizzer is not designed to replace the instructor: it was
-built <em>by</em> an instructor, to enable more efficient and positive
-interaction with students over issues of grammar and style.</p>
-
-<p>Quizzer is simple to install and use. A couple of highlights to
-encourage the reader:</p>
-
-<ul>
-<li>Students do not need to be issued IDs and passwords. It just works.</li>
-<li>The entire system can be installed with a single command.</li>
-<li>The design fosters spontaneous intra-class support and tutoring.</li>
-</ul><p>Quizzer makes intensive use of multiple-choice quizzes, <em>not</em> as a
-test of knowledge or skill level, but as a lightweight means of
-encouraging students to engage positively with flaws in their
-writing. In our Academic Writing program in the Nagoya University
-Faculty of Law, Quizzer supports the following workflow:</p>
+<p>In or Academic Writing program in the Nagoya University Faculty of
+Law, Quizzer supports the following workflow:</p>
 
 <ol>
-<li>Students submit a short (250 to 400-word) essay once each week on an arbitrary
+<li>Students submit a 400-word essay once each week on an arbitrary
 topic.</li>
 <li>The instructor selects one poorly-written sentence from each
 essay, and composes a multiple-choice question consisting of the
 student's own sentence, two alternatives that also contain errors,
 and a corrected version. <em>The essays themselves are not assessed.</em>
 </li>
-<li>After one question is built from each submitted essay, students
+<li>After constructing one question from each submitted essay, students
 are sent personalized links to the resulting quiz.</li>
 <li>Students submit their responses, which are recorded on the Quizzer
-server. Students receive feedback immediately feedback on their
+server. Student receive feedback immediately feedback on their
 incorrect responses.</li>
 <li>Class commenters (TAs, instructors, and other experienced writers)
 post short explanations of why the wrong answers were wrong.</li>
@@ -89,97 +70,25 @@ to the questions that they missed.</li>
 <li>Students are given an assessed, paper-based, multiple-choice
 supplementary mid-term and final exam, consisting entirely of
 questions from the quizzes.</li>
-</ol><p>Quiz distribution, commenting, exam composition, and marking are all
+</ol><p>Quiz distribtion, commenting, exam composition, and marking are all
 managed by Quizzer. Paper tests are randomized as a hedge against
-cheating, and marked with a barcode reader for quick assessment.
-(Tip: a scanning wand is both more convenient and cheaper for this
-particular purpose than a laser scanner).</p>
+cheating, and marked with a barcode reader for quick assessment.</p>
 
-<p>Using a small Markdown syntax extension, commenters can add one-line guidance notes ("rules") to their posts. Rules are made instantly available to the posting commenter in a pulldown menu, and enter a queue for promotion to system-wide use. Promoted rules can be glossed by students who perform well against them, for the benefit of their classmates from the same language domain. While student quiz responses and attached comments are typically purged at the end of each term, rules and their multilingual glosses persist, providing an evolving base of guidance notes tailored to the (preferences and the instructor and) the conventions of the target community.</p>
+<p>The original motivation for this work was an unpleasant encounter with
+the products of a commercial vendor. Quizzes are <em>simple</em> things. They
+should be easy to customise, and deploying a quiz to a given group of
+students should not require weeks of effort, large volumes of email,
+numerous meetings and progress reports, or extensive trial-and-error
+exploration of a byzantine menu system. Software is supposed to save
+time, not the other way around. It should just do its job, so that we
+can get on with our own.</p>
 
-<p>The initial inspiration for Quizzer was a small <a href="http://chetan0389.blogspot.jp/2013/06/quiz-using-htmlcss-jquery-xml-javascript.html">code
+<p>The initial inspiration for this particular attempt to do better was a
+simple <a href="http://chetan0389.blogspot.jp/2013/06/quiz-using-htmlcss-jquery-xml-javascript.html">code
 sample</a>
-posted by Chetan Jain. His code has been refactored and extended
-considerably for this project, but I gratefully acknowledge his code as the
-starting point for this frolic. Hats off also to the developers of
-<code>node.js</code>, and LaTeX and, well, the developers of everything else that I used for this project. Quizzer was built on short notice to fill a critical need, and it has been a real
-pleasure to see how quickly the whole thing could be brought together.</p>
-
-<h2>
-<a name="commenting" class="anchor" href="#commenting"><span class="octicon octicon-link"></span></a>Commenting</h2>
-
-<p>The most important phase of the Quizzer cycle for teaching purposes
-is commenting on wrong answers. At this point, students have engaged
-with style requirements to produce their original submission, and
-engaged with one anothers' mistakes through the quizzes. Targeted
-feedback is the capstone that helps the class grow more confident
-in their next submission.</p>
-
-<p>Use the Commenters page to register trusted contributors. If the
-setting is enabled, a commenter receives a mail message once each
-week, containing a personal link to the comment views. The link
-changes with each mailing.</p>
-
-<p>In the commenter view, a list of courses opens onto a list of
-quizzes for each course. The quiz views show a list of wrong
-answers, sorted by frequency of error, and with already-commented
-items pushed to the bottom of the list.</p>
-
-<p><code>Markdown</code> syntax is recognized in comment text, with a few small
-extensions. To set markers in text, enclose a number or letter in
-double parens:</p>
-
-<pre><code>This will render as a circle-A: ((A))
-</code></pre>
-
-<p>For an explanation of why a wrong answer was wrong,
-set a single <code>&gt;</code> character at the beginning of the line,
-followed by the pasted text of the wrong answer to be explained:</p>
-
-<pre><code>&gt; Many new legislations were passed in 2010.
-</code></pre>
-
-<p>Mark text targeted for specific comment by wrapping it in
-double-parent, opening with a single letter or number:</p>
-
-<pre><code>&gt; ((1 Many)) new ((2 legislations)) ((3 were)) passed in 2010.
-
-((2)) is a non-countable noun, and is *never* written
-with an 's'. With a non-countable noun, use 'much', not
-'many' at ((1)), and the singular verb form at ((3)).
-</code></pre>
-
-<p>For a comment that states a pattern, open with two '&gt;' characters:</p>
-
-<pre><code>&gt;&gt; I studied *for* two hours.
-</code></pre>
-
-<p>For a comment that states a grammatical rule, open with
-three '&gt;' characters:</p>
-
-<pre><code>&gt;&gt;&gt; Never use the word "nowadays" in formal writing.
-</code></pre>
-
-<p>When set at the very beginning of an entry, the explanation,
-pattern, and rule prefixes trigger a tidy heading in the displayed
-entry.</p>
-
-<h2>
-<a name="storage-and-files" class="anchor" href="#storage-and-files"><span class="octicon octicon-link"></span></a>Storage and files</h2>
-
-<p>Quizzer data is held in an <code>sqlite3</code> database, located in the directory
-from which the script is run, and named after the port number under
-which the instance is running. A companion configuration file with the 
-extension <code>.cfg</code> holds the runtime parameters.</p>
-
-<p>An editable template of the weekly message to be sent to commenters registered on the
-Quizzer instance will be written into the directory from which the script is run.
-Be sure to touch up the text of the message to suit your requirements. The sample
-template has my signature at the bottom; you can and should remove my name and
-replace it with your own.</p>
-
-<p>When examination papers are generated, they will be placed in an <code>exams</code> subdirectory and Quizzer will create to house them, together with the LaTeX source of the quizzes. Quizzer offers the exam paper text to the administrator with a one-click download, so there should be no need enter the directory, but the
-files are there if you need them, or if you are curious about the LaTeX behind the formatting.</p>
+posted by Chetan Jain. The code has been refactored and extended considerably
+for this project, but I gratefully acknowledge the starting
+point for this frolic.</p>
 
 <h2>
 <a name="basic-installation" class="anchor" href="#basic-installation"><span class="octicon octicon-link"></span></a>Basic Installation</h2>
@@ -324,54 +233,86 @@ auth.require = ( "/quizzer/admin.html" =&gt;
 </code></pre>
 
 <h2>
-<a name="screenshots" class="anchor" href="#screenshots"><span class="octicon octicon-link"></span></a>Screenshots</h2>
+<a name="adding-commenters" class="anchor" href="#adding-commenters"><span class="octicon octicon-link"></span></a>Adding Commenters</h2>
 
-<p>The page layouts are pretty basic, but the buttons all work.</p>
+<p>Quizzer data is held in an <code>sqlite3</code> database, located in the directory
+from which the script is run, and named after the port number under
+which the instance is running. </p>
 
-<h3>
-<a name="top-page" class="anchor" href="#top-page"><span class="octicon octicon-link"></span></a>Top page</h3>
+<p>commenters are held in the <code>admin</code> table of the Quizzer database.
+There is no web interface to this table: add commenters by inserting
+them directly, using the <code>sqlite3</code> access tool, like so:</p>
 
-<p><img src="quizzer-top.png" alt="Top page"></p>
+<pre><code>sqlite3&gt; INSERT INTO admin VALUES (NULL, 'jeff', 'ahTh3nie', 2, 0);
+</code></pre>
 
-<h3>
-<a name="global-student-list" class="anchor" href="#global-student-list"><span class="octicon octicon-link"></span></a>Global student list</h3>
+<p>The <code>NULL</code> value in the first column is for the automatically-assigned
+numeric ID of the database row. The second column is the screen
+name of the commenter, which must be unique. The third column is the
+access key that will be included in the personal URL of the commenter,
+and must also be unique. Under Linux, the <code>pwgen</code> utility is a handy
+tool for creating these. The fourth column is the role of the commenter,
+and must be set to <code>2</code>. The fifth column is currently unused, but may
+eventually control the intervals at which scheduled key resets and
+reminder mailings occur.</p>
 
-<p><img src="quizzer-students.png" alt="Student list"></p>
+<p>After commenters have been added to the <code>admin</code> table, their
+access URLs will be reported in the startup chatter. For example:</p>
 
-<h3>
-<a name="classes-list" class="anchor" href="#classes-list"><span class="octicon octicon-link"></span></a>Classes list</h3>
+<pre><code>Reading config from quizzer-3498.cfg
+Admin URL: http://localhost:3498/?admin=fyvg19vx
+Adding admin role
+Adding commenter 'adam' with URL http://localhost:3498/?commenter=En5chaej
+Adding commenter 'bob' with URL http://localhost:3498/?commenter=koosha1D
+Adding commenter 'chris' with URL http://localhost:3498/?commenter=Ro5aise5
+Loaded class membership keys
+Done. Ready to shake, rattle and roll!
+</code></pre>
 
-<p><img src="quizzer-classes.png" alt="Classes"></p>
+<p>The commenter links show a list of courses, and course links a list
+of quizzes with the number of uncommented mistakes, if any. Clicking on
+a quiz link opens a list of wrong answers, sorted in descending order
+of frequency among quiz-takers, and with already-commented answers
+pushed to the bottom.</p>
 
-<h3>
-<a name="class-view" class="anchor" href="#class-view"><span class="octicon octicon-link"></span></a>Class view</h3>
+<p><code>Markdown</code> syntax is recognized in comment text, with a few small
+extensions. To set markers in text, enclose a number or letter in
+double parens:</p>
 
-<p><img src="quizzer-class.png" alt="Class"></p>
+<pre><code>This will render as a circle-A: ((A))
+</code></pre>
 
-<h3>
-<a name="quiz-editing" class="anchor" href="#quiz-editing"><span class="octicon octicon-link"></span></a>Quiz editing</h3>
+<p>For an explanation of why a wrong answer was wrong,
+set a single <code>&gt;</code> character at the beginning of the line,
+followed by the pasted text of the wrong answer to be explained:</p>
 
-<p><img src="quizzer-quiz-edit.png" alt="Quiz editing"></p>
+<pre><code>&gt; Many new legislations were passed in 2010.
+</code></pre>
 
-<h3>
-<a name="submission-stragglers" class="anchor" href="#submission-stragglers"><span class="octicon octicon-link"></span></a>Submission stragglers</h3>
+<p>Mark text targeted for specific comment by wrapping it in
+double-quotes, opening with a single letter or number:</p>
 
-<p><img src="quizzer-stragglers.png" alt="Stragglers view"></p>
+<pre><code>&gt; ((1 Many)) new ((2 legislations)) ((3 were)) passed in 2010.
 
-<h3>
-<a name="commenters-admin" class="anchor" href="#commenters-admin"><span class="octicon octicon-link"></span></a>Commenters admin</h3>
+((2)) is a non-countable noun, and is *never* written
+with an 's'. With a non-countable noun, use 'much', not
+'many' at ((1)), and the singular verb form at ((3)).
+</code></pre>
 
-<p><img src="quizzer-commenters.png" alt="Commenters"></p>
+<p>For a comment that states a pattern, open with two '&gt;' characters:</p>
 
-<h3>
-<a name="commenter-view" class="anchor" href="#commenter-view"><span class="octicon octicon-link"></span></a>Commenter view</h3>
+<pre><code>&gt;&gt; I studied *for* two hours.
+</code></pre>
 
-<p><img src="quizzer-commenter.png" alt="Commenter"></p>
+<p>For a comment that states a grammatical rule, open with
+three '&gt;' characters:</p>
 
-<h3>
-<a name="exam" class="anchor" href="#exam"><span class="octicon octicon-link"></span></a>Exam</h3>
+<pre><code>&gt;&gt;&gt; Never use the word "nowadays" in formal writing.
+</code></pre>
 
-<p><img src="quizzer-exam.png" alt="Exam sample"></p>
+<p>When set at the very beginning of an entry, the explanation,
+pattern, and rule prefixes trigger a tidy heading in the displayed
+entry.</p>
       </section>
     </div>
 
