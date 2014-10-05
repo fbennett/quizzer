@@ -1,9 +1,3 @@
-# Quizzer
-
-A lightweight writing instruction tool
-
---------------------
-
 ## Overview
 
 Quizzer is an online support tool for academic writing instruction.
