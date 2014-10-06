@@ -21,11 +21,11 @@
         }
 
         function getQuestionsByID () {
-            var sql = 'SELECT questionID,quizNumber,questionNumber,string AS rubric,correct '
+            var sql = 'SELECT questionID,quizNumber,questionNumber,string AS rubric,correct,examName '
                 + 'FROM quizzes '
                 + 'NATURAL JOIN questions '
                 + 'JOIN strings USING(stringID) '
-                + 'WHERE classID=? AND questionID IN (' + questionIDs.join(',') + ') '
+                + 'WHERE classID=? AND examName IS NULL AND questionID IN (' + questionIDs.join(',') + ') '
                 + 'ORDER BY questionID;';
             sys.db.all(sql,[classID],function(err,rows){
                 if (err||!rows) {return oops(response,err,'*quiz/quizdata(1)')};
@@ -35,11 +35,11 @@
         }
 
         function getQuestionsByQuizNumber () {
-            var sql = 'SELECT questionID,quizNumber,questionNumber,string AS rubric,correct '
+            var sql = 'SELECT questionID,quizNumber,questionNumber,string AS rubric,correct,examName '
                 + 'FROM quizzes '
                 + 'NATURAL JOIN questions '
                 + 'JOIN strings USING(stringID) '
-                + 'WHERE classID=? AND quizNumber=? '
+                + 'WHERE classID=? AND quizNumber=? AND examName IS NULL '
                 + 'ORDER BY questionNumber';
             sys.db.all(sql,[classID,quizNumber],function(err,rows){
                 if (err||!rows) {return oops(response,err,'*quiz/quizdata(2)')};
