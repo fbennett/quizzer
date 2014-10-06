@@ -90,7 +90,7 @@
                 + 'JOIN questions USING(quizID) '
                 + 'JOIN answers USING(questionID) '
                 + 'JOIN students USING(studentID) '
-                + 'WHERE quizzes.classID=? AND quizzes.quizNumber=? AND questions.questionNumber=? AND questions.correct=answers.choice'
+                + 'WHERE quizzes.classID=? AND quizzes.quizNumber=? AND questions.questionNumber=? AND questions.correct=answers.choice AND privacy=0 '
             var questionNumber = items[pos].questionNumber;
             sys.db.all(sql,[classID,quizNumber,questionNumber],function(err,rows){
                 if (err||!rows) {return oops(response,err,'*quiz/myquizresult(3)')}
