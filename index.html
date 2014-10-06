@@ -2,9 +2,9 @@
 <html>
 
   <head>
-    <meta charset='utf-8' />
-    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
-    <meta name="description" content="Quizzer : A lightweight writing lab quiz engine for node.js" />
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="description" content="Quizzer : A lightweight writing lab quiz engine for node.js">
 
     <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
 
@@ -31,155 +31,118 @@
     <!-- MAIN CONTENT -->
     <div id="main_content_wrap" class="outer">
       <section id="main_content" class="inner">
-        <p><strong>Contents</strong></p>
-
-<ul>
-<li><a href="#overview">Overview</a></li>
-<li><a href="#commenting">Commenting</a></li>
-<li><a href="#storage-and-files">Storage and files</a></li>
-<li><a href="#basic-installation">Basic Installation</a></li>
-<li><a href="#running-quizzer-behind-a-proxy">Running Quizzer behind a Proxy</a></li>
-<li><a href="#screenshots">Screenshots</a></li>
-</ul><h2>
+        <h2>
 <a name="overview" class="anchor" href="#overview"><span class="octicon octicon-link"></span></a>Overview</h2>
 
-<p>Quizzer is a tool for writing instruction. It is particularly suitable
-for:</p>
+<p>Quizzer is an online support tool for academic writing instruction.
+It can be installed with a single command, requires no student IDs or
+passwords, and works well with classes made up of students at varying
+stages of language acquisition, and from diverse language backgrounds.</p>
 
-<ul>
-<li>Students facing novel stylistic demands</li>
-<li>Second language learners</li>
-<li>Any teaching environment where staff resources are in short supply</li>
-</ul><p>In contrast to many commercial offerings in the online education
-"sphere", Quizzer is not designed to replace the instructor: it was
-built <em>by</em> an instructor, to enable more efficient and positive
-interaction with students over issues of grammar and style.</p>
+<p>The basic concept is to use student writing as the basis for a flood
+of pattern-recognition exercises, cast as online quizzes delivered by
+email.  By raising the pace of iteration, the aim is to help students
+internalize a sense of grammatical anomalies and stylistic
+infelicities.</p>
 
-<p>Quizzer is simple to install and use. A couple of highlights to
-encourage the reader:</p>
-
-<ul>
-<li>Students do not need to be issued IDs and passwords. It just works.</li>
-<li>The entire system can be installed with a single command.</li>
-<li>The design fosters spontaneous intra-class support and tutoring.</li>
-</ul><p>Quizzer makes intensive use of multiple-choice quizzes, <em>not</em> as a
-test of knowledge or skill level, but as a lightweight means of
-encouraging students to engage positively with flaws in their
-writing. In our Academic Writing program in the Nagoya University
-Faculty of Law, Quizzer supports the following workflow:</p>
+<p>While Quizzer can be used to generate multiple-choice quizzes for
+a variety of purposes, the workflow it was built for runs like this:</p>
 
 <ol>
-<li>Students submit a short (250 to 400-word) essay once each week on an arbitrary
+<li>Students submit a 400-word essay once each week on an arbitrary
 topic.</li>
-<li>The instructor selects one poorly-written sentence from each
-essay, and composes a multiple-choice question consisting of the
-student's own sentence, two alternatives that also contain errors,
-and a corrected version. <em>The essays themselves are not assessed.</em>
-</li>
-<li>After one question is built from each submitted essay, students
+<li>The instructor selects representative errors of style and grammar
+from the submissions, and composes a multiple-choice question
+consisting of the student's own sentence, two alternatives that
+also contain errors, and a corrected version.</li>
+<li>After constructing one question from each submitted essay, students
 are sent personalized links to the resulting quiz.</li>
 <li>Students submit their responses, which are recorded on the Quizzer
 server. Students receive feedback immediately feedback on their
-incorrect responses.</li>
+incorrect responses. <em>Neither the essays nor the quiz results are
+assessed.</em>
+</li>
 <li>Class commenters (TAs, instructors, and other experienced writers)
-post short explanations of why the wrong answers were wrong.</li>
+post short explanations of why the wrong answers were wrong. Where
+appropriate, commenters from the students' own language domain can
+be brought in to provide supplementary native-language guidance.</li>
+<li>Class commenters of the target language domain can set persistent
+"rules" on-the-fly to cover issues that arise frequently. These
+rules can then to set as comments on specific wrong answers, and
+they can be translated by native-language commenters, for reference
+by students of the same language domain.</li>
 <li>When students revisit their quiz links, they will find
-both the comments, and a list of classmates who gave the correct answer
-to the questions that they missed.</li>
+their errors attached with explanatory rule, comments, and a list
+of classmates who answered the question correctly.</li>
 <li>Students are given an assessed, paper-based, multiple-choice
 supplementary mid-term and final exam, consisting entirely of
 questions from the quizzes.</li>
 </ol><p>Quiz distribution, commenting, exam composition, and marking are all
 managed by Quizzer. Paper tests are randomized as a hedge against
-cheating, and marked with a barcode reader for quick assessment.
-(Tip: a scanning wand is both more convenient and cheaper for this
-particular purpose than a laser scanner).</p>
-
-<p>Using a small Markdown syntax extension, commenters can add one-line guidance notes ("rules") to their posts. Rules are made instantly available to the posting commenter in a pulldown menu, and enter a queue for promotion to system-wide use. Promoted rules can be glossed by students who perform well against them, for the benefit of their classmates from the same language domain. While student quiz responses and attached comments are typically purged at the end of each term, rules and their multilingual glosses persist, providing an evolving base of guidance notes tailored to the (preferences and the instructor and) the conventions of the target community.</p>
+cheating, and marked with a barcode reader for quick assessment.</p>
 
 <p>The initial inspiration for Quizzer was a small <a href="http://chetan0389.blogspot.jp/2013/06/quiz-using-htmlcss-jquery-xml-javascript.html">code
 sample</a>
-posted by Chetan Jain. His code has been refactored and extended
-considerably for this project, but I gratefully acknowledge his code as the
+posted by Chetan Jain. The code has been refactored and extended
+considerably for this project, but I gratefully acknowledge the
 starting point for this frolic. Hats off also to the developers of
-<code>node.js</code>, and LaTeX and, well, the developers of everything else that I used for this project. Quizzer was built on short notice to fill a critical need, and it has been a real
-pleasure to see how quickly the whole thing could be brought together.</p>
+<code>node.js</code>, and LaTeX and, well, everything else. Quizzer was built on
+short notice to fill a critical need, and it has been a real pleasure
+to see how quickly it could be brought together, and how smoothly
+it could be extended.</p>
 
 <h2>
-<a name="commenting" class="anchor" href="#commenting"><span class="octicon octicon-link"></span></a>Commenting</h2>
+<a name="requirements" class="anchor" href="#requirements"><span class="octicon octicon-link"></span></a>Requirements</h2>
 
-<p>The most important phase of the Quizzer cycle for teaching purposes
-is commenting on wrong answers. At this point, students have engaged
-with style requirements to produce their original submission, and
-engaged with one anothers' mistakes through the quizzes. Targeted
-feedback is the capstone that helps the class grow more confident
-in their next submission.</p>
+<p>Quizzer is a <code>node.js</code> module. To get the website running, the
+minimum requirements are:</p>
 
-<p>Use the Commenters page to register trusted contributors. If the
-setting is enabled, a commenter receives a mail message once each
-week, containing a personal link to the comment views. The link
-changes with each mailing.</p>
+<blockquote>
+<ul>
+<li>
+<code>npm</code> &gt;=1.3.x</li>
+<li>
+<code>node</code> &gt;=0.10.x</li>
+</ul>
+</blockquote>
 
-<p>In the commenter view, a list of courses opens onto a list of
-quizzes for each course. The quiz views show a list of wrong
-answers, sorted by frequency of error, and with already-commented
-items pushed to the bottom of the list.</p>
+<p>In addition, the following external utilities are required
+for the typesetting of exams:</p>
 
-<p><code>Markdown</code> syntax is recognized in comment text, with a few small
-extensions. To set markers in text, enclose a number or letter in
-double parens:</p>
+<blockquote>
+<ul>
+<li>
+<code>pandoc</code> &gt;=1.11.x (preferably compiled with texmath support)</li>
+<li>either <code>pdflatex</code>, or <code>platex</code> and <code>dvipdfmx</code> (the latter pair is needed
+only if Japanese text must be handled)</li>
+</ul>
+</blockquote>
 
-<pre><code>This will render as a circle-A: ((A))
-</code></pre>
+<p>LaTex (pLaTeX) documents created by Quizzer use the following
+packages:</p>
 
-<p>For an explanation of why a wrong answer was wrong,
-set a single <code>&gt;</code> character at the beginning of the line,
-followed by the pasted text of the wrong answer to be explained:</p>
+<blockquote>
+<ul>
+<li><code>makebarcode</code></li>
+<li><code>marginnote</code></li>
+<li><code>graphicx</code></li>
+<li><code>tikz</code></li>
+<li><code>ctable</code></li>
+<li><code>float</code></li>
+<li><code>hyphenat</code></li>
+<li><code>amsmath</code></li>
+</ul>
+</blockquote>
 
-<pre><code>&gt; Many new legislations were passed in 2010.
-</code></pre>
+<p>Quizzer must have access to a mail transfer agent (MTA). This can
+either be a <code>sendmail</code> instance running on the same server, or a mail
+API to a service such as GMail.</p>
 
-<p>Mark text targeted for specific comment by wrapping it in
-double-parent, opening with a single letter or number:</p>
-
-<pre><code>&gt; ((1 Many)) new ((2 legislations)) ((3 were)) passed in 2010.
-
-((2)) is a non-countable noun, and is *never* written
-with an 's'. With a non-countable noun, use 'much', not
-'many' at ((1)), and the singular verb form at ((3)).
-</code></pre>
-
-<p>For a comment that states a pattern, open with two '&gt;' characters:</p>
-
-<pre><code>&gt;&gt; I studied *for* two hours.
-</code></pre>
-
-<p>For a comment that states a grammatical rule, open with
-three '&gt;' characters:</p>
-
-<pre><code>&gt;&gt;&gt; Never use the word "nowadays" in formal writing.
-</code></pre>
-
-<p>When set at the very beginning of an entry, the explanation,
-pattern, and rule prefixes trigger a tidy heading in the displayed
-entry.</p>
-
-<h2>
-<a name="storage-and-files" class="anchor" href="#storage-and-files"><span class="octicon octicon-link"></span></a>Storage and files</h2>
-
-<p>Quizzer data is held in an <code>sqlite3</code> database, located in the directory
-from which the script is run, and named after the port number under
-which the instance is running. A companion configuration file with the 
-extension <code>.cfg</code> holds the runtime parameters.</p>
-
-<p>An editable template of the weekly message to be sent to commenters registered on the
-Quizzer instance will be written into the directory from which the script is run.
-Be sure to touch up the text of the message to suit your requirements. The sample
-template has my signature at the bottom; you can and should remove my name and
-replace it with your own.</p>
-
-<p>When examination papers are generated, they will be placed in an <code>exams</code> subdirectory and Quizzer will create to house them, together with the LaTeX source of the quizzes. Quizzer offers the exam paper text to the administrator with a one-click download, so there should be no need enter the directory, but the
-files are there if you need them, or if you are curious about the LaTeX behind the formatting.</p>
+<p>With the above requirements in place, Quizzer can be run on a
+workstation for initial trials, accessed via a port on <code>localhost</code>
+(aka <code>127.0.0.1</code>). For production use, Quizzer should be placed behind
+a webserver, such as <code>lighttpd</code> or <code>apache</code>. Instructions for setting
+up the former are given below.</p>
 
 <h2>
 <a name="basic-installation" class="anchor" href="#basic-installation"><span class="octicon octicon-link"></span></a>Basic Installation</h2>
@@ -189,37 +152,7 @@ files are there if you need them, or if you are curious about the LaTeX behind t
 <pre><code>npm install quizzer
 </code></pre>
 
-<p>In addition to the dependencies pulled in by <code>npm</code>, Quizzer needs to
-have access to the external programs <code>pandoc</code> and <code>pdflatex</code>. While
-<code>pdflatex</code> should be available as package installs on your operating
-system (probably as part of the <code>texlive</code> package), <code>pandoc</code> is a
-different matter.</p>
-
-<p>Quizzer uses a simple JavaScript module to convert <code>markdown</code> text to
-HTML, supplemented by <code>MathJax</code> for mathematical formulae. When generating
-examination papers, the <code>markdown</code> + <code>MathJax</code> markup must be converted to
-<code>LaTeX</code>, and <code>pandoc</code> is used for that purpose. For things to work correctly,
-mathematical formulae must be left intact during the conversion. An extension
-to <code>pandoc</code> (<code>tex_math_dollars</code>) exists for this exact purpose, but unfortunately
-it is available only in <code>pandoc</code> version 1.10 and above.</p>
-
-<p>Depending on your system, installing <code>pandoc</code> 1.10+ may be something
-of a chore at this point in time. In our own environment, getting it
-in place on an aging virtual server running CentOS 6 required a
-scratch build of both the Glasgow Haskell Compiler and the Haskell Platform.
-Everything worked swimmingly after that was done, but the compile process
-took several hours, and needed to be nudged forward repeatedly.</p>
-
-<p>If <code>pandoc</code> 1.10 is not an option, and you don't need maths rendering, you
-can use an earlier pandoc by editing the following file:</p>
-
-<p>./api/admin/quiz/downloadexam/matchExec.js</p>
-
-<p>Just change <code>html+tex_math_dollars</code> to simply <code>html</code>, and you should be good.</p>
-
-<p>Apart from this transitional speed bump, installation is simple. Run
-the server by saving the following code to a file (such as
-<code>quizServer.js</code>, say):</p>
+<p>Run the server by saving the following code to a file (say, <code>quizServer.js</code>):</p>
 
 <pre><code>var qz = require('quizzer');
 qz.run();
@@ -233,8 +166,9 @@ qz.run();
 <p>The script will whinge on first run, asking for some essential
 details:</p>
 
-<pre><code>usage: quizServer.js [-h] [-v] [-H PROXY_HOSTNAME] [-p REAL_PORT]
-                     [-e EMAIL_ACCOUNT] [-s SMTP_HOST]
+<pre><code>usage: quizServer.js [-h] [-v] [-H PROXY_HOSTNAME] [-Q QUIZZER_PATH]
+                     [-p REAL_PORT] [-e EMAIL_ACCOUNT] [-s SMTP_HOST]
+                     [-l LOCALE] [-P] [-E]
 
 
 Quizzer, a quiz server
@@ -244,44 +178,54 @@ Optional arguments:
   -v, --version         Show program's version number and exit.
   -H PROXY_HOSTNAME, --proxy-hostname PROXY_HOSTNAME
                         Host name for external access
+  -Q QUIZZER_PATH, --quizzer-path QUIZZER_PATH
+                        Server path to quizzer (default: "/quizzer/")
   -p REAL_PORT, --real-port REAL_PORT
                         Port on which to listen for local connections
+                        (defaults to 3498)
   -e EMAIL_ACCOUNT, --email-account EMAIL_ACCOUNT
                         Full username of email account (e.g. useme@gmail.com)
   -s SMTP_HOST, --smtp-host SMTP_HOST
                         SMTP host name (e.g. smtp.gmail.com)
-  ERROR: must set option smtp_host
+  -l LOCALE, --locale LOCALE
+                        Language locale for admin interface ("en" or "ja")
+  -P, --use-platex      Use platex engine + dvipdfmx for PDF generation
+  -E, --use-euc-jp      Convert input text from UTF8 to legacy EUC-JP 
+                        encoding before LaTeX processing
   ERROR: must set option proxy_hostname
   ERROR: must set option email_account
 </code></pre>
 
-<p>A GMail account can be used as <code>EMAIL_ACCOUNT</code>, with <code>smtp.gmail.com</code> as <code>SMTP_HOST</code>.
-<code>REAL_PORT</code> will default to <code>3498</code>, but can be set to other values for multiple
-server instances. For initial testing, <code>PROXY_HOSTNAME</code> should be set to <code>127.0.0.1</code>
-or <code>localhost</code>. Running again will yield this:</p>
+<p>To get Quizzer running, set <code>proxy_hostname</code> to <code>localhost</code> (or <code>127.0.0.1</code>), and
+set <code>email_account</code> to your mail address (<code>me@mail.com</code> in the example below):</p>
 
-<pre><code>ERROR: file mypwd.txt not found: Error: ENOENT, no such file or directory './mypwd.txt'
+<pre><code>node ./quizServer -H localhost -e me@mail.com
 </code></pre>
 
-<p>Save the email account password to disk in a file <code>mypwd.txt</code> (only the user running
-Quizzer should have access permissions on the file, obviously). This will get the server
-running:</p>
+<p>Quizzer will come up with a message like the following:</p>
 
 <pre><code>Wrote config parameters to quizzer-3498.cfg
 Quizzer can now be run with the single option: -p 3498
-Admin URL: http://localhost:3498/?admin=fyvg19vx
+Message: no mypwd.txt file found, will use local Sendmail transport
+Using local Sendmail transport
+Admin URL: http://localhost:3498/?admin=179359xq
 Adding admin role
 Loaded class membership keys
+Woke up the mail schedulers
 Done. Ready to shake, rattle and roll!
 </code></pre>
 
-<p>Connect to the listed URL with a browser, and you're ready to go.  The
-database and configuration files are created in the directory from
-which the script is run, named after the port number. The server can
-be shut down with <code>CTRL-c</code> (<code>SIGINT</code>), and as the startup message
-says, it can be restarted with the single option <code>-p &lt;REAL_PORT&gt;</code>
+<p>The website can now be accessed at the URL reported in the fifth line.
 (Note that the <code>admin</code> key is automatically generated, and will differ
 from that shown in the example above.)</p>
+
+<p>The database and configuration files are created in the directory from
+which the script is run, named after the port number. The server can
+be shut down with <code>CTRL-c</code> (<code>SIGINT</code>), and as the startup message
+says, it can be restarted with the single option <code>-p &lt;REAL_PORT&gt;</code></p>
+
+<p>A full explanation of the remaining options will be added to this
+README as time permits.</p>
 
 <h2>
 <a name="running-quizzer-behind-a-proxy" class="anchor" href="#running-quizzer-behind-a-proxy"><span class="octicon octicon-link"></span></a>Running Quizzer behind a Proxy</h2>
@@ -322,56 +266,6 @@ auth.require = ( "/quizzer/admin.html" =&gt;
   )
 )
 </code></pre>
-
-<h2>
-<a name="screenshots" class="anchor" href="#screenshots"><span class="octicon octicon-link"></span></a>Screenshots</h2>
-
-<p>The page layouts are pretty basic, but the buttons all work.</p>
-
-<h3>
-<a name="top-page" class="anchor" href="#top-page"><span class="octicon octicon-link"></span></a>Top page</h3>
-
-<p><img src="quizzer-top.png" alt="Top page"></p>
-
-<h3>
-<a name="global-student-list" class="anchor" href="#global-student-list"><span class="octicon octicon-link"></span></a>Global student list</h3>
-
-<p><img src="quizzer-students.png" alt="Student list"></p>
-
-<h3>
-<a name="classes-list" class="anchor" href="#classes-list"><span class="octicon octicon-link"></span></a>Classes list</h3>
-
-<p><img src="quizzer-classes.png" alt="Classes"></p>
-
-<h3>
-<a name="class-view" class="anchor" href="#class-view"><span class="octicon octicon-link"></span></a>Class view</h3>
-
-<p><img src="quizzer-class.png" alt="Class"></p>
-
-<h3>
-<a name="quiz-editing" class="anchor" href="#quiz-editing"><span class="octicon octicon-link"></span></a>Quiz editing</h3>
-
-<p><img src="quizzer-quiz-edit.png" alt="Quiz editing"></p>
-
-<h3>
-<a name="submission-stragglers" class="anchor" href="#submission-stragglers"><span class="octicon octicon-link"></span></a>Submission stragglers</h3>
-
-<p><img src="quizzer-stragglers.png" alt="Stragglers view"></p>
-
-<h3>
-<a name="commenters-admin" class="anchor" href="#commenters-admin"><span class="octicon octicon-link"></span></a>Commenters admin</h3>
-
-<p><img src="quizzer-commenters.png" alt="Commenters"></p>
-
-<h3>
-<a name="commenter-view" class="anchor" href="#commenter-view"><span class="octicon octicon-link"></span></a>Commenter view</h3>
-
-<p><img src="quizzer-commenter.png" alt="Commenter"></p>
-
-<h3>
-<a name="exam" class="anchor" href="#exam"><span class="octicon octicon-link"></span></a>Exam</h3>
-
-<p><img src="quizzer-exam.png" alt="Exam sample"></p>
       </section>
     </div>
 
