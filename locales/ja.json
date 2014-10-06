@@ -99,5 +99,7 @@
 	"which-is-correct": "最も正しいと思われるものを下記選択肢から選びなさい。",
 	"chart-note": "<b>Note:</b> This chart shows student quiz performance by quintile. The <span style='background:#eaf2f6;padding:0 0.25em 0 0.25em;border:1px solid #3880aa;border-radius:0.5em;'>shaded curve</span> charts early returns, the <span style='padding:0 0.25em 0 0.25em;border:1px solid #3880aa;border-radius:0.5em;'>unshaded curve</span> the most recent. All students are represented in both curves, with roughly equal per-student response numbers in each.",
 	"edit-query": "本当に訂正しますか？",
-	"reedit-question": "訂正"
+	"reedit-question": "訂正",
+    "correct-students-label": "The following class members got this one right &mdash; ask them for advice!",
+    "congratulations-100": "百点満点。おもでとう！"
 }
