@@ -14,7 +14,7 @@
 
             var mistakenChoices = getMistakenChoices(locale,commenterLangs);
 
-            var sql = "SELECT name,classes.classID,COUNT(res.commentNeeded) AS numberOfCommentsNeeded "
+            var sql = "SELECT name,classes.classID,CASE WHEN examName IS NULL THEN COUNT(res.commentNeeded) ELSE 0 END AS numberOfCommentsNeeded "
                 + "FROM classes "
                 + "JOIN quizzes USING(classID) "
                 + "LEFT JOIN ("

@@ -34,7 +34,12 @@ function buildQuizList (rows) {
     }
     // Rebuild container content
     for (var i=0,ilen=rows.length;i<ilen;i+=1) {
-        var nameText = document.createTextNode("Quiz "+rows[i].number);
+        var nameText;
+        if (rows[i].name) {
+            nameText = document.createTextNode(rows[i].name);
+        } else {
+            nameText = document.createTextNode("Quiz "+rows[i].number);
+        }
         var idText = document.createTextNode(rows[i].number);
         var tr = document.createElement('tr');
         var nameAnchor = document.createElement('a');

@@ -1,4 +1,6 @@
-
+div#quiz-list td {
+    text-align: left;
+}
 
 table#rules-for-lang {
     table-layout: fixed;
