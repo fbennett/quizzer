@@ -19,7 +19,9 @@
     <script type="text/javascript" src="js/marked.js"></script>
     <script type="text/javascript" src="js/quiz-result.js"></script>
   </head>  
-  <body onload="setRuleButtons();runResult();">
+  <body onload="i18n();setRuleButtons();runResult();">
+    <input style="display:none;" class="i18n" name="value-correct-students-label" value="The following class members got this one right &mdash; ask them for advice!"/>
+    <input style="display:none;" class="i18n" name="value-congratulations-100" value="100%. Well done."/>
     <div class="grid">
       <div class="col-1-1">
         <h1>@@STUDENT_NAME@@</h1>
