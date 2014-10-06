@@ -11,6 +11,7 @@
         var studentID = params.studentid;
         var page = this.page.toString();
         var altpage = this.altpage.toString();
+        var examPage = this.sys.exampage.toString();
         var errpage = '<html>\n'
             + '<head><title>Page removed</title></head><body><h1>Our apologies!</h1><p>This page has been removed. Sorry for the inconvenience.</p></body></html>';
 
@@ -65,6 +66,11 @@
             });
         }
 
+        function abortBecauseItsAnExam () {
+            response.writeHead(200, {'Content-Type': 'text/html'});
+            response.end(examPage);
+        }
+
         function getQuizOrResult(className,examName) {
             var sql = 'SELECT students.name AS studentName,classes.name AS className '
                 + 'FROM answers '
@@ -82,15 +88,20 @@
                 } else {
                     quizLabel = 'Quiz ' + quizNumber;
                 }
+
                 if (!row) {
-                    page = page
-                        .replace(/@@CLASS@@/g,className)
-                        .replace(/@@QUIZ_LABEL@@/g,quizLabel)
-                        .replace(/@@QUIZ_NUMBER@@/,quizNumber)
-                        .replace(/@@GLOSS_LANGUAGE@@/,"")
-                        .replace(/@@QUESTION_IDS@@/,"");
-                    response.writeHead(200, {'Content-Type': 'text/html'});
-                    response.end(page);
+                    if (examName) {
+                        abortBecauseItsAnExam();
+                    } else {
+                        page = page
+                            .replace(/@@CLASS@@/g,className)
+                            .replace(/@@QUIZ_LABEL@@/g,quizLabel)
+                            .replace(/@@QUIZ_NUMBER@@/,quizNumber)
+                            .replace(/@@GLOSS_LANGUAGE@@/,"")
+                            .replace(/@@QUESTION_IDS@@/,"");
+                        response.writeHead(200, {'Content-Type': 'text/html'});
+                        response.end(page);
+                    }
                 } else {
                     altpage = altpage
                         .replace(/@@CLASS@@/g,row.className)
