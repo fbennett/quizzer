@@ -22,14 +22,12 @@ function runResult () {
     resultList.innerHTML = "";
 
     if (!quizErrors.length) {
-        var congratsText = document.createTextNode("Congratulations! You scored 100%");
+        var congratsText = document.createTextNode(i18nStrings["congratulations-100"]);
         var congrats = document.createElement("div");
         congrats.setAttribute('class','congratuations');
         congrats.appendChild(congratsText);
         resultList.appendChild(congrats);
     } else {
-        var explain = document.createElement("div");
-        explain.innerHTML = "(Correct answers are double-boxed)";
         for (var i=0,ilen=quizErrors.length;i<ilen;i+=1) {
             var rubric = document.createElement("div");
             rubric.setAttribute("class", "rubric");
@@ -51,8 +49,8 @@ function runResult () {
                 var studentsPair = document.createElement('div');
                 studentsPair.setAttribute("class","students-container");
                 var studentsLabel = document.createElement('div');
-                studentsLabel.innerHTML = "The following class members got this one right &mdash; ask them to explain why their answer was correct!"
-                studentsLabel.setAttribute("class", "correct-students-label");
+                studentsLabel.innerHTML = i18nStrings["correct-students-label"];
+                console.log("XX "+JSON.stringify(i18nStrings,null,2));
                 studentsPair.appendChild(studentsLabel);
                 var studentsList = document.createElement('div');
                 studentsList.innerHTML = lst.join(", ");
