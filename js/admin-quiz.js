@@ -438,15 +438,12 @@ function openQuestion (node) {
     var questionNumber;
     if (!node) {
         questionNumber = 0;
-        console.log("XX (1)");
     } else {
         var m = node.parentNode.getAttribute('id').match(/.*-([0-9]+)/);
         if (m) {
             questionNumber = m[1];
-            console.log("XX (2)");
         } else {
             questionNumber = 0;
-            console.log("XX (3)");
         }
     }
     var qobj = {};
@@ -628,8 +625,8 @@ function closeQuestion (questionNumber, moveToBottom) {
         container.removeChild(node);
         container.appendChild(node);
     }
-    displayQuestion(obj, questionNumber);
-    setButtonState('send-quiz');
+    var isEditable = setButtonState('send-quiz');
+    displayQuestion(obj, questionNumber, isEditable);
     MathJax.Hub.Queue(["Typeset",MathJax.Hub,"quiz-question-" + questionNumber]);
 }
 
@@ -676,7 +673,7 @@ function displayQuestion (qobj, questionNumber, isEditable) {
 function setChoice(node,questionNumber,choiceNumber,choiceText,isCorrect,isEditable) {
     var choiceWrapper = document.createElement('div');
     choiceWrapper.setAttribute('class', 'choice');
-    var choiceMarker = getChoiceMarker(questionNumber,choiceNumber,isCorrect);
+    var choiceMarker = getChoiceMarker(questionNumber,choiceNumber,isCorrect,isEditable);
     var choiceText = getChoiceText(choiceText);
     choiceWrapper.innerHTML = choiceMarker + choiceText;
     node.appendChild(choiceWrapper)
@@ -788,6 +785,7 @@ function setButtonState (state,lst) {
             sendQuiz.style.display = 'inline';
             sendQuiz.value = 'Send Quiz';
             quizDone.style.display = 'none';
+            addQuestion.disabled = false;
             isEditable = true;
         } else if (pending === 0) {
             sendQuiz.style.display = 'none';
