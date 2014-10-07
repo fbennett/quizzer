@@ -61,7 +61,7 @@
                 + "CHOICE.choice AS correct,CHOICE.stringID AS correctID,CORRECT.string AS correctText,"
                 + "MISTAKE.wrong,MISTAKE.choiceID AS wrongID,WRONG.string AS wrongText,"
                 + "COUNT(students.studentID) AS count,"
-                + "CASE WHEN COUNT(comments.commentID)>0 THEN 1 ELSE 0 END AS commentCount,"
+                + "CASE WHEN COUNT(comments.commentID)>0 OR COUNT(rulesToChoices.ruleToChoiceID)>0 THEN 1 ELSE 0 END AS commentCount,"
                 + "group_concat(DISTINCT students.lang) AS langs "
                 + "FROM classes "
                 + "JOIN quizzes USING(classID) "
@@ -76,6 +76,7 @@
                 + "JOIN strings RUBRIC ON RUBRIC.stringID=questions.stringID "
 		        + "JOIN students ON students.studentID=ANSWERS.studentID "
 		        + "LEFT JOIN comments ON comments.choiceID=MISTAKE.choiceID "
+		        + "LEFT JOIN rulesToChoices ON rulesToChoices.choiceID=MISTAKE.choiceID "
                 + "WHERE classes.classID=? AND quizzes.quizNumber=? "
                 + "GROUP BY quizzes.quizNumber,questions.questionNumber,MISTAKE.wrong "
                 + "ORDER BY commentCount,count DESC,langs;";
