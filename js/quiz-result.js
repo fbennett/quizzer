@@ -29,6 +29,9 @@ function runResult () {
         resultList.appendChild(congrats);
     } else {
         for (var i=0,ilen=quizErrors.length;i<ilen;i+=1) {
+
+            var hasWrongAnswer = quizErrors[i].right !== quizErrors[i].wrong;
+
             var rubric = document.createElement("div");
             rubric.setAttribute("class", "rubric");
             rubric.innerHTML = markdown(quizErrors[i].rubric);
@@ -39,24 +42,31 @@ function runResult () {
             wrongAnswer.innerHTML = markdown(quizErrors[i].wrong);
             var rightAnswer = document.createElement('div');
             rightAnswer.setAttribute("class", "right-answer");
-            rightAnswer.innerHTML = markdown(quizErrors[i].right);
+            var rightAnswerString = quizErrors[i].right;
+            if (!hasWrongAnswer) {
+                rightAnswerString = "**CORRECT:** " + rightAnswerString;
+            }
+            rightAnswer.innerHTML = markdown(rightAnswerString);
             answerPair.appendChild(rubric);
             answerPair.appendChild(rightAnswer);
 
             resultList.appendChild(answerPair);
-            if (quizErrors[i].goodAnswerStudents.length) {
+            if (quizErrors[i].goodAnswerStudents.length && hasWrongAnswer) {
                 var lst = quizErrors[i].goodAnswerStudents;
                 var studentsPair = document.createElement('div');
                 studentsPair.setAttribute("class","students-container");
                 var studentsLabel = document.createElement('div');
                 studentsLabel.innerHTML = i18nStrings["correct-students-label"];
-                console.log("XX "+JSON.stringify(i18nStrings,null,2));
                 studentsPair.appendChild(studentsLabel);
                 var studentsList = document.createElement('div');
                 studentsList.innerHTML = lst.join(", ");
                 studentsList.setAttribute("class", "correct-students-list");
                 studentsPair.appendChild(studentsList);
                 answerPair.appendChild(studentsPair);
+            }
+
+            if (!hasWrongAnswer) {
+                continue;
             }
 
             answerPair.appendChild(wrongAnswer);

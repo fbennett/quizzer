@@ -26,7 +26,7 @@
                 + 'FROM answers '
                 + 'NATURAL JOIN questions '
                 + 'JOIN quizzes USING (quizID) '
-                + 'WHERE quizzes.classID=? AND quizzes.quizNumber=? AND answers.studentID=? AND NOT answers.choice=questions.correct';
+                + 'WHERE quizzes.classID=? AND quizzes.quizNumber=? AND answers.studentID=?';
             sys.db.all(sql,[classID,quizNumber,studentID],function(err,rows){
                 if (err||!rows) {return oops(response,err,'*quiz/myquizresult(1)')};
                 if (rows.length) {
