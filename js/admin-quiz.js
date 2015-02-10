@@ -33,13 +33,22 @@ function keystrokeHandler(event) {
     if (event.key === 'Enter') {
         var inputVal = '';
         var inputNode = document.getElementById('string-input');
-        var inputVal = inputNode.value;
-        if (inputVal.length === 10) {
-            setAnswer(inputVal);
-        } else {
-            alert("Input overlap, try again.");
-        }
-        inputNode.value = '';
+	function setvalue() {
+            var inputVal = inputNode.value;
+            if (inputVal.length === 10) {
+		setAnswer(inputVal);
+            } else {
+		alert("Bad input (" + inputVal + "), try again.");
+		return false;
+            }
+            inputNode.value = '';
+	    return true;
+	}
+	setTimeout(function(){
+	    if (!setvalue()){
+		setTimeout(setvalue, 1000);;
+	    }
+	}, 20);
     }
 };
 
