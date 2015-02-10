@@ -53,7 +53,7 @@
             // With a little arm-twisting, SQLite will do this.
 
             // Inner SELECT yields the two most recent relevant questions answered by this student.
-            //   (the select is broader here b/c choice is not constrained to the student's own choice)
+            //   (the select is broader here: choice is not constrained to the student's own choice)
             // Outer SELECT yields the list of recent questions answered (correctly or incorrectly) by this student.
             //   (here the answer.choice constraint is imposed)
             //   (outer select converts ruleToChoiceID to a one-step counter, and the most-outer select sums the result)

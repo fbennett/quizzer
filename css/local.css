@@ -32,6 +32,10 @@ input.button {
     padding:0.5em;
 }
 
+input.button:hover {
+    cursor:pointer;
+}
+
 div.button-bold {
     margin: 0.5em 0 0 1em;
 }

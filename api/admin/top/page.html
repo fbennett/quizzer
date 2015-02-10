@@ -12,11 +12,15 @@
   <div class="grid">  
     <div class="col-1-1">
       <h1 class="i18n" name="content-quizzer-admin">Quizzer Admin</h1>
-      <div class="button-wrapper">
-        <input class="i18n" name="value-students" type="button" value="Students" onclick="window.location = fixPath('/?admin=' + getParameterByName('admin') + '&page=students')"/>
-        <input class="i18n" name="value-classes-and-quizzes" type="button" value="Classes and Quizzes" onclick="window.location = fixPath('/?admin=' + getParameterByName('admin') + '&page=classes')"/>
-        <input class="i18n" name="value-commenters" type="button" value="Commenters" onclick="window.location = fixPath('/?admin=' + getParameterByName('admin') + '&page=commenters')"/>
-        <input class="i18n" name="value-rules" type="button" value="Rules" onclick="window.location = fixPath('/?admin=' + getParameterByName('admin') + '&page=groups')"/>
+      <div class="button-wrapper-outer">
+        <div class="button-wrapper-inner">
+          <input class="i18n" name="value-students" type="button" value="Students" onclick="window.location = fixPath('/?admin=' + getParameterByName('admin') + '&page=students')"/>
+          <input class="i18n" name="value-classes-and-quizzes" type="button" value="Classes and Quizzes" onclick="window.location = fixPath('/?admin=' + getParameterByName('admin') + '&page=classes')"/>
+        </div>
+        <div class="button-wrapper-inner">
+          <input class="i18n" name="value-commenters" type="button" value="Commenters" onclick="window.location = fixPath('/?admin=' + getParameterByName('admin') + '&page=commenters')"/>
+          <input class="i18n" name="value-rules" type="button" value="Rules" onclick="window.location = fixPath('/?admin=' + getParameterByName('admin') + '&page=groups')"/>
+        </div>
       </div>
     </div>
   </div>

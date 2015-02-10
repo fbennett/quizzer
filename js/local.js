@@ -27,14 +27,25 @@ function i18n (node) {
     // Send strings to server in a batch
     var adminID = getParameterByName('admin');
     var roleName = 'admin';
+    var studentID,studentKey,classID;
+    // Try for a commenter
     if (!adminID) {
         adminID = getParameterByName('commenter');
         roleName = 'commenter'
     }
+    // Try for a student
+    if (!adminID) {
+        studentID = getParameterByName('studentid');
+        studentKey = getParameterByName('studentkey');
+        classID = getParameterByName('classid');
+    }
     var roleAndID;
     if (adminID) {
         roleAndID = roleName + '=' + adminID + '&';
+    } else if (studentID && studentKey) {
+        roleAndID = 'studentid=' + studentID + '&studentkey=' + studentKey + '&classid=' + classID + '&';
     } else {
+        // Give up
         roleAndID = '';
     }
     i18nStrings = apiRequest(
@@ -127,14 +138,17 @@ function markdown (txt) {
     return marked.parse(txt);
 }
 
-function confirmDelete (node,callbackName) {
+function confirmDelete (node,callbackName,message) {
+    if (!message) {
+        message = "delete-query";
+    }
     var origValue,origEvent;
     if (node.value) {
         origValue = node.value;
-        node.value= i18nStrings["delete-query"];
+        node.value= i18nStrings[message];
     } else {
         origValue = node.innerHTML;
-        node.innerHTML = i18nStrings["delete-query"];
+        node.innerHTML = i18nStrings[message];
     }
     var origEvent = '' + node.getAttribute('onclick');
     var origStyle = node.parentNode.style;

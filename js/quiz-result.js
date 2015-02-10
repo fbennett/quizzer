@@ -22,15 +22,16 @@ function runResult () {
     resultList.innerHTML = "";
 
     if (!quizErrors.length) {
-        var congratsText = document.createTextNode("Congratulations! You scored 100%");
+        var congratsText = document.createTextNode(i18nStrings["congratulations-100"]);
         var congrats = document.createElement("div");
         congrats.setAttribute('class','congratuations');
         congrats.appendChild(congratsText);
         resultList.appendChild(congrats);
     } else {
-        var explain = document.createElement("div");
-        explain.innerHTML = "(Correct answers are double-boxed)";
         for (var i=0,ilen=quizErrors.length;i<ilen;i+=1) {
+
+            var hasWrongAnswer = quizErrors[i].right !== quizErrors[i].wrong;
+
             var rubric = document.createElement("div");
             rubric.setAttribute("class", "rubric");
             rubric.innerHTML = markdown(quizErrors[i].rubric);
@@ -41,24 +42,31 @@ function runResult () {
             wrongAnswer.innerHTML = markdown(quizErrors[i].wrong);
             var rightAnswer = document.createElement('div');
             rightAnswer.setAttribute("class", "right-answer");
-            rightAnswer.innerHTML = markdown(quizErrors[i].right);
+            var rightAnswerString = quizErrors[i].right;
+            if (!hasWrongAnswer) {
+                rightAnswerString = "**CORRECT:** " + rightAnswerString;
+            }
+            rightAnswer.innerHTML = markdown(rightAnswerString);
             answerPair.appendChild(rubric);
             answerPair.appendChild(rightAnswer);
 
             resultList.appendChild(answerPair);
-            if (quizErrors[i].goodAnswerStudents.length) {
+            if (quizErrors[i].goodAnswerStudents.length && hasWrongAnswer) {
                 var lst = quizErrors[i].goodAnswerStudents;
                 var studentsPair = document.createElement('div');
                 studentsPair.setAttribute("class","students-container");
                 var studentsLabel = document.createElement('div');
-                studentsLabel.innerHTML = "The following class members got this one right &mdash; ask them to explain why their answer was correct!"
-                studentsLabel.setAttribute("class", "correct-students-label");
+                studentsLabel.innerHTML = i18nStrings["correct-students-label"];
                 studentsPair.appendChild(studentsLabel);
                 var studentsList = document.createElement('div');
                 studentsList.innerHTML = lst.join(", ");
                 studentsList.setAttribute("class", "correct-students-list");
                 studentsPair.appendChild(studentsList);
                 answerPair.appendChild(studentsPair);
+            }
+
+            if (!hasWrongAnswer) {
+                continue;
             }
 
             answerPair.appendChild(wrongAnswer);

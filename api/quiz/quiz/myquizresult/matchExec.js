@@ -8,6 +8,7 @@
         var studentID = params.studentid;
         var studentLang;
         var items = [];
+        var locale = this.sys.locale;
 
         getStudentLanguage();
 
@@ -25,7 +26,7 @@
                 + 'FROM answers '
                 + 'NATURAL JOIN questions '
                 + 'JOIN quizzes USING (quizID) '
-                + 'WHERE quizzes.classID=? AND quizzes.quizNumber=? AND answers.studentID=? AND NOT answers.choice=questions.correct';
+                + 'WHERE quizzes.classID=? AND quizzes.quizNumber=? AND answers.studentID=?';
             sys.db.all(sql,[classID,quizNumber,studentID],function(err,rows){
                 if (err||!rows) {return oops(response,err,'*quiz/myquizresult(1)')};
                 if (rows.length) {
@@ -89,7 +90,7 @@
                 + 'JOIN questions USING(quizID) '
                 + 'JOIN answers USING(questionID) '
                 + 'JOIN students USING(studentID) '
-                + 'WHERE quizzes.classID=? AND quizzes.quizNumber=? AND questions.questionNumber=? AND questions.correct=answers.choice'
+                + 'WHERE quizzes.classID=? AND quizzes.quizNumber=? AND questions.questionNumber=? AND questions.correct=answers.choice AND privacy=0 '
             var questionNumber = items[pos].questionNumber;
             sys.db.all(sql,[classID,quizNumber,questionNumber],function(err,rows){
                 if (err||!rows) {return oops(response,err,'*quiz/myquizresult(3)')}
@@ -147,17 +148,23 @@
                 response.end(JSON.stringify(items));
                 return;
             }
-            var sql = 'SELECT admin.name AS commenter,s.string AS comment '
+            var sql = 'SELECT admin.name AS commenter,s.string AS comment,'
+                + "SUM("
+                +   "CASE WHEN lang=? OR lang=? THEN 1 ELSE 0 END "
+                + ") AS UseMe "
                 + 'FROM quizzes '
                 + 'NATURAL JOIN questions '
                 + 'JOIN choices USING(questionID) '
                 + 'JOIN comments USING(choiceID) '
                 + 'JOIN admin USING(adminID) '
-                + 'LEFT JOIN strings AS s ON s.stringID=comments.stringID '
-                + 'WHERE quizzes.classID=? AND quizzes.quizNumber=? AND questions.questionNumber=? AND choices.choice=?'
+                + "JOIN adminLanguages USING(adminID) "
+                + 'LEFT JOIN strings s ON s.stringID=comments.stringID '
+                + 'WHERE quizzes.classID=? AND quizzes.quizNumber=? AND questions.questionNumber=? AND choices.choice=? '
+                + "GROUP BY commentID "
+                + "HAVING UseMe > 0;"
             var questionNumber = items[pos].questionNumber;
             var wrongChoice = items[pos].wrongChoice;
-            sys.db.all(sql,[classID,quizNumber,questionNumber,wrongChoice],function(err,rows){
+            sys.db.all(sql,[locale,studentLang,classID,quizNumber,questionNumber,wrongChoice],function(err,rows){
                 if (err||!rows) {return oops(response,err,'*quiz/myquizresults(5)')};
                 items[pos].comments = [];
                 for (var i=0,ilen=rows.length;i<ilen;i+=1) {

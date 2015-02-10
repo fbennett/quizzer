@@ -53,6 +53,7 @@
 
         function getStudents(){
             mailData.students = [];
+            // This will send links to exams as well. Editing will be blocked, view of results is permitted.
             var sql = 'SELECT memberships.studentID,studentKey,students.name,email,last_key_date,classes.name AS className '
                 + 'FROM memberships '
                 + 'JOIN students USING(studentID) '
@@ -131,6 +132,7 @@
             }
             // Get quizzes that have been answered by a given student
             // and quizzes that have not been.
+            // This will include exams. Editing will be denied, viewing permitted.
             var sql = 'SELECT quizNumber,'
                 + 'CASE WHEN COUNT(answers.answerID)>0 THEN 1 ELSE 0 END AS answered '
                 + 'FROM students '

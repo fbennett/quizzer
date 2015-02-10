@@ -74,9 +74,9 @@
         }
 
         function saveExam() {
-            // Create a fresh quiz, with sent=-1
+            // Create a fresh quiz, with sent=1
             var quizNumber = quizNumberMax + 1;
-            sys.db.run('INSERT INTO quizzes VALUES (NULL,?,?,?,?,?)',[data.classID,quizNumber,0,data.examTitle,data.examDate],function(err){
+            sys.db.run('INSERT INTO quizzes VALUES (NULL,?,?,?,?,?)',[data.classID,quizNumber,1,data.examTitle,data.examDate],function(err){
                 if (err) {return oops(response,err,'class/createexam(3)')};
                 var quizID = this.lastID;
                 choicesCount += (data.questions.length * 4);

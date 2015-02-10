@@ -69,7 +69,7 @@
 	"quiz-number-label": ": Quiz ",
 	"send": "Send",
 	"quiz-done": "Quiz Ready",
-	"download-exam": "Download Exame",
+	"download-exam": "Download Exam",
 	"mark-exam": "Mark Exam",
 	"add-question-button": "Add a Question",
 	"scripts-marked": "Results",
@@ -79,7 +79,7 @@
 	"tag-with-a-rule": "Tag with a rule",
 	"help": "[help]",
 	"cancel": "Cancel",
-	"source": "ソース",
+	"source": "Source",
 	"edit-question": "Edit Question",
 	"in-draft": "In Draft",
 	"responses-complete": "Responses Complete",
@@ -97,5 +97,9 @@
 	"choices-must-be-unique": "Choices must be unique.",
 	"which-is-correct": "Which of the following is best?",
 	"chart-note": "<b>Note:</b> This chart shows student quiz performance by quintile. The <span style='background:#eaf2f6;padding:0 0.25em 0 0.25em;border:1px solid #3880aa;border-radius:0.5em;'>shaded curve</span> charts early returns, the <span style='padding:0 0.25em 0 0.25em;border:1px solid #3880aa;border-radius:0.5em;'>unshaded curve</span> the most recent. All students are represented in both curves, with roughly equal per-student response numbers in each.",
-	"send-quiz": "send-quiz"
+	"send-quiz": "Send Quiz",
+	"edit-query": "Really Re-Edit?",
+	"reedit-question": "Re-Edit",
+    "correct-students-label": "The following class members got this one right &mdash; ask them for advice!",
+    "congratulations-100": "You scored 100%. Congratulations!"
 }

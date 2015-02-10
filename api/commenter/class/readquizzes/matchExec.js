@@ -54,7 +54,7 @@
             // console.log("XX "+mistakenChoices.sql);
             // console.log("XX "+mistakenChoices.vars);
 
-            var sql = "SELECT quizzes.quizNumber,examName,COUNT(res.commentNeeded) AS numberOfCommentsNeeded "
+            var sql = "SELECT quizzes.quizNumber,examName,CASE WHEN examName IS NULL THEN COUNT(res.commentNeeded) ELSE 0 END AS numberOfCommentsNeeded "
                 + "FROM quizzes "
                 + "LEFT JOIN ("
                 +   mistakenChoices.sql
